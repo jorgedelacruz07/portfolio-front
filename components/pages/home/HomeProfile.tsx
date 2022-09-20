@@ -1,9 +1,7 @@
 import Image from "next/image";
-import { PROFILE } from "../../../data/content";
+import { profile } from "../../../data/content";
 
-export const Profile = () => {
-  const profile = PROFILE;
-
+export const HomeProfile = () => {
   return (
     <div className="md:flex items-center justify-between gap-5">
       <div className="flex-none w-full md:w-2/3">

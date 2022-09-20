@@ -13,6 +13,9 @@ export const Footer = () => {
         <Link href="/projects">
           <a className="px-2">Projects</a>
         </Link>
+        <Link href="/blog">
+          <a className="px-2">Blog</a>
+        </Link>
       </div>
     </footer>
   );
