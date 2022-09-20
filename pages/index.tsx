@@ -1,16 +1,18 @@
 import type { NextPage } from "next";
-import { Blog } from "../components/pages/home/Blog";
-import { Profile } from "../components/pages/home/Profile";
-import { Projects } from "../components/pages/home/Projects";
-import { Social } from "../components/pages/home/Social";
+import { HomeBlog } from "../components/pages/home/HomeBlog";
+import { HomeProfile } from "../components/pages/home/HomeProfile";
+import { HomeProjects } from "../components/pages/home/HomeProjects";
+import { HomeSocial } from "../components/pages/home/HomeSocial";
+import { HomeExperiences } from "../components/pages/home/HomeExperiences";
 
 const Home: NextPage = () => {
   return (
     <>
-      <Profile />
-      <Social />
-      <Projects />
-      <Blog />
+      <HomeProfile />
+      <HomeExperiences />
+      <HomeProjects />
+      <HomeSocial />
+      <HomeBlog />
     </>
   );
 };
