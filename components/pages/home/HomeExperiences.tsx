@@ -1,6 +1,11 @@
-import { experiences } from "../../../data/content";
+import { FC } from "react";
+import { TExperience } from "../../../types/experience";
 
-export const HomeExperiences = () => {
+type Props = {
+  experiences: TExperience[];
+};
+
+export const HomeExperiences: FC<Props> = ({ experiences }) => {
   return (
     <div className="my-8">
       <h3 className="text-xl md:text-2xl">Experiences</h3>

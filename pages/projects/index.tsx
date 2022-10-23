@@ -1,7 +1,32 @@
-import type { NextPage } from "next";
-import { projects } from "../../data/content";
+import type { GetStaticProps, NextPage } from "next";
+import { TProject } from "../../types/project";
+import axios from "axios";
 
-const Projects: NextPage = () => {
+export const getStaticProps: GetStaticProps = async () => {
+  let projects: TProject[] = [];
+
+  const url = process.env.NEXT_PUBLIC_API_URL;
+
+  try {
+    projects = await axios
+      .get(`${url}/client/projects`)
+      .then((res) => res.data);
+  } catch (error) {
+    console.error({ error });
+  }
+
+  return {
+    props: {
+      projects,
+    },
+  };
+};
+
+type Props = {
+  projects: TProject[];
+};
+
+const Projects: NextPage<Props> = ({ projects }) => {
   return (
     <div>
       <h1 className="text-xl md:text-3xl text-center uppercase">Projects</h1>

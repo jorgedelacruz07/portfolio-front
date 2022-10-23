@@ -1,8 +1,31 @@
-import { NextPage } from "next";
+import axios from "axios";
+import { GetStaticProps, NextPage } from "next";
 import Link from "next/link";
-import { posts } from "../../data/content";
+import { TPost } from "../../types/post";
 
-const Blog: NextPage = () => {
+export const getStaticProps: GetStaticProps = async () => {
+  let posts: TPost[] = [];
+
+  const url = process.env.NEXT_PUBLIC_API_URL;
+
+  try {
+    posts = await axios.get(`${url}/client/posts`).then((res) => res.data);
+  } catch (error) {
+    console.error({ error });
+  }
+
+  return {
+    props: {
+      posts,
+    },
+  };
+};
+
+type Props = {
+  posts: TPost[];
+};
+
+const Blog: NextPage<Props> = ({ posts }) => {
   return (
     <div>
       <h1 className="text-xl md:text-3xl text-center uppercase">Blog</h1>
@@ -12,9 +35,9 @@ const Blog: NextPage = () => {
             <h3 className="text-xl md:text-2xl uppercase">
               <Link
                 href={{
-                  pathname: "/blog/[slug]",
+                  pathname: "/blog/[id]",
                   query: {
-                    slug: post.slug,
+                    id: post.id,
                   },
                 }}
               >
@@ -25,7 +48,10 @@ const Blog: NextPage = () => {
               {post.createdAt}
             </div>
             <div className="my-6">
-              <div className="my-2">{post.body}</div>
+              <div
+                className="my-2"
+                dangerouslySetInnerHTML={{ __html: post?.body }}
+              />
             </div>
           </div>
         ))}
