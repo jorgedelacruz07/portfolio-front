@@ -10,8 +10,6 @@ export const DarkModeButton = () => {
 
   if (!mounted) return null;
 
-  console.log({ theme });
-
   return (
     <>
       <button

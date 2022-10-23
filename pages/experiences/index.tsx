@@ -1,7 +1,32 @@
-import { NextPage } from "next";
-import { experiences } from "../../data/content";
+import { GetStaticProps, NextPage } from "next";
+import axios from "axios";
+import { TExperience } from "../../types/experience";
 
-const Experiences: NextPage = () => {
+export const getStaticProps: GetStaticProps = async () => {
+  let experiences: TExperience[] = [];
+
+  const url = process.env.NEXT_PUBLIC_API_URL;
+
+  try {
+    experiences = await axios
+      .get(`${url}/client/experiences`)
+      .then((res) => res.data);
+  } catch (error) {
+    console.error({ error });
+  }
+
+  return {
+    props: {
+      experiences,
+    },
+  };
+};
+
+type Props = {
+  experiences: TExperience[];
+};
+
+const Experiences: NextPage<Props> = ({ experiences }) => {
   return (
     <div>
       <h1 className="text-xl md:text-3xl text-center uppercase">Experiences</h1>

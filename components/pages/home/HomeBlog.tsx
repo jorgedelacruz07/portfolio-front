@@ -1,7 +1,12 @@
 import Link from "next/link";
-import { posts } from "../../../data/content";
+import { FC } from "react";
+import { TPost } from "../../../types/post";
 
-export const HomeBlog = () => {
+type Props = {
+  posts: TPost[];
+};
+
+export const HomeBlog: FC<Props> = ({ posts }) => {
   return (
     <div className="my-8">
       <h3 className="text-xl md:text-2xl">Blog</h3>
@@ -12,9 +17,9 @@ export const HomeBlog = () => {
               <Link
                 className="hover:text-blue-600"
                 href={{
-                  pathname: "/blog/[slug]",
+                  pathname: "/blog/[id]",
                   query: {
-                    slug: post.slug,
+                    id: post.id,
                   },
                 }}
                 target="_blank"
