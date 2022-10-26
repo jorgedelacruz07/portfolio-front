@@ -12,7 +12,11 @@ export const getStaticProps: GetStaticProps = async () => {
       .get(`${url}/client/experiences`)
       .then((res) => res.data);
   } catch (error) {
-    console.error({ error });
+    let message = "";
+    if (axios.isAxiosError(error)) {
+      message = error?.response?.statusText as string;
+    }
+    console.error({ error: message });
   }
 
   return {

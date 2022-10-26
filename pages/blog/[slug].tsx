@@ -13,12 +13,18 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   let post;
 
   const url = process.env.NEXT_PUBLIC_API_URL;
-  const id = params?.id;
+  const slug = params?.slug;
 
   try {
-    post = await axios.get(`${url}/client/posts/${id}`).then((res) => res.data);
+    post = await axios
+      .get(`${url}/client/posts/${slug}`)
+      .then((res) => res.data);
   } catch (error) {
-    console.error({ error });
+    let message = "";
+    if (axios.isAxiosError(error)) {
+      message = error?.response?.statusText as string;
+    }
+    console.error({ error: message });
   }
 
   return {

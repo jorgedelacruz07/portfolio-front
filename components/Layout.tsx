@@ -15,7 +15,9 @@ export const Layout = ({ children }: any) => {
         />
       </Head>
       <Navbar />
-      <main className="m-8 lg:mx-auto md:max-w-3xl md:my-12">{children}</main>
+      <main className="m-8 lg:mx-auto md:max-w-3xl md:my-12 min-h-[89vh]">
+        {children}
+      </main>
       <Footer />
     </div>
   );
