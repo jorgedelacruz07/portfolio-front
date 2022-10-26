@@ -13,13 +13,13 @@ export const HomeBlog: FC<Props> = ({ posts }) => {
       <div className="my-2 md:my-4 px-4">
         <ul className="list-disc">
           {posts.map((post) => (
-            <li key={post.id}>
+            <li key={post.slug}>
               <Link
                 className="hover:text-blue-600"
                 href={{
-                  pathname: "/blog/[id]",
+                  pathname: "/blog/[slug]",
                   query: {
-                    id: post.id,
+                    slug: post.slug,
                   },
                 }}
                 target="_blank"

@@ -18,10 +18,10 @@ export const HomeProjects: FC<Props> = ({ projects }) => {
             <li key={project.id}>
               <a
                 className="hover:text-blue-600"
-                href="https://oportunidadesparatodos.pe"
+                href={project.url}
                 target="_blanck"
               >
-                Oportunidades para todos
+                {project.name}
               </a>
             </li>
           ))}
