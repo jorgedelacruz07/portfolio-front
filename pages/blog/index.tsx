@@ -42,7 +42,7 @@ const Blog: NextPage<Props> = ({ posts }) => {
         {posts.map((post) => (
           <div key={post.slug} className="mb-16">
             <div className="flex gap-6 items-center">
-              <div className="max-w-[70px] md:max-w-[100px]">
+              <div className="max-w-[70px] md:max-w-[90px] lg:max-w-[100px]">
                 <Image
                   src={post?.image?.src || "/images/placeholder.jpg"}
                   className="rounded-2xl"
