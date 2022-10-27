@@ -33,9 +33,9 @@ const Blog: NextPage<Props> = ({ posts }) => {
   return (
     <div>
       <h1 className="text-xl md:text-3xl text-center uppercase">Blog</h1>
-      <div>
+      <div className="py-16">
         {posts.map((post) => (
-          <div key={post.id} className="my-16">
+          <div key={post.id} className="mb-16">
             <h3 className="text-xl md:text-2xl uppercase">
               <Link
                 href={{
