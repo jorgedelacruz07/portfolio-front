@@ -40,8 +40,8 @@ const Projects: NextPage<Props> = ({ projects }) => {
         {projects.map((project) => (
           <div key={project.id} className="mb-16">
             <div className="flex gap-6 items-center">
-              <div className="max-w-[90px]">
-                {project?.image?.src && (
+              {project?.image?.src && (
+                <div className="max-w-[100px]">
                   <Image
                     src={project?.image?.src}
                     className="rounded-3xl"
@@ -49,17 +49,20 @@ const Projects: NextPage<Props> = ({ projects }) => {
                     width={180}
                     height={180}
                   />
-                )}
-              </div>
+                </div>
+              )}
               <div>
-                <h3 className="md:text-2xl uppercase">{project.name}</h3>
-                <a
-                  className="text-blue-700 hover:text-blue-800"
-                  href={project.url}
-                  rel=""
-                >
-                  {project.url}
-                </a>
+                <h3 className="text-lg md:text-xl uppercase">{project.name}</h3>
+                <div className="mt-2">
+                  <a
+                    className="dark:text-blue-500 dark:hover:text-blue-600"
+                    href={project.url}
+                    rel="noreferrer"
+                    target="_blank"
+                  >
+                    {project.url}
+                  </a>
+                </div>
               </div>
             </div>
             <div className="mt-6">

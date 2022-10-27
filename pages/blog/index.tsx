@@ -1,7 +1,10 @@
 import axios from "axios";
 import { GetStaticProps, NextPage } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { TPost } from "../../types/post";
+import { format } from "date-fns";
+import { es } from "date-fns/locale";
 
 export const getStaticProps: GetStaticProps = async () => {
   let posts: TPost[] = [];
@@ -37,20 +40,39 @@ const Blog: NextPage<Props> = ({ posts }) => {
       <div className="py-16">
         {posts.map((post) => (
           <div key={post.id} className="mb-16">
-            <h3 className="text-xl md:text-2xl uppercase">
-              <Link
-                href={{
-                  pathname: "/blog/[id]",
-                  query: {
-                    id: post.id,
-                  },
-                }}
-              >
-                <a className="hover:text-blue-600">{post.title}</a>
-              </Link>
-            </h3>
-            <div className="text-sm text-gray-500 dark:text-gray-400">
-              {post.createdAt}
+            <div className="flex gap-6 items-center">
+              {post?.image?.src && (
+                <div className="max-w-[100px]">
+                  <Image
+                    src={post?.image?.src}
+                    className="rounded-3xl"
+                    alt=""
+                    width={180}
+                    height={180}
+                  />
+                </div>
+              )}
+              <div>
+                <h3 className="text-xl md:text-2xl uppercase">
+                  <Link
+                    href={{
+                      pathname: "/blog/[slug]",
+                      query: {
+                        slug: post.slug,
+                      },
+                    }}
+                  >
+                    <a className="dark:text-blue-500 dark:hover:text-blue-600">
+                      {post.title}
+                    </a>
+                  </Link>
+                </h3>
+                <div className="text-sm text-gray-500 dark:text-gray-400">
+                  {format(new Date(post.createdAt), "dd MMM yyyy hh:mm", {
+                    locale: es,
+                  })}
+                </div>
+              </div>
             </div>
             <div className="my-6">
               <div
