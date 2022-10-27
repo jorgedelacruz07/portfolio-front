@@ -40,7 +40,7 @@ const Projects: NextPage<Props> = ({ projects }) => {
         {projects.map((project) => (
           <div key={project.slug} id={project.slug} className="mb-16">
             <div className="flex gap-6 items-center">
-              <div className="max-w-[70px] md:max-w-[90px] lg:max-w-[100px]">
+              <div className="max-w-[70px] md:max-w-[80px] lg:max-w-[100px]">
                 <Image
                   src={project?.image?.src || "/images/placeholder.jpg"}
                   className="rounded-2xl"

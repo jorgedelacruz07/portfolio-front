@@ -9,9 +9,9 @@ type Props = {
 
 export const HomeBlog: FC<Props> = ({ posts }) => {
   return (
-    <div className="my-4text-sm sm:text-basemy-8">
-      <h3 className="text-xltext-sm sm:text-basetext-2xl">Blog</h3>
-      <div className="py-4text-sm sm:text-basepy-6">
+    <div className="my-4 md:my-8">
+      <h3 className="text-xl md:text-2xl">Blog</h3>
+      <div className="py-4 md:py-6">
         <ul>
           {posts.map((post) => (
             <li key={post.slug}>
@@ -35,9 +35,7 @@ export const HomeBlog: FC<Props> = ({ posts }) => {
                     }}
                     target="_blank"
                   >
-                    <a className="text-smtext-sm sm:text-basetext-base">
-                      {post.title}
-                    </a>
+                    <a className="text-sm md:text-base">{post.title}</a>
                   </Link>
                 </div>
               </div>
