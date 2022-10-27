@@ -8,4 +8,5 @@ export type TProject = {
   url: string;
   description: string;
   createdAt: string;
+  updatedAt: string;
 };
