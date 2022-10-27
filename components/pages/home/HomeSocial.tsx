@@ -30,7 +30,7 @@ export const HomeSocial = () => {
           {socialNetworks.map((social) => (
             <li key={social.slug}>
               <div className="flex gap-4 items-center">
-                <div className="max-w-[40px] md:max-w-[90px]">
+                <div className="max-w-[40px] md:max-w-[50px]">
                   <Image
                     src={social?.image?.src || "/images/placeholder.jpg"}
                     className="rounded-lg dark:bg-white"

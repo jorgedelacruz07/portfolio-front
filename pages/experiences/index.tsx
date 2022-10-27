@@ -43,7 +43,7 @@ const Experiences: NextPage<Props> = ({ experiences }) => {
         {experiences.map((experience) => (
           <div key={experience.slug} id={experience.slug} className="mb-16">
             <div className="flex gap-6 items-center">
-              <div className="max-w-[70px] md:max-w-[100px]">
+              <div className="max-w-[70px] md:max-w-[90px] lg:max-w-[100px]">
                 <Image
                   src={experience?.image?.src || "/images/placeholder.jpg"}
                   className="rounded-2xl"

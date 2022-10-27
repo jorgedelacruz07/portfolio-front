@@ -18,7 +18,7 @@ export const HomeProjects: FC<Props> = ({ projects }) => {
           {projects.map((project) => (
             <li key={project.slug}>
               <div className="flex gap-4 items-center">
-                <div className="max-w-[40px] md:max-w-[90px]">
+                <div className="max-w-[40px] md:max-w-[50px]">
                   <Image
                     src={project?.image?.src || "/images/placeholder.jpg"}
                     className="rounded-lg"
