@@ -2,6 +2,7 @@ import axios from "axios";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { TPost } from "../../types/post";
 import { format } from "date-fns";
+import Image from "next/image";
 
 export const getStaticPaths: GetStaticPaths = async () => {
   return {
@@ -50,6 +51,11 @@ const PostPage: NextPage<Props> = ({ post }) => {
         <div className="text-sm text-gray-500 dark:text-gray-400">
           {format(new Date(post.createdAt), "dd MMM yyyy - hh:mm")}
         </div>
+        {post?.image?.src && (
+          <div>
+            <Image src={post?.image?.src} className="w-full" alt="" width={400} height={400} />
+          </div>
+        )}
         <div className="my-6">
           <div
             className="my-2"
