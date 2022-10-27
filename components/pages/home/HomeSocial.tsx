@@ -6,16 +6,20 @@ export const HomeSocial = () => {
         <ul className="list-disc">
           <li>
             <a
-              className="hover:text-blue-600"
+              className="dark:text-blue-500 dark:hover:text-blue-600"
               href="https://www.linkedin.com/in/jorgedelacruz07"
+              rel="noreferrer"
+              target="_blank"
             >
               Linkedin
             </a>
           </li>
           <li>
             <a
-              className="hover:text-blue-600"
+              className="dark:text-blue-500 dark:hover:text-blue-600"
               href="https://github.com/jorgedelacruz07"
+              rel="noreferrer"
+              target="_blank"
             >
               GitHub
             </a>

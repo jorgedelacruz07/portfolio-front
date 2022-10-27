@@ -10,7 +10,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 };
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  let post;
+  let post = null;
 
   const url = process.env.NEXT_PUBLIC_API_URL;
   const slug = params?.slug;
@@ -41,18 +41,20 @@ type Props = {
 
 const PostPage: NextPage<Props> = ({ post }) => {
   return (
-    <>
-      <h2 className="text-3xl uppercase">{post.title}</h2>
-      <div className="text-sm text-gray-500 dark:text-gray-400">
-        {post.createdAt}
-      </div>
-      <div className="my-6">
-        <div
-          className="my-2"
-          dangerouslySetInnerHTML={{ __html: post?.body }}
-        />
-      </div>
-    </>
+    post && (
+      <>
+        <h2 className="text-3xl uppercase">{post.title}</h2>
+        <div className="text-sm text-gray-500 dark:text-gray-400">
+          {post.createdAt}
+        </div>
+        <div className="my-6">
+          <div
+            className="my-2"
+            dangerouslySetInnerHTML={{ __html: post?.body }}
+          />
+        </div>
+      </>
+    )
   );
 };
 

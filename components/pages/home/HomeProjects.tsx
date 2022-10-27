@@ -17,9 +17,10 @@ export const HomeProjects: FC<Props> = ({ projects }) => {
           {projects.map((project) => (
             <li key={project.id}>
               <a
-                className="hover:text-blue-600"
+                className="dark:text-blue-500 dark:hover:text-blue-600"
                 href={project.url}
-                target="_blanck"
+                rel="noreferrer"
+                target="_blank"
               >
                 {project.name}
               </a>

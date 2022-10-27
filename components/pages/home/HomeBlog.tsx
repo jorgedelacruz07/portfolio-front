@@ -15,7 +15,6 @@ export const HomeBlog: FC<Props> = ({ posts }) => {
           {posts.map((post) => (
             <li key={post.slug}>
               <Link
-                className="hover:text-blue-600"
                 href={{
                   pathname: "/blog/[slug]",
                   query: {
@@ -24,7 +23,9 @@ export const HomeBlog: FC<Props> = ({ posts }) => {
                 }}
                 target="_blank"
               >
-                {post.title}
+                <a className="dark:text-blue-500 dark:hover:text-blue-600">
+                  {post.title}
+                </a>
               </Link>
             </li>
           ))}
