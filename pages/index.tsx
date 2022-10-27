@@ -38,6 +38,7 @@ export const getStaticProps: GetStaticProps = async () => {
       projects,
       posts,
     },
+    revalidate: 10,
   };
 };
 
