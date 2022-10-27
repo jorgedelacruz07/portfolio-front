@@ -14,4 +14,5 @@ export type TExperience = {
   from: string;
   to: string;
   createdAt: string;
+  updatedAt: string;
 };

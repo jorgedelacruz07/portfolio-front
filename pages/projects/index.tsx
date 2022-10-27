@@ -35,27 +35,27 @@ type Props = {
 const Projects: NextPage<Props> = ({ projects }) => {
   return (
     <div>
-      <h1 className="text-xl md:text-3xl text-center uppercase">Projects</h1>
+      <h1 className="text-2xl md:text-3xl text-center uppercase">Projects</h1>
       <div className="py-16">
         {projects.map((project) => (
-          <div key={project.id} className="mb-16">
+          <div key={project.slug} id={project.slug} className="mb-16">
             <div className="flex gap-6 items-center">
-              {project?.image?.src && (
-                <div className="max-w-[100px]">
-                  <Image
-                    src={project?.image?.src}
-                    className="rounded-3xl"
-                    alt=""
-                    width={180}
-                    height={180}
-                  />
-                </div>
-              )}
+              <div className="max-w-[70px] md:max-w-[100px]">
+                <Image
+                  src={project?.image?.src || "/images/placeholder.jpg"}
+                  className="rounded-2xl"
+                  alt=""
+                  width={180}
+                  height={180}
+                />
+              </div>
               <div>
-                <h3 className="text-lg md:text-xl uppercase">{project.name}</h3>
+                <h3 className="text-base md:text-xl font-bold uppercase">
+                  {project.name}
+                </h3>
                 <div className="mt-2">
                   <a
-                    className="dark:text-blue-500 dark:hover:text-blue-600"
+                    className="text-blue-700 hover:text-blue-900 dark:text-blue-500 dark:hover:text-blue-700 text-sm md:text-base"
                     href={project.url}
                     rel="noreferrer"
                     target="_blank"
@@ -66,7 +66,9 @@ const Projects: NextPage<Props> = ({ projects }) => {
               </div>
             </div>
             <div className="mt-6">
-              <div className="italic">{project.description}</div>
+              <div className="italic text-sm md:text-base">
+                {project.description}
+              </div>
             </div>
           </div>
         ))}

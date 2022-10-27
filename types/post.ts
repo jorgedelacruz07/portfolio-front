@@ -7,4 +7,5 @@ export type TPost = {
   image: TImage;
   body: string;
   createdAt: string;
+  updatedAt: string;
 };

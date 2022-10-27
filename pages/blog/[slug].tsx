@@ -1,6 +1,7 @@
 import axios from "axios";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { TPost } from "../../types/post";
+import { format } from "date-fns";
 
 export const getStaticPaths: GetStaticPaths = async () => {
   return {
@@ -40,12 +41,14 @@ type Props = {
 };
 
 const PostPage: NextPage<Props> = ({ post }) => {
+  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
   return (
     post && (
       <>
         <h2 className="text-3xl uppercase">{post.title}</h2>
         <div className="text-sm text-gray-500 dark:text-gray-400">
-          {post.createdAt}
+          {format(new Date(post.createdAt), "dd MMM yyyy - hh:mm")}
         </div>
         <div className="my-6">
           <div
