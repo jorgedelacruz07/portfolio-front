@@ -16,7 +16,7 @@ export const HomeBlog: FC<Props> = ({ posts }) => {
           {posts.map((post) => (
             <li key={post.slug}>
               <div className="flex gap-4 items-center">
-                <div className="max-w-[40px]text-sm sm:text-basemax-w-[50px]">
+                <div className="max-w-[40px] md:max-w-[50px]">
                   <Image
                     src={post?.image?.src || "/images/placeholder.jpg"}
                     className="rounded-lg"
@@ -35,7 +35,9 @@ export const HomeBlog: FC<Props> = ({ posts }) => {
                     }}
                     target="_blank"
                   >
-                    <a className="text-smtext-sm sm:text-basetext-base">{post.title}</a>
+                    <a className="text-smtext-sm sm:text-basetext-base">
+                      {post.title}
+                    </a>
                   </Link>
                 </div>
               </div>
