@@ -1,5 +1,9 @@
+import { TImage } from "./image";
+
 export type TExperience = {
   id: string;
+  slug: string;
+  image: TImage;
   company: string;
   companyFrom: string;
   companyDescription: string;
