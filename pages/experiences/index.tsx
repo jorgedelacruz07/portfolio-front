@@ -36,7 +36,7 @@ type Props = {
 const Experiences: NextPage<Props> = ({ experiences }) => {
   return (
     <div>
-      <h1 className="text-2xl md:text-3xl text-center uppercase">
+      <h1 className="text-2xl md:text-3xl text-center uppercase font-bold">
         Experiences
       </h1>
       <div className="py-16">
@@ -48,8 +48,8 @@ const Experiences: NextPage<Props> = ({ experiences }) => {
                   src={experience?.image?.src || "/images/placeholder.jpg"}
                   className="rounded-2xl"
                   alt=""
-                  width={180}
-                  height={180}
+                  width={120}
+                  height={120}
                 />
               </div>
               <div className="">
@@ -70,7 +70,7 @@ const Experiences: NextPage<Props> = ({ experiences }) => {
                 </div>
                 <div>
                   <a
-                    className="text-blue-700 hover:text-blue-900 dark:text-blue-500 dark:hover:text-blue-700 text-sm md:text-base"
+                    className="text-blue-700 hover:text-blue-900 dark:text-blue-600 dark:hover:text-blue-800 text-sm md:text-base"
                     href={experience.companyUrl}
                     rel="noreferrer"
                     target="_blank"

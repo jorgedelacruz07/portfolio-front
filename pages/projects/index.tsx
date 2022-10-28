@@ -35,7 +35,9 @@ type Props = {
 const Projects: NextPage<Props> = ({ projects }) => {
   return (
     <div>
-      <h1 className="text-2xl md:text-3xl text-center uppercase">Projects</h1>
+      <h1 className="text-2xl md:text-3xl text-center uppercase font-bold">
+        Projects
+      </h1>
       <div className="py-16">
         {projects.map((project) => (
           <div key={project.slug} id={project.slug} className="mb-16">
@@ -45,8 +47,8 @@ const Projects: NextPage<Props> = ({ projects }) => {
                   src={project?.image?.src || "/images/placeholder.jpg"}
                   className="rounded-2xl"
                   alt=""
-                  width={180}
-                  height={180}
+                  width={120}
+                  height={120}
                 />
               </div>
               <div>
@@ -55,7 +57,7 @@ const Projects: NextPage<Props> = ({ projects }) => {
                 </h3>
                 <div className="mt-2">
                   <a
-                    className="text-blue-700 hover:text-blue-900 dark:text-blue-500 dark:hover:text-blue-700 text-sm md:text-base"
+                    className="text-blue-700 hover:text-blue-900 dark:text-blue-600 dark:hover:text-blue-800 text-sm md:text-base"
                     href={project.url}
                     rel="noreferrer"
                     target="_blank"

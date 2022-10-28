@@ -9,27 +9,29 @@ type Props = {
 
 export const HomeProjects: FC<Props> = ({ projects }) => {
   return (
-    <div className="my-4 md:my-8">
+    <div className="my-6 md:my-10">
       <h3 className="text-xl md:text-2xl">
         <Link href="/projects">Projects</Link>
       </h3>
-      <div className="py-4 md:py-6">
+      <div className="pt-4 md:pt-6">
         <ul>
           {projects.map((project) => (
-            <li key={project.slug}>
+            <li key={project.slug} className="mb-4">
               <div className="flex gap-4 items-center">
-                <div className="max-w-[40px] md:max-w-[50px]">
+                <div className="max-w-[30px] md:max-w-[40px] flex items-center">
                   <Image
                     src={project?.image?.src || "/images/placeholder.jpg"}
                     className="rounded-lg"
                     alt=""
-                    width={180}
-                    height={180}
+                    width={40}
+                    height={40}
                   />
                 </div>
                 <div>
                   <Link href={`/projects#${project.slug}`}>
-                    <a className="text-sm md:text-base">{project.name}</a>
+                    <a className="text-blue-700 hover:text-blue-900 dark:text-gray-200 dark:hover:text-gray-400 text-sm md:text-base">
+                      {project.name}
+                    </a>
                   </Link>
                 </div>
               </div>
