@@ -42,25 +42,36 @@ type Props = {
 };
 
 const PostPage: NextPage<Props> = ({ post }) => {
-  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-
   return (
     post && (
       <>
-        <h2 className="text-3xl uppercase">{post.title}</h2>
-        <div className="text-sm text-gray-500 dark:text-gray-400">
-          {format(new Date(post.createdAt), "dd MMM yyyy - hh:mm")}
-        </div>
-        {post?.image?.src && (
-          <div>
-            <Image src={post?.image?.src} className="w-full" alt="" width={400} height={400} />
+        <h1 className="text-2xl md:text-3xl text-center uppercase font-bold">
+          {post.title}
+        </h1>
+        <div className="py-16">
+          <div className="text-sm text-gray-500 dark:text-gray-400">
+            {`Created at ${format(
+              new Date(post.createdAt),
+              "dd/MM/yyyy hh:mm"
+            )}`}
           </div>
-        )}
-        <div className="my-6">
-          <div
-            className="my-2"
-            dangerouslySetInnerHTML={{ __html: post?.body }}
-          />
+          {post?.image?.src && (
+            <div className="my-6 text-center">
+              <Image
+                src={post?.image?.src}
+                className="w-full"
+                alt=""
+                width={400}
+                height={400}
+              />
+            </div>
+          )}
+          <div className="my-6">
+            <div
+              className="my-2"
+              dangerouslySetInnerHTML={{ __html: post?.body }}
+            />
+          </div>
         </div>
       </>
     )
