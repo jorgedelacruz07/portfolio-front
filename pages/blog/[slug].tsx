@@ -49,12 +49,6 @@ const PostPage: NextPage<Props> = ({ post }) => {
           {post.title}
         </h1>
         <div className="py-12 md:py-16">
-          <div className="text-sm text-gray-800 dark:text-gray-300">
-            {`Created at ${format(
-              new Date(post.createdAt),
-              "dd/MM/yyyy hh:mm"
-            )}`}
-          </div>
           {post?.image?.src && (
             <div className="my-6 text-center">
               <Image
@@ -66,11 +60,14 @@ const PostPage: NextPage<Props> = ({ post }) => {
               />
             </div>
           )}
-          <div className="my-6">
-            <div
-              className="my-2"
-              dangerouslySetInnerHTML={{ __html: post?.body }}
-            />
+          <div className="my-12">
+            <div dangerouslySetInnerHTML={{ __html: post?.body }} />
+          </div>
+          <div className="text-sm text-gray-800 dark:text-gray-300">
+            {`Created at ${format(
+              new Date(post.createdAt),
+              "MM/dd/yyyy hh:mm"
+            )}`}
           </div>
         </div>
       </>

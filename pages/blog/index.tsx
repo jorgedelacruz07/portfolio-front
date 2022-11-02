@@ -77,7 +77,7 @@ const Blog: NextPage<Props> = ({ postCategories }) => {
                               </a>
                             </Link>
                           </h3>
-                          <div className="my-2 text-sm italic text-gray-800 dark:text-gray-300">
+                          <div className="my-2 text-sm italic text-gray-800 dark:text-gray-300 font-medium">
                             {format(
                               new Date(post.updatedAt),
                               "dd MMM yyyy - hh:mm"
@@ -87,7 +87,7 @@ const Blog: NextPage<Props> = ({ postCategories }) => {
                             {post?.tags?.map((tag) => (
                               <span
                                 key={tag.id}
-                                className="inline-flex items-center justify-center px-2 py-1 mr-2 text-xs md:text-sm font-semibold leading-none text-red-100 bg-blue-500 rounded-full"
+                                className="inline-flex items-center justify-center px-2 py-1 mr-2 text-xs md:text-sm font-semibold leading-none text-white bg-blue-500 rounded-full"
                               >
                                 {tag.name}
                               </span>

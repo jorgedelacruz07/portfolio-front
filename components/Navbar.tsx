@@ -19,8 +19,8 @@ export const Navbar = () => {
             <a
               className={
                 selected === "/"
-                  ? "bg-blue-100 rounded-lg dark:bg-slate-800 p-1.5 font-semibold md:uppercase text-sm"
-                  : "p-1.5 font-semibold md:uppercase text-sm"
+                  ? "bg-blue-100 rounded-lg dark:bg-slate-800 p-1.5 md:p-2 font-semibold md:uppercase text-sm"
+                  : "p-1.5 md:p-2 font-semibold md:uppercase text-sm"
               }
             >
               Home
@@ -30,8 +30,8 @@ export const Navbar = () => {
             <a
               className={
                 selected === "/experiences"
-                  ? "bg-blue-100 rounded-lg dark:bg-slate-800 p-1.5 font-semibold md:uppercase text-sm"
-                  : "p-1.5 font-semibold md:uppercase text-sm"
+                  ? "bg-blue-100 rounded-lg dark:bg-slate-800 p-1.5 md:p-2 font-semibold md:uppercase text-sm"
+                  : "p-1.5 md:p-2 font-semibold md:uppercase text-sm"
               }
             >
               Experiences
@@ -41,8 +41,8 @@ export const Navbar = () => {
             <a
               className={
                 selected === "/projects"
-                  ? "bg-blue-100 rounded-lg dark:bg-slate-800 p-1.5 font-semibold md:uppercase text-sm"
-                  : "p-1.5 font-semibold md:uppercase text-sm"
+                  ? "bg-blue-100 rounded-lg dark:bg-slate-800 p-1.5 md:p-2 font-semibold md:uppercase text-sm"
+                  : "p-1.5 md:p-2 font-semibold md:uppercase text-sm"
               }
             >
               Projects
@@ -52,8 +52,8 @@ export const Navbar = () => {
             <a
               className={
                 selected === "/blog"
-                  ? "bg-blue-100 rounded-lg dark:bg-slate-800 p-1.5 font-semibold md:uppercase text-sm"
-                  : "p-1.5 font-semibold md:uppercase text-sm"
+                  ? "bg-blue-100 rounded-lg dark:bg-slate-800 p-1.5 md:p-2 font-semibold md:uppercase text-sm"
+                  : "p-1.5 md:p-2 font-semibold md:uppercase text-sm"
               }
             >
               Blog
