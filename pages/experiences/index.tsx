@@ -69,7 +69,7 @@ const Experiences: NextPage<Props> = ({ experiences }) => {
                     "MMM yyyy"
                   )})`}
                 </div>
-                <div className="text-sm text-gray-700 dark:text-gray-400">
+                <div className="text-sm text-gray-700 dark:text-gray-400 font-semibold">
                   {experience.companyFrom}
                 </div>
               </div>

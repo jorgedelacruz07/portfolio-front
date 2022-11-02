@@ -27,7 +27,7 @@ export const HomeExperiences: FC<Props> = ({ experiences }) => {
                 </div>
                 <div>
                   <Link href={`/experiences#${experience.slug}`}>
-                    <a className="text-blue-700 hover:text-blue-900 dark:text-gray-200 dark:hover:text-gray-400 text-sm md:text-base">
+                    <a className="text-gray-700 hover:text-gray-900 dark:text-gray-200 dark:hover:text-gray-400 text-sm md:text-base font-semibold">
                       {experience.company}
                     </a>
                   </Link>
