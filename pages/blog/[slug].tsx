@@ -49,26 +49,10 @@ const PostPage: NextPage<Props> = ({ post }) => {
           {post.title}
         </h1>
         <div className="py-12 md:py-16">
-          {post?.image?.src && (
-            <div className="my-6 text-center">
-              <Image
-                src={post?.image?.src}
-                className="w-full"
-                alt=""
-                width={400}
-                height={400}
-              />
-            </div>
-          )}
-          <div className="my-12">
-            <div dangerouslySetInnerHTML={{ __html: post?.body }} />
-          </div>
-          <div className="text-sm text-gray-800 dark:text-gray-300">
-            {`Created at ${format(
-              new Date(post.createdAt),
-              "MM/dd/yyyy hh:mm"
-            )}`}
-          </div>
+          <div dangerouslySetInnerHTML={{ __html: post?.body }} />
+        </div>
+        <div className="text-sm text-gray-800 dark:text-gray-300">
+          {`Created at ${format(new Date(post.createdAt), "MM/dd/yyyy hh:mm")}`}
         </div>
       </>
     )

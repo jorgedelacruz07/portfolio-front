@@ -72,7 +72,7 @@ const Blog: NextPage<Props> = ({ postCategories }) => {
                                 },
                               }}
                             >
-                              <a className="text-blue-700 hover:text-blue-900 dark:text-gray-200 dark:hover:text-gray-400 text-base md:text-lg">
+                              <a className="text-blue-700 hover:text-blue-900 dark:text-blue-600 dark:hover:text-blue-800 text-base md:text-lg">
                                 {post.title}
                               </a>
                             </Link>
@@ -80,7 +80,7 @@ const Blog: NextPage<Props> = ({ postCategories }) => {
                           <div className="my-2 text-sm italic text-gray-800 dark:text-gray-300 font-medium">
                             {format(
                               new Date(post.updatedAt),
-                              "dd MMM yyyy - hh:mm"
+                              "MMM dd yyyy - hh:mm"
                             )}
                           </div>
                           <div className="my-2">
