@@ -48,8 +48,8 @@ const PostPage: NextPage<Props> = ({ post }) => {
         <h1 className="text-2xl md:text-3xl text-center uppercase font-bold">
           {post.title}
         </h1>
-        <div className="py-16">
-          <div className="text-sm text-gray-500 dark:text-gray-400">
+        <div className="py-12 md:py-16">
+          <div className="text-sm text-gray-800 dark:text-gray-300">
             {`Created at ${format(
               new Date(post.createdAt),
               "dd/MM/yyyy hh:mm"

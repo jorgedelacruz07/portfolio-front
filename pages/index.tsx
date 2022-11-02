@@ -23,7 +23,9 @@ export const getStaticProps: GetStaticProps = async () => {
     projects = await axios
       .get(`${url}/client/projects`)
       .then((res) => res.data);
-    posts = await axios.get(`${url}/client/posts`).then((res) => res.data);
+    posts = await axios
+      .get(`${url}/client/posts`)
+      .then((res) => res.data.slice(0, 5));
   } catch (error) {
     let message = "";
     if (axios.isAxiosError(error)) {
