@@ -3,7 +3,7 @@ import { TImage } from "./image";
 export type TTag = {
   id: string;
   name: string;
-  postIDs: string[];
+  postIds: string[];
   posts: TPost[];
   createdAt: string;
   updatedAt: string;
@@ -13,7 +13,7 @@ export type TCategory = {
   id: string;
   slug: string;
   name: string;
-  postIDs: string[];
+  postIds: string[];
   posts: TPost[];
   createdAt: string;
   updatedAt: string;
@@ -25,9 +25,9 @@ export type TPost = {
   title: string;
   image: TImage;
   body: string;
-  categoryIDs: string[];
+  categoryIds: string[];
   categories: TCategory[];
-  tagIDs: string[];
+  tagIds: string[];
   tags: TTag[];
   createdAt: string;
   updatedAt: string;
