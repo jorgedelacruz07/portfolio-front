@@ -41,18 +41,18 @@ const Blog: NextPage<Props> = ({ postCategories }) => {
       <h1 className="text-2xl md:text-3xl text-center uppercase font-bold">
         Blog
       </h1>
-      <div className="py-16">
+      <div className="py-12 md:py-16">
         {postCategories.map(
           (postCategory) =>
             postCategory.posts.length > 0 && (
               <div key={postCategory.slug}>
-                <h3 className="text-lg md:text-2xl">
-                  Category: {postCategory.name}
+                <h3 className="text-lg md:text-2xl font-semibold uppercase">
+                  {`Category: ${postCategory.name}`}
                 </h3>
                 <div className="my-6">
                   {postCategory?.posts.map((post: TPost) => (
-                    <div key={post.slug} className="mb-16">
-                      <div className="flex gap-6 items-center">
+                    <div key={post.slug} className="mb-12 md:mb-16">
+                      <div className="flex items-center gap-6">
                         <div className="max-w-[80px] md:max-w-[100px] lg:max-w-[120px]">
                           <Image
                             src={post?.image?.src || "/images/placeholder.jpg"}
@@ -63,7 +63,7 @@ const Blog: NextPage<Props> = ({ postCategories }) => {
                           />
                         </div>
                         <div>
-                          <h3 className="my-2 text-base md:text-xl uppercase font-bold">
+                          <h3 className="my-2 text-base md:text-lg uppercase font-semibold">
                             <Link
                               href={{
                                 pathname: "/blog/[slug]",
@@ -72,22 +72,22 @@ const Blog: NextPage<Props> = ({ postCategories }) => {
                                 },
                               }}
                             >
-                              <a className="text-blue-700 hover:text-blue-900 dark:text-gray-200 dark:hover:text-gray-400">
+                              <a className="text-blue-700 hover:text-blue-900 dark:text-gray-200 dark:hover:text-gray-400 text-base md:text-lg">
                                 {post.title}
                               </a>
                             </Link>
                           </h3>
-                          <div className="my-2 text-sm italic text-gray-500 dark:text-gray-400">
+                          <div className="my-2 text-sm italic text-gray-800 dark:text-gray-300">
                             {format(
                               new Date(post.updatedAt),
                               "dd MMM yyyy - hh:mm"
                             )}
                           </div>
-                          <div className="my-2 text-sm md:text-base">
+                          <div className="my-2">
                             {post?.tags?.map((tag) => (
                               <span
                                 key={tag.id}
-                                className="inline-flex items-center justify-center px-2 py-1 mr-2 text-base leading-none text-red-100 bg-blue-500 rounded-full"
+                                className="inline-flex items-center justify-center px-2 py-1 mr-2 text-xs md:text-sm font-semibold leading-none text-red-100 bg-blue-500 rounded-full"
                               >
                                 {tag.name}
                               </span>
