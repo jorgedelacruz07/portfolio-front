@@ -46,24 +46,24 @@ const Blog: NextPage<Props> = ({ postCategories }) => {
           (postCategory) =>
             postCategory.posts.length > 0 && (
               <div key={postCategory.slug}>
-                <h3 className="text-lg md:text-2xl font-semibold uppercase">
+                <h2 className="text-lg md:text-2xl font-semibold uppercase">
                   {`Category: ${postCategory.name}`}
-                </h3>
+                </h2>
                 <div className="my-6">
                   {postCategory?.posts.map((post: TPost) => (
                     <div key={post.slug} className="mb-12 md:mb-16">
                       <div className="flex items-center gap-6">
-                        <div className="max-w-[80px] md:max-w-[100px] lg:max-w-[120px]">
+                        <div className="max-w-[70px] md:max-w-[80px] 3xl:max-w-[90px]">
                           <Image
                             src={post?.image?.src || "/images/placeholder.jpg"}
                             className="rounded-2xl"
                             alt=""
-                            width={120}
-                            height={120}
+                            width={90}
+                            height={90}
                           />
                         </div>
                         <div>
-                          <h3 className="my-2 text-base md:text-lg uppercase font-semibold">
+                          <h4 className="my-2 text-base md:text-lg uppercase font-semibold">
                             <Link
                               href={{
                                 pathname: "/blog/[slug]",
@@ -72,11 +72,11 @@ const Blog: NextPage<Props> = ({ postCategories }) => {
                                 },
                               }}
                             >
-                              <a className="text-blue-700 hover:text-blue-900 dark:text-blue-600 dark:hover:text-blue-800 text-base md:text-lg">
+                              <a className="text-blue-700 hover:text-blue-900 dark:text-blue-600 dark:hover:text-blue-800">
                                 {post.title}
                               </a>
                             </Link>
-                          </h3>
+                          </h4>
                           <div className="my-2 text-sm italic text-gray-800 dark:text-gray-300 font-medium">
                             {format(
                               new Date(post.updatedAt),

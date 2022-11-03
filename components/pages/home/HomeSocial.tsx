@@ -24,7 +24,7 @@ const socialNetworks = [
 export const HomeSocial = () => {
   return (
     <div className="my-8 md:my-10">
-      <h3 className="text-xl md:text-2xl font-semibold">Social networks</h3>
+      <h2 className="text-xl md:text-2xl font-semibold">Social networks</h2>
       <div className="pt-4 md:pt-6">
         <ul>
           {socialNetworks.map((social) => (
