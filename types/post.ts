@@ -13,6 +13,7 @@ export type TCategory = {
   id: string;
   slug: string;
   name: string;
+  image: TImage;
   postIds: string[];
   posts: TPost[];
   createdAt: string;
