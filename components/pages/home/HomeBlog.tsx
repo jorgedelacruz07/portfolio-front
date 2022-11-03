@@ -10,7 +10,7 @@ type Props = {
 export const HomeBlog: FC<Props> = ({ posts }) => {
   return (
     <div className="my-8 md:my-10">
-      <h3 className="text-xl md:text-2xl font-semibold">Blog</h3>
+      <h2 className="text-xl md:text-2xl font-semibold">Blog</h2>
       <div className="pt-4 md:pt-6">
         <ul>
           {posts.map((post) => (

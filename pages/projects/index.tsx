@@ -47,8 +47,8 @@ const Projects: NextPage<Props> = ({ projects }) => {
                   src={project?.image?.src || "/images/placeholder.jpg"}
                   className="rounded-2xl"
                   alt=""
-                  width={120}
-                  height={120}
+                  width={90}
+                  height={90}
                 />
               </div>
               <div>

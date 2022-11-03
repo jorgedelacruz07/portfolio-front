@@ -10,9 +10,9 @@ type Props = {
 export const HomeProjects: FC<Props> = ({ projects }) => {
   return (
     <div className="my-8 md:my-10">
-      <h3 className="text-xl md:text-2xl font-semibold">
+      <h2 className="text-xl md:text-2xl font-semibold">
         <Link href="/projects">Projects</Link>
-      </h3>
+      </h2>
       <div className="pt-4 md:pt-6">
         <ul>
           {projects.map((project) => (
