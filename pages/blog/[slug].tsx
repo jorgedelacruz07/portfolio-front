@@ -51,8 +51,23 @@ const PostPage: NextPage<Props> = ({ post }) => {
         <div className="py-12 md:py-16">
           <div dangerouslySetInnerHTML={{ __html: post?.body }} />
         </div>
-        <div className="text-sm text-gray-800 dark:text-gray-300">
-          {`Created at ${format(new Date(post.createdAt), "MM/dd/yyyy hh:mm")}`}
+        <div className="mt-8">
+          {post?.tags?.map((tag) => (
+            <span
+              key={tag.id}
+              className="inline-flex items-center justify-center px-2 py-1 mr-2 text-xs md:text-sm font-semibold leading-none text-white bg-slate-800 rounded-full"
+            >
+              {tag.name}
+            </span>
+          ))}
+        </div>
+        <div className="mt-10">
+          <div className="text-sm text-gray-800 dark:text-gray-300">
+            {`Created at ${format(
+              new Date(post.createdAt),
+              "MM/dd/yyyy hh:mm"
+            )}`}
+          </div>
         </div>
       </>
     )

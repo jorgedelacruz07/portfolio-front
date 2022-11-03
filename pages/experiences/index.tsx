@@ -82,7 +82,6 @@ const Experiences: NextPage<Props> = ({ experiences }) => {
               <div className="mt-2 text-gray-700 dark:text-gray-300 text-sm md:text-base italic">
                 {experience.jobDescription}
               </div>
-
               <div className="mt-2">
                 <a
                   className="text-blue-700 hover:text-blue-900 dark:text-blue-600 dark:hover:text-blue-800 text-sm md:text-base"
@@ -92,6 +91,17 @@ const Experiences: NextPage<Props> = ({ experiences }) => {
                 >
                   {experience.companyUrl}
                 </a>
+              </div>
+              <div className="mt-4">
+                <span className="text-xs md:text-sm">Stack: </span>
+                {experience?.technologies?.map((technology) => (
+                  <span
+                    key={technology.id}
+                    className="inline-flex items-center justify-center px-2 py-1 mr-2 text-xs md:text-sm font-semibold leading-none text-white bg-slate-800 rounded-full"
+                  >
+                    {technology.name}
+                  </span>
+                ))}
               </div>
             </div>
           </div>
