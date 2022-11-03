@@ -1,4 +1,5 @@
 import { TImage } from "./image";
+import { TTechnology } from "./technology";
 
 export type TExperience = {
   id: string;
@@ -13,6 +14,8 @@ export type TExperience = {
   jobDescription: string;
   from: string;
   to: string;
+  technologyIds: string[];
+  technologies: TTechnology[];
   createdAt: string;
   updatedAt: string;
 };

@@ -71,6 +71,17 @@ const Projects: NextPage<Props> = ({ projects }) => {
                   {project.url}
                 </a>
               </div>
+              <div className="mt-4">
+                <span className="text-xs md:text-sm">Stack: </span>
+                {project?.technologies?.map((technology) => (
+                  <span
+                    key={technology.id}
+                    className="inline-flex items-center justify-center px-2 py-1 mr-2 text-xs md:text-sm font-semibold leading-none text-white bg-slate-800 rounded-full"
+                  >
+                    {technology.name}
+                  </span>
+                ))}
+              </div>
             </div>
           </div>
         ))}

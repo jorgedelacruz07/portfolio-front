@@ -1,24 +1,6 @@
+import { TCategory } from "./category";
 import { TImage } from "./image";
-
-export type TTag = {
-  id: string;
-  name: string;
-  postIds: string[];
-  posts: TPost[];
-  createdAt: string;
-  updatedAt: string;
-};
-
-export type TCategory = {
-  id: string;
-  slug: string;
-  name: string;
-  image: TImage;
-  postIds: string[];
-  posts: TPost[];
-  createdAt: string;
-  updatedAt: string;
-};
+import { TTag } from "./tag";
 
 export type TPost = {
   id: string;
