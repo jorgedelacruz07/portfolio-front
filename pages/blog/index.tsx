@@ -2,9 +2,9 @@ import axios from "axios";
 import { GetStaticProps, NextPage } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { TCategory } from "../../types/post";
 import { format } from "date-fns";
 import { TPost } from "../../types/post";
+import { TCategory } from "../../types/category";
 
 export const getStaticProps: GetStaticProps = async () => {
   let postCategories: TCategory[] = [];
