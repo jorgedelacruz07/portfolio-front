@@ -19,7 +19,7 @@ export const Navbar = () => {
             <a
               className={
                 selected === "/"
-                  ? "bg-blue-100 rounded-lg dark:bg-slate-800 p-1.5 md:p-2 font-semibold md:uppercase text-sm"
+                  ? "bg-slate-600 dark:bg-slate-800 text-white rounded-lg p-1.5 md:p-2 font-semibold md:uppercase text-sm"
                   : "p-1.5 md:p-2 font-semibold md:uppercase text-sm"
               }
             >
@@ -30,7 +30,7 @@ export const Navbar = () => {
             <a
               className={
                 selected === "/experiences"
-                  ? "bg-blue-100 rounded-lg dark:bg-slate-800 p-1.5 md:p-2 font-semibold md:uppercase text-sm"
+                  ? "bg-slate-600 dark:bg-slate-800 text-white rounded-lg p-1.5 md:p-2 font-semibold md:uppercase text-sm"
                   : "p-1.5 md:p-2 font-semibold md:uppercase text-sm"
               }
             >
@@ -41,7 +41,7 @@ export const Navbar = () => {
             <a
               className={
                 selected === "/projects"
-                  ? "bg-blue-100 rounded-lg dark:bg-slate-800 p-1.5 md:p-2 font-semibold md:uppercase text-sm"
+                  ? "bg-slate-600 dark:bg-slate-800 text-white rounded-lg p-1.5 md:p-2 font-semibold md:uppercase text-sm"
                   : "p-1.5 md:p-2 font-semibold md:uppercase text-sm"
               }
             >
@@ -52,7 +52,7 @@ export const Navbar = () => {
             <a
               className={
                 selected === "/blog"
-                  ? "bg-blue-100 rounded-lg dark:bg-slate-800 p-1.5 md:p-2 font-semibold md:uppercase text-sm"
+                  ? "bg-slate-600 dark:bg-slate-800 text-white rounded-lg p-1.5 md:p-2 font-semibold md:uppercase text-sm"
                   : "p-1.5 md:p-2 font-semibold md:uppercase text-sm"
               }
             >

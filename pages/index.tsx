@@ -54,10 +54,10 @@ const Home: NextPage<Props> = ({ experiences, projects, posts }) => {
   return (
     <>
       <HomeProfile />
-      <HomeExperiences experiences={experiences} />
-      <HomeProjects projects={projects} />
+      {experiences && <HomeExperiences experiences={experiences} />}
+      {projects && <HomeProjects projects={projects} />}
       <HomeSocial />
-      <HomeBlog posts={posts} />
+      {posts.length > 0 && <HomeBlog posts={posts} />}
     </>
   );
 };
