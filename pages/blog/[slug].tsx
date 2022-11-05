@@ -55,7 +55,7 @@ const PostPage: NextPage<Props> = ({ post }) => {
           {post?.tags?.map((tag) => (
             <span
               key={tag.id}
-              className="inline-flex items-center justify-center px-2 py-1 mr-2 text-xs md:text-sm font-semibold leading-none text-white bg-slate-800 rounded-full"
+              className="inline-flex items-center justify-center px-2 py-1 mr-2 text-xs md:text-sm font-semibold leading-none text-white bg-slate-600 dark:bg-slate-800 rounded-full"
             >
               {tag.name}
             </span>
