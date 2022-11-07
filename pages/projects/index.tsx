@@ -55,6 +55,13 @@ const Projects: NextPage<Props> = ({ projects }) => {
                 <h3 className="text-base md:text-xl font-semibold uppercase">
                   {project.name}
                 </h3>
+                {project.type && (
+                  <div className="mt-2">
+                    <span className="px-2 py-1 text-xs md:text-sm uppercase font-semibold text-black bg-slate-300 rounded-md">
+                      {project.type}
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
             <div className="mt-6">
@@ -72,11 +79,13 @@ const Projects: NextPage<Props> = ({ projects }) => {
                 </a>
               </div>
               <div className="mt-4">
-                <span className="text-xs md:text-sm">Stack: </span>
+                <span className="text-xs md:text-sm font-semibold">
+                  Stack:{" "}
+                </span>
                 {project?.technologies?.map((technology) => (
                   <span
                     key={technology.id}
-                    className="inline-flex items-center justify-center px-2 py-1 mr-2 text-xs md:text-sm font-semibold leading-none text-white bg-slate-600 dark:bg-slate-800 rounded-full"
+                    className="inline-flex items-center justify-center px-2 py-1 mr-2 text-xs md:text-sm font-semibold leading-none text-black bg-slate-300 rounded-full"
                   >
                     {technology.name}
                   </span>

@@ -60,7 +60,7 @@ const Experiences: NextPage<Props> = ({ experiences }) => {
                 <h3 className="text-base md:text-xl font-semibold uppercase">
                   {experience.company}
                 </h3>
-                <div className="italic text-gray-800 dark:text-gray-300">
+                <div className="text-sm italic text-gray-800 dark:text-gray-300">
                   {`(${format(
                     addHours(new Date(experience.from), 5),
                     "MMM yyyy"
@@ -93,11 +93,11 @@ const Experiences: NextPage<Props> = ({ experiences }) => {
                 </a>
               </div>
               <div className="mt-4">
-                <span className="text-xs md:text-sm">Stack: </span>
+                <span className="text-xs md:text-sm font-semibold">Stack: </span>
                 {experience?.technologies?.map((technology) => (
                   <span
                     key={technology.id}
-                    className="inline-flex items-center justify-center px-2 py-1 mr-2 text-xs md:text-sm font-semibold leading-none text-white bg-slate-600 dark:bg-slate-800 rounded-full"
+                    className="inline-flex items-center justify-center px-2 py-1 mr-2 text-xs md:text-sm font-semibold leading-none text-black bg-slate-300 rounded-full"
                   >
                     {technology.name}
                   </span>

@@ -8,6 +8,7 @@ export type TPost = {
   title: string;
   image: TImage;
   body: string;
+  status: boolean;
   categoryIds: string[];
   categories: TCategory[];
   tagIds: string[];
