@@ -40,7 +40,7 @@ export const getStaticProps: GetStaticProps = async () => {
       projects,
       posts,
     },
-    revalidate: 10,
+    revalidate: 60,
   };
 };
 
