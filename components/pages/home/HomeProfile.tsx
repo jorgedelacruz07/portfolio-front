@@ -8,8 +8,20 @@ export const HomeProfile = () => {
         <h1 className="text-xl md:text-2xl lg:text-3xl text-center md:text-left font-semibold uppercase">
           {profile.name}
         </h1>
-        <div className="text-sm md:text-base my-4 text-justify">
+        <div className="text-sm md:text-base my-2 text-justify">
           {profile.description}
+        </div>
+        <div className="my-4">
+          <span className="text-xs md:text-sm italic">
+            For more information, please see my{" "}
+            <a
+              className="underline"
+              href="/documents/jorgedelacruz_cv.pdf"
+              target="_blank"
+            >
+              CV
+            </a>
+          </span>
         </div>
       </div>
       <div className="flex-1 px-8 text-center w-full">
