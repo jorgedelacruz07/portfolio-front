@@ -64,10 +64,11 @@ const Experiences: NextPage<Props> = ({ experiences }) => {
                   {`(${format(
                     addHours(new Date(experience.from), 5),
                     "MMM yyyy"
-                  )} - ${format(
-                    addHours(new Date(experience.to), 5),
-                    "MMM yyyy"
-                  )})`}
+                  )} - ${
+                    experience.to
+                      ? format(addHours(new Date(experience.to), 5), "MMM yyyy")
+                      : "current"
+                  })`}
                 </div>
                 <div className="text-sm text-gray-700 dark:text-gray-400 font-semibold">
                   {experience.companyFrom}
@@ -93,7 +94,9 @@ const Experiences: NextPage<Props> = ({ experiences }) => {
                 </a>
               </div>
               <div className="mt-4">
-                <span className="text-xs md:text-sm font-semibold">Stack: </span>
+                <span className="text-xs md:text-sm font-semibold">
+                  Stack:{" "}
+                </span>
                 {experience?.technologies?.map((technology) => (
                   <span
                     key={technology.id}
