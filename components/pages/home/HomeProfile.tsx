@@ -48,7 +48,7 @@ export const HomeProfile = () => {
             </a>
           </span>
         </div>
-        <div className="my-2 flex gap-2">
+        <div className="hidden my-2 md:flex gap-2">
           {socialNetworks.map((social) => {
             const Icon = social.icon;
             return (
@@ -69,6 +69,18 @@ export const HomeProfile = () => {
           width={180}
           height={180}
         />
+      </div>
+      <div className="md:hidden my-4 flex justify-center md:justify-start gap-2">
+        {socialNetworks.map((social) => {
+          const Icon = social.icon;
+          return (
+            <div key={social.id} className="w-[40px] h-[40px]">
+              <a href={social.url} target="_blank" rel="noreferrer">
+                {Icon}
+              </a>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
