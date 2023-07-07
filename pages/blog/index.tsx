@@ -72,7 +72,7 @@ const Blog: NextPage<Props> = ({ postCategories }) => {
                                 },
                               }}
                             >
-                              <a className="text-blue-700 hover:text-blue-900 dark:text-blue-600 dark:hover:text-blue-800">
+                              <a className="text-slate-600 hover:text-slate-800 dark:text-gray-200 dark:hover:text-gray-400">
                                 {post.title}
                               </a>
                             </Link>
