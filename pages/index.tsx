@@ -2,7 +2,6 @@ import type { GetStaticProps, NextPage } from "next";
 import { HomeBlog } from "../components/pages/home/HomeBlog";
 import { HomeProfile } from "../components/pages/home/HomeProfile";
 import { HomeProjects } from "../components/pages/home/HomeProjects";
-import { HomeSocial } from "../components/pages/home/HomeSocial";
 import { HomeExperiences } from "../components/pages/home/HomeExperiences";
 import { TProject } from "../types/project";
 import { TExperience } from "../types/experience";
@@ -56,8 +55,6 @@ const Home: NextPage<Props> = ({ experiences, projects, posts }) => {
       <HomeProfile />
       {experiences && <HomeExperiences experiences={experiences} />}
       {projects && <HomeProjects projects={projects} />}
-      <HomeSocial />
-      {posts.length > 0 && <HomeBlog posts={posts} />}
     </>
   );
 };

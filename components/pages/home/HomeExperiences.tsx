@@ -10,7 +10,9 @@ type Props = {
 export const HomeExperiences: FC<Props> = ({ experiences }) => {
   return (
     <div className="my-8 md:my-10">
-      <h2 className="text-xl md:text-2xl font-semibold">Experiences</h2>
+      <h2 className="text-xl md:text-2xl font-semibold">
+        Experiences
+      </h2>
       <div className="pt-4 md:pt-6">
         <ul>
           {experiences.map((experience) => (
