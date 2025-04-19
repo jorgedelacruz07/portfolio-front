@@ -37,7 +37,7 @@ type Props = {
 
 const Blog: NextPage<Props> = ({ postCategories }) => {
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div className="max-w-7xl mx-auto p-4">
       <div className="space-y-8">
         <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">
           Blog Posts
@@ -61,10 +61,10 @@ const Blog: NextPage<Props> = ({ postCategories }) => {
                         />
                       </div>
                       <div className="space-y-2">
-                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors duration-300">
+                        <h3 className="text-lg md:text-xl font-semibold text-black dark:text-gray-300 group-hover:text-gray-600 dark:group-hover:text-white transition-colors duration-300">
                           <Link href={`/blog/${post.slug}`}>{post.title}</Link>
                         </h3>
-                        <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
+                        <div className="flex items-center justify-between text-sm text-gray-700 dark:text-gray-400 font-semibold">
                           <span>
                             {format(new Date(post.updatedAt), "MMM dd yyyy")}
                           </span>

@@ -35,12 +35,12 @@ type Props = {
 
 const Projects: NextPage<Props> = ({ projects }) => {
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div className="max-w-7xl mx-auto p-4">
       <div className="space-y-8">
         <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">
           My Projects
         </h1>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="space-y-6">
           {projects.map((project) => (
             <div key={project.slug} className="group">
               <div className="h-full relative overflow-hidden rounded-lg bg-white dark:bg-gray-800 p-6 shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-200 dark:border-gray-700">
@@ -57,7 +57,7 @@ const Projects: NextPage<Props> = ({ projects }) => {
                         />
                       </div>
                     )}
-                    <div className="text-lg font-semibold text-gray-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors duration-300">
+                    <div className="text-lg md:text-xl font-semibold text-black dark:text-gray-300 group-hover:text-gray-600 dark:group-hover:text-white transition-colors duration-300">
                       <Link href={`/projects/${project.slug}`}>
                         {project.name}
                       </Link>
@@ -68,7 +68,7 @@ const Projects: NextPage<Props> = ({ projects }) => {
                     <p className="text-gray-600 dark:text-gray-300 line-clamp-2">
                       {project.description}
                     </p>
-                    <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
+                    <div className="flex items-center justify-between text-sm text-gray-700 dark:text-gray-400 font-semibold">
                       <span>{project.type}</span>
                     </div>
                   </div>
@@ -91,7 +91,7 @@ const Projects: NextPage<Props> = ({ projects }) => {
                       href={project.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center text-cyan-600 dark:text-cyan-400 hover:text-cyan-700 dark:hover:text-cyan-300 transition-colors duration-300"
+                      className="inline-flex items-center text-cyan-800 dark:text-gray-400 hover:text-cyan-700 dark:hover:text-gray-100 transition-colors duration-300 font-semibold"
                     >
                       Visit Project
                       <svg

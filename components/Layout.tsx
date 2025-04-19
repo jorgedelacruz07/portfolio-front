@@ -9,7 +9,7 @@ interface LayoutProps {
 
 export const Layout = ({ children }: LayoutProps) => {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 dark:from-slate-900 dark:to-slate-800 transition-colors duration-300">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 via-gray-100 to-gray-200 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 transition-all duration-500">
       <Head>
         <title>Portafolio de Jorge de la Cruz</title>
         <meta
@@ -24,7 +24,7 @@ export const Layout = ({ children }: LayoutProps) => {
         />
       </Head>
       <Navbar />
-      <main className="animate-fade-in px-4 py-8 md:py-12 mx-auto max-w-5xl min-h-[calc(100vh-8rem)]">
+      <main className="animate-fade-in px-8 py-8 md:px-12 md:py-10 mx-auto max-w-5xl min-h-[calc(100vh-8rem)]">
         {children}
       </main>
       <Footer />

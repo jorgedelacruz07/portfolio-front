@@ -10,11 +10,11 @@ const HomeExperiences = ({ experiences }: Props) => {
   return (
     <div className="space-y-8">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
+        <h2 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">
           Work Experience
         </h2>
-        <div className="text-cyan-600 dark:text-cyan-400 hover:text-cyan-700 dark:hover:text-cyan-300 transition-colors duration-300">
-          <Link href="/experiences">View All Experiences</Link>
+        <div className="text-cyan-800 dark:text-gray-400 hover:text-cyan-700 dark:hover:text-gray-100 transition-colors duration-300 font-semibold">
+          <Link href="/experiences">View All</Link>
         </div>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -32,7 +32,7 @@ const HomeExperiences = ({ experiences }: Props) => {
                       className="object-cover"
                     />
                   </div>
-                  <div className="text-lg font-semibold text-gray-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors duration-300">
+                  <div className="text-lg font-semibold text-black dark:text-gray-300 group-hover:text-gray-600 dark:group-hover:text-white transition-colors duration-300">
                     <Link href={`/experiences/${experience.slug}`}>
                       {experience.company}
                     </Link>
@@ -71,7 +71,7 @@ const HomeExperiences = ({ experiences }: Props) => {
                       href={experience.companyUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center text-sm text-cyan-600 dark:text-cyan-400 hover:text-cyan-700 dark:hover:text-cyan-300 transition-colors duration-300"
+                      className="inline-flex items-center text-sm text-cyan-800 dark:text-gray-400 hover:text-cyan-700 dark:hover:text-gray-100 transition-colors duration-300 font-semibold"
                     >
                       Visit Company
                       <svg

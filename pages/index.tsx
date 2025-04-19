@@ -50,7 +50,7 @@ type Props = {
 
 const Home: NextPage<Props> = ({ experiences, projects, posts }) => {
   return (
-    <div className="container mx-auto px-4 py-4 space-y-8">
+    <div className="container mx-auto space-y-8">
       <HomeProfile />
       {experiences && <HomeExperiences experiences={experiences} />}
       {projects && <HomeProjects projects={projects} />}

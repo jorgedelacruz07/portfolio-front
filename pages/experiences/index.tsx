@@ -36,7 +36,7 @@ type Props = {
 
 const Experiences: NextPage<Props> = ({ experiences }) => {
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div className="max-w-7xl mx-auto p-4">
       <div className="space-y-8">
         <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">
           My Experiences
@@ -59,12 +59,12 @@ const Experiences: NextPage<Props> = ({ experiences }) => {
                       </div>
                     )}
                     <div className="flex-1">
-                      <h2 className="text-lg font-semibold text-gray-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors duration-300">
+                      <h2 className="text-lg md:text-xl font-semibold text-black dark:text-gray-300 group-hover:text-gray-600 dark:group-hover:text-white transition-colors duration-300">
                         <Link href={`/experiences/${experience.slug}`}>
                           {experience.jobTitle}
                         </Link>
                       </h2>
-                      <div className="text-sm text-gray-600 dark:text-gray-300">
+                      <div className="text-sm text-gray-600 dark:text-gray-300 font-semibold">
                         {experience.company}
                       </div>
                     </div>
@@ -107,7 +107,7 @@ const Experiences: NextPage<Props> = ({ experiences }) => {
                         href={experience.companyUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-sm text-cyan-600 dark:text-cyan-400 hover:text-cyan-700 dark:hover:text-cyan-300 transition-colors duration-300"
+                        className="text-sm text-cyan-800 dark:text-gray-400 hover:text-cyan-700 dark:hover:text-gray-100 transition-colors duration-300 font-semibold"
                       >
                         Visit Company Website
                       </a>
