@@ -47,7 +47,7 @@ const ExperiencePage = ({ experience }: Props) => {
                     href={experience.companyUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center text-cyan-600 dark:text-cyan-400 hover:text-cyan-700 dark:hover:text-cyan-300 transition-colors duration-300"
+                    className="inline-flex items-center text-cyan-800 dark:text-gray-400 hover:text-cyan-700 dark:hover:text-gray-100 transition-colors duration-300 font-semibold"
                   >
                     <svg
                       className="w-4 h-4"
@@ -118,7 +118,7 @@ const ExperiencePage = ({ experience }: Props) => {
 
         {/* Footer */}
         <footer className="pt-8 border-t border-gray-200 dark:border-gray-700">
-          <div className="inline-flex items-center text-cyan-600 dark:text-cyan-400 hover:text-cyan-700 dark:hover:text-cyan-300 transition-colors duration-300">
+          <div className="inline-flex items-center text-cyan-800 dark:text-gray-400 hover:text-cyan-700 dark:hover:text-gray-100 transition-colors duration-300 font-semibold">
             <Link href="/experiences">
               <>
                 <svg

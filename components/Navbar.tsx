@@ -20,7 +20,7 @@ export const Navbar = () => {
 
   const navLinkClasses = (path: string) =>
     classNames(
-      "text-white dark:text-gray-200 hover:text-gray-300 dark:hover:text-gray-100 transition-colors duration-200",
+      "text-white dark:text-gray-200 hover:text-gray-300 dark:hover:text-gray-100 transition-colors duration-200 font-semibold",
       router.pathname === path ? "text-gray-300 dark:text-gray-100" : ""
     );
 
@@ -123,7 +123,7 @@ export const Navbar = () => {
           "md:hidden bg-slate-800 dark:bg-slate-900 border-t border-gray-200 dark:border-gray-800 transition-all duration-200 ease-in-out",
           {
             "max-h-96 opacity-100": isMenuOpen,
-            "max-h-0 opacity-0": !isMenuOpen,
+            "max-h-0 opacity-0 overflow-hidden": !isMenuOpen,
           }
         )}
       >
