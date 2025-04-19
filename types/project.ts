@@ -6,7 +6,7 @@ export type TProject = {
   slug: string;
   name: string;
   type: string;
-  image: TImage;
+  image?: TImage;
   url: string;
   description: string;
   from: string;
