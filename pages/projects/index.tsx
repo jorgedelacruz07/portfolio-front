@@ -2,6 +2,7 @@ import type { GetStaticProps, NextPage } from "next";
 import { TProject } from "../../types/project";
 import axios from "axios";
 import Image from "next/image";
+import Link from "next/link";
 
 export const getStaticProps: GetStaticProps = async () => {
   let projects: TProject[] = [];
@@ -34,66 +35,85 @@ type Props = {
 
 const Projects: NextPage<Props> = ({ projects }) => {
   return (
-    <div>
-      <h1 className="text-2xl md:text-3xl text-center uppercase font-bold">
-        Projects
-      </h1>
-      <div className="py-12 md:py-16">
-        {projects.map((project) => (
-          <div key={project.slug} id={project.slug} className="mb-12 md:mb-16">
-            <div className="flex items-center gap-6">
-              <div className="max-w-[70px] md:max-w-[80px] 3xl:max-w-[90px]">
-                <Image
-                  src={project?.image?.src || "/images/placeholder.jpg"}
-                  className="rounded-2xl"
-                  alt=""
-                  width={90}
-                  height={90}
-                />
-              </div>
-              <div>
-                <h3 className="text-base md:text-xl font-semibold uppercase">
-                  {project.name}
-                </h3>
-                {project.type && (
-                  <div className="mt-2">
-                    <span className="px-2 py-1 text-xs md:text-sm uppercase font-semibold text-black dark:text-white bg-blue-200 dark:bg-blue-900 rounded-md">
-                      {project.type}
-                    </span>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="space-y-8">
+        <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">
+          My Projects
+        </h1>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {projects.map((project) => (
+            <div key={project.slug} className="group">
+              <div className="h-full relative overflow-hidden rounded-lg bg-white dark:bg-gray-800 p-6 shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-200 dark:border-gray-700">
+                <div className="space-y-4">
+                  <div className="flex items-center gap-4">
+                    {project.image?.src && (
+                      <div className="relative w-12 h-12 rounded-lg overflow-hidden">
+                        <Image
+                          src={project.image.src}
+                          alt={project.name}
+                          width={48}
+                          height={48}
+                          className="object-cover"
+                        />
+                      </div>
+                    )}
+                    <div className="text-lg font-semibold text-gray-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors duration-300">
+                      <Link href={`/projects/${project.slug}`}>
+                        {project.name}
+                      </Link>
+                    </div>
                   </div>
-                )}
+
+                  <div className="space-y-2">
+                    <p className="text-gray-600 dark:text-gray-300 line-clamp-2">
+                      {project.description}
+                    </p>
+                    <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
+                      <span>{project.type}</span>
+                    </div>
+                  </div>
+
+                  {project.technologies && project.technologies.length > 0 && (
+                    <div className="flex flex-wrap gap-2">
+                      {project.technologies.map((tech) => (
+                        <span
+                          key={tech.id}
+                          className="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded-full text-xs font-medium text-gray-600 dark:text-gray-300"
+                        >
+                          {tech.name}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+
+                  {project.url && (
+                    <a
+                      href={project.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center text-cyan-600 dark:text-cyan-400 hover:text-cyan-700 dark:hover:text-cyan-300 transition-colors duration-300"
+                    >
+                      Visit Project
+                      <svg
+                        className="w-4 h-4 ml-1"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                        />
+                      </svg>
+                    </a>
+                  )}
+                </div>
               </div>
             </div>
-            <div className="mt-6">
-              <div className="text-gray-700 dark:text-gray-300 text-sm md:text-base italic">
-                {project.description}
-              </div>
-              <div className="mt-2">
-                <a
-                  className="text-blue-700 hover:text-blue-900 dark:text-blue-600 dark:hover:text-blue-800 text-sm md:text-base"
-                  href={project.url}
-                  rel="noreferrer"
-                  target="_blank"
-                >
-                  {project.url}
-                </a>
-              </div>
-              <div className="mt-4">
-                <span className="text-xs md:text-sm font-semibold">
-                  Stack:{" "}
-                </span>
-                {project?.technologies?.map((technology) => (
-                  <span
-                    key={technology.id}
-                    className="inline-flex items-center justify-center px-2 py-1 mr-2 text-xs md:text-sm font-semibold leading-none text-black dark:text-white bg-slate-300 dark:bg-slate-700 rounded-full"
-                  >
-                    {technology.name}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   );

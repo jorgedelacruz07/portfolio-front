@@ -9,7 +9,7 @@ export type TExperience = {
   companyFrom: string;
   companyDescription: string;
   companyLogo: string;
-  companyUrl: string;
+  companyUrl?: string;
   jobTitle: string;
   jobDescription: string;
   from: string;

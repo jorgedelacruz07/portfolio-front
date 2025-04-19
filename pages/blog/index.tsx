@@ -1,10 +1,10 @@
 import axios from "axios";
 import { GetStaticProps, NextPage } from "next";
 import Image from "next/image";
-import Link from "next/link";
 import { format } from "date-fns";
 import { TPost } from "../../types/post";
 import { TCategory } from "../../types/category";
+import Link from "next/link";
 
 export const getStaticProps: GetStaticProps = async () => {
   let postCategories: TCategory[] = [];
@@ -37,72 +37,72 @@ type Props = {
 
 const Blog: NextPage<Props> = ({ postCategories }) => {
   return (
-    <div>
-      <h1 className="text-2xl md:text-3xl text-center uppercase font-bold">
-        Blog
-      </h1>
-      <div className="py-12 md:py-16">
-        {postCategories.map(
-          (postCategory) =>
-            postCategory.posts.length > 0 && (
-              <div key={postCategory.slug}>
-                <h2 className="text-lg md:text-2xl font-semibold uppercase">
-                  {`Category: ${postCategory.name}`}
-                </h2>
-                <div className="my-6">
-                  {postCategory?.posts.map((post: TPost) => (
-                    <div key={post.slug} className="mb-12 md:mb-16">
-                      <div className="flex items-center gap-6">
-                        <div className="max-w-[70px] md:max-w-[80px] 3xl:max-w-[90px]">
-                          <Image
-                            src={post?.image?.src || "/images/placeholder.jpg"}
-                            className="rounded-2xl"
-                            alt=""
-                            width={90}
-                            height={90}
-                          />
-                        </div>
-                        <div>
-                          <h4 className="my-2 text-base md:text-lg uppercase font-semibold">
-                            <Link
-                              href={{
-                                pathname: "/blog/[slug]",
-                                query: {
-                                  slug: post.slug,
-                                },
-                              }}
-                            >
-                              <a className="text-slate-600 hover:text-slate-800 dark:text-gray-200 dark:hover:text-gray-400">
-                                {post.title}
-                              </a>
-                            </Link>
-                          </h4>
-                          <div className="my-2">
-                            <div className="text-sm italic text-gray-800 dark:text-gray-300 font-medium">
-                              {format(
-                                new Date(post.updatedAt),
-                                "MMM dd yyyy - hh:mm"
-                              )}
-                            </div>
-                          </div>
-                          <div className="my-2">
-                            {post?.tags?.map((tag) => (
-                              <span
-                                key={tag.id}
-                                className="inline-flex items-center justify-center px-2 py-1 mr-2 text-xs md:text-sm font-semibold leading-none text-black dark:text-white bg-slate-300 dark:bg-slate-700 rounded-full"
-                              >
-                                {tag.name}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="space-y-8">
+        <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">
+          Blog Posts
+        </h1>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {postCategories.map(
+            (postCategory) =>
+              postCategory.posts.length > 0 &&
+              postCategory.posts.map((post: TPost) => (
+                <div key={post.slug} className="group">
+                  <div className="h-full relative overflow-hidden rounded-lg bg-white dark:bg-gray-800 p-6 shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-200 dark:border-gray-700">
+                    <div className="space-y-4">
+                      <div className="relative aspect-w-16 aspect-h-9 rounded-lg overflow-hidden">
+                        <Image
+                          src={post.image.src}
+                          alt={post.title}
+                          width={800}
+                          height={450}
+                          className="object-cover"
+                          priority
+                        />
                       </div>
+                      <div className="space-y-2">
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors duration-300">
+                          <Link href={`/blog/${post.slug}`}>{post.title}</Link>
+                        </h3>
+                        <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
+                          <span>
+                            {format(new Date(post.updatedAt), "MMM dd yyyy")}
+                          </span>
+                          {post.categories && post.categories.length > 0 && (
+                            <div className="flex flex-wrap gap-2">
+                              {post.categories.map((category) => (
+                                <span
+                                  key={category.id}
+                                  className="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded-full text-xs font-medium text-gray-600 dark:text-gray-300"
+                                >
+                                  {category.name}
+                                </span>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                        <p className="text-gray-600 dark:text-gray-300 line-clamp-2">
+                          {post.body}
+                        </p>
+                      </div>
+                      {post.tags && post.tags.length > 0 && (
+                        <div className="flex flex-wrap gap-2">
+                          {post.tags.map((tag) => (
+                            <span
+                              key={tag.id}
+                              className="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded-full text-xs font-medium text-gray-600 dark:text-gray-300"
+                            >
+                              {tag.name}
+                            </span>
+                          ))}
+                        </div>
+                      )}
                     </div>
-                  ))}
+                  </div>
                 </div>
-              </div>
-            )
-        )}
+              ))
+          )}
+        </div>
       </div>
     </div>
   );

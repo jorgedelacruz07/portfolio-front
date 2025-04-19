@@ -1,12 +1,11 @@
 import type { GetStaticProps, NextPage } from "next";
-import { HomeBlog } from "../components/pages/home/HomeBlog";
 import { HomeProfile } from "../components/pages/home/HomeProfile";
 import { HomeProjects } from "../components/pages/home/HomeProjects";
-import { HomeExperiences } from "../components/pages/home/HomeExperiences";
 import { TProject } from "../types/project";
 import { TExperience } from "../types/experience";
 import { TPost } from "../types/post";
 import axios from "axios";
+import HomeExperiences from "../components/pages/home/HomeExperiences";
 
 export const getStaticProps: GetStaticProps = async () => {
   let experiences: TExperience[] = [];
@@ -51,11 +50,11 @@ type Props = {
 
 const Home: NextPage<Props> = ({ experiences, projects, posts }) => {
   return (
-    <>
+    <div className="container mx-auto px-4 py-4 space-y-8">
       <HomeProfile />
       {experiences && <HomeExperiences experiences={experiences} />}
       {projects && <HomeProjects projects={projects} />}
-    </>
+    </div>
   );
 };
 

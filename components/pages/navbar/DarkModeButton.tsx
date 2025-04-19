@@ -13,7 +13,7 @@ export const DarkModeButton = () => {
   return (
     <>
       <button
-        className="w-8 h-8 rounded-lg bg-slate-600 dark:bg-slate-800 flex items-center justify-center hover:ring-2 ring-slate-600 transition-all duration-300 focus:outline-none"
+        className="w-8 h-8 rounded-lg bg-slate-600 dark:bg-slate-800 flex items-center justify-center transition-all duration-300 focus:outline-none"
         onClick={() => setTheme(theme === "light" ? "dark" : "light")}
         aria-label="Toggle Dark Mode"
       >
