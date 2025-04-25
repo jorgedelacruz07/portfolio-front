@@ -1,13 +1,18 @@
 import Head from "next/head";
 import { Navbar } from "./Navbar";
-import { ReactNode } from "react";
+import { ReactNode, Suspense } from "react";
 import Footer from "./Footer";
+import { Loading } from "./Loading";
+import { useRouter } from "next/router";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface LayoutProps {
   children: ReactNode;
 }
 
 export const Layout = ({ children }: LayoutProps) => {
+  const router = useRouter();
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 via-gray-100 to-gray-200 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 transition-all duration-500">
       <Head>
@@ -16,6 +21,7 @@ export const Layout = ({ children }: LayoutProps) => {
           name="description"
           content="Portfolio personal de Jorge de la Cruz - Desarrollador Web"
         />
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" />
         <link
@@ -24,8 +30,27 @@ export const Layout = ({ children }: LayoutProps) => {
         />
       </Head>
       <Navbar />
-      <main className="animate-fade-in px-8 py-8 md:px-12 md:py-10 mx-auto max-w-5xl min-h-[calc(100vh-8rem)]">
-        {children}
+      <main className="relative min-h-[calc(100vh-8rem)]">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={router.route}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
+            className="px-4 py-8 md:py-16 mx-auto max-w-5xl"
+          >
+            <Suspense
+              fallback={
+                <div className="fixed inset-0 flex items-center justify-center">
+                  <Loading />
+                </div>
+              }
+            >
+              {children}
+            </Suspense>
+          </motion.div>
+        </AnimatePresence>
       </main>
       <Footer />
     </div>
