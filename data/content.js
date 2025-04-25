@@ -1,5 +1,5 @@
 export const profile = {
   name: "Jorge de la Cruz Padilla",
   description:
-    "I’m a Software Engineer with more than 5 years of experience. I have experience with Javascript (and Typescript), Node.js and React.js. I’ve worked with Express.js, Koa.js and Serverless as Node.js frameworks. I built a lot of websites with Next.js and others with Nuxt.js. Also I’ve worked with AWS products as DynamoDB, SQS, EC2 and S3. In my first years of work, I worked with PHP (Laravel framework) and Vue.js. I like to work with Notion, Jira, Slack, Visual Code Studio, GitHub, Postman to help me to work better.",
+    "I’m a Software Engineer with professional experience since April 2016. I began my career working with Vue.js, Nuxt.js, and MySQL, and gradually transitioned to using React.js, Next.js, Tailwind CSS, and MongoDB. On the backend, I specialize in Node.js with frameworks like Express.js and have built scalable APIs and web applications. I’m continuously exploring AI tools to enhance productivity and code quality. Currently, I'm involved in key projects aimed at improving user engagement, metrics, and overall UX. I’m comfortable working in collaborative environments using tools like Notion, Jira, Slack, GitHub, Postman, and Visual Studio Code.",
 };
