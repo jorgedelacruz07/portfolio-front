@@ -26,8 +26,13 @@ export const HomeProfile = () => {
   return (
     <div className="md:flex items-center justify-between gap-8 lg:gap-12">
       <motion.div
-        initial={{ opacity: 0, x: -20 }}
-        animate={{ opacity: 1, x: 0 }}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        variants={{
+          hidden: { opacity: 0, x: -20 },
+          visible: { opacity: 1, x: 0 }
+        }}
         transition={{ duration: 0.5 }}
         className="w-full xl:w-2/3"
       >
@@ -86,8 +91,13 @@ export const HomeProfile = () => {
         </div>
       </motion.div>
       <motion.div
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1 }}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        variants={{
+          hidden: { opacity: 0, scale: 0.8 },
+          visible: { opacity: 1, scale: 1 }
+        }}
         transition={{ duration: 0.5, delay: 0.2 }}
         className="text-center w-full xl:w-1/3"
       >

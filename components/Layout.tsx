@@ -17,12 +17,6 @@ export const Layout = ({ children }: LayoutProps) => {
           content="Portfolio personal de Jorge de la Cruz - Desarrollador Web"
         />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&display=swap"
-          rel="stylesheet"
-        />
       </Head>
       <Navbar />
       <main className="animate-fade-in px-4 sm:px-6 lg:px-8 py-8 md:py-10 mx-auto max-w-5xl min-h-[calc(100vh-8rem)]">
