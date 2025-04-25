@@ -29,7 +29,9 @@ const HomeExperiences = ({ experiences }: Props) => {
                       alt={experience.company}
                       width={48}
                       height={48}
+                      sizes="(max-width: 768px) 48px, 48px"
                       className="object-cover"
+                      priority
                     />
                   </div>
                   <div className="text-lg font-semibold text-black dark:text-white group-hover:text-gray-600 dark:group-hover:text-gray-200 transition-colors duration-300">
