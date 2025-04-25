@@ -1,8 +1,7 @@
 import Head from "next/head";
 import { Navbar } from "./Navbar";
-import { ReactNode, Suspense } from "react";
+import { ReactNode } from "react";
 import Footer from "./Footer";
-import { Loading } from "./Loading";
 import { useRouter } from "next/router";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -30,7 +29,7 @@ export const Layout = ({ children }: LayoutProps) => {
         />
       </Head>
       <Navbar />
-      <main className="relative min-h-[calc(100vh-8rem)]">
+      <main className="animate-fade-in px-4 sm:px-6 lg:px-8 py-8 md:py-10 mx-auto max-w-5xl min-h-[calc(100vh-8rem)]">
         <AnimatePresence mode="wait">
           <motion.div
             key={router.route}
@@ -38,17 +37,8 @@ export const Layout = ({ children }: LayoutProps) => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.3 }}
-            className="px-4 py-8 md:py-16 mx-auto max-w-5xl"
           >
-            <Suspense
-              fallback={
-                <div className="fixed inset-0 flex items-center justify-center">
-                  <Loading />
-                </div>
-              }
-            >
-              {children}
-            </Suspense>
+            {children}
           </motion.div>
         </AnimatePresence>
       </main>
