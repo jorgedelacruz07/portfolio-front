@@ -1,125 +1,31 @@
+import { FC } from "react";
 import Image from "next/image";
 import { profile } from "../../../data/content";
-import { LinkedinIcon } from "../../svgs/Linkedin";
-import { GithubIcon } from "../../svgs/Github";
-import classNames from "classnames";
-import { AnimatedSection } from "../../AnimatedSection";
+import { SocialNetworks } from "../../../components/SocialNetworks";
 
-const socialNetworks = [
-  {
-    id: 1,
-    slug: "linkedin",
-    name: "Linkedin",
-    icon: LinkedinIcon,
-    url: "https://www.linkedin.com/in/jorgedelacruz07",
-  },
-  {
-    id: 2,
-    slug: "github",
-    name: "GitHub",
-    icon: GithubIcon,
-    url: "https://github.com/jorgedelacruz07",
-  },
-];
-
-export const HomeProfile = () => {
+export const HomeProfile: FC = () => {
   return (
-    <div className="md:flex items-center justify-between gap-8 lg:gap-12">
-      <AnimatedSection
-        type="slide"
-        direction="left"
-        className="w-full xl:w-2/3"
-      >
-        <h1 className="text-3xl md:text-4xl text-center md:text-left font-bold mb-6">
+    <div className="flex flex-col items-center space-y-6 md:space-y-8">
+      <div className="relative w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden ring-4 ring-white dark:ring-gray-800 shadow-lg transition-transform duration-500 hover:scale-105">
+        <Image
+          src={profile.image}
+          alt={profile.name}
+          width={160}
+          height={160}
+          className="object-cover"
+          priority
+        />
+      </div>
+      <div className="text-center space-y-4">
+        <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white tracking-tight">
           {profile.name}
         </h1>
-        <div className="text-base md:text-lg my-6 text-justify text-gray-700 dark:text-gray-300 leading-relaxed">
+        <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
           {profile.description}
-        </div>
-        <div className="my-8">
-          <a
-            className={classNames(
-              "inline-flex items-center px-6 py-3 rounded-lg transition-all duration-300",
-              "bg-black dark:bg-white text-white dark:text-black border border-gray-200 dark:border-gray-700",
-              "text-sm md:text-base"
-            )}
-            href="/documents/jorgedelacruz_cv.pdf"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <span className="mr-2 font-medium md:font-semibold">
-              View my CV
-            </span>
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M14 5l7 7m0 0l-7 7m7-7H3"
-              />
-            </svg>
-          </a>
-        </div>
-        <div className="hidden my-6 md:flex gap-6">
-          {socialNetworks.map((social) => {
-            const Icon = social.icon;
-            return (
-              <a
-                key={social.id}
-                href={social.url}
-                target="_blank"
-                rel="noreferrer"
-                className={classNames(
-                  "w-10 h-10 flex items-center justify-center rounded-lg transition-all duration-300 hover:scale-110"
-                )}
-                aria-label={`Visit my ${social.name} profile`}
-              >
-                <Icon />
-              </a>
-            );
-          })}
-        </div>
-      </AnimatedSection>
-      <AnimatedSection
-        type="scale"
-        delay={0.2}
-        className="text-center w-full xl:w-1/3"
-      >
-        <div className="relative inline-block">
-          <div className="rounded-full shadow-lg dark:shadow-gray-800/50 flex items-center justify-center overflow-hidden ring-4 ring-cyan-800/20 dark:ring-cyan-700/20">
-            <Image
-              className="rounded-full hover:scale-105 transition-transform duration-300"
-              src="/images/jorge.jpg"
-              alt="Jorge de la Cruz"
-              width={250}
-              height={250}
-            />
-          </div>
-        </div>
-      </AnimatedSection>
-      <div className="md:hidden my-8 flex justify-center gap-6">
-        {socialNetworks.map((social) => {
-          const Icon = social.icon;
-          return (
-            <a
-              key={social.id}
-              href={social.url}
-              target="_blank"
-              rel="noreferrer"
-              className={classNames(
-                "w-10 h-10 flex items-center justify-center rounded-lg transition-all duration-300 hover:scale-110"
-              )}
-              aria-label={`Visit my ${social.name} profile`}
-            >
-              <Icon />
-            </a>
-          );
-        })}
+        </p>
+      </div>
+      <div className="pt-4">
+        <SocialNetworks />
       </div>
     </div>
   );
