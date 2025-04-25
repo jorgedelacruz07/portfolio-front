@@ -2,7 +2,7 @@ import { FC } from "react";
 import { LinkedinIcon } from "./svgs/Linkedin";
 import { GithubIcon } from "./svgs/Github";
 
-const socialNetworks = [
+export const socialNetworks = [
   {
     id: 1,
     slug: "linkedin",
@@ -30,10 +30,10 @@ export const SocialNetworks: FC = () => {
             href={social.url}
             target="_blank"
             rel="noreferrer"
-            className="w-10 h-10 flex items-center justify-center rounded-lg transition-all duration-300 hover:scale-110 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
+            className="w-10 h-10 flex items-center justify-center rounded-lg transition-all duration-300 hover:scale-110 text-black dark:text-white hover:text-gray-900 dark:hover:text-white"
             aria-label={`Visit my ${social.name} profile`}
           >
-            <Icon />
+            <Icon width={50} height={50} />
           </a>
         );
       })}

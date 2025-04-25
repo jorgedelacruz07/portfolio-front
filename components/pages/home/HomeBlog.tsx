@@ -32,7 +32,7 @@ const HomeBlog = ({ posts }: Props) => {
                       className="object-cover"
                     />
                   </div>
-                  <div className="text-lg font-semibold text-black dark:text-gray-300 group-hover:text-gray-600 dark:group-hover:text-white transition-colors duration-300">
+                  <div className="text-lg font-semibold text-black dark:text-white group-hover:text-gray-600 dark:group-hover:text-gray-200 transition-colors duration-300">
                     <Link href={`/blog/${post.slug}`}>{post.title}</Link>
                   </div>
                 </div>
