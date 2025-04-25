@@ -57,6 +57,7 @@ export const Navbar = () => {
             <Link href="/">
               <a className="text-white text-xl font-bold hover:text-gray-400 dark:hover:text-gray-200 transition-colors duration-200 flex items-center">
                 <HomeIcon className="h-6 w-6 mr-2" />
+                <span className="sr-only">Home</span>
               </a>
             </Link>
           </div>
