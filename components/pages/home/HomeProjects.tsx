@@ -31,7 +31,9 @@ export const HomeProjects: FC<Props> = ({ projects }) => {
                         alt={project.name}
                         width={48}
                         height={48}
+                        sizes="(max-width: 768px) 48px, 48px"
                         className="object-cover"
+                        priority
                       />
                     </div>
                   )}
