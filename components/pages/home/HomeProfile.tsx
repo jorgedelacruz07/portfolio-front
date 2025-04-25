@@ -3,7 +3,7 @@ import { profile } from "../../../data/content";
 import { LinkedinIcon } from "../../svgs/Linkedin";
 import { GithubIcon } from "../../svgs/Github";
 import classNames from "classnames";
-import { motion } from "framer-motion";
+import { AnimatedSection } from "../../AnimatedSection";
 
 const socialNetworks = [
   {
@@ -25,15 +25,9 @@ const socialNetworks = [
 export const HomeProfile = () => {
   return (
     <div className="md:flex items-center justify-between gap-8 lg:gap-12">
-      <motion.div
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true }}
-        variants={{
-          hidden: { opacity: 0, x: -20 },
-          visible: { opacity: 1, x: 0 }
-        }}
-        transition={{ duration: 0.5 }}
+      <AnimatedSection
+        type="slide"
+        direction="left"
         className="w-full xl:w-2/3"
       >
         <h1 className="text-3xl md:text-4xl text-center md:text-left font-bold mb-6">
@@ -46,13 +40,16 @@ export const HomeProfile = () => {
           <a
             className={classNames(
               "inline-flex items-center px-6 py-3 rounded-lg transition-all duration-300",
-              "bg-black dark:bg-white border text-white dark:text-black border-gray-200 dark:border-gray-700"
+              "bg-black dark:bg-white text-white dark:text-black border border-gray-200 dark:border-gray-700",
+              "text-sm md:text-base"
             )}
             href="/documents/jorgedelacruz_cv.pdf"
             target="_blank"
             rel="noopener noreferrer"
           >
-            <span className="mr-2 font-semibold">View my CV</span>
+            <span className="mr-2 font-medium md:font-semibold">
+              View my CV
+            </span>
             <svg
               className="w-4 h-4"
               fill="none"
@@ -72,33 +69,25 @@ export const HomeProfile = () => {
           {socialNetworks.map((social) => {
             const Icon = social.icon;
             return (
-              <motion.a
+              <a
                 key={social.id}
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
                 href={social.url}
                 target="_blank"
                 rel="noreferrer"
                 className={classNames(
-                  "w-10 h-10 flex items-center justify-center rounded-lg transition-all duration-300"
+                  "w-10 h-10 flex items-center justify-center rounded-lg transition-all duration-300 hover:scale-110"
                 )}
                 aria-label={`Visit my ${social.name} profile`}
               >
                 <Icon />
-              </motion.a>
+              </a>
             );
           })}
         </div>
-      </motion.div>
-      <motion.div
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true }}
-        variants={{
-          hidden: { opacity: 0, scale: 0.8 },
-          visible: { opacity: 1, scale: 1 }
-        }}
-        transition={{ duration: 0.5, delay: 0.2 }}
+      </AnimatedSection>
+      <AnimatedSection
+        type="scale"
+        delay={0.2}
         className="text-center w-full xl:w-1/3"
       >
         <div className="relative inline-block">
@@ -112,25 +101,23 @@ export const HomeProfile = () => {
             />
           </div>
         </div>
-      </motion.div>
+      </AnimatedSection>
       <div className="md:hidden my-8 flex justify-center gap-6">
         {socialNetworks.map((social) => {
           const Icon = social.icon;
           return (
-            <motion.a
+            <a
               key={social.id}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
               href={social.url}
               target="_blank"
               rel="noreferrer"
               className={classNames(
-                "w-10 h-10 flex items-center justify-center rounded-lg transition-all duration-300"
+                "w-10 h-10 flex items-center justify-center rounded-lg transition-all duration-300 hover:scale-110"
               )}
               aria-label={`Visit my ${social.name} profile`}
             >
               <Icon />
-            </motion.a>
+            </a>
           );
         })}
       </div>
