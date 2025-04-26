@@ -50,7 +50,7 @@ export const Navbar = () => {
   ];
 
   return (
-    <nav className="bg-slate-800 dark:bg-slate-900 shadow-sm border-b border-gray-200 dark:border-gray-800 sticky top-0 z-50">
+    <nav className="bg-slate-700 dark:bg-slate-900 shadow-sm border-b border-gray-200 dark:border-gray-800 sticky top-0 z-50">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
