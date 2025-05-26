@@ -20,9 +20,11 @@ export const HomeProfile: FC = () => {
         <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white tracking-tight">
           {profile.name}
         </h1>
-        <p className="text-base md:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
-          {profile.description}
-        </p>
+        <div className="text-center max-w-2xl mx-auto text-gray-600 dark:text-gray-300 text-base md:text-lg leading-relaxed space-y-6">
+          {profile.description.map((paragraph, index) => (
+            <p key={index} dangerouslySetInnerHTML={{ __html: paragraph }} />
+          ))}
+        </div>
       </div>
       <div className="flex flex-col items-center space-y-6">
         <a
