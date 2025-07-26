@@ -1,12 +1,14 @@
+import { memo } from "react";
 import { TExperience } from "../../../types/experience";
 import Link from "next/link";
 import Image from "next/image";
+import { ExternalLinkIcon } from "../../icons/ExternalLinkIcon";
 
 type Props = {
   experiences: TExperience[];
 };
 
-const HomeExperiences = ({ experiences }: Props) => {
+const HomeExperiencesComponent = ({ experiences }: Props) => {
   return (
     <div className="space-y-8">
       <div className="flex items-center justify-between">
@@ -31,7 +33,6 @@ const HomeExperiences = ({ experiences }: Props) => {
                       height={48}
                       sizes="(max-width: 768px) 48px, 48px"
                       className="object-cover"
-                      priority
                     />
                   </div>
                   <div className="text-lg font-semibold text-black dark:text-white group-hover:text-gray-600 dark:group-hover:text-gray-200 transition-colors duration-300">
@@ -76,19 +77,7 @@ const HomeExperiences = ({ experiences }: Props) => {
                       className="inline-flex items-center text-sm text-cyan-800 dark:text-gray-400 hover:text-cyan-700 dark:hover:text-gray-100 transition-colors duration-300 font-semibold"
                     >
                       Visit Company
-                      <svg
-                        className="w-4 h-4 ml-1"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                        />
-                      </svg>
+                      <ExternalLinkIcon className="w-4 h-4 ml-1" />
                     </a>
                   </div>
                 )}
@@ -101,4 +90,6 @@ const HomeExperiences = ({ experiences }: Props) => {
   );
 };
 
+HomeExperiencesComponent.displayName = 'HomeExperiences';
+const HomeExperiences = memo(HomeExperiencesComponent);
 export default HomeExperiences;

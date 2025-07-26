@@ -1,13 +1,14 @@
-import { FC } from "react";
+import { FC, memo } from "react";
 import { TProject } from "../../../types/project";
 import Link from "next/link";
 import Image from "next/image";
+import { ExternalLinkIcon } from "../../icons/ExternalLinkIcon";
 
 type Props = {
   projects: TProject[];
 };
 
-export const HomeProjects: FC<Props> = ({ projects }) => {
+const HomeProjectsComponent: FC<Props> = ({ projects }) => {
   return (
     <div className="space-y-8">
       <div className="flex items-center justify-between">
@@ -33,7 +34,6 @@ export const HomeProjects: FC<Props> = ({ projects }) => {
                         height={48}
                         sizes="(max-width: 768px) 48px, 48px"
                         className="object-cover"
-                        priority
                       />
                     </div>
                   )}
@@ -74,19 +74,7 @@ export const HomeProjects: FC<Props> = ({ projects }) => {
                     className="inline-flex items-center text-cyan-800 dark:text-gray-400 hover:text-cyan-700 dark:hover:text-gray-100 transition-colors duration-300 font-semibold"
                   >
                     Visit Project
-                    <svg
-                      className="w-4 h-4 ml-1"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                      />
-                    </svg>
+                    <ExternalLinkIcon className="w-4 h-4 ml-1" />
                   </a>
                 )}
               </div>
@@ -97,3 +85,6 @@ export const HomeProjects: FC<Props> = ({ projects }) => {
     </div>
   );
 };
+
+HomeProjectsComponent.displayName = 'HomeProjects';
+export const HomeProjects = memo(HomeProjectsComponent);
