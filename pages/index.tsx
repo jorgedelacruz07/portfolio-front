@@ -15,21 +15,22 @@ export const getStaticProps: GetStaticProps = async () => {
   const url = process.env.NEXT_PUBLIC_API_URL;
 
   try {
-    experiences = await axios
-      .get(`${url}/client/experiences`)
-      .then((res) => res.data);
-    projects = await axios
-      .get(`${url}/client/projects`)
-      .then((res) => res.data);
-    posts = await axios
-      .get(`${url}/client/posts`)
-      .then((res) => res.data.slice(0, 5));
+    const [experiencesRes, projectsRes, postsRes] = await Promise.all([
+      axios.get(`${url}/client/experiences?limit=3`),
+      axios.get(`${url}/client/projects?limit=3`),
+      axios.get(`${url}/client/posts?limit=3`)
+    ]);
+    
+    experiences = experiencesRes.data.slice(0, 3);
+    projects = projectsRes.data.slice(0, 3);
+    posts = postsRes.data.slice(0, 3);
   } catch (error) {
-    let message = "";
-    if (axios.isAxiosError(error)) {
-      message = error?.response?.statusText as string;
-    }
-    console.error({ error: message });
+    console.error('[getStaticProps] Failed to fetch homepage data:', {
+      message: error instanceof Error ? error.message : 'Unknown error',
+      status: axios.isAxiosError(error) ? error.response?.status : undefined,
+      statusText: axios.isAxiosError(error) ? error.response?.statusText : undefined,
+      url: axios.isAxiosError(error) ? error.config?.url : undefined,
+    });
   }
 
   return {
