@@ -3,6 +3,8 @@ import type { AppProps } from "next/app";
 import { Layout } from "../components/Layout";
 import { ThemeProvider } from "next-themes";
 import Script from "next/script";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { queryClient } from "../lib/query-client";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -25,11 +27,13 @@ function MyApp({ Component, pageProps }: AppProps) {
           `,
         }}
       />
-      <ThemeProvider enableSystem={true} attribute="class">
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
-      </ThemeProvider>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider enableSystem={true} attribute="class">
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        </ThemeProvider>
+      </QueryClientProvider>
     </>
   );
 }

@@ -1,20 +1,51 @@
-import { GetStaticProps, GetStaticPaths } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { TProject } from "../../types/project";
-import axios from "axios";
 import { format } from "date-fns";
 import Link from "next/link";
+import { useGetProjectBySlug } from "../../hooks/queries";
+import { LoadingSpinner } from "../../components/LoadingSpinner";
 
-type Props = {
-  project: TProject;
-};
-
-const ProjectPage = ({ project }: Props) => {
+const ProjectPage = () => {
   const router = useRouter();
+  const { slug } = router.query;
+  
+  const { data: project, isLoading, error } = useGetProjectBySlug(slug);
 
-  if (router.isFallback) {
-    return <div>Loading...</div>;
+  if (router.isFallback || isLoading) {
+    return (
+      <div className="container mx-auto flex justify-center items-center min-h-screen">
+        <LoadingSpinner />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="container mx-auto flex justify-center items-center min-h-screen">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Error loading project</h1>
+          <p className="text-gray-600 dark:text-gray-400 mb-4">
+            {error instanceof Error ? error.message : 'An unexpected error occurred'}
+          </p>
+          <Link href="/projects" className="text-cyan-600 hover:text-cyan-700">
+            Back to Projects
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  if (!project) {
+    return (
+      <div className="container mx-auto flex justify-center items-center min-h-screen">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Project not found</h1>
+          <Link href="/projects" className="text-cyan-600 hover:text-cyan-700">
+            Back to Projects
+          </Link>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -31,6 +62,8 @@ const ProjectPage = ({ project }: Props) => {
                   width={64}
                   height={64}
                   className="object-cover"
+                  sizes="64px"
+                  priority
                 />
               </div>
             )}
@@ -89,6 +122,7 @@ const ProjectPage = ({ project }: Props) => {
               width={800}
               height={450}
               className="object-cover"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 800px"
               priority
             />
           </div>
@@ -148,39 +182,5 @@ const ProjectPage = ({ project }: Props) => {
   );
 };
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  return {
-    paths: [],
-    fallback: "blocking",
-  };
-};
-
-export const getStaticProps: GetStaticProps = async ({ params }) => {
-  let project = null;
-
-  const url = process.env.NEXT_PUBLIC_API_URL;
-  const slug = params?.slug;
-
-  try {
-    project = await axios
-      .get(`${url}/client/projects/${slug}`)
-      .then((res) => res.data);
-  } catch (error) {
-    console.error('[Project slug getStaticProps] Failed to fetch project:', {
-      slug,
-      message: error instanceof Error ? error.message : 'Unknown error',
-      status: axios.isAxiosError(error) ? error.response?.status : undefined,
-      statusText: axios.isAxiosError(error) ? error.response?.statusText : undefined,
-      url: axios.isAxiosError(error) ? error.config?.url : undefined,
-    });
-  }
-
-  return {
-    props: {
-      project,
-    },
-    revalidate: 60,
-  };
-};
 
 export default ProjectPage;

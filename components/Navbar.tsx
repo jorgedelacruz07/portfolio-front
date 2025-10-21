@@ -54,11 +54,12 @@ export const Navbar = () => {
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
-            <Link href="/">
-              <a className="text-white text-xl font-bold hover:text-gray-400 dark:hover:text-gray-200 transition-colors duration-200 flex items-center">
-                <HomeIcon className="h-6 w-6 mr-2" />
-                <span className="sr-only">Home</span>
-              </a>
+            <Link 
+              href="/"
+              className="text-white text-xl font-bold hover:text-gray-400 dark:hover:text-gray-200 transition-colors duration-200 flex items-center"
+            >
+              <HomeIcon className="h-6 w-6 mr-2" />
+              <span className="sr-only">Home</span>
             </Link>
           </div>
 
@@ -66,8 +67,12 @@ export const Navbar = () => {
           <div className="hidden md:block">
             <div className="ml-10 flex items-baseline space-x-8">
               {navbarItems.map((item) => (
-                <Link href={item.href} key={item.href}>
-                  <a className={navLinkClasses(item.href)}>{item.label}</a>
+                <Link 
+                  href={item.href} 
+                  key={item.href}
+                  className={navLinkClasses(item.href)}
+                >
+                  {item.label}
                 </Link>
               ))}
             </div>
@@ -130,16 +135,16 @@ export const Navbar = () => {
       >
         <div className="px-4 py-2 space-y-2">
           {navbarItems.map((item) => (
-            <Link href={item.href} key={item.href}>
-              <a
-                className={classNames(
-                  "block py-2 text-base font-medium",
-                  navLinkClasses(item.href)
-                )}
-                onClick={(e) => handleLinkClick(e, item.href)}
-              >
-                {item.label}
-              </a>
+            <Link 
+              href={item.href} 
+              key={item.href}
+              className={classNames(
+                "block py-2 text-base font-medium",
+                navLinkClasses(item.href)
+              )}
+              onClick={(e) => handleLinkClick(e, item.href)}
+            >
+              {item.label}
             </Link>
           ))}
         </div>
