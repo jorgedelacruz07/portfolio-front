@@ -4,6 +4,17 @@ import Link from "next/link";
 import { addHours, format } from "date-fns";
 import { useGetExperiences } from "../../hooks/queries";
 import { LoadingSpinner } from "../../components/LoadingSpinner";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { ExternalLinkIcon } from "@/components/icons/ExternalLinkIcon";
 
 const Experiences: NextPage = () => {
   const { data: experiences = [], isLoading, error } = useGetExperiences();
@@ -19,111 +30,156 @@ const Experiences: NextPage = () => {
   if (error) {
     return (
       <div className="container mx-auto flex justify-center items-center min-h-screen">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Error loading experiences</h1>
-          <p className="text-gray-600 dark:text-gray-400 mb-4">
-            {error instanceof Error ? error.message : 'An unexpected error occurred'}
+        <div className="text-center space-y-4">
+          <h1 className="text-3xl font-bold text-foreground">
+            Error loading experiences
+          </h1>
+          <p className="text-muted-foreground text-lg">
+            {error instanceof Error
+              ? error.message
+              : "An unexpected error occurred"}
           </p>
-          <button 
-            onClick={() => window.location.reload()} 
-            className="text-cyan-600 hover:text-cyan-700"
+          <Button
+            onClick={() => window.location.reload()}
+            variant="outline"
+            className="mt-4"
           >
             Try Again
-          </button>
+          </Button>
         </div>
       </div>
     );
   }
+
   return (
-    <div>
-      <div className="space-y-8">
-        <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">
-          My Experiences
-        </h1>
-        <div className="space-y-6">
-          {experiences.length === 0 ? (
-            <div className="text-center py-12">
-              <p className="text-gray-500 dark:text-gray-400">No experiences available at the moment.</p>
+    <div className="py-12 md:py-16">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="space-y-8 md:space-y-12">
+          <div className="text-center space-y-3 md:space-y-4">
+            <div className="flex items-center justify-center mb-3 md:mb-4">
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground">
+                My <span className="text-primary">Experiences</span>
+              </h1>
+              <div className="ml-3 md:ml-4 h-1 w-12 md:w-16 bg-primary"></div>
             </div>
-          ) : (
-            experiences.map((experience) => (
-              <div key={experience.slug} className="group">
-                <div className="relative overflow-hidden rounded-lg bg-white dark:bg-gray-800 p-6 shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-200 dark:border-gray-700">
-                  <div className="space-y-4">
+            <p className="text-muted-foreground text-base md:text-lg max-w-2xl mx-auto px-4">
+              My professional journey and the experiences that have shaped my
+              career in software development.
+            </p>
+          </div>
+
+          <div className="space-y-4 md:space-y-6">
+            {experiences.length === 0 ? (
+              <div className="text-center py-16">
+                <p className="text-muted-foreground text-lg">
+                  No experiences available at the moment.
+                </p>
+              </div>
+            ) : (
+              experiences.map((experience) => (
+                <Card
+                  key={experience.slug}
+                  className="group transition-all duration-300 hover:shadow-lg hover:scale-[1.01] border-border/50 hover:border-primary/20 bg-card"
+                >
+                  <CardHeader className="pb-4">
                     <div className="flex items-center gap-4">
                       {experience.image?.src && (
-                        <div className="relative w-12 h-12 rounded-lg overflow-hidden">
+                        <div className="relative w-16 h-16 rounded-lg overflow-hidden ring-2 ring-border/50">
                           <Image
                             src={experience.image.src}
-                            alt={experience.company || 'Company'}
-                            width={48}
-                            height={48}
+                            alt={experience.company || "Company"}
+                            width={64}
+                            height={64}
                             className="object-cover"
-                            sizes="48px"
+                            sizes="64px"
                             loading="lazy"
                           />
                         </div>
                       )}
                       <div className="flex-1">
-                        <h2 className="text-lg md:text-xl font-semibold text-black dark:text-gray-300 group-hover:text-gray-600 dark:group-hover:text-white transition-colors duration-300">
+                        <CardTitle className="text-xl md:text-2xl group-hover:text-primary transition-colors duration-300">
                           <Link href={`/experiences/${experience.slug}`}>
-                            {experience.jobTitle || 'Position'}
+                            {experience.jobTitle || "Position"}
                           </Link>
-                        </h2>
-                        <div className="text-sm text-gray-600 dark:text-gray-300 font-semibold">
-                          {experience.company || 'Company'}
-                        </div>
+                        </CardTitle>
+                        <CardDescription className="text-base font-medium text-muted-foreground">
+                          {experience.company || "Company"}
+                        </CardDescription>
                       </div>
-                      <div className="text-sm text-gray-500 dark:text-gray-400">
-                        {experience.from ? `${format(
-                          addHours(new Date(experience.from), 5),
-                          "MMM yyyy"
-                        )} - ${
-                          experience.to
-                            ? format(
-                                addHours(new Date(experience.to), 5),
-                                "MMM yyyy"
-                              )
-                            : "Present"
-                        }` : 'No dates available'}
+                      <div className="text-sm text-muted-foreground font-medium">
+                        {experience.from
+                          ? `${format(
+                              addHours(new Date(experience.from), 5),
+                              "MMM yyyy",
+                            )} - ${
+                              experience.to
+                                ? format(
+                                    addHours(new Date(experience.to), 5),
+                                    "MMM yyyy",
+                                  )
+                                : "Present"
+                            }`
+                          : "No dates available"}
                       </div>
                     </div>
+                  </CardHeader>
 
-                    <p className="text-gray-600 dark:text-gray-300">
-                      {experience.jobDescription || 'No description available'}
+                  <CardContent className="pb-4">
+                    <p className="text-muted-foreground leading-relaxed">
+                      {experience.jobDescription || "No description available"}
                     </p>
+                  </CardContent>
 
+                  <CardFooter className="flex flex-col gap-4 pt-0">
                     {experience.technologies &&
                       experience.technologies.length > 0 && (
                         <div className="flex flex-wrap gap-2">
                           {experience.technologies.map((tech) => (
-                            <span
+                            <Badge
                               key={tech.id}
-                              className="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded-full text-xs font-medium text-gray-600 dark:text-gray-300"
+                              variant="secondary"
+                              className="text-sm font-medium bg-muted/50 hover:bg-primary/10 hover:text-primary transition-colors duration-200"
                             >
                               {tech.name}
-                            </span>
+                            </Badge>
                           ))}
                         </div>
                       )}
 
-                    {experience.companyUrl && (
-                      <div className="pt-2">
-                        <a
-                          href={experience.companyUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-sm text-cyan-800 dark:text-gray-400 hover:text-cyan-700 dark:hover:text-gray-100 transition-colors duration-300 font-semibold"
+                    <div className="flex gap-2">
+                      {experience.companyUrl && (
+                        <Button
+                          variant="default"
+                          size="sm"
+                          className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300"
+                          asChild
                         >
-                          Visit Company Website
-                        </a>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            ))
-          )}
+                          <a
+                            href={experience.companyUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            Visit Company Website
+                            <ExternalLinkIcon className="w-4 h-4 ml-2" />
+                          </a>
+                        </Button>
+                      )}
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="w-full"
+                        asChild
+                      >
+                        <Link href={`/experiences/${experience.slug}`}>
+                          View Details
+                        </Link>
+                      </Button>
+                    </div>
+                  </CardFooter>
+                </Card>
+              ))
+            )}
+          </div>
         </div>
       </div>
     </div>

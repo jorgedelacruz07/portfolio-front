@@ -2,7 +2,7 @@
 declare global {
   interface Window {
     gtag: (
-      command: 'config' | 'event' | 'js' | 'set',
+      command: "config" | "event" | "js" | "set",
       targetId: string | Date,
       config?: {
         page_path?: string;
@@ -11,7 +11,7 @@ declare global {
         value?: number;
         custom_map?: Record<string, string>;
         [key: string]: any;
-      }
+      },
     ) => void;
   }
 }

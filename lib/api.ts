@@ -1,38 +1,42 @@
-import axios, { AxiosError, AxiosResponse } from 'axios';
-import { TProject } from '../types/project';
-import { TExperience } from '../types/experience';
-import { TPost } from '../types/post';
-import { TCategory } from '../types/category';
-import { ApiError, NetworkError } from '../types/error';
+import axios, { AxiosError, AxiosResponse } from "axios";
+import { TProject } from "../types/project";
+import { TExperience } from "../types/experience";
+import { TPost } from "../types/post";
+import { TCategory } from "../types/category";
+import { ApiError, NetworkError } from "../types/error";
 
 // API Configuration
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 if (!API_BASE_URL) {
-  console.warn('NEXT_PUBLIC_API_URL environment variable is not set. API calls will fail.');
+  console.warn(
+    "NEXT_PUBLIC_API_URL environment variable is not set. API calls will fail.",
+  );
 }
 
 // Create axios instance with default config
 export const apiClient = axios.create({
-  baseURL: API_BASE_URL || 'http://localhost:3000',
+  baseURL: API_BASE_URL || "http://localhost:3000",
   timeout: 10000,
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
 });
 
 // Request interceptor for logging
 apiClient.interceptors.request.use(
   (config) => {
-    if (process.env.NODE_ENV === 'development') {
-      console.log(`[API Request] ${config.method?.toUpperCase()} ${config.url}`);
+    if (process.env.NODE_ENV === "development") {
+      console.log(
+        `[API Request] ${config.method?.toUpperCase()} ${config.url}`,
+      );
     }
     return config;
   },
   (error) => {
-    console.error('[API Request Error]', error);
+    console.error("[API Request Error]", error);
     return Promise.reject(error);
-  }
+  },
 );
 
 // Response interceptor for error handling
@@ -45,28 +49,28 @@ apiClient.interceptors.response.use(
       statusText: error.response?.statusText,
       url: error.config?.url,
     };
-    
-    console.error('[API Response Error]', errorInfo);
+
+    console.error("[API Response Error]", errorInfo);
     return Promise.reject(error);
-  }
+  },
 );
 
 // API Endpoints
 export const apiEndpoints = {
   // Projects
-  projects: () => '/client/projects',
+  projects: () => "/client/projects",
   projectBySlug: (slug: string) => `/client/projects/${slug}`,
-  
+
   // Experiences
-  experiences: () => '/client/experiences',
+  experiences: () => "/client/experiences",
   experienceBySlug: (slug: string) => `/client/experiences/${slug}`,
-  
+
   // Posts
-  posts: () => '/client/posts',
+  posts: () => "/client/posts",
   postBySlug: (slug: string) => `/client/posts/${slug}`,
-  
+
   // Categories
-  categories: () => '/client/categories',
+  categories: () => "/client/categories",
 } as const;
 
 // Mock data for development when API is not available
@@ -85,7 +89,7 @@ export const api = {
       const response = await apiClient.get(apiEndpoints.projects());
       return response.data;
     } catch (error) {
-      console.warn('API not available, returning empty array for projects');
+      console.warn("API not available, returning empty array for projects");
       return mockData.projects;
     }
   },
@@ -106,7 +110,7 @@ export const api = {
       const response = await apiClient.get(apiEndpoints.experiences());
       return response.data;
     } catch (error) {
-      console.warn('API not available, returning empty array for experiences');
+      console.warn("API not available, returning empty array for experiences");
       return mockData.experiences;
     }
   },
@@ -127,7 +131,7 @@ export const api = {
       const response = await apiClient.get(apiEndpoints.posts());
       return response.data.data || [];
     } catch (error) {
-      console.warn('API not available, returning empty array for posts');
+      console.warn("API not available, returning empty array for posts");
       return mockData.posts;
     }
   },
@@ -148,7 +152,7 @@ export const api = {
       const response = await apiClient.get(apiEndpoints.categories());
       return response.data;
     } catch (error) {
-      console.warn('API not available, returning empty array for categories');
+      console.warn("API not available, returning empty array for categories");
       return mockData.categories;
     }
   },
@@ -166,15 +170,15 @@ export const handleApiError = (error: unknown): ApiError => {
       code: error.code,
     };
   }
-  
+
   if (error instanceof Error) {
     return {
       message: error.message,
       code: error.name,
     };
   }
-  
+
   return {
-    message: 'An unknown error occurred',
+    message: "An unknown error occurred",
   };
 };

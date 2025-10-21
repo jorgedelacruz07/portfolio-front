@@ -1,11 +1,14 @@
-import { FC } from 'react';
+import { FC } from "react";
 
 interface IconProps {
   className?: string;
   size?: number;
 }
 
-export const ExternalLinkIcon: FC<IconProps> = ({ className = 'w-4 h-4', size }) => (
+export const ExternalLinkIcon: FC<IconProps> = ({
+  className = "w-4 h-4",
+  size,
+}) => (
   <svg
     className={className}
     fill="none"

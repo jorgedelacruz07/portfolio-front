@@ -3,61 +3,199 @@ import Image from "next/image";
 import { profile } from "../../../data/content";
 import { SocialNetworks } from "../../../components/SocialNetworks";
 import { DownloadIcon } from "../../icons/DownloadIcon";
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { cn } from "@/lib/utils";
+import { useScrollAnimation, useMousePosition } from "@/hooks";
 
 const HomeProfileComponent: FC = () => {
-  // Memoize the description paragraphs to prevent unnecessary re-renders
-  const descriptionParagraphs = useMemo(() => 
-    profile.description.map((paragraph, index) => (
-      <p key={index} dangerouslySetInnerHTML={{ __html: paragraph }} />
-    )), []
-  );
+  const { ref: profileRef, isVisible } = useScrollAnimation({ threshold: 0.2 });
+  const { ref: textRef, isVisible: textVisible } = useScrollAnimation({
+    threshold: 0.3,
+  });
+  const { ref: imageRef, isVisible: imageVisible } = useScrollAnimation({
+    threshold: 0.2,
+  });
+  const mousePosition = useMousePosition();
 
   const handleDownloadClick = useCallback((e: React.MouseEvent) => {
     // Track download event if analytics is available
-    if (typeof window !== 'undefined' && window.gtag) {
-      window.gtag('event', 'download', {
-        event_category: 'CV',
-        event_label: 'Jorge de la Cruz CV',
+    if (typeof window !== "undefined" && window.gtag) {
+      window.gtag("event", "download", {
+        event_category: "CV",
+        event_label: "Jorge de la Cruz CV",
       });
     }
   }, []);
 
+  const name = "Jorge de la Cruz";
+
   return (
-    <div className="flex flex-col items-center space-y-6 md:space-y-8">
-      <div className="relative w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden ring-4 ring-white dark:ring-gray-800 shadow-lg transition-transform duration-500 hover:scale-105">
-        <Image
-          src={profile.image}
-          alt={profile.name}
-          width={160}
-          height={160}
-          className="object-cover"
-          priority
-          sizes="(max-width: 768px) 128px, 160px"
-        />
-      </div>
-      <div className="text-center space-y-4">
-        <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white tracking-tight">
-          {profile.name}
-        </h1>
-        <div className="text-center max-w-2xl mx-auto text-gray-600 dark:text-gray-300 text-base md:text-lg leading-relaxed space-y-6">
-          {descriptionParagraphs}
+    <div
+      ref={profileRef}
+      className="min-h-[60vh] flex items-center justify-center py-8 md:py-12 relative"
+    >
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+          {/* Left Content */}
+          <div
+            ref={textRef}
+            className={cn(
+              "space-y-6 lg:space-y-8 transition-all duration-1000",
+              textVisible
+                ? "animate-fade-in-left"
+                : "opacity-0 translate-x-[-30px]",
+            )}
+          >
+            <div className="space-y-3 lg:space-y-4">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground animate-fade-in-down">
+                Hello.
+              </h1>
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-semibold text-foreground animate-fade-in-up animate-stagger-1">
+                I&apos;m{" "}
+                <span className="text-primary gradient-text animate-gradient">
+                  {name}
+                </span>
+              </h2>
+              <h3 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground animate-fade-in-up animate-stagger-2">
+                Senior Software Engineer
+              </h3>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-3 lg:gap-4 animate-fade-in-up animate-stagger-3">
+              <Button
+                size="lg"
+                className="px-6 lg:px-8 py-2.5 lg:py-3 text-sm lg:text-base font-semibold shadow-lg hover:shadow-xl transition-all duration-300 focus-ring-none btn-hover hover-glow group"
+                onClick={handleDownloadClick}
+                asChild
+              >
+                <a
+                  href="/documents/jorgedelacruz_cv.pdf"
+                  download
+                  className="flex items-center"
+                >
+                  <DownloadIcon className="w-4 h-4 lg:w-5 lg:h-5 mr-2 group-hover:animate-bounce" />
+                  Download CV
+                </a>
+              </Button>
+              <Button
+                variant="outline"
+                size="lg"
+                className="px-6 lg:px-8 py-2.5 lg:py-3 text-sm lg:text-base font-semibold border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-all duration-300 focus-ring-none btn-hover hover-scale"
+                asChild
+              >
+                <a href="mailto:jdelacruzp7@gmail.com">Contact Me</a>
+              </Button>
+            </div>
+
+            <div className="pt-2 lg:pt-4 animate-fade-in-up animate-stagger-4">
+              <SocialNetworks />
+            </div>
+          </div>
+
+          {/* Right Content - Profile Image with Programmer Theme */}
+          <div
+            ref={imageRef}
+            className={cn(
+              "flex justify-center lg:justify-end transition-all duration-1000",
+              imageVisible
+                ? "animate-fade-in-right"
+                : "opacity-0 translate-x-[30px]",
+            )}
+          >
+            <div className="relative group">
+              {/* Enhanced code-themed decorative elements */}
+              <div className="absolute -top-4 -left-4 w-8 h-8 border-2 border-primary/30 rounded rotate-45 animate-glow-pulse"></div>
+              <div className="absolute -top-2 -right-6 w-6 h-6 border-2 border-primary/20 rounded-full animate-float"></div>
+              <div
+                className="absolute -bottom-4 -right-4 w-10 h-10 border-2 border-primary/25 rounded rotate-12 animate-glow-pulse"
+                style={{ animationDelay: "1s" }}
+              ></div>
+
+              {/* Floating code symbols with enhanced animations */}
+              <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 text-primary/40 font-mono text-sm animate-float">
+                {"</>"}
+              </div>
+              <div
+                className="absolute -bottom-8 left-1/4 text-primary/30 font-mono text-xs animate-float-slow"
+                style={{ animationDelay: "0.5s" }}
+              >
+                {"{}"}
+              </div>
+              <div
+                className="absolute -bottom-6 right-1/4 text-primary/35 font-mono text-xs animate-float-reverse"
+                style={{ animationDelay: "1.5s" }}
+              >
+                {"[]"}
+              </div>
+
+              {/* Main profile image container */}
+              <div className="relative z-10">
+                <div className="relative group-hover:scale-105 transition-transform duration-500">
+                  {/* Enhanced terminal-style frame */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-primary/5 rounded-full blur-xl animate-glow"></div>
+
+                  {/* Profile image with enhanced effects */}
+                  <Avatar className="w-48 h-48 lg:w-56 lg:h-56 ring-4 ring-primary/20 shadow-2xl relative z-10 hover-lift animate-scale-in">
+                    <AvatarImage
+                      src={profile.image}
+                      alt={profile.name}
+                      className="object-cover"
+                    />
+                    <AvatarFallback className="text-2xl lg:text-3xl font-bold bg-primary/10 text-primary">
+                      {profile.name
+                        .split(" ")
+                        .map((n) => n[0])
+                        .join("")}
+                    </AvatarFallback>
+                  </Avatar>
+
+                  {/* Enhanced code brackets around image */}
+                  <div className="absolute -top-2 -left-2 text-primary/60 font-mono text-lg lg:text-xl font-bold animate-rotate-in">
+                    {"<"}
+                  </div>
+                  <div
+                    className="absolute -top-2 -right-2 text-primary/60 font-mono text-lg lg:text-xl font-bold animate-rotate-in"
+                    style={{ animationDelay: "0.2s" }}
+                  >
+                    {">"}
+                  </div>
+                  <div
+                    className="absolute -bottom-2 -left-2 text-primary/60 font-mono text-lg lg:text-xl font-bold animate-rotate-in"
+                    style={{ animationDelay: "0.4s" }}
+                  >
+                    {"{"}
+                  </div>
+                  <div
+                    className="absolute -bottom-2 -right-2 text-primary/60 font-mono text-lg lg:text-xl font-bold animate-rotate-in"
+                    style={{ animationDelay: "0.6s" }}
+                  >
+                    {"}"}
+                  </div>
+                </div>
+              </div>
+
+              {/* Enhanced animated connection lines */}
+              <div className="absolute top-1/2 -left-8 w-6 h-0.5 bg-primary/30 animate-glow-pulse"></div>
+              <div
+                className="absolute top-1/2 -right-8 w-6 h-0.5 bg-primary/30 animate-glow-pulse"
+                style={{ animationDelay: "0.5s" }}
+              ></div>
+              <div
+                className="absolute top-1/4 -left-6 w-4 h-0.5 bg-primary/25 animate-glow-pulse"
+                style={{ animationDelay: "1s" }}
+              ></div>
+              <div
+                className="absolute top-3/4 -right-6 w-4 h-0.5 bg-primary/25 animate-glow-pulse"
+                style={{ animationDelay: "1.5s" }}
+              ></div>
+            </div>
+          </div>
         </div>
-      </div>
-      <div className="flex flex-col items-center space-y-6">
-        <a
-          href="/documents/jorgedelacruz_cv.pdf"
-          download
-          onClick={handleDownloadClick}
-          className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm bg-black text-white dark:bg-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors duration-200"
-        >
-          <DownloadIcon className="w-5 h-5 mr-2" />
-          Download CV
-        </a>
-        <SocialNetworks />
       </div>
     </div>
   );
 };
 
-HomeProfileComponent.displayName = 'HomeProfile';
+HomeProfileComponent.displayName = "HomeProfile";
 export const HomeProfile = memo(HomeProfileComponent);

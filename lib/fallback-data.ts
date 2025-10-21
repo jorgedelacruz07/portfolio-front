@@ -1,7 +1,7 @@
-import { TProject } from '../types/project';
-import { TExperience } from '../types/experience';
-import { TPost } from '../types/post';
-import { TCategory } from '../types/category';
+import { TProject } from "../types/project";
+import { TExperience } from "../types/experience";
+import { TPost } from "../types/post";
+import { TCategory } from "../types/category";
 
 // Fallback data when API is not available
 export const fallbackData = {

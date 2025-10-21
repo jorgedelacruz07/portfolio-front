@@ -1,13 +1,14 @@
-import { useQuery } from '@tanstack/react-query';
-import { api, handleApiError } from '../../lib/api';
-import { TExperience } from '../../types/experience';
+import { useQuery } from "@tanstack/react-query";
+import { api, handleApiError } from "../../lib/api";
+import { TExperience } from "../../types/experience";
 
 // Query keys
 export const experienceKeys = {
-  all: ['experiences'] as const,
-  lists: () => [...experienceKeys.all, 'list'] as const,
-  list: (filters: Record<string, unknown>) => [...experienceKeys.lists(), { filters }] as const,
-  details: () => [...experienceKeys.all, 'detail'] as const,
+  all: ["experiences"] as const,
+  lists: () => [...experienceKeys.all, "list"] as const,
+  list: (filters: Record<string, unknown>) =>
+    [...experienceKeys.lists(), { filters }] as const,
+  details: () => [...experienceKeys.all, "detail"] as const,
   detail: (slug: string) => [...experienceKeys.details(), slug] as const,
 };
 
@@ -28,12 +29,12 @@ export const useGetExperiences = () => {
 // Hook for fetching a single experience by slug
 export const useGetExperienceBySlug = (slug: string | string[] | undefined) => {
   const experienceSlug = Array.isArray(slug) ? slug[0] : slug;
-  
+
   return useQuery({
-    queryKey: experienceKeys.detail(experienceSlug || ''),
+    queryKey: experienceKeys.detail(experienceSlug || ""),
     queryFn: async (): Promise<TExperience> => {
       if (!experienceSlug) {
-        throw new Error('Experience slug is required');
+        throw new Error("Experience slug is required");
       }
       try {
         return await api.getExperienceBySlug(experienceSlug);
