@@ -1,20 +1,51 @@
-import { GetStaticProps, GetStaticPaths } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { TExperience } from "../../types/experience";
-import axios from "axios";
 import { format } from "date-fns";
 import Link from "next/link";
+import { useGetExperienceBySlug } from "../../hooks/queries";
+import { LoadingSpinner } from "../../components/LoadingSpinner";
 
-type Props = {
-  experience: TExperience;
-};
-
-const ExperiencePage = ({ experience }: Props) => {
+const ExperiencePage = () => {
   const router = useRouter();
+  const { slug } = router.query;
+  
+  const { data: experience, isLoading, error } = useGetExperienceBySlug(slug);
 
-  if (router.isFallback) {
-    return <div>Loading...</div>;
+  if (router.isFallback || isLoading) {
+    return (
+      <div className="container mx-auto flex justify-center items-center min-h-screen">
+        <LoadingSpinner />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="container mx-auto flex justify-center items-center min-h-screen">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Error loading experience</h1>
+          <p className="text-gray-600 dark:text-gray-400 mb-4">
+            {error instanceof Error ? error.message : 'An unexpected error occurred'}
+          </p>
+          <Link href="/experiences" className="text-cyan-600 hover:text-cyan-700">
+            Back to Experiences
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  if (!experience) {
+    return (
+      <div className="container mx-auto flex justify-center items-center min-h-screen">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Experience not found</h1>
+          <Link href="/experiences" className="text-cyan-600 hover:text-cyan-700">
+            Back to Experiences
+          </Link>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -31,6 +62,8 @@ const ExperiencePage = ({ experience }: Props) => {
                   width={64}
                   height={64}
                   className="object-cover"
+                  sizes="64px"
+                  priority
                 />
               </div>
             )}
@@ -144,39 +177,5 @@ const ExperiencePage = ({ experience }: Props) => {
   );
 };
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  return {
-    paths: [],
-    fallback: "blocking",
-  };
-};
-
-export const getStaticProps: GetStaticProps = async ({ params }) => {
-  let experience = null;
-
-  const url = process.env.NEXT_PUBLIC_API_URL;
-  const slug = params?.slug;
-
-  try {
-    experience = await axios
-      .get(`${url}/client/experiences/${slug}`)
-      .then((res) => res.data);
-  } catch (error) {
-    console.error('[Experience slug getStaticProps] Failed to fetch experience:', {
-      slug,
-      message: error instanceof Error ? error.message : 'Unknown error',
-      status: axios.isAxiosError(error) ? error.response?.status : undefined,
-      statusText: axios.isAxiosError(error) ? error.response?.statusText : undefined,
-      url: axios.isAxiosError(error) ? error.config?.url : undefined,
-    });
-  }
-
-  return {
-    props: {
-      experience,
-    },
-    revalidate: 60,
-  };
-};
 
 export default ExperiencePage;

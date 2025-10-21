@@ -2,6 +2,7 @@ import Head from "next/head";
 import { Navbar } from "./Navbar";
 import { ReactNode } from "react";
 import Footer from "./Footer";
+import { ErrorBoundary } from "./ErrorBoundary";
 
 interface LayoutProps {
   children: ReactNode;
@@ -32,7 +33,9 @@ export const Layout = ({ children }: LayoutProps) => {
       </Head>
       <Navbar />
       <main className="animate-fade-in px-4 sm:px-6 lg:px-8 py-8 md:py-10 mx-auto max-w-5xl min-h-[calc(100vh-8rem)]">
-        {children}
+        <ErrorBoundary>
+          {children}
+        </ErrorBoundary>
       </main>
       <Footer />
     </div>

@@ -1,60 +1,50 @@
-import type { GetStaticProps, NextPage } from "next";
+import type { NextPage } from "next";
 import { HomeProfile } from "../components/pages/home/HomeProfile";
 import { HomeProjects } from "../components/pages/home/HomeProjects";
-import { TProject } from "../types/project";
-import { TExperience } from "../types/experience";
-import { TPost } from "../types/post";
-import axios from "axios";
 import HomeExperiences from "../components/pages/home/HomeExperiences";
+import { useGetExperiences, useGetProjects, useGetPosts } from "../hooks/queries";
+import { LoadingSpinner } from "../components/LoadingSpinner";
 
-export const getStaticProps: GetStaticProps = async () => {
-  let experiences: TExperience[] = [];
-  let projects: TProject[] = [];
-  let posts: TPost[] = [];
+const Home: NextPage = () => {
+  const { data: experiences = [], isLoading: experiencesLoading, error: experiencesError } = useGetExperiences();
+  const { data: projects = [], isLoading: projectsLoading, error: projectsError } = useGetProjects();
+  const { data: posts = [], isLoading: postsLoading, error: postsError } = useGetPosts();
 
-  const url = process.env.NEXT_PUBLIC_API_URL;
+  const isLoading = experiencesLoading || projectsLoading || postsLoading;
+  const hasError = experiencesError || projectsError || postsError;
 
-  try {
-    const [experiencesRes, projectsRes, postsRes] = await Promise.all([
-      axios.get(`${url}/client/experiences?limit=3`),
-      axios.get(`${url}/client/projects?limit=3`),
-      axios.get(`${url}/client/posts?limit=3`)
-    ]);
-    
-    experiences = experiencesRes.data.slice(0, 3);
-    projects = projectsRes.data.slice(0, 3);
-    posts = postsRes.data.slice(0, 3);
-  } catch (error) {
-    console.error('[getStaticProps] Failed to fetch homepage data:', {
-      message: error instanceof Error ? error.message : 'Unknown error',
-      status: axios.isAxiosError(error) ? error.response?.status : undefined,
-      statusText: axios.isAxiosError(error) ? error.response?.statusText : undefined,
-      url: axios.isAxiosError(error) ? error.config?.url : undefined,
-    });
+  if (isLoading) {
+    return (
+      <div className="container mx-auto flex justify-center items-center min-h-screen">
+        <LoadingSpinner />
+      </div>
+    );
   }
 
-  return {
-    props: {
-      experiences,
-      projects,
-      posts,
-    },
-    revalidate: 60,
-  };
-};
+  if (hasError) {
+    return (
+      <div className="container mx-auto flex justify-center items-center min-h-screen">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Error loading content</h1>
+          <p className="text-gray-600 dark:text-gray-400 mb-4">
+            {hasError instanceof Error ? hasError.message : 'An unexpected error occurred'}
+          </p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="text-cyan-600 hover:text-cyan-700"
+          >
+            Try Again
+          </button>
+        </div>
+      </div>
+    );
+  }
 
-type Props = {
-  experiences: TExperience[];
-  projects: TProject[];
-  posts: TPost[];
-};
-
-const Home: NextPage<Props> = ({ experiences, projects, posts }) => {
   return (
     <div className="container mx-auto space-y-8">
       <HomeProfile />
-      {experiences && <HomeExperiences experiences={experiences} />}
-      {projects && <HomeProjects projects={projects} />}
+      {experiences.length > 0 && <HomeExperiences experiences={experiences.slice(0, 3)} />}
+      {projects.length > 0 && <HomeProjects projects={projects.slice(0, 3)} />}
     </div>
   );
 };

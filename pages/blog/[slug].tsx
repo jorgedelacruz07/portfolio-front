@@ -1,51 +1,54 @@
-import axios from "axios";
-import { GetStaticPaths, GetStaticProps, NextPage } from "next";
-import { TPost } from "../../types/post";
+import { NextPage } from "next";
+import { useRouter } from "next/router";
 import { format } from "date-fns";
 import Link from "next/link";
 import Image from "next/image";
+import { useGetPostBySlug } from "../../hooks/queries";
+import { LoadingSpinner } from "../../components/LoadingSpinner";
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  return {
-    paths: [],
-    fallback: "blocking",
-  };
-};
 
-export const getStaticProps: GetStaticProps = async ({ params }) => {
-  let post = null;
+const PostPage: NextPage = () => {
+  const router = useRouter();
+  const { slug } = router.query;
+  
+  const { data: post, isLoading, error } = useGetPostBySlug(slug);
 
-  const url = process.env.NEXT_PUBLIC_API_URL;
-  const slug = params?.slug;
-
-  try {
-    post = await axios
-      .get(`${url}/client/posts/${slug}`)
-      .then((res) => res.data);
-  } catch (error) {
-    console.error('[Blog slug getStaticProps] Failed to fetch blog post:', {
-      slug,
-      message: error instanceof Error ? error.message : 'Unknown error',
-      status: axios.isAxiosError(error) ? error.response?.status : undefined,
-      statusText: axios.isAxiosError(error) ? error.response?.statusText : undefined,
-      url: axios.isAxiosError(error) ? error.config?.url : undefined,
-    });
+  if (router.isFallback || isLoading) {
+    return (
+      <div className="container mx-auto flex justify-center items-center min-h-screen">
+        <LoadingSpinner />
+      </div>
+    );
   }
 
-  return {
-    props: {
-      post,
-    },
-    revalidate: 60,
-  };
-};
+  if (error) {
+    return (
+      <div className="container mx-auto flex justify-center items-center min-h-screen">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Error loading post</h1>
+          <p className="text-gray-600 dark:text-gray-400 mb-4">
+            {error instanceof Error ? error.message : 'An unexpected error occurred'}
+          </p>
+          <Link href="/blog" className="text-cyan-600 hover:text-cyan-700">
+            Back to Blog
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
-type Props = {
-  post: TPost;
-};
-
-const PostPage: NextPage<Props> = ({ post }) => {
-  if (!post) return null;
+  if (!post) {
+    return (
+      <div className="container mx-auto flex justify-center items-center min-h-screen">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Post not found</h1>
+          <Link href="/blog" className="text-cyan-600 hover:text-cyan-700">
+            Back to Blog
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -61,6 +64,8 @@ const PostPage: NextPage<Props> = ({ post }) => {
                   width={64}
                   height={64}
                   className="object-cover"
+                  sizes="64px"
+                  priority
                 />
               </div>
             )}
