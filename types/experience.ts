@@ -13,7 +13,7 @@ export type TExperience = {
   jobTitle: string;
   jobDescription: string;
   from: string;
-  to: string;
+  to: string | null;
   technologyIds: string[];
   technologies: TTechnology[];
   createdAt: string;
