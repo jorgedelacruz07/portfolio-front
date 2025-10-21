@@ -14,11 +14,12 @@ export const getStaticProps: GetStaticProps = async () => {
       .get(`${url}/client/projects`)
       .then((res) => res.data);
   } catch (error) {
-    let message = "";
-    if (axios.isAxiosError(error)) {
-      message = error?.response?.statusText as string;
-    }
-    console.error({ error: message });
+    console.error('[Projects getStaticProps] Failed to fetch projects data:', {
+      message: error instanceof Error ? error.message : 'Unknown error',
+      status: axios.isAxiosError(error) ? error.response?.status : undefined,
+      statusText: axios.isAxiosError(error) ? error.response?.statusText : undefined,
+      url: axios.isAxiosError(error) ? error.config?.url : undefined,
+    });
   }
 
   return {

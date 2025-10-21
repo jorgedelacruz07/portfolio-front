@@ -7,7 +7,7 @@ export type TProject = {
   name: string;
   type: string;
   image?: TImage;
-  url: string;
+  url?: string;
   description: string;
   from: string;
   to: string;
