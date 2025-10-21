@@ -28,7 +28,11 @@ function MyApp({ Component, pageProps }: AppProps) {
         }}
       />
       <QueryClientProvider client={queryClient}>
-        <ThemeProvider enableSystem={true} attribute="class">
+        <ThemeProvider
+          enableSystem={false}
+          defaultTheme="dark"
+          attribute="class"
+        >
           <Layout>
             <Component {...pageProps} />
           </Layout>

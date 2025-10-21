@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback } from "react";
 
 interface PerformanceMetrics {
   loadTime: number;
@@ -10,29 +10,33 @@ interface PerformanceMetrics {
 
 export const usePerformance = () => {
   const measurePerformance = useCallback(() => {
-    if (typeof window === 'undefined' || !window.performance) {
+    if (typeof window === "undefined" || !window.performance) {
       return null;
     }
 
-    const navigation = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
-    const paintEntries = performance.getEntriesByType('paint');
-    
+    const navigation = performance.getEntriesByType(
+      "navigation",
+    )[0] as PerformanceNavigationTiming;
+    const paintEntries = performance.getEntriesByType("paint");
+
     const metrics: PerformanceMetrics = {
       loadTime: navigation.loadEventEnd - navigation.loadEventStart,
-      firstContentfulPaint: paintEntries.find(entry => entry.name === 'first-contentful-paint')?.startTime || 0,
+      firstContentfulPaint:
+        paintEntries.find((entry) => entry.name === "first-contentful-paint")
+          ?.startTime || 0,
       largestContentfulPaint: 0,
       firstInputDelay: 0,
       cumulativeLayoutShift: 0,
     };
 
     // Measure LCP
-    if ('PerformanceObserver' in window) {
+    if ("PerformanceObserver" in window) {
       const lcpObserver = new PerformanceObserver((list) => {
         const entries = list.getEntries();
         const lastEntry = entries[entries.length - 1];
         metrics.largestContentfulPaint = lastEntry.startTime;
       });
-      lcpObserver.observe({ entryTypes: ['largest-contentful-paint'] });
+      lcpObserver.observe({ entryTypes: ["largest-contentful-paint"] });
 
       // Measure FID
       const fidObserver = new PerformanceObserver((list) => {
@@ -41,7 +45,7 @@ export const usePerformance = () => {
           metrics.firstInputDelay = entry.processingStart - entry.startTime;
         });
       });
-      fidObserver.observe({ entryTypes: ['first-input'] });
+      fidObserver.observe({ entryTypes: ["first-input"] });
 
       // Measure CLS
       let clsValue = 0;
@@ -53,26 +57,28 @@ export const usePerformance = () => {
         }
         metrics.cumulativeLayoutShift = clsValue;
       });
-      clsObserver.observe({ entryTypes: ['layout-shift'] });
+      clsObserver.observe({ entryTypes: ["layout-shift"] });
     }
 
     return metrics;
   }, []);
 
   const logPerformance = useCallback((metrics: PerformanceMetrics) => {
-    console.log('[Performance Metrics]', metrics);
+    console.log("[Performance Metrics]", metrics);
 
     // Log to analytics if available
-    if (typeof window !== 'undefined' && window.gtag) {
-      window.gtag('event', 'performance', {
-        event_category: 'Performance',
-        event_label: 'Page Load',
+    if (typeof window !== "undefined" && window.gtag) {
+      window.gtag("event", "performance", {
+        event_category: "Performance",
+        event_label: "Page Load",
         value: Math.round(metrics.loadTime),
         custom_map: {
           fcp: Math.round(metrics.firstContentfulPaint).toString(),
           lcp: Math.round(metrics.largestContentfulPaint).toString(),
           fid: Math.round(metrics.firstInputDelay).toString(),
-          cls: (Math.round(metrics.cumulativeLayoutShift * 1000) / 1000).toString(),
+          cls: (
+            Math.round(metrics.cumulativeLayoutShift * 1000) / 1000
+          ).toString(),
         },
       });
     }

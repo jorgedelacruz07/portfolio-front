@@ -4,11 +4,14 @@ import { format } from "date-fns";
 import Link from "next/link";
 import { useGetProjectBySlug } from "../../hooks/queries";
 import { LoadingSpinner } from "../../components/LoadingSpinner";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { ExternalLinkIcon } from "@/components/icons/ExternalLinkIcon";
 
 const ProjectPage = () => {
   const router = useRouter();
   const { slug } = router.query;
-  
+
   const { data: project, isLoading, error } = useGetProjectBySlug(slug);
 
   if (router.isFallback || isLoading) {
@@ -22,14 +25,18 @@ const ProjectPage = () => {
   if (error) {
     return (
       <div className="container mx-auto flex justify-center items-center min-h-screen">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Error loading project</h1>
-          <p className="text-gray-600 dark:text-gray-400 mb-4">
-            {error instanceof Error ? error.message : 'An unexpected error occurred'}
+        <div className="text-center space-y-4">
+          <h1 className="text-3xl font-bold text-foreground">
+            Error loading project
+          </h1>
+          <p className="text-muted-foreground text-lg">
+            {error instanceof Error
+              ? error.message
+              : "An unexpected error occurred"}
           </p>
-          <Link href="/projects" className="text-cyan-600 hover:text-cyan-700">
-            Back to Projects
-          </Link>
+          <Button variant="outline" asChild>
+            <Link href="/projects">Back to Projects</Link>
+          </Button>
         </div>
       </div>
     );
@@ -38,127 +45,121 @@ const ProjectPage = () => {
   if (!project) {
     return (
       <div className="container mx-auto flex justify-center items-center min-h-screen">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Project not found</h1>
-          <Link href="/projects" className="text-cyan-600 hover:text-cyan-700">
-            Back to Projects
-          </Link>
+        <div className="text-center space-y-4">
+          <h1 className="text-3xl font-bold text-foreground">
+            Project not found
+          </h1>
+          <Button variant="outline" asChild>
+            <Link href="/projects">Back to Projects</Link>
+          </Button>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <article className="space-y-8">
-        {/* Header */}
-        <header className="space-y-4">
-          <div className="flex items-center gap-4">
-            {project.image?.src && (
-              <div className="relative w-16 h-16 rounded-lg overflow-hidden">
-                <Image
-                  src={project.image.src}
-                  alt={project.name}
-                  width={64}
-                  height={64}
-                  className="object-cover"
-                  sizes="64px"
-                  priority
-                />
+    <div className="py-16">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <article className="space-y-8">
+          {/* Header */}
+          <header className="space-y-6">
+            <div className="flex items-center gap-4">
+              {project.image?.src && (
+                <div className="relative w-20 h-20 rounded-lg overflow-hidden ring-2 ring-border/50">
+                  <Image
+                    src={project.image.src}
+                    alt={project.name}
+                    width={80}
+                    height={80}
+                    className="object-cover"
+                    sizes="80px"
+                    priority
+                  />
+                </div>
+              )}
+              <div className="flex-1">
+                <h1 className="text-4xl md:text-5xl font-bold text-foreground">
+                  {project.name}
+                </h1>
+                <div className="flex items-center gap-4 mt-2">
+                  {project.type && (
+                    <Badge variant="secondary" className="text-sm font-medium">
+                      {project.type}
+                    </Badge>
+                  )}
+                  {project.url && (
+                    <Button variant="outline" size="sm" asChild>
+                      <a
+                        href={project.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center"
+                      >
+                        Visit Project
+                        <ExternalLinkIcon className="w-4 h-4 ml-2" />
+                      </a>
+                    </Button>
+                  )}
+                </div>
               </div>
-            )}
-            <div>
-              <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">
-                {project.name}
-              </h1>
-              <div className="flex items-center gap-4 mt-2">
-                {project.type && (
-                  <span className="px-3 py-1 text-sm font-medium text-gray-100 bg-gray-700 dark:bg-gray-800 rounded-full">
-                    {project.type}
-                  </span>
-                )}
-                {project.url && (
-                  <a
-                    href={project.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center text-cyan-800 dark:text-gray-400 hover:text-cyan-700 dark:hover:text-gray-100 transition-colors duration-300 font-semibold"
+            </div>
+
+            <div className="flex items-center gap-4 text-sm text-muted-foreground">
+              <time>
+                {format(new Date(project.from), "MMMM yyyy")} -{" "}
+                {project.to
+                  ? format(new Date(project.to), "MMMM yyyy")
+                  : "Present"}
+              </time>
+            </div>
+          </header>
+
+          {/* Project Image */}
+          {project.image?.src && (
+            <div className="relative aspect-w-16 aspect-h-9 rounded-lg overflow-hidden shadow-lg">
+              <Image
+                src={project.image.src}
+                alt={project.name}
+                width={800}
+                height={450}
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 800px"
+                priority
+              />
+            </div>
+          )}
+
+          {/* Description */}
+          <div className="prose prose-lg dark:prose-invert max-w-none">
+            <p className="text-muted-foreground text-lg leading-relaxed">
+              {project.description}
+            </p>
+          </div>
+
+          {/* Technologies */}
+          {project.technologies && project.technologies.length > 0 && (
+            <div className="space-y-4">
+              <h2 className="text-2xl font-semibold text-foreground">
+                Technologies Used
+              </h2>
+              <div className="flex flex-wrap gap-2">
+                {project.technologies.map((tech) => (
+                  <Badge
+                    key={tech.id}
+                    variant="secondary"
+                    className="text-sm font-medium bg-muted/50 hover:bg-primary/10 hover:text-primary transition-colors duration-200"
                   >
-                    <svg
-                      className="w-4 h-4"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                      />
-                    </svg>
-                  </a>
-                )}
+                    {tech.name}
+                  </Badge>
+                ))}
               </div>
             </div>
-          </div>
+          )}
 
-          <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
-            <time>
-              {format(new Date(project.from), "MMMM yyyy")} -{" "}
-              {project.to
-                ? format(new Date(project.to), "MMMM yyyy")
-                : "Present"}
-            </time>
-          </div>
-        </header>
-
-        {/* Project Image */}
-        {project.image?.src && (
-          <div className="relative aspect-w-16 aspect-h-9 rounded-lg overflow-hidden shadow-lg">
-            <Image
-              src={project.image.src}
-              alt={project.name}
-              width={800}
-              height={450}
-              className="object-cover"
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 800px"
-              priority
-            />
-          </div>
-        )}
-
-        {/* Description */}
-        <div className="prose prose-lg dark:prose-invert max-w-none">
-          <p className="text-gray-600 dark:text-gray-300">
-            {project.description}
-          </p>
-        </div>
-
-        {/* Technologies */}
-        {project.technologies && project.technologies.length > 0 && (
-          <div className="space-y-4">
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-              Technologies Used
-            </h2>
-            <div className="flex flex-wrap gap-2">
-              {project.technologies.map((tech) => (
-                <span
-                  key={tech.id}
-                  className="px-3 py-1 bg-gray-100 dark:bg-gray-800 rounded-full text-sm text-gray-700 dark:text-gray-300"
-                >
-                  {tech.name}
-                </span>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Footer */}
-        <footer className="pt-8 border-t border-gray-200 dark:border-gray-700">
-          <div className="inline-flex items-center text-cyan-800 dark:text-gray-400 hover:text-cyan-700 dark:hover:text-gray-100 transition-colors duration-300 font-semibold">
-            <Link href="/projects">
-              <>
+          {/* Footer */}
+          <footer className="pt-8 border-t border-border/40">
+            <Button variant="outline" asChild>
+              <Link href="/projects" className="inline-flex items-center">
                 <svg
                   className="w-4 h-4 mr-2"
                   fill="none"
@@ -173,14 +174,13 @@ const ProjectPage = () => {
                   />
                 </svg>
                 Back to Projects
-              </>
-            </Link>
-          </div>
-        </footer>
-      </article>
+              </Link>
+            </Button>
+          </footer>
+        </article>
+      </div>
     </div>
   );
 };
-
 
 export default ProjectPage;

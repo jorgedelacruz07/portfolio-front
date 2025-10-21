@@ -1,5 +1,5 @@
-import { useCallback } from 'react';
-import { ApiError } from '../types/error';
+import { useCallback } from "react";
+import { ApiError } from "../types/error";
 
 export const useErrorHandler = () => {
   const handleError = useCallback((error: unknown): ApiError => {
@@ -11,13 +11,13 @@ export const useErrorHandler = () => {
       };
     }
 
-    if (typeof error === 'string') {
+    if (typeof error === "string") {
       return {
         message: error,
       };
     }
 
-    if (error && typeof error === 'object' && 'message' in error) {
+    if (error && typeof error === "object" && "message" in error) {
       return {
         message: (error as any).message,
         status: (error as any).status,
@@ -28,7 +28,7 @@ export const useErrorHandler = () => {
     }
 
     return {
-      message: 'An unknown error occurred',
+      message: "An unknown error occurred",
     };
   }, []);
 
@@ -37,19 +37,20 @@ export const useErrorHandler = () => {
       ...error,
       context,
       timestamp: new Date().toISOString(),
-      userAgent: typeof window !== 'undefined' ? window.navigator.userAgent : undefined,
+      userAgent:
+        typeof window !== "undefined" ? window.navigator.userAgent : undefined,
     };
 
-    console.error('[Error Handler]', errorInfo);
+    console.error("[Error Handler]", errorInfo);
 
     // Log to analytics if available
-    if (typeof window !== 'undefined' && window.gtag) {
-      window.gtag('event', 'exception', {
+    if (typeof window !== "undefined" && window.gtag) {
+      window.gtag("event", "exception", {
         description: error.message,
         fatal: false,
         custom_map: {
-          error_code: error.code || 'unknown',
-          error_status: error.status?.toString() || 'unknown',
+          error_code: error.code || "unknown",
+          error_status: error.status?.toString() || "unknown",
         },
       });
     }

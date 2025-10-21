@@ -1,4 +1,4 @@
-import React, { Component, ErrorInfo, ReactNode } from 'react';
+import React, { Component, ErrorInfo, ReactNode } from "react";
 
 interface Props {
   children: ReactNode;
@@ -21,11 +21,11 @@ class ErrorBoundaryComponent extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('ErrorBoundary caught an error:', error, errorInfo);
-    
+    console.error("ErrorBoundary caught an error:", error, errorInfo);
+
     // Log error to analytics if available
-    if (typeof window !== 'undefined' && window.gtag) {
-      window.gtag('event', 'exception', {
+    if (typeof window !== "undefined" && window.gtag) {
+      window.gtag("event", "exception", {
         description: error.message,
         fatal: false,
       });
@@ -63,7 +63,8 @@ class ErrorBoundaryComponent extends Component<Props, State> {
                 </h3>
                 <div className="mt-2 text-sm text-gray-500 dark:text-gray-400">
                   <p>
-                    We&apos;re sorry, but something unexpected happened. Please try refreshing the page.
+                    We&apos;re sorry, but something unexpected happened. Please
+                    try refreshing the page.
                   </p>
                 </div>
                 <div className="mt-4">

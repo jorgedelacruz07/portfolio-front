@@ -3,6 +3,17 @@ import Image from "next/image";
 import Link from "next/link";
 import { useGetProjects } from "../../hooks/queries";
 import { LoadingSpinner } from "../../components/LoadingSpinner";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { ExternalLinkIcon } from "@/components/icons/ExternalLinkIcon";
 
 const Projects: NextPage = () => {
   const { data: projects = [], isLoading, error } = useGetProjects();
@@ -18,108 +29,151 @@ const Projects: NextPage = () => {
   if (error) {
     return (
       <div className="container mx-auto flex justify-center items-center min-h-screen">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Error loading projects</h1>
-          <p className="text-gray-600 dark:text-gray-400 mb-4">
-            {error instanceof Error ? error.message : 'An unexpected error occurred'}
+        <div className="text-center space-y-4">
+          <h1 className="text-3xl font-bold text-foreground">
+            Error loading projects
+          </h1>
+          <p className="text-muted-foreground text-lg">
+            {error instanceof Error
+              ? error.message
+              : "An unexpected error occurred"}
           </p>
-          <button 
-            onClick={() => window.location.reload()} 
-            className="text-cyan-600 hover:text-cyan-700"
+          <Button
+            onClick={() => window.location.reload()}
+            variant="outline"
+            className="mt-4"
           >
             Try Again
-          </button>
+          </Button>
         </div>
       </div>
     );
   }
+
   return (
-    <div>
-      <div className="space-y-8">
-        <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">
-          My Projects
-        </h1>
-        <div className="space-y-6">
-          {projects.length === 0 ? (
-            <div className="text-center py-12">
-              <p className="text-gray-500 dark:text-gray-400">No projects available at the moment.</p>
+    <div className="py-12 md:py-16">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="space-y-8 md:space-y-12">
+          <div className="text-center space-y-3 md:space-y-4">
+            <div className="flex items-center justify-center mb-3 md:mb-4">
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground">
+                My <span className="text-primary">Projects</span>
+              </h1>
+              <div className="ml-3 md:ml-4 h-1 w-12 md:w-16 bg-primary"></div>
             </div>
-          ) : (
-            projects.map((project) => (
-              <div key={project.slug} className="group">
-                <div className="h-full relative overflow-hidden rounded-lg bg-white dark:bg-gray-800 p-6 shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-200 dark:border-gray-700">
-                  <div className="space-y-4">
-                    <div className="flex items-center gap-4">
-                      {project.image?.src && (
-                        <div className="relative w-12 h-12 rounded-lg overflow-hidden">
-                          <Image
-                            src={project.image.src}
-                            alt={project.name || 'Project'}
-                            width={48}
-                            height={48}
-                            className="object-cover"
-                            sizes="48px"
-                            loading="lazy"
-                          />
-                        </div>
-                      )}
-                      <div className="text-lg md:text-xl font-semibold text-black dark:text-gray-300 group-hover:text-gray-600 dark:group-hover:text-white transition-colors duration-300">
-                        <Link href={`/projects/${project.slug}`}>
-                          {project.name || 'Untitled Project'}
-                        </Link>
-                      </div>
-                    </div>
+            <p className="text-muted-foreground text-base md:text-lg max-w-2xl mx-auto px-4">
+              A collection of projects I&apos;ve worked on, showcasing my skills
+              and experience in software development.
+            </p>
+          </div>
 
-                    <div className="space-y-2">
-                      <p className="text-gray-600 dark:text-gray-300 line-clamp-2">
-                        {project.description || 'No description available'}
-                      </p>
-                      <div className="flex items-center justify-between text-sm text-gray-700 dark:text-gray-400 font-semibold">
-                        <span>{project.type || 'Unknown type'}</span>
-                      </div>
-                    </div>
-
-                    {project.technologies && project.technologies.length > 0 && (
-                      <div className="flex flex-wrap gap-2">
-                        {project.technologies.map((tech) => (
-                          <span
-                            key={tech.id}
-                            className="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded-full text-xs font-medium text-gray-600 dark:text-gray-300"
-                          >
-                            {tech.name}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-
-                    {project.url && (
-                      <a
-                        href={project.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center text-cyan-800 dark:text-gray-400 hover:text-cyan-700 dark:hover:text-gray-100 transition-colors duration-300 font-semibold"
-                      >
-                        Visit Project
-                        <svg
-                          className="w-4 h-4 ml-1"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                          />
-                        </svg>
-                      </a>
-                    )}
-                  </div>
-                </div>
+          <div className="space-y-4 md:space-y-6">
+            {projects.length === 0 ? (
+              <div className="text-center py-16">
+                <p className="text-muted-foreground text-lg">
+                  No projects available at the moment.
+                </p>
               </div>
-            ))
-          )}
+            ) : (
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
+                {projects.map((project) => (
+                  <Card
+                    key={project.slug}
+                    className="group transition-all duration-300 hover:shadow-lg hover:scale-[1.01] border-border/50 hover:border-primary/20 bg-card"
+                  >
+                    <CardHeader className="pb-3 md:pb-4">
+                      <div className="flex items-start gap-3 md:gap-4">
+                        {project.image?.src && (
+                          <div className="relative w-12 h-12 md:w-16 md:h-16 rounded-lg overflow-hidden ring-2 ring-border/50 flex-shrink-0">
+                            <Image
+                              src={project.image.src}
+                              alt={project.name || "Project"}
+                              width={64}
+                              height={64}
+                              className="object-cover"
+                              sizes="(max-width: 768px) 48px, 64px"
+                              loading="lazy"
+                            />
+                          </div>
+                        )}
+                        <div className="flex-1 min-w-0">
+                          <CardTitle className="text-lg md:text-xl lg:text-2xl group-hover:text-primary transition-colors duration-300 line-clamp-2">
+                            <Link href={`/projects/${project.slug}`}>
+                              {project.name || "Untitled Project"}
+                            </Link>
+                          </CardTitle>
+                          <CardDescription className="text-sm md:text-base font-medium text-muted-foreground mt-1">
+                            {project.type || "Unknown type"}
+                          </CardDescription>
+                        </div>
+                      </div>
+                    </CardHeader>
+
+                    <CardContent className="pb-3 md:pb-4">
+                      <p className="text-muted-foreground leading-relaxed text-sm md:text-base line-clamp-3">
+                        {project.description || "No description available"}
+                      </p>
+                    </CardContent>
+
+                    <CardFooter className="flex flex-col gap-3 md:gap-4 pt-0">
+                      {project.technologies &&
+                        project.technologies.length > 0 && (
+                          <div className="flex flex-wrap gap-1.5 md:gap-2">
+                            {project.technologies.slice(0, 4).map((tech) => (
+                              <Badge
+                                key={tech.id}
+                                variant="secondary"
+                                className="text-xs md:text-sm font-medium bg-muted/50 hover:bg-primary/10 hover:text-primary transition-colors duration-200"
+                              >
+                                {tech.name}
+                              </Badge>
+                            ))}
+                            {project.technologies.length > 4 && (
+                              <Badge
+                                variant="outline"
+                                className="text-xs md:text-sm font-medium"
+                              >
+                                +{project.technologies.length - 4} more
+                              </Badge>
+                            )}
+                          </div>
+                        )}
+
+                      <div className="flex gap-2">
+                        {project.url && (
+                          <Button
+                            variant="default"
+                            size="sm"
+                            className="flex-1 group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300"
+                            asChild
+                          >
+                            <a
+                              href={project.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              Visit Project
+                              <ExternalLinkIcon className="w-3 h-3 md:w-4 md:h-4 ml-1.5 md:ml-2" />
+                            </a>
+                          </Button>
+                        )}
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="flex-1"
+                          asChild
+                        >
+                          <Link href={`/projects/${project.slug}`}>
+                            View Details
+                          </Link>
+                        </Button>
+                      </div>
+                    </CardFooter>
+                  </Card>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

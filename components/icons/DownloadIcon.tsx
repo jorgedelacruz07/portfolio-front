@@ -1,11 +1,14 @@
-import { FC } from 'react';
+import { FC } from "react";
 
 interface IconProps {
   className?: string;
   size?: number;
 }
 
-export const DownloadIcon: FC<IconProps> = ({ className = 'w-5 h-5', size }) => (
+export const DownloadIcon: FC<IconProps> = ({
+  className = "w-5 h-5",
+  size,
+}) => (
   <svg
     className={className}
     fill="none"
