@@ -67,7 +67,7 @@ const Blog: NextPage = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
             {posts.length === 0 ? (
               <div className="col-span-full text-center py-16">
                 <p className="text-muted-foreground text-lg">
@@ -80,7 +80,7 @@ const Blog: NextPage = () => {
                   key={post.slug}
                   className="group transition-all duration-300 hover:shadow-lg hover:scale-[1.02] border-border/50 hover:border-primary/20 bg-card"
                 >
-                  <CardHeader className="pb-4">
+                  <CardHeader className="pb-3 md:pb-4">
                     <div className="relative aspect-w-16 aspect-h-9 rounded-lg overflow-hidden mb-4">
                       <Image
                         src={post.image?.src || "/images/placeholder.jpg"}
@@ -104,13 +104,13 @@ const Blog: NextPage = () => {
                     </CardDescription>
                   </CardHeader>
 
-                  <CardContent className="pb-4">
+                  <CardContent className="pb-3 md:pb-4">
                     <p className="text-muted-foreground line-clamp-3 leading-relaxed">
                       {post.body || "No content available"}
                     </p>
                   </CardContent>
 
-                  <CardFooter className="flex flex-col gap-4 pt-0">
+                  <CardFooter className="flex flex-col gap-3 md:gap-4 pt-0">
                     {post.categories && post.categories.length > 0 && (
                       <div className="flex flex-wrap gap-2">
                         {post.categories.map((category) => (
