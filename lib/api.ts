@@ -3,7 +3,7 @@ import { TProject } from "../types/project";
 import { TExperience } from "../types/experience";
 import { TPost } from "../types/post";
 import { TCategory } from "../types/category";
-import { ApiError, NetworkError } from "../types/error";
+import { ApiError } from "../types/error";
 
 // API Configuration
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -161,7 +161,7 @@ export const api = {
 // Utility function to handle API errors
 export const handleApiError = (error: unknown): ApiError => {
   if (axios.isAxiosError(error)) {
-    const networkError: NetworkError = error;
+    // const _networkError: NetworkError = error;
     return {
       message: error.message,
       status: error.response?.status,

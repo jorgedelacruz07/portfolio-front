@@ -75,7 +75,7 @@ const Blog: NextPage = () => {
                 </p>
               </div>
             ) : (
-              posts.map((post: TPost, index: number) => (
+              posts.map((post: TPost) => (
                 <Card
                   key={post.slug}
                   className="group transition-all duration-300 hover:shadow-lg hover:scale-[1.02] border-border/50 hover:border-primary/20 bg-card"
@@ -89,7 +89,7 @@ const Blog: NextPage = () => {
                         height={450}
                         className="object-cover"
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                        priority={index < 3}
+                        loading="lazy"
                       />
                     </div>
                     <CardTitle className="text-xl md:text-2xl group-hover:text-primary transition-colors duration-300">

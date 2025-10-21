@@ -73,7 +73,7 @@ const ProjectPage = () => {
                     height={80}
                     className="object-cover"
                     sizes="80px"
-                    priority
+                    loading="lazy"
                   />
                 </div>
               )}
@@ -124,7 +124,7 @@ const ProjectPage = () => {
                 height={450}
                 className="object-cover"
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 800px"
-                priority
+                loading="lazy"
               />
             </div>
           )}

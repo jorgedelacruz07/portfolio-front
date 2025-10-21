@@ -88,7 +88,7 @@ export const useParallax = (speed: number = 0.5) => {
   useEffect(() => {
     const handleScroll = () => {
       if (ref.current) {
-        const rect = ref.current.getBoundingClientRect();
+        ref.current.getBoundingClientRect();
         const scrolled = window.pageYOffset;
         const rate = scrolled * -speed;
         setOffset(rate);

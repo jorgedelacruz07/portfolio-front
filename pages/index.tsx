@@ -1,8 +1,8 @@
 import type { NextPage } from "next";
+import dynamic from "next/dynamic";
+import { memo, useMemo } from "react";
 import { HomeProfile } from "../components/pages/home/HomeProfile";
 import { HomeAbout } from "../components/pages/home/HomeAbout";
-import { HomeProjects } from "../components/pages/home/HomeProjects";
-import HomeExperiences from "../components/pages/home/HomeExperiences";
 import {
   useGetExperiences,
   useGetProjects,
@@ -13,7 +13,35 @@ import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { classConstants } from "@/lib/class-constants";
 
-const Home: NextPage = () => {
+// Dynamic imports for below-the-fold components
+const HomeProjects = dynamic(
+  () =>
+    import("../components/pages/home/HomeProjects").then((mod) => ({
+      default: mod.HomeProjects,
+    })),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="py-16">
+        <div className="animate-pulse bg-muted/20 h-64 rounded-lg"></div>
+      </div>
+    ),
+  },
+);
+
+const HomeExperiences = dynamic(
+  () => import("../components/pages/home/HomeExperiences"),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="py-16">
+        <div className="animate-pulse bg-muted/20 h-64 rounded-lg"></div>
+      </div>
+    ),
+  },
+);
+
+const HomeComponent: NextPage = () => {
   const {
     data: experiences = [],
     isLoading: experiencesLoading,
@@ -25,13 +53,20 @@ const Home: NextPage = () => {
     error: projectsError,
   } = useGetProjects();
   const {
-    data: posts = [],
+    data: _posts = [],
     isLoading: postsLoading,
     error: postsError,
   } = useGetPosts();
 
-  const isLoading = experiencesLoading || projectsLoading || postsLoading;
-  const hasError = experiencesError || projectsError || postsError;
+  const isLoading = useMemo(
+    () => experiencesLoading || projectsLoading || postsLoading,
+    [experiencesLoading, projectsLoading, postsLoading],
+  );
+
+  const hasError = useMemo(
+    () => experiencesError || projectsError || postsError,
+    [experiencesError, projectsError, postsError],
+  );
 
   if (isLoading) {
     return <PageLoader />;
@@ -81,4 +116,6 @@ const Home: NextPage = () => {
   );
 };
 
+const Home = memo(HomeComponent);
+Home.displayName = "Home";
 export default Home;

@@ -7,7 +7,7 @@ import { useScrollAnimation } from "@/hooks";
 
 export const Navbar = () => {
   const router = useRouter();
-  const [selected, setSelected] = useState("/");
+  const [, setSelected] = useState("/");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const { ref: navbarRef, isVisible } = useScrollAnimation({ threshold: 0.1 });
@@ -34,12 +34,6 @@ export const Navbar = () => {
       "text-muted-foreground hover:text-foreground transition-colors duration-200 font-medium",
       router.pathname === path ? "text-foreground font-semibold" : "",
     );
-
-  const handleLinkClick = (e: React.MouseEvent, path: string) => {
-    e.preventDefault();
-    setIsMenuOpen(false);
-    router.push(path);
-  };
 
   const navbarItems = [
     {

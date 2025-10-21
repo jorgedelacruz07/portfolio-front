@@ -73,7 +73,7 @@ const ExperiencePage = () => {
                     height={80}
                     className="object-cover"
                     sizes="80px"
-                    priority
+                    loading="lazy"
                   />
                 </div>
               )}

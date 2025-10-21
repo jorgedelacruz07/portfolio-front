@@ -1,12 +1,13 @@
+const withBundleAnalyzer = require("@next/bundle-analyzer")({
+  enabled: process.env.ANALYZE === "true",
+});
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  swcMinify: true,
 
   // Enable experimental features for better performance
   experimental: {
-    scrollRestoration: true,
-    optimizeCss: true,
     optimizePackageImports: ["@heroicons/react", "lucide-react"],
   },
 
@@ -18,6 +19,8 @@ const nextConfig = {
     minimumCacheTTL: 60 * 60 * 24 * 30, // 30 days
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+    unoptimized: false,
+    loader: "default",
   },
 
   // Compiler optimizations
@@ -25,11 +28,6 @@ const nextConfig = {
     removeConsole: process.env.NODE_ENV === "production",
     // Remove React DevTools in production
     reactRemoveProperties: process.env.NODE_ENV === "production",
-  },
-
-  // Experimental features for better performance
-  experimental: {
-    scrollRestoration: true,
   },
 
   // Headers for better caching
@@ -49,6 +47,14 @@ const nextConfig = {
           {
             key: "X-XSS-Protection",
             value: "1; mode=block",
+          },
+          {
+            key: "Referrer-Policy",
+            value: "strict-origin-when-cross-origin",
+          },
+          {
+            key: "Permissions-Policy",
+            value: "camera=(), microphone=(), geolocation=()",
           },
         ],
       },
@@ -74,7 +80,7 @@ const nextConfig = {
   },
 
   // Webpack optimizations
-  webpack: (config, { isServer, dev }) => {
+  webpack: (config, { isServer }) => {
     // Fallback for client-side
     if (!isServer) {
       config.resolve.fallback = {
@@ -104,42 +110,6 @@ const nextConfig = {
       };
     }
 
-    // Optimize bundle splitting
-    config.optimization = {
-      ...config.optimization,
-      splitChunks: {
-        chunks: "all",
-        cacheGroups: {
-          default: false,
-          vendors: false,
-          // Framework chunk
-          framework: {
-            name: "framework",
-            chunks: "all",
-            test: /(?<!node_modules.*)[\\/]node_modules[\\/](react|react-dom|scheduler|prop-types|use-subscription)[\\/]/,
-            priority: 40,
-            enforce: true,
-          },
-          // Vendor chunk
-          vendor: {
-            name: "vendor",
-            chunks: "all",
-            test: /[\\/]node_modules[\\/]/,
-            priority: 20,
-          },
-          // Common chunk
-          common: {
-            name: "common",
-            minChunks: 2,
-            chunks: "all",
-            priority: 10,
-            reuseExistingChunk: true,
-            enforce: true,
-          },
-        },
-      },
-    };
-
     return config;
   },
 
@@ -150,4 +120,4 @@ const nextConfig = {
   poweredByHeader: false,
 };
 
-module.exports = nextConfig;
+module.exports = withBundleAnalyzer(nextConfig);
