@@ -68,7 +68,7 @@ const Experiences: NextPage = () => {
             </p>
           </div>
 
-          <div className="space-y-4 md:space-y-6">
+          <div className="space-y-6 md:space-y-8">
             {experiences.length === 0 ? (
               <div className="text-center py-16">
                 <p className="text-muted-foreground text-lg">
@@ -81,7 +81,7 @@ const Experiences: NextPage = () => {
                   key={experience.slug}
                   className="group transition-all duration-300 hover:shadow-lg hover:scale-[1.01] border-border/50 hover:border-primary/20 bg-card"
                 >
-                  <CardHeader className="pb-4">
+                  <CardHeader className="pb-3 md:pb-4">
                     <div className="flex items-center gap-4">
                       {experience.image?.src && (
                         <div className="relative w-16 h-16 rounded-lg overflow-hidden ring-2 ring-border/50">
@@ -124,13 +124,13 @@ const Experiences: NextPage = () => {
                     </div>
                   </CardHeader>
 
-                  <CardContent className="pb-4">
+                  <CardContent className="pb-3 md:pb-4">
                     <p className="text-muted-foreground leading-relaxed">
                       {experience.jobDescription || "No description available"}
                     </p>
                   </CardContent>
 
-                  <CardFooter className="flex flex-col gap-4 pt-0">
+                  <CardFooter className="flex flex-col gap-3 md:gap-4 pt-0">
                     {experience.technologies &&
                       experience.technologies.length > 0 && (
                         <div className="flex flex-wrap gap-2">
