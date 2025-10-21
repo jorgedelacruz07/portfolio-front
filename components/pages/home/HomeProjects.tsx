@@ -14,7 +14,6 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { componentClasses, classConstants } from "@/lib/class-constants";
 import { useScrollAnimation, useStaggeredAnimation } from "@/hooks";
 
 type Props = {

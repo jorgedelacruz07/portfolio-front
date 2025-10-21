@@ -1,24 +1,22 @@
-import { FC, memo, useMemo, useCallback } from "react";
+import { FC, memo, useCallback } from "react";
 import Image from "next/image";
 import { profile } from "../../../data/content";
 import { SocialNetworks } from "../../../components/SocialNetworks";
 import { DownloadIcon } from "../../icons/DownloadIcon";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
-import { useScrollAnimation, useMousePosition } from "@/hooks";
+import { useScrollAnimation } from "@/hooks";
 
 const HomeProfileComponent: FC = () => {
-  const { ref: profileRef, isVisible } = useScrollAnimation({ threshold: 0.2 });
+  const { ref: profileRef } = useScrollAnimation({ threshold: 0.2 });
   const { ref: textRef, isVisible: textVisible } = useScrollAnimation({
     threshold: 0.3,
   });
   const { ref: imageRef, isVisible: imageVisible } = useScrollAnimation({
     threshold: 0.2,
   });
-  const mousePosition = useMousePosition();
 
-  const handleDownloadClick = useCallback((e: React.MouseEvent) => {
+  const handleDownloadClick = useCallback(() => {
     // Track download event if analytics is available
     if (typeof window !== "undefined" && window.gtag) {
       window.gtag("event", "download", {
@@ -135,20 +133,24 @@ const HomeProfileComponent: FC = () => {
                   {/* Enhanced terminal-style frame */}
                   <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-primary/5 rounded-full blur-xl animate-glow"></div>
 
-                  {/* Profile image with enhanced effects */}
-                  <Avatar className="w-48 h-48 lg:w-56 lg:h-56 ring-4 ring-primary/20 shadow-2xl relative z-10 hover-lift animate-scale-in">
-                    <AvatarImage
+                  {/* Profile image with enhanced effects - LCP element */}
+                  <div className="w-48 h-48 lg:w-56 lg:h-56 ring-4 ring-primary/20 shadow-2xl relative z-10 hover-lift animate-scale-in rounded-full overflow-hidden">
+                    <Image
                       src={profile.image}
                       alt={profile.name}
-                      className="object-cover"
+                      width={224}
+                      height={224}
+                      className="object-cover w-full h-full"
+                      priority
+                      sizes="(max-width: 1024px) 192px, 224px"
                     />
-                    <AvatarFallback className="text-2xl lg:text-3xl font-bold bg-primary/10 text-primary">
+                    <div className="absolute inset-0 flex items-center justify-center bg-primary/10 text-primary text-2xl lg:text-3xl font-bold">
                       {profile.name
                         .split(" ")
                         .map((n) => n[0])
                         .join("")}
-                    </AvatarFallback>
-                  </Avatar>
+                    </div>
+                  </div>
 
                   {/* Enhanced code brackets around image */}
                   <div className="absolute -top-2 -left-2 text-primary/60 font-mono text-lg lg:text-xl font-bold animate-rotate-in">
