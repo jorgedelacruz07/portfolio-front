@@ -144,12 +144,6 @@ const HomeProfileComponent: FC = () => {
                       priority
                       sizes="(max-width: 1024px) 192px, 224px"
                     />
-                    <div className="absolute inset-0 flex items-center justify-center bg-primary/10 text-primary text-2xl lg:text-3xl font-bold">
-                      {profile.name
-                        .split(" ")
-                        .map((n) => n[0])
-                        .join("")}
-                    </div>
                   </div>
 
                   {/* Enhanced code brackets around image */}
