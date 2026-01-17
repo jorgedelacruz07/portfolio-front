@@ -1,4 +1,4 @@
-import { FC, memo, useMemo, useCallback } from "react";
+import { FC, memo, useCallback } from "react";
 import { TProject } from "../../../types/project";
 import Link from "next/link";
 import Image from "next/image";
@@ -13,7 +13,8 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { SectionHeader } from "@/components/ui/SectionHeader";
+import classNames from "classnames";
 import { useScrollAnimation, useStaggeredAnimation } from "@/hooks";
 
 type Props = {
@@ -32,7 +33,7 @@ const ProjectCard = memo<{
 
   return (
     <Card
-      className={cn(
+      className={classNames(
         "group transition-all duration-700 hover:shadow-2xl hover:scale-[1.04] border-border/30 hover:border-primary/50 bg-card/70 backdrop-blur-md relative overflow-hidden",
         isVisible ? "animate-fade-in-up" : "opacity-0 translate-y-8",
       )}
@@ -141,14 +142,8 @@ const ProjectCard = memo<{
 ProjectCard.displayName = "ProjectCard";
 
 const HomeProjectsComponent: FC<Props> = ({ projects }) => {
-  // Memoize the sliced projects to prevent unnecessary re-renders
-  const featuredProjects = useMemo(() => projects.slice(0, 3), [projects]);
-
   const { ref: sectionRef, isVisible } = useScrollAnimation({ threshold: 0.2 });
-  const { refs, visibleItems } = useStaggeredAnimation(
-    featuredProjects.length,
-    150,
-  );
+  const { refs, visibleItems } = useStaggeredAnimation(projects.length, 150);
 
   return (
     <div ref={sectionRef} className="py-16 relative overflow-hidden">
@@ -159,33 +154,15 @@ const HomeProjectsComponent: FC<Props> = ({ projects }) => {
       </div>
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div
-          className={cn(
-            "flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 sm:mb-12 gap-4 sm:gap-0 transition-all duration-1000",
-            isVisible
-              ? "animate-fade-in-down"
-              : "opacity-0 translate-y-[-30px]",
-          )}
-        >
-          <div className="flex items-center">
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground">
-              Featured{" "}
-              <span className="text-primary gradient-text animate-gradient">
-                Projects
-              </span>
-            </h2>
-            <div className="ml-4 h-1 w-16 bg-primary animate-glow"></div>
-          </div>
-          <Button
-            variant="ghost"
-            className="text-primary hover:text-primary/80 font-semibold hover-scale"
-            asChild
-          >
-            <Link href="/projects">View All</Link>
-          </Button>
-        </div>
+        <SectionHeader
+          title="Featured"
+          highlight="Projects"
+          viewAllHref="/projects"
+          isVisible={isVisible}
+          animated
+        />
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-8">
-          {featuredProjects.map((project, index) => (
+          {projects.map((project, index) => (
             <div key={project.slug} ref={(el) => (refs.current[index] = el)}>
               <ProjectCard
                 project={project}

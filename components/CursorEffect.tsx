@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { cn } from "@/lib/utils";
+import classNames from "classnames";
 
 interface CursorEffectProps {
   className?: string;
@@ -63,7 +63,7 @@ export const CursorEffect: React.FC<CursorEffectProps> = ({
     <>
       {/* Main cursor */}
       <div
-        className={cn(
+        className={classNames(
           "fixed top-0 left-0 w-4 h-4 bg-primary/20 rounded-full pointer-events-none z-50 transition-all duration-300 ease-out",
           isHovering && "scale-150 bg-primary/40",
           className,
@@ -75,7 +75,7 @@ export const CursorEffect: React.FC<CursorEffectProps> = ({
 
       {/* Trailing cursor */}
       <div
-        className={cn(
+        className={classNames(
           "fixed top-0 left-0 w-8 h-8 border border-primary/30 rounded-full pointer-events-none z-40 transition-all duration-500 ease-out",
           isHovering && "scale-75 border-primary/50",
         )}
@@ -86,7 +86,7 @@ export const CursorEffect: React.FC<CursorEffectProps> = ({
 
       {/* Outer ring */}
       <div
-        className={cn(
+        className={classNames(
           "fixed top-0 left-0 w-12 h-12 border border-primary/10 rounded-full pointer-events-none z-30 transition-all duration-700 ease-out",
           isHovering && "scale-50 border-primary/20",
         )}
@@ -124,7 +124,7 @@ export const TextReveal: React.FC<TextRevealProps> = ({
 
   return (
     <div
-      className={cn(
+      className={classNames(
         "transition-all ease-out",
         isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4",
         className,
@@ -171,7 +171,10 @@ export const Magnetic: React.FC<MagneticProps> = ({
   return (
     <div
       ref={ref}
-      className={cn("transition-transform duration-300 ease-out", className)}
+      className={classNames(
+        "transition-transform duration-300 ease-out",
+        className,
+      )}
       style={{
         transform: `translate(${position.x}px, ${position.y}px)`,
       }}
@@ -211,7 +214,7 @@ export const GlitchText: React.FC<GlitchTextProps> = ({
 
   return (
     <span
-      className={cn(
+      className={classNames(
         "relative inline-block transition-all duration-100",
         isGlitching && "animate-pulse",
         className,

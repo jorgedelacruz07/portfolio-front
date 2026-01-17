@@ -4,7 +4,7 @@ import { profile } from "../../../data/content";
 import { SocialNetworks } from "../../../components/SocialNetworks";
 import { DownloadIcon } from "../../icons/DownloadIcon";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import classNames from "classnames";
 import { useScrollAnimation } from "@/hooks";
 
 const HomeProfileComponent: FC = () => {
@@ -38,7 +38,7 @@ const HomeProfileComponent: FC = () => {
           {/* Left Content */}
           <div
             ref={textRef}
-            className={cn(
+            className={classNames(
               "space-y-6 lg:space-y-8 transition-all duration-1000",
               textVisible
                 ? "animate-fade-in-left"
@@ -94,7 +94,7 @@ const HomeProfileComponent: FC = () => {
           {/* Right Content - Profile Image with Programmer Theme */}
           <div
             ref={imageRef}
-            className={cn(
+            className={classNames(
               "flex justify-center lg:justify-end transition-all duration-1000",
               imageVisible
                 ? "animate-fade-in-right"

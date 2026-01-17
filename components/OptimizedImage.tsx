@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { useState, useRef, useEffect } from "react";
-import { cn } from "@/lib/utils";
+import classNames from "classnames";
 
 interface OptimizedImageProps {
   src: string;
@@ -79,7 +79,7 @@ export const OptimizedImage = ({
     return (
       <div
         ref={imgRef}
-        className={cn(
+        className={classNames(
           "flex items-center justify-center bg-muted text-muted-foreground",
           className,
         )}
@@ -93,7 +93,7 @@ export const OptimizedImage = ({
   return (
     <div
       ref={imgRef}
-      className={cn(
+      className={classNames(
         "relative overflow-hidden transition-opacity duration-300",
         isLoaded ? "opacity-100" : "opacity-0",
         className,
@@ -112,7 +112,7 @@ export const OptimizedImage = ({
         blurDataURL={blurDataURL || defaultBlurDataURL}
         onLoad={handleLoad}
         onError={handleError}
-        className={cn(
+        className={classNames(
           "object-cover transition-transform duration-300 hover:scale-105",
           !isLoaded && "blur-sm",
         )}
@@ -145,7 +145,7 @@ export const AvatarImage = ({
     alt={alt}
     width={size}
     height={size}
-    className={cn("rounded-full", className)}
+    className={classNames("rounded-full", className)}
     sizes={`${size}px`}
     {...props}
   />
@@ -167,7 +167,7 @@ export const ProjectImage = ({
     alt={alt}
     width={64}
     height={64}
-    className={cn("rounded-lg", className)}
+    className={classNames("rounded-lg", className)}
     sizes="64px"
     {...props}
   />
@@ -189,7 +189,7 @@ export const HeroImage = ({
     alt={alt}
     width={400}
     height={400}
-    className={cn("rounded-full", className)}
+    className={classNames("rounded-full", className)}
     sizes="(max-width: 768px) 200px, 400px"
     priority
     {...props}

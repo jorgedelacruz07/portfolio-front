@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { cn } from "@/lib/utils";
+import classNames from "classnames";
 
 interface Particle {
   id: number;
@@ -226,7 +226,7 @@ export const ParticleEffect: React.FC<ParticleEffectProps> = ({
   return (
     <canvas
       ref={canvasRef}
-      className={cn("absolute inset-0 pointer-events-none", className)}
+      className={classNames("absolute inset-0 pointer-events-none", className)}
       style={{ width: "100%", height: "100%" }}
     />
   );
@@ -238,7 +238,7 @@ export const FloatingElements: React.FC<{ className?: string }> = ({
 }) => {
   return (
     <div
-      className={cn(
+      className={classNames(
         "absolute inset-0 pointer-events-none overflow-hidden",
         className,
       )}
@@ -272,7 +272,9 @@ export const GradientBackground: React.FC<{ className?: string }> = ({
   className,
 }) => {
   return (
-    <div className={cn("absolute inset-0 pointer-events-none", className)}>
+    <div
+      className={classNames("absolute inset-0 pointer-events-none", className)}
+    >
       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/10" />
       <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-background/50 to-transparent" />
     </div>

@@ -1,4 +1,4 @@
-import { memo, useMemo, useCallback } from "react";
+import { memo, useCallback } from "react";
 import { TExperience } from "../../../types/experience";
 import Link from "next/link";
 import Image from "next/image";
@@ -13,19 +13,32 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { SectionHeader } from "@/components/ui/SectionHeader";
+import classNames from "classnames";
+import { useScrollAnimation, useStaggeredAnimation } from "@/hooks";
 
 type Props = {
   experiences: TExperience[];
 };
 
 // Memoized experience card component
-const ExperienceCard = memo<{ experience: TExperience }>(({ experience }) => {
+const ExperienceCard = memo<{
+  experience: TExperience;
+  index: number;
+  isVisible: boolean;
+}>(({ experience, index, isVisible }) => {
   const handleExternalLinkClick = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
   }, []);
 
   return (
-    <Card className="group h-full transition-all duration-500 hover:shadow-2xl hover:scale-[1.03] border-border/30 hover:border-primary/40 bg-card/80 backdrop-blur-sm relative overflow-hidden">
+    <Card
+      className={classNames(
+        "group h-full transition-all duration-500 hover:shadow-2xl hover:scale-[1.03] border-border/30 hover:border-primary/40 bg-card/80 backdrop-blur-sm relative overflow-hidden",
+        isVisible ? "animate-fade-in-up" : "opacity-0 translate-y-8",
+      )}
+      style={{ animationDelay: `${index * 150}ms` }}
+    >
       {/* Subtle gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
@@ -86,12 +99,12 @@ const ExperienceCard = memo<{ experience: TExperience }>(({ experience }) => {
       <CardFooter className="flex flex-col gap-4 pt-0 relative z-10">
         {experience.technologies && experience.technologies.length > 0 && (
           <div className="flex flex-wrap gap-2">
-            {experience.technologies.map((tech, index) => (
+            {experience.technologies.map((tech, techIndex) => (
               <Badge
                 key={tech.id}
                 variant="secondary"
                 className="text-xs font-medium bg-muted/50 hover:bg-primary/10 hover:text-primary transition-all duration-300 hover:scale-105"
-                style={{ animationDelay: `${index * 30}ms` }}
+                style={{ animationDelay: `${techIndex * 30}ms` }}
               >
                 {tech.name}
               </Badge>
@@ -136,33 +149,28 @@ const ExperienceCard = memo<{ experience: TExperience }>(({ experience }) => {
 ExperienceCard.displayName = "ExperienceCard";
 
 const HomeExperiencesComponent = ({ experiences }: Props) => {
-  // Memoize the sliced experiences to prevent unnecessary re-renders
-  const featuredExperiences = useMemo(
-    () => experiences.slice(0, 3),
-    [experiences],
-  );
+  const { ref: sectionRef, isVisible } = useScrollAnimation({ threshold: 0.2 });
+  const { refs, visibleItems } = useStaggeredAnimation(experiences.length, 150);
 
   return (
-    <div className="py-16">
+    <div ref={sectionRef} className="py-16">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 sm:mb-12 gap-4 sm:gap-0">
-          <div className="flex items-center">
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground">
-              Work <span className="text-primary">Experience</span>
-            </h2>
-            <div className="ml-4 h-1 w-16 bg-primary"></div>
-          </div>
-          <Button
-            variant="ghost"
-            className="text-primary hover:text-primary/80 font-semibold"
-            asChild
-          >
-            <Link href="/experiences">View All</Link>
-          </Button>
-        </div>
+        <SectionHeader
+          title="Work"
+          highlight="Experience"
+          viewAllHref="/experiences"
+          isVisible={isVisible}
+          animated
+        />
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-8">
-          {featuredExperiences.map((experience) => (
-            <ExperienceCard key={experience.slug} experience={experience} />
+          {experiences.map((experience, index) => (
+            <div key={experience.slug} ref={(el) => (refs.current[index] = el)}>
+              <ExperienceCard
+                experience={experience}
+                index={index}
+                isVisible={visibleItems.has(index)}
+              />
+            </div>
           ))}
         </div>
       </div>
