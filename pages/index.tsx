@@ -36,6 +36,28 @@ const HomeExperiences = dynamic(
   },
 );
 
+import { useInView } from "react-intersection-observer";
+
+// Lazy hydration wrapper
+const LazySection = ({
+  children,
+  height = "min-h-[50vh]",
+}: {
+  children: React.ReactNode;
+  height?: string;
+}) => {
+  const { ref, inView } = useInView({
+    triggerOnce: true,
+    rootMargin: "200px 0px", // Start loading 200px before viewport
+  });
+
+  return (
+    <div ref={ref} className={height}>
+      {inView ? children : <div className="w-full h-full" />}
+    </div>
+  );
+};
+
 const Home: NextPage = () => {
   const { experiences, projects, isLoading, error } = useHomePageData();
 
@@ -71,17 +93,17 @@ const Home: NextPage = () => {
       <HomeAbout />
 
       {experiences.length > 0 && (
-        <>
+        <LazySection>
           <Separator className="my-8" />
           <HomeExperiences experiences={experiences} />
-        </>
+        </LazySection>
       )}
 
       {projects.length > 0 && (
-        <>
+        <LazySection>
           <Separator className="my-8" />
           <HomeProjects projects={projects} />
-        </>
+        </LazySection>
       )}
     </div>
   );
