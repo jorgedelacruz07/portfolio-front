@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { cn } from "@/lib/utils";
+import classNames from "classnames";
 import { Button } from "@/components/ui/button";
 import { useScrollAnimation } from "@/hooks";
 
@@ -30,7 +30,7 @@ export const Navbar = () => {
   };
 
   const navLinkClasses = (path: string) =>
-    cn(
+    classNames(
       "text-muted-foreground hover:text-foreground transition-colors duration-200 font-medium",
       router.pathname === path ? "text-foreground font-semibold" : "",
     );
@@ -57,7 +57,7 @@ export const Navbar = () => {
   return (
     <nav
       ref={navbarRef}
-      className={cn(
+      className={classNames(
         "sticky top-0 z-50 transition-all duration-500",
         isScrolled
           ? "bg-background/95 backdrop-blur-md supports-[backdrop-filter]:bg-background/60 border-b border-border/40 shadow-lg"
@@ -86,7 +86,7 @@ export const Navbar = () => {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={cn(
+                  className={classNames(
                     navLinkClasses(item.href),
                     "focus-ring-none link-hover hover-scale transition-all duration-300",
                     isVisible
@@ -112,7 +112,7 @@ export const Navbar = () => {
             >
               <div className="relative w-6 h-6">
                 <svg
-                  className={cn(
+                  className={classNames(
                     "absolute inset-0 h-6 w-6 transition-all duration-300",
                     isMenuOpen ? "rotate-90 opacity-0" : "rotate-0 opacity-100",
                   )}
@@ -128,7 +128,7 @@ export const Navbar = () => {
                   />
                 </svg>
                 <svg
-                  className={cn(
+                  className={classNames(
                     "absolute inset-0 h-6 w-6 transition-all duration-300",
                     isMenuOpen
                       ? "rotate-0 opacity-100"
@@ -153,7 +153,7 @@ export const Navbar = () => {
 
       {/* Mobile Menu */}
       <div
-        className={cn(
+        className={classNames(
           "md:hidden transition-all duration-500 ease-in-out overflow-hidden",
           isScrolled
             ? "bg-background/95 backdrop-blur-md supports-[backdrop-filter]:bg-background/60 border-t border-border/40 shadow-lg"
@@ -169,7 +169,7 @@ export const Navbar = () => {
             <Link
               key={item.href}
               href={item.href}
-              className={cn(
+              className={classNames(
                 "block px-4 py-3 rounded-lg text-base font-medium transition-all duration-300 hover:bg-muted/50 focus-ring-none hover-scale",
                 navLinkClasses(item.href),
                 isMenuOpen

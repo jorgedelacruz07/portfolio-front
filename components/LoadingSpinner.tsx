@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from "react";
-import { cn } from "@/lib/utils";
+import classNames from "classnames";
 
 interface LoadingSpinnerProps {
   size?: "sm" | "md" | "lg";
@@ -30,7 +30,7 @@ export const LoadingSpinner: FC<LoadingSpinnerProps> = ({
 
   return (
     <div
-      className={cn(
+      className={classNames(
         "flex flex-col items-center justify-center space-y-4",
         className,
       )}
@@ -38,7 +38,7 @@ export const LoadingSpinner: FC<LoadingSpinnerProps> = ({
       <div className="relative">
         {/* Outer ring */}
         <div
-          className={cn(
+          className={classNames(
             "border-4 border-primary/20 rounded-full animate-spin",
             sizeClasses[size],
           )}
@@ -46,7 +46,7 @@ export const LoadingSpinner: FC<LoadingSpinnerProps> = ({
 
         {/* Inner ring */}
         <div
-          className={cn(
+          className={classNames(
             "absolute top-0 left-0 border-4 border-transparent border-t-primary rounded-full animate-spin",
             sizeClasses[size],
           )}
@@ -71,7 +71,7 @@ export const LoadingSpinner: FC<LoadingSpinnerProps> = ({
 
 // Skeleton loading components
 export const SkeletonCard: FC<{ className?: string }> = ({ className }) => (
-  <div className={cn("animate-pulse", className)}>
+  <div className={classNames("animate-pulse", className)}>
     <div className="bg-muted rounded-lg p-6 space-y-4">
       <div className="flex items-center space-x-4">
         <div className="w-12 h-12 bg-muted-foreground/20 rounded-lg" />
@@ -98,11 +98,11 @@ export const SkeletonText: FC<{ lines?: number; className?: string }> = ({
   lines = 3,
   className,
 }) => (
-  <div className={cn("animate-pulse space-y-2", className)}>
+  <div className={classNames("animate-pulse space-y-2", className)}>
     {Array.from({ length: lines }).map((_, i) => (
       <div
         key={i}
-        className={cn(
+        className={classNames(
           "h-4 bg-muted-foreground/20 rounded",
           i === lines - 1 ? "w-3/4" : "w-full",
         )}
@@ -116,7 +116,7 @@ export const SkeletonAvatar: FC<{ size?: number; className?: string }> = ({
   className,
 }) => (
   <div
-    className={cn(
+    className={classNames(
       "animate-pulse bg-muted-foreground/20 rounded-full",
       className,
     )}
@@ -145,14 +145,14 @@ export const ProgressiveLoader: FC<{
 
   if (isLoading || !showContent) {
     return (
-      <div className={cn("transition-opacity duration-300", className)}>
+      <div className={classNames("transition-opacity duration-300", className)}>
         {fallback || <LoadingSpinner />}
       </div>
     );
   }
 
   return (
-    <div className={cn("transition-opacity duration-300", className)}>
+    <div className={classNames("transition-opacity duration-300", className)}>
       {children}
     </div>
   );
@@ -161,7 +161,7 @@ export const ProgressiveLoader: FC<{
 // Page loading component
 export const PageLoader: FC<{ className?: string }> = ({ className }) => (
   <div
-    className={cn(
+    className={classNames(
       "min-h-screen flex items-center justify-center bg-background",
       className,
     )}

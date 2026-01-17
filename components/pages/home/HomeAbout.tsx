@@ -1,16 +1,12 @@
-import { FC, memo, useMemo } from "react";
+import { FC, memo } from "react";
 import { profile } from "../../../data/content";
 import { Badge } from "@/components/ui/badge";
 
 const HomeAboutComponent: FC = () => {
-  // Memoize the description paragraphs to prevent unnecessary re-renders
-  const descriptionParagraphs = useMemo(
-    () =>
-      profile.description.map((paragraph, index) => (
-        <p key={index} dangerouslySetInnerHTML={{ __html: paragraph }} />
-      )),
-    [],
-  );
+  // Pre-render description paragraphs (static data, no memoization needed)
+  const descriptionParagraphs = profile.description.map((paragraph, index) => (
+    <p key={index} dangerouslySetInnerHTML={{ __html: paragraph }} />
+  ));
 
   const skills = [
     "React.js",

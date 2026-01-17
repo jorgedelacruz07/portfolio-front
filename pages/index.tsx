@@ -1,13 +1,8 @@
 import type { NextPage } from "next";
 import dynamic from "next/dynamic";
-import { memo, useMemo } from "react";
 import { HomeProfile } from "../components/pages/home/HomeProfile";
 import { HomeAbout } from "../components/pages/home/HomeAbout";
-import {
-  useGetExperiences,
-  useGetProjects,
-  useGetPosts,
-} from "../hooks/queries";
+import { useHomePageData } from "../hooks";
 import { PageLoader } from "../components/LoadingSpinner";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
@@ -41,45 +36,21 @@ const HomeExperiences = dynamic(
   },
 );
 
-const HomeComponent: NextPage = () => {
-  const {
-    data: experiences = [],
-    isLoading: experiencesLoading,
-    error: experiencesError,
-  } = useGetExperiences();
-  const {
-    data: projects = [],
-    isLoading: projectsLoading,
-    error: projectsError,
-  } = useGetProjects();
-  const {
-    data: _posts = [],
-    isLoading: postsLoading,
-    error: postsError,
-  } = useGetPosts();
-
-  const isLoading = useMemo(
-    () => experiencesLoading || projectsLoading || postsLoading,
-    [experiencesLoading, projectsLoading, postsLoading],
-  );
-
-  const hasError = useMemo(
-    () => experiencesError || projectsError || postsError,
-    [experiencesError, projectsError, postsError],
-  );
+const Home: NextPage = () => {
+  const { experiences, projects, isLoading, error } = useHomePageData();
 
   if (isLoading) {
     return <PageLoader />;
   }
 
-  if (hasError) {
+  if (error) {
     return (
       <div className={classConstants.loadingContainer}>
         <div className={classConstants.errorContainer}>
           <h1 className={classConstants.errorHeading}>Error loading content</h1>
           <p className={classConstants.errorText}>
-            {hasError instanceof Error
-              ? hasError.message
+            {error instanceof Error
+              ? error.message
               : "An unexpected error occurred"}
           </p>
           <Button
@@ -102,20 +73,18 @@ const HomeComponent: NextPage = () => {
       {experiences.length > 0 && (
         <>
           <Separator className="my-8" />
-          <HomeExperiences experiences={experiences.slice(0, 3)} />
+          <HomeExperiences experiences={experiences} />
         </>
       )}
 
       {projects.length > 0 && (
         <>
           <Separator className="my-8" />
-          <HomeProjects projects={projects.slice(0, 3)} />
+          <HomeProjects projects={projects} />
         </>
       )}
     </div>
   );
 };
 
-const Home = memo(HomeComponent);
-Home.displayName = "Home";
 export default Home;
