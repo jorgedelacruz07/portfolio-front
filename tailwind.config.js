@@ -137,6 +137,7 @@ module.exports = {
         "float-reverse": "floatReverse 3s ease-in-out infinite",
         glow: "glow 2s ease-in-out infinite",
         "glow-pulse": "glowPulse 2s ease-in-out infinite",
+        "gradient-layer": "gradientOpacity 3s ease infinite",
         gradient: "gradientShift 3s ease infinite",
         shimmer: "shimmer 2s infinite",
         typewriter:
@@ -221,20 +222,20 @@ module.exports = {
           "50%": { transform: "translateY(10px)" },
         },
         glow: {
-          "0%, 100%": { boxShadow: "0 0 5px rgba(59, 130, 246, 0.3)" },
-          "50%": {
-            boxShadow:
-              "0 0 20px rgba(59, 130, 246, 0.6), 0 0 30px rgba(59, 130, 246, 0.4)",
-          },
+          "0%, 100%": { opacity: "0.6", transform: "scale(1)" },
+          "50%": { opacity: "1", transform: "scale(1.05)" },
         },
         glowPulse: {
           "0%, 100%": { opacity: "1", transform: "scale(1)" },
           "50%": { opacity: "0.8", transform: "scale(1.05)" },
         },
+        gradientOpacity: {
+          "0%, 100%": { opacity: "1" },
+          "50%": { opacity: "0" },
+        },
         gradientShift: {
-          "0%": { backgroundPosition: "0% 50%" },
-          "50%": { backgroundPosition: "100% 50%" },
-          "100%": { backgroundPosition: "0% 50%" },
+          "0%, 100%": { opacity: "1" },
+          "50%": { opacity: "0.5" },
         },
         shimmer: {
           "0%": { backgroundPosition: "-200% 0" },

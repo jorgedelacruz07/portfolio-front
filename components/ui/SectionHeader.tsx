@@ -44,8 +44,16 @@ const SectionHeaderComponent = ({
       <div className="flex items-center">
         <h2 className="text-3xl md:text-4xl font-bold text-foreground">
           {title}{" "}
-          <span className="text-primary gradient-text animate-gradient">
-            {highlight}
+          <span className="relative inline-block">
+            <span className="text-primary gradient-text relative z-10">
+              {highlight}
+            </span>
+            <span
+              className="text-primary gradient-text-alt absolute inset-0 animate-gradient-layer z-20"
+              aria-hidden="true"
+            >
+              {highlight}
+            </span>
           </span>
         </h2>
         <div className="ml-4 h-1 w-16 bg-primary animate-glow"></div>
