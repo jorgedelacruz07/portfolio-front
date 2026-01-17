@@ -237,17 +237,23 @@ module.exports = {
           "0%, 100%": { opacity: "1" },
           "50%": { opacity: "0.5" },
         },
+        // Optimized shimmer using mask/opacity technique instead of background-position if possible,
+        // but since we are in config, we keep simple transform where possible.
+        // Replacing background-position shimmer with a simple opacity pulse for mobile performance
+        // or ensure it's used on a pseudo-element that is transformed.
+        // For now, I'll replace it with a composite-safe fallback or simple pulse.
         shimmer: {
-          "0%": { backgroundPosition: "-200% 0" },
-          "100%": { backgroundPosition: "200% 0" },
+          "0%, 100%": { opacity: "1" },
+          "50%": { opacity: "0.5" },
         },
         typewriter: {
-          from: { width: "0" },
-          to: { width: "100%" },
+          // Replaced width animation with a simple fade in for performance
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" },
         },
         blink: {
-          "0%, 50%": { borderColor: "transparent" },
-          "51%, 100%": { borderColor: "currentColor" },
+          "0%, 50%": { opacity: "0" },
+          "51%, 100%": { opacity: "1" },
         },
         morph: {
           "0%, 100%": { borderRadius: "50%" },
@@ -276,12 +282,15 @@ module.exports = {
           "50%": { transform: "translateY(-5px)" },
         },
         "accordion-down": {
-          from: { height: "0" },
-          to: { height: "var(--radix-accordion-content-height)" },
+          from: { height: "0", opacity: "0" },
+          to: { height: "var(--radix-accordion-content-height)", opacity: "1" },
         },
         "accordion-up": {
-          from: { height: "var(--radix-accordion-content-height)" },
-          to: { height: "0" },
+          from: {
+            height: "var(--radix-accordion-content-height)",
+            opacity: "1",
+          },
+          to: { height: "0", opacity: "0" },
         },
       },
       backdropBlur: {
@@ -307,6 +316,16 @@ module.exports = {
             outline: "none",
             "box-shadow": "0 0 0 2px hsl(var(--primary) / 0.3)",
           },
+        },
+        // New Experimental Performance Utilities
+        ".will-change-transform": {
+          "will-change": "transform",
+        },
+        ".will-change-opacity": {
+          "will-change": "opacity",
+        },
+        ".will-change-composite": {
+          "will-change": "transform, opacity",
         },
       });
     },

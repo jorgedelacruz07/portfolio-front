@@ -150,7 +150,8 @@ const HomeProfileComponent: FC = () => {
                       height={224}
                       className="object-cover w-full h-full"
                       priority
-                      sizes="(max-width: 640px) 192px, (max-width: 1024px) 224px, 224px"
+                      fetchPriority="high"
+                      sizes="(max-width: 640px) 192px, 224px"
                     />
                   </div>
 
