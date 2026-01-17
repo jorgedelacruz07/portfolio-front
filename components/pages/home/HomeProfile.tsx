@@ -51,8 +51,16 @@ const HomeProfileComponent: FC = () => {
               </h1>
               <h2 className="text-2xl md:text-3xl lg:text-4xl font-semibold text-foreground animate-fade-in-up animate-stagger-1">
                 I&apos;m{" "}
-                <span className="text-primary gradient-text animate-gradient">
-                  {name}
+                <span className="relative inline-block">
+                  <span className="text-primary gradient-text relative z-10">
+                    {name}
+                  </span>
+                  <span
+                    className="text-primary gradient-text-alt absolute inset-0 animate-gradient-layer z-20"
+                    aria-hidden="true"
+                  >
+                    {name}
+                  </span>
                 </span>
               </h2>
               <h3 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground animate-fade-in-up animate-stagger-2">

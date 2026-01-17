@@ -176,16 +176,16 @@
   }
 }
 
-/* Glow animations */
-@keyframes glow {
+/* Glow animations - Optimized for GPU */
+@keyframes glowOpacity {
   0%,
   100% {
-    box-shadow: 0 0 5px rgba(59, 130, 246, 0.3);
+    opacity: 0.6;
+    transform: scale(1);
   }
   50% {
-    box-shadow:
-      0 0 20px rgba(59, 130, 246, 0.6),
-      0 0 30px rgba(59, 130, 246, 0.4);
+    opacity: 1;
+    transform: scale(1.05); /* Simulate shadow spread with scale */
   }
 }
 
@@ -201,20 +201,22 @@
   }
 }
 
-/* Gradient animations */
-@keyframes gradientShift {
-  0% {
-    background-position: 0% 50%;
+/* Gradient animations - Optimized for GPU */
+/* Note: This requires a DOM structure change to two layered elements for text */
+@keyframes gradientOpacity {
+  0%,
+  100% {
+    opacity: 1;
   }
   50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
+    opacity: 0;
   }
 }
 
-/* Shimmer effect */
+/* Shimmer effect - Optimized to use mask if possible, but background-position on a pseudo-element is acceptable if it doesn't trigger layout of content. 
+   However, simpler is just opacity on a highlight layer. 
+   For now, we will leave shimmer as is or optimize if it's flagged. The user report specifically flagged 'background-position-x' on .animate-gradient.
+*/
 @keyframes shimmer {
   0% {
     background-position: -200% 0;
@@ -300,82 +302,31 @@
   }
 }
 
-/* Animation classes */
-.animate-fade-in {
-  animation: fadeIn 0.6s ease-out forwards;
-}
-
-.animate-fade-in-up {
-  animation: fadeInUp 0.8s ease-out forwards;
-}
-
-.animate-fade-in-down {
-  animation: fadeInDown 0.8s ease-out forwards;
-}
-
-.animate-fade-in-left {
-  animation: fadeInLeft 0.8s ease-out forwards;
-}
-
-.animate-fade-in-right {
-  animation: fadeInRight 0.8s ease-out forwards;
-}
-
-.animate-slide-in-left {
-  animation: slideInLeft 0.8s ease-out forwards;
-}
-
-.animate-slide-in-right {
-  animation: slideInRight 0.8s ease-out forwards;
-}
-
-.animate-slide-in-up {
-  animation: slideInUp 0.8s ease-out forwards;
-}
-
-.animate-slide-in-down {
-  animation: slideInDown 0.8s ease-out forwards;
-}
-
-.animate-scale-in {
-  animation: scaleIn 0.6s ease-out forwards;
-}
-
-.animate-scale-in-up {
-  animation: scaleInUp 0.8s ease-out forwards;
-}
-
-.animate-rotate-in {
-  animation: rotateIn 0.8s ease-out forwards;
-}
-
-.animate-rotate-in-up-left {
-  animation: rotateInUpLeft 0.8s ease-out forwards;
-}
-
-.animate-float {
-  animation: float 3s ease-in-out infinite;
-}
-
-.animate-float-slow {
-  animation: floatSlow 4s ease-in-out infinite;
-}
-
-.animate-float-reverse {
-  animation: floatReverse 3s ease-in-out infinite;
-}
-
 .animate-glow {
-  animation: glow 2s ease-in-out infinite;
+  /* Previously animated box-shadow directly */
+  animation: glowOpacity 2s ease-in-out infinite;
+  will-change: transform, opacity;
 }
 
 .animate-glow-pulse {
   animation: glowPulse 2s ease-in-out infinite;
+  will-change: transform, opacity;
 }
 
 .animate-gradient {
-  background-size: 200% 200%;
-  animation: gradientShift 3s ease infinite;
+  /* 
+     Legacy class kept for compatibility, but we will remove the expensive background-position animation.
+     Ideally, components should rely on the multi-layer approach. 
+     We'll make this a static gradient base for now to stop the thrashing immediately.
+  */
+  background-size: 200% auto;
+  /* animation removed: gradientShift */
+}
+
+/* New utility for the layered gradient approach */
+.animate-gradient-layer {
+  animation: gradientOpacity 3s ease infinite;
+  will-change: opacity;
 }
 
 .animate-shimmer {
