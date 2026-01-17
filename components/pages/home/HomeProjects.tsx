@@ -34,16 +34,19 @@ const ProjectCard = memo<{
   return (
     <Card
       className={classNames(
-        "group transition-all duration-700 hover:shadow-2xl hover:scale-[1.04] border-border/30 hover:border-primary/50 bg-card/70 backdrop-blur-md relative overflow-hidden",
+        "group transition-all duration-700 md:hover:shadow-2xl md:hover:scale-[1.04] border-border/30 md:hover:border-primary/50 bg-card/95 md:bg-card/70 md:backdrop-blur-md relative overflow-hidden will-change-transform",
         isVisible ? "animate-fade-in-up" : "opacity-0 translate-y-8",
       )}
-      style={{ animationDelay: `${index * 150}ms` }}
+      style={{
+        animationDelay: `${index * 150}ms`,
+        WebkitBackfaceVisibility: "hidden",
+      }}
     >
-      {/* Enhanced gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/8 via-transparent to-primary/12 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+      {/* Enhanced gradient overlay - optimized for mobile */}
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/8 via-transparent to-primary/12 opacity-0 md:group-hover:opacity-100 transition-opacity duration-700"></div>
 
-      {/* Animated border effect */}
-      <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-primary/30 via-transparent to-primary/30 opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-sm"></div>
+      {/* Animated border effect - disabled on mobile */}
+      <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-primary/30 via-transparent to-primary/30 opacity-0 md:group-hover:opacity-100 transition-opacity duration-700 blur-sm hidden md:block"></div>
 
       {/* Subtle pattern overlay */}
       <div className="absolute inset-0 opacity-0 group-hover:opacity-5 transition-opacity duration-700">
