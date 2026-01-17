@@ -34,7 +34,7 @@ const ProjectCard = memo<{
   return (
     <Card
       className={classNames(
-        "group transition-all duration-700 md:hover:shadow-2xl md:hover:scale-[1.04] border-border/30 md:hover:border-primary/50 bg-card/95 md:bg-card/70 md:backdrop-blur-md relative overflow-hidden will-change-transform",
+        "group transition-[transform,opacity] duration-700 md:hover:scale-[1.04] border-border/30 border md:hover:border-primary/50 bg-card/95 md:bg-card/70 md:backdrop-blur-md relative overflow-hidden will-change-composite",
         isVisible ? "animate-fade-in-up" : "opacity-0 translate-y-8",
       )}
       style={{
@@ -99,7 +99,7 @@ const ProjectCard = memo<{
               <Badge
                 key={tech.id}
                 variant="secondary"
-                className="text-xs font-medium bg-muted/50 hover:bg-primary/10 hover:text-primary transition-all duration-300 hover:scale-105"
+                className="text-xs font-medium bg-muted/50 hover:bg-primary/10 hover:text-primary transition-colors duration-300 hover:scale-105 will-change-transform"
                 style={{ animationDelay: `${techIndex * 30}ms` }}
               >
                 {tech.name}
@@ -113,7 +113,7 @@ const ProjectCard = memo<{
             <Button
               variant="default"
               size="sm"
-              className="flex-1 group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300 hover:shadow-md text-sm font-medium"
+              className="flex-1 group-hover:bg-primary group-hover:text-primary-foreground transition-colors duration-300 hover:shadow-md text-sm font-medium hover:scale-[1.02] active:scale-[0.98]"
               onClick={handleExternalLinkClick}
               asChild
             >
@@ -131,7 +131,7 @@ const ProjectCard = memo<{
           <Button
             variant="outline"
             size="sm"
-            className="flex-1 hover:bg-primary/5 hover:text-primary hover:border-primary/30 transition-all duration-300 hover:shadow-md text-sm font-medium"
+            className="flex-1 hover:bg-primary/5 hover:text-primary hover:border-primary/30 transition-colors duration-300 hover:shadow-md text-sm font-medium hover:scale-[1.02] active:scale-[0.98]"
             asChild
           >
             <Link href={`/projects/${project.slug}`}>View Details</Link>

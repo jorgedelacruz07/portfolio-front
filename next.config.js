@@ -9,6 +9,7 @@ const nextConfig = {
   // Enable experimental features for better performance
   experimental: {
     optimizePackageImports: ["@heroicons/react", "lucide-react"],
+    optimizeCss: true, // Enable critical CSS optimization
   },
 
   // Image optimization

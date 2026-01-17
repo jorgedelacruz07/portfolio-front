@@ -37,8 +37,9 @@ const HomeExperiences = dynamic(
 );
 
 import { useInView } from "react-intersection-observer";
+import React from "react";
 
-// Lazy hydration wrapper
+// Lazy hydration wrapper with idle callback support
 const LazySection = ({
   children,
   height = "min-h-[50vh]",
@@ -48,12 +49,29 @@ const LazySection = ({
 }) => {
   const { ref, inView } = useInView({
     triggerOnce: true,
-    rootMargin: "200px 0px", // Start loading 200px before viewport
+    rootMargin: "100px 0px", // Reduced margin to defer loading slightly more on mobile
+    threshold: 0,
   });
+
+  const [shouldRender, setShouldRender] = React.useState(false);
+
+  React.useEffect(() => {
+    if (inView) {
+      // Defer rendering to idle time if possible to avoid blocking main thread during scroll
+      if (
+        typeof window !== "undefined" &&
+        (window as any).requestIdleCallback
+      ) {
+        (window as any).requestIdleCallback(() => setShouldRender(true));
+      } else {
+        setTimeout(() => setShouldRender(true), 100);
+      }
+    }
+  }, [inView]);
 
   return (
     <div ref={ref} className={height}>
-      {inView ? children : <div className="w-full h-full" />}
+      {shouldRender ? children : <div className="w-full h-full" />}
     </div>
   );
 };

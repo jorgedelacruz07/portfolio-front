@@ -17,6 +17,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
       <Script
+        id="gtm-script"
         strategy="lazyOnload"
         src="https://www.googletagmanager.com/gtag/js?id=G-4J8T4WP1S7"
       />
@@ -27,10 +28,22 @@ function MyApp({ Component, pageProps }: AppProps) {
           __html: `
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', '${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}', {
-              page_path: window.location.pathname,
-            });
+            
+            // Defer valid execution until main thread is idle
+            const initAnalytics = () => {
+              gtag('js', new Date());
+              gtag('config', '${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}', {
+                page_path: window.location.pathname,
+                transport_type: 'beacon',
+                anonymize_ip: true
+              });
+            };
+
+            if (window.requestIdleCallback) {
+              window.requestIdleCallback(initAnalytics);
+            } else {
+              setTimeout(initAnalytics, 2000);
+            }
           `,
         }}
       />
