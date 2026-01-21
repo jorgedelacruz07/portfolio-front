@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import classNames from "classnames";
 
 interface CursorEffectProps {
@@ -10,28 +10,54 @@ export const CursorEffect: React.FC<CursorEffectProps> = ({
   className,
   enabled = true,
 }) => {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [isHovering, setIsHovering] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
+  const cursorRef = useRef<HTMLDivElement>(null);
+  const trailingRef = useRef<HTMLDivElement>(null);
+  const ringRef = useRef<HTMLDivElement>(null);
+  const isVisibleRef = useRef(false);
 
   useEffect(() => {
     if (!enabled) return;
 
     const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
-      setIsVisible(true);
+      const { clientX, clientY } = e;
+
+      // Make visible on first move
+      if (!isVisibleRef.current) {
+        isVisibleRef.current = true;
+        if (cursorRef.current) cursorRef.current.style.opacity = "1";
+        if (trailingRef.current) trailingRef.current.style.opacity = "1";
+        if (ringRef.current) ringRef.current.style.opacity = "1";
+      }
+
+      // Direct DOM manipulation for performance
+      if (cursorRef.current) {
+        cursorRef.current.style.transform = `translate(${clientX - 8}px, ${clientY - 8}px)`;
+      }
+      if (trailingRef.current) {
+        trailingRef.current.style.transform = `translate(${clientX - 16}px, ${clientY - 16}px)`;
+      }
+      if (ringRef.current) {
+        ringRef.current.style.transform = `translate(${clientX - 24}px, ${clientY - 24}px)`;
+      }
     };
 
     const handleMouseEnter = () => {
-      setIsHovering(true);
+      cursorRef.current?.classList.add("scale-150", "bg-primary/40");
+      trailingRef.current?.classList.add("scale-75", "border-primary/50");
+      ringRef.current?.classList.add("scale-50", "border-primary/20");
     };
 
     const handleMouseLeave = () => {
-      setIsHovering(false);
+      cursorRef.current?.classList.remove("scale-150", "bg-primary/40");
+      trailingRef.current?.classList.remove("scale-75", "border-primary/50");
+      ringRef.current?.classList.remove("scale-50", "border-primary/20");
     };
 
     const handleMouseOut = () => {
-      setIsVisible(false);
+      isVisibleRef.current = false;
+      if (cursorRef.current) cursorRef.current.style.opacity = "0";
+      if (trailingRef.current) trailingRef.current.style.opacity = "0";
+      if (ringRef.current) ringRef.current.style.opacity = "0";
     };
 
     // Add event listeners to interactive elements
@@ -57,42 +83,36 @@ export const CursorEffect: React.FC<CursorEffectProps> = ({
     };
   }, [enabled]);
 
-  if (!enabled || !isVisible) return null;
+  if (!enabled) return null;
 
   return (
     <>
       {/* Main cursor */}
       <div
+        ref={cursorRef}
         className={classNames(
           "fixed top-0 left-0 w-4 h-4 bg-primary/20 rounded-full pointer-events-none z-50 transition-all duration-300 ease-out",
-          isHovering && "scale-150 bg-primary/40",
           className,
         )}
-        style={{
-          transform: `translate(${mousePosition.x - 8}px, ${mousePosition.y - 8}px)`,
-        }}
+        style={{ opacity: 0 }}
       />
 
       {/* Trailing cursor */}
       <div
+        ref={trailingRef}
         className={classNames(
           "fixed top-0 left-0 w-8 h-8 border border-primary/30 rounded-full pointer-events-none z-40 transition-all duration-500 ease-out",
-          isHovering && "scale-75 border-primary/50",
         )}
-        style={{
-          transform: `translate(${mousePosition.x - 16}px, ${mousePosition.y - 16}px)`,
-        }}
+        style={{ opacity: 0 }}
       />
 
       {/* Outer ring */}
       <div
+        ref={ringRef}
         className={classNames(
           "fixed top-0 left-0 w-12 h-12 border border-primary/10 rounded-full pointer-events-none z-30 transition-all duration-700 ease-out",
-          isHovering && "scale-50 border-primary/20",
         )}
-        style={{
-          transform: `translate(${mousePosition.x - 24}px, ${mousePosition.y - 24}px)`,
-        }}
+        style={{ opacity: 0 }}
       />
     </>
   );
