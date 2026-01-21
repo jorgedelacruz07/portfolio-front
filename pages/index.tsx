@@ -3,7 +3,7 @@ import Head from "next/head";
 import dynamic from "next/dynamic";
 import { HomeProfile } from "../components/pages/home/HomeProfile";
 import { HomeAbout } from "../components/pages/home/HomeAbout";
-import { useHomePageData } from "../hooks";
+import { useHomePageData, useNearScreen } from "../hooks";
 import { PageLoader } from "../components/LoadingSpinner";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
@@ -16,7 +16,6 @@ const HomeProjects = dynamic(
       default: mod.HomeProjects,
     })),
   {
-    ssr: false,
     loading: () => (
       <div className="py-16">
         <div className="animate-pulse bg-muted/20 h-64 rounded-lg"></div>
@@ -28,7 +27,6 @@ const HomeProjects = dynamic(
 const HomeExperiences = dynamic(
   () => import("../components/pages/home/HomeExperiences"),
   {
-    ssr: false,
     loading: () => (
       <div className="py-16">
         <div className="animate-pulse bg-muted/20 h-64 rounded-lg"></div>
@@ -38,7 +36,6 @@ const HomeExperiences = dynamic(
 );
 
 const HomeBlog = dynamic(() => import("../components/pages/home/HomeBlog"), {
-  ssr: false,
   loading: () => (
     <div className="py-16">
       <div className="animate-pulse bg-muted/20 h-64 rounded-lg"></div>
@@ -46,48 +43,14 @@ const HomeBlog = dynamic(() => import("../components/pages/home/HomeBlog"), {
   ),
 });
 
-import { useInView } from "react-intersection-observer";
-import React from "react";
-
-// Lazy hydration wrapper with idle callback support
-const LazySection = ({
-  children,
-  height = "min-h-[50vh]",
-}: {
-  children: React.ReactNode;
-  height?: string;
-}) => {
-  const { ref, inView } = useInView({
-    triggerOnce: true,
-    rootMargin: "100px 0px", // Reduced margin to defer loading slightly more on mobile
-    threshold: 0,
-  });
-
-  const [shouldRender, setShouldRender] = React.useState(false);
-
-  React.useEffect(() => {
-    if (inView) {
-      // Defer rendering to idle time if possible to avoid blocking main thread during scroll
-      if (
-        typeof window !== "undefined" &&
-        (window as any).requestIdleCallback
-      ) {
-        (window as any).requestIdleCallback(() => setShouldRender(true));
-      } else {
-        setTimeout(() => setShouldRender(true), 100);
-      }
-    }
-  }, [inView]);
-
-  return (
-    <div ref={ref} className={height}>
-      {shouldRender ? children : <div className="w-full h-full" />}
-    </div>
-  );
-};
-
 const Home: NextPage = () => {
   const { experiences, projects, posts, isLoading, error } = useHomePageData();
+
+  // Custom Intersection Observer hooks for aggressive code splitting
+  // Chunks are not requested until user scrolls within 200px
+  const { isNearScreen: isExperiencesNear, fromRef: experiencesRef } = useNearScreen("200px");
+  const { isNearScreen: isProjectsNear, fromRef: projectsRef } = useNearScreen("200px");
+  const { isNearScreen: isBlogNear, fromRef: blogRef } = useNearScreen("200px");
 
   if (isLoading) {
     return <PageLoader />;
@@ -124,24 +87,36 @@ const Home: NextPage = () => {
       <HomeAbout />
 
       {experiences.length > 0 && (
-        <LazySection>
-          <Separator className="my-8" />
-          <HomeExperiences experiences={experiences} />
-        </LazySection>
+        <div ref={experiencesRef} className="min-h-[50vh]">
+          {isExperiencesNear && (
+            <>
+              <Separator className="my-8" />
+              <HomeExperiences experiences={experiences} />
+            </>
+          )}
+        </div>
       )}
 
       {projects.length > 0 && (
-        <LazySection>
-          <Separator className="my-8" />
-          <HomeProjects projects={projects} />
-        </LazySection>
+        <div ref={projectsRef} className="min-h-[50vh]">
+          {isProjectsNear && (
+            <>
+              <Separator className="my-8" />
+              <HomeProjects projects={projects} />
+            </>
+          )}
+        </div>
       )}
 
       {posts.length > 0 && (
-        <LazySection>
-          <Separator className="my-8" />
-          <HomeBlog posts={posts} />
-        </LazySection>
+        <div ref={blogRef} className="min-h-[50vh]">
+          {isBlogNear && (
+            <>
+              <Separator className="my-8" />
+              <HomeBlog posts={posts} />
+            </>
+          )}
+        </div>
       )}
     </div>
   );

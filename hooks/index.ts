@@ -10,3 +10,4 @@ export {
   useMousePosition,
   useSmoothScroll,
 } from "./useScrollAnimation";
+export { useNearScreen } from "./useNearScreen";
