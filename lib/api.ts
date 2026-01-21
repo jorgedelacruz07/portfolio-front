@@ -75,9 +75,41 @@ export const apiEndpoints = {
 
 // Mock data for development when API is not available
 const mockData = {
-  projects: [] as TProject[],
-  experiences: [] as TExperience[],
-  posts: [] as TPost[],
+  projects: [
+    {
+      id: "1",
+      name: "Project 1",
+      slug: "project-1",
+      type: "Web App",
+      description: "This is a test project",
+      image: { src: "/images/placeholder.jpg" },
+      technologies: [{ id: "1", name: "React" }],
+      url: "https://example.com",
+    },
+  ] as TProject[],
+  experiences: [
+    {
+      id: "1",
+      company: "Company A",
+      slug: "company-a",
+      jobTitle: "Developer",
+      from: "2020",
+      to: "2022",
+      image: { src: "/images/placeholder.jpg" },
+      technologies: [{ id: "1", name: "React" }],
+    },
+  ] as TExperience[],
+  posts: [
+    {
+      id: "1",
+      title: "Blog Post 1",
+      slug: "blog-post-1",
+      body: "This is a test blog post",
+      image: { src: "/images/placeholder.jpg" },
+      createdAt: "2023-01-01",
+      categories: [{ id: "1", name: "Tech" }],
+    },
+  ] as TPost[],
   categories: [] as TCategory[],
 };
 
