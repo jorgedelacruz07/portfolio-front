@@ -213,16 +213,13 @@
   }
 }
 
-/* Shimmer effect - Optimized to use mask if possible, but background-position on a pseudo-element is acceptable if it doesn't trigger layout of content. 
-   However, simpler is just opacity on a highlight layer. 
-   For now, we will leave shimmer as is or optimize if it's flagged. The user report specifically flagged 'background-position-x' on .animate-gradient.
-*/
+/* Shimmer effect - Optimized to use transform on pseudo-element */
 @keyframes shimmer {
   0% {
-    background-position: -200% 0;
+    transform: translate3d(-100%, 0, 0);
   }
   100% {
-    background-position: 200% 0;
+    transform: translate3d(100%, 0, 0);
   }
 }
 
@@ -330,14 +327,26 @@
 }
 
 .animate-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.animate-shimmer::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   background: linear-gradient(
     90deg,
     transparent,
     rgba(255, 255, 255, 0.2),
     transparent
   );
-  background-size: 200% 100%;
+  transform: translate3d(-100%, 0, 0);
   animation: shimmer 2s infinite;
+  will-change: transform;
 }
 
 .animate-typewriter {
@@ -383,14 +392,30 @@
 
 /* Hover animations */
 .hover-lift {
-  transition:
-    transform 0.3s ease,
-    box-shadow 0.3s ease;
+  position: relative;
+  transition: transform 0.3s ease;
+  will-change: transform;
+}
+
+.hover-lift::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: -1;
+  pointer-events: none;
+  will-change: opacity;
 }
 
 .hover-lift:hover {
   transform: translateY(-5px);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.hover-lift:hover::after {
+  opacity: 1;
 }
 
 .hover-glow:hover {
@@ -443,10 +468,10 @@
 
 @keyframes shimmerCard {
   0% {
-    background-position: -200% 0;
+    transform: translate3d(-100%, 0, 0);
   }
   100% {
-    background-position: 200% 0;
+    transform: translate3d(100%, 0, 0);
   }
 }
 
@@ -470,14 +495,26 @@
 }
 
 .animate-shimmer-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.animate-shimmer-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   background: linear-gradient(
     90deg,
     transparent,
     rgba(255, 255, 255, 0.1),
     transparent
   );
-  background-size: 200% 100%;
+  transform: translate3d(-100%, 0, 0);
   animation: shimmerCard 3s infinite;
+  will-change: transform;
 }
 
 .animate-border-pulse {

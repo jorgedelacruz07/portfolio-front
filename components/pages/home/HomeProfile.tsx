@@ -149,9 +149,10 @@ const HomeProfileComponent: FC = () => {
                       width={224}
                       height={224}
                       className="object-cover w-full h-full"
-                      priority
+                      priority={true}
+                      loading="eager"
                       fetchPriority="high"
-                      sizes="(max-width: 768px) 100vw, 50vw"
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     />
                   </div>
 
