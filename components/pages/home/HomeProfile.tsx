@@ -8,12 +8,8 @@ import classNames from "classnames";
 import { useScrollAnimation } from "@/hooks";
 
 const HomeProfileComponent: FC = () => {
-  const { ref: profileRef } = useScrollAnimation({ threshold: 0.2 });
   const { ref: textRef, isVisible: textVisible } = useScrollAnimation({
     threshold: 0.3,
-  });
-  const { ref: imageRef, isVisible: imageVisible } = useScrollAnimation({
-    threshold: 0.2,
   });
 
   const handleDownloadClick = useCallback(() => {
@@ -30,7 +26,6 @@ const HomeProfileComponent: FC = () => {
 
   return (
     <div
-      ref={profileRef}
       className="min-h-[60vh] flex items-center justify-center py-8 md:py-12 relative"
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -101,13 +96,7 @@ const HomeProfileComponent: FC = () => {
 
           {/* Right Content - Profile Image with Programmer Theme */}
           <div
-            ref={imageRef}
-            className={classNames(
-              "flex justify-center lg:justify-end transition-all duration-1000",
-              imageVisible
-                ? "animate-fade-in-right"
-                : "opacity-0 translate-x-[30px]",
-            )}
+            className="flex justify-center lg:justify-end"
           >
             <div className="relative group">
               {/* Enhanced code-themed decorative elements */}
