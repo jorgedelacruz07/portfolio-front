@@ -8,7 +8,13 @@ const nextConfig = {
 
   // Enable experimental features for better performance
   experimental: {
-    optimizePackageImports: ["@heroicons/react", "lucide-react"],
+    optimizePackageImports: [
+      "@heroicons/react",
+      "lucide-react",
+      "framer-motion",
+      "date-fns",
+      "@tanstack/react-query"
+    ],
     optimizeCss: true, // Enable critical CSS optimization
   },
 

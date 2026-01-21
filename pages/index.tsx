@@ -3,11 +3,12 @@ import Head from "next/head";
 import dynamic from "next/dynamic";
 import { HomeProfile } from "../components/pages/home/HomeProfile";
 import { HomeAbout } from "../components/pages/home/HomeAbout";
-import { useHomePageData, useNearScreen } from "../hooks";
+import { useHomePageData } from "../hooks";
 import { PageLoader } from "../components/LoadingSpinner";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { classConstants } from "@/lib/class-constants";
+import { LazyHydrate } from "../components/LazyHydrate";
 
 // Dynamic imports for below-the-fold components
 const HomeProjects = dynamic(
@@ -46,12 +47,6 @@ const HomeBlog = dynamic(() => import("../components/pages/home/HomeBlog"), {
 const Home: NextPage = () => {
   const { experiences, projects, posts, isLoading, error } = useHomePageData();
 
-  // Custom Intersection Observer hooks for aggressive code splitting
-  // Chunks are not requested until user scrolls within 200px
-  const { isNearScreen: isExperiencesNear, fromRef: experiencesRef } = useNearScreen("200px");
-  const { isNearScreen: isProjectsNear, fromRef: projectsRef } = useNearScreen("200px");
-  const { isNearScreen: isBlogNear, fromRef: blogRef } = useNearScreen("200px");
-
   if (isLoading) {
     return <PageLoader />;
   }
@@ -87,36 +82,24 @@ const Home: NextPage = () => {
       <HomeAbout />
 
       {experiences.length > 0 && (
-        <div ref={experiencesRef} className="min-h-[50vh]">
-          {isExperiencesNear && (
-            <>
-              <Separator className="my-8" />
-              <HomeExperiences experiences={experiences} />
-            </>
-          )}
-        </div>
+        <LazyHydrate className="min-h-[50vh]">
+          <Separator className="my-8" />
+          <HomeExperiences experiences={experiences} />
+        </LazyHydrate>
       )}
 
       {projects.length > 0 && (
-        <div ref={projectsRef} className="min-h-[50vh]">
-          {isProjectsNear && (
-            <>
-              <Separator className="my-8" />
-              <HomeProjects projects={projects} />
-            </>
-          )}
-        </div>
+        <LazyHydrate className="min-h-[50vh]">
+          <Separator className="my-8" />
+          <HomeProjects projects={projects} />
+        </LazyHydrate>
       )}
 
       {posts.length > 0 && (
-        <div ref={blogRef} className="min-h-[50vh]">
-          {isBlogNear && (
-            <>
-              <Separator className="my-8" />
-              <HomeBlog posts={posts} />
-            </>
-          )}
-        </div>
+        <LazyHydrate className="min-h-[50vh]">
+          <Separator className="my-8" />
+          <HomeBlog posts={posts} />
+        </LazyHydrate>
       )}
     </div>
   );
