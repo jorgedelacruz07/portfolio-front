@@ -1,4 +1,5 @@
 import type { NextPage } from "next";
+import Head from "next/head";
 import dynamic from "next/dynamic";
 import { HomeProfile } from "../components/pages/home/HomeProfile";
 import { HomeAbout } from "../components/pages/home/HomeAbout";
@@ -35,6 +36,15 @@ const HomeExperiences = dynamic(
     ),
   },
 );
+
+const HomeBlog = dynamic(() => import("../components/pages/home/HomeBlog"), {
+  ssr: false,
+  loading: () => (
+    <div className="py-16">
+      <div className="animate-pulse bg-muted/20 h-64 rounded-lg"></div>
+    </div>
+  ),
+});
 
 import { useInView } from "react-intersection-observer";
 import React from "react";
@@ -77,7 +87,7 @@ const LazySection = ({
 };
 
 const Home: NextPage = () => {
-  const { experiences, projects, isLoading, error } = useHomePageData();
+  const { experiences, projects, posts, isLoading, error } = useHomePageData();
 
   if (isLoading) {
     return <PageLoader />;
@@ -107,6 +117,9 @@ const Home: NextPage = () => {
 
   return (
     <div className="space-y-0">
+      <Head>
+        <link rel="preload" as="image" href="/images/jorge.jpg" />
+      </Head>
       <HomeProfile />
       <HomeAbout />
 
@@ -121,6 +134,13 @@ const Home: NextPage = () => {
         <LazySection>
           <Separator className="my-8" />
           <HomeProjects projects={projects} />
+        </LazySection>
+      )}
+
+      {posts.length > 0 && (
+        <LazySection>
+          <Separator className="my-8" />
+          <HomeBlog posts={posts} />
         </LazySection>
       )}
     </div>
