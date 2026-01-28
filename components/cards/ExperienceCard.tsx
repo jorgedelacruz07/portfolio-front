@@ -43,18 +43,20 @@ export const ExperienceCard = memo<ExperienceCardProps>(({ experience, index, is
 
       <CardHeader className="pb-5 relative z-10">
         <div className="flex items-start gap-4">
-          <div className="relative w-16 h-16 rounded-lg overflow-hidden ring-2 ring-border/30 group-hover:ring-primary/50 transition-all duration-500 group-hover:scale-105">
-            <Image
-              src={experience.image.src}
-              alt={experience.company}
-              width={64}
-              height={64}
-              sizes="(max-width: 768px) 64px, 64px"
-              className="object-cover transition-transform duration-500 group-hover:scale-105"
-              loading="lazy"
-            />
-            <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/10 transition-colors duration-500"></div>
-          </div>
+          {experience.image?.src && (
+            <div className="relative w-16 h-16 rounded-lg overflow-hidden ring-2 ring-border/30 group-hover:ring-primary/50 transition-all duration-500 group-hover:scale-105">
+              <Image
+                src={experience.image.src}
+                alt={experience.company}
+                width={64}
+                height={64}
+                sizes="(max-width: 768px) 64px, 64px"
+                className="object-cover transition-transform duration-500 group-hover:scale-105"
+                loading="lazy"
+              />
+              <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/10 transition-colors duration-500"></div>
+            </div>
+          )}
           <div className="flex-1 min-w-0">
             <CardTitle className="text-xl font-bold group-hover:text-primary transition-colors duration-500 mb-1">
               <Link

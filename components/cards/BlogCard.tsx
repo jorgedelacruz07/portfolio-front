@@ -14,15 +14,17 @@ export const BlogCard = memo<BlogCardProps>(({ post }) => {
       <div className="h-full relative overflow-hidden rounded-lg bg-white dark:bg-gray-800 p-6 shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-200 dark:border-gray-700">
         <div className="space-y-4">
           <div className="flex items-center gap-4">
-            <div className="relative w-12 h-12 rounded-lg overflow-hidden">
-              <Image
-                src={post.image.src}
-                alt={post.title}
-                width={48}
-                height={48}
-                className="object-cover"
-              />
-            </div>
+            {post.image?.src && (
+              <div className="relative w-12 h-12 rounded-lg overflow-hidden">
+                <Image
+                  src={post.image.src}
+                  alt={post.title}
+                  width={48}
+                  height={48}
+                  className="object-cover"
+                />
+              </div>
+            )}
             <div className="text-lg font-semibold text-black dark:text-white group-hover:text-gray-600 dark:group-hover:text-gray-200 transition-colors duration-300">
               <Link href={`/blog/${post.slug}`}>{post.title}</Link>
             </div>
