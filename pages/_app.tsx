@@ -14,7 +14,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     reportWebVitals();
   }
 
-  const gaId = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS || 'G-4J8T4WP1S7';
+  const gaId = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS || "G-4J8T4WP1S7";
 
   return (
     <>

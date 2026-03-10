@@ -5,6 +5,7 @@ const withBundleAnalyzer = require("@next/bundle-analyzer")({
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  output: "export",
 
   // Enable experimental features for better performance
   experimental: {
@@ -13,7 +14,7 @@ const nextConfig = {
       "lucide-react",
       "framer-motion",
       "date-fns",
-      "@tanstack/react-query"
+      "@tanstack/react-query",
     ],
     optimizeCss: true, // Enable critical CSS optimization
   },
@@ -26,7 +27,7 @@ const nextConfig = {
     minimumCacheTTL: 60 * 60 * 24 * 30, // 30 days
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
-    unoptimized: false,
+    unoptimized: true,
     loader: "default",
   },
 

@@ -25,9 +25,7 @@ const HomeProfileComponent: FC = () => {
   const name = "Jorge de la Cruz";
 
   return (
-    <div
-      className="min-h-[60vh] flex items-center justify-center py-8 md:py-12 relative"
-    >
+    <div className="min-h-[60vh] flex items-center justify-center py-8 md:py-12 relative">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           {/* Left Content */}
@@ -95,9 +93,7 @@ const HomeProfileComponent: FC = () => {
           </div>
 
           {/* Right Content - Profile Image with Programmer Theme */}
-          <div
-            className="flex justify-center lg:justify-end"
-          >
+          <div className="flex justify-center lg:justify-end">
             <div className="relative group">
               {/* Enhanced code-themed decorative elements */}
               <div className="absolute -top-4 -left-4 w-8 h-8 border-2 border-primary/30 rounded rotate-45 animate-glow-pulse"></div>
