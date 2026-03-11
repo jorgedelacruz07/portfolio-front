@@ -51,7 +51,7 @@ export const homeMotion = {
 } as const;
 
 export const homePageStyles = {
-  page: "relative mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 pb-16 pt-4 sm:px-6 lg:gap-10 lg:px-8 lg:pb-24 lg:pt-8",
+  page: "relative mx-auto flex w-full max-w-[92rem] flex-col gap-8 px-2 pb-16 pt-4 sm:px-4 lg:gap-10 lg:px-6 lg:pb-24 lg:pt-8",
   section: "relative py-4 lg:py-6",
   sectionSurface:
     "glass-panel surface-grid relative overflow-hidden rounded-[2rem] px-6 py-8 shadow-premium sm:px-8 md:px-10 md:py-10",
@@ -61,13 +61,13 @@ export const homePageStyles = {
   eyebrow:
     "text-[0.7rem] font-semibold uppercase tracking-[0.34em] text-primary/80",
   title:
-    "max-w-4xl text-4xl font-semibold tracking-[-0.05em] text-foreground sm:text-5xl lg:text-6xl",
+    "max-w-5xl text-4xl font-semibold tracking-[-0.05em] text-foreground sm:text-5xl lg:text-6xl",
   description:
     "max-w-2xl text-sm leading-7 text-muted-foreground sm:text-base sm:leading-8",
   sectionContent: "relative z-10 mt-8 md:mt-10",
   featuredGrid: "grid gap-6 lg:grid-cols-12",
   twoColumn:
-    "relative z-10 grid gap-10 lg:grid-cols-[minmax(0,1.08fr)_minmax(21rem,0.92fr)] lg:items-center lg:gap-12",
+    "relative z-10 grid gap-10 lg:grid-cols-[minmax(0,1.16fr)_minmax(24rem,0.94fr)] lg:items-center lg:gap-14",
   spotlightCard:
     "group glass-panel relative flex h-full flex-col gap-5 overflow-hidden rounded-[1.75rem] p-6 transition-all duration-500 hover:-translate-y-1.5 hover:border-primary/30 hover:shadow-premium-lg lg:p-7",
   metaList: "flex flex-wrap gap-2.5",

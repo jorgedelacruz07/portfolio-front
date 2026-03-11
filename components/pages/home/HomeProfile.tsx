@@ -53,7 +53,7 @@ export const HomeProfile = () => {
 
             <div className="space-y-5">
               <p className={homePageStyles.eyebrow}>Senior software engineer</p>
-              <h1 className="max-w-4xl font-display text-5xl font-semibold tracking-[-0.075em] text-foreground sm:text-6xl lg:text-7xl">
+              <h1 className="max-w-5xl font-display text-5xl font-semibold tracking-[-0.075em] text-foreground sm:text-6xl lg:text-7xl xl:text-[5.5rem]">
                 Building
                 <span className="text-premium-gradient">
                   {" "}
@@ -61,7 +61,7 @@ export const HomeProfile = () => {
                 </span>
                 product surfaces that feel engineered, not assembled.
               </h1>
-              <p className="max-w-2xl text-base leading-8 text-muted-foreground sm:text-lg sm:leading-9">
+              <p className="max-w-3xl text-base leading-8 text-muted-foreground sm:text-lg sm:leading-9">
                 I&apos;m Jorge de la Cruz. I design and ship scalable React
                 systems with a strong focus on UI consistency, accessibility,
                 and measurable performance. The goal is simple: premium
@@ -145,7 +145,7 @@ export const HomeProfile = () => {
 
         <motion.div
           variants={homeMotion.item}
-          className="mx-auto w-full max-w-[28rem]"
+          className="mx-auto w-full max-w-[32rem]"
         >
           <div className="relative">
             <div className="absolute inset-x-10 top-10 h-48 rounded-full bg-accent-radial opacity-80 blur-3xl" />
