@@ -4,9 +4,7 @@ type UseDeferredRenderOptions = {
   rootMargin?: string;
 };
 
-export const useDeferredRender = (
-  options: UseDeferredRenderOptions = {},
-) => {
+export const useDeferredRender = (options: UseDeferredRenderOptions = {}) => {
   const { rootMargin = "280px" } = options;
   const [shouldRender, setShouldRender] = useState(false);
   const ref = useRef<HTMLDivElement>(null);

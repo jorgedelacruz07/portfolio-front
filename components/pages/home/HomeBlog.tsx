@@ -1,30 +1,90 @@
-import { memo } from "react";
-import { TPost } from "../../../types/post";
+import Image from "next/image";
 import Link from "next/link";
-import { BlogCard } from "@/components/cards/BlogCard";
+import { format } from "date-fns";
+import { TPost } from "@/types/post";
+import { Badge } from "@/components/ui/badge";
+import { HomeSection } from "@/components/pages/home/HomeSection";
+import { homePageStyles } from "@/lib/utils";
 
-type Props = {
+type HomeBlogProps = {
   posts: TPost[];
 };
 
-const HomeBlog = ({ posts }: Props) => {
+const BlogPostCard = ({ post }: { post: TPost }) => {
   return (
-    <div className="space-y-8">
-      <div className="flex items-center justify-between">
-        <h2 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">
-          Latest Posts
-        </h2>
-        <div className="text-cyan-800 dark:text-gray-400 hover:text-cyan-700 dark:hover:text-gray-100 transition-colors duration-300 font-semibold">
-          <Link href="/blog">View All</Link>
+    <article className={homePageStyles.spotlightCard}>
+      <div className="flex items-start gap-4">
+        {post.image?.src ? (
+          <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-2xl border border-border/60 bg-muted">
+            <Image
+              src={post.image.src}
+              alt={post.title}
+              width={56}
+              height={56}
+              sizes="56px"
+              className="h-full w-full object-cover"
+              loading="lazy"
+            />
+          </div>
+        ) : null}
+
+        <div className="space-y-2">
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-primary/80">
+            {format(new Date(post.createdAt), "MMM d, yyyy")}
+          </p>
+          <h3 className="text-xl font-semibold tracking-tight text-foreground">
+            <Link
+              href={`/blog/${post.slug}`}
+              className="transition-colors hover:text-primary"
+            >
+              {post.title}
+            </Link>
+          </h3>
         </div>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {posts.slice(0, 3).map((post) => (
-          <BlogCard key={post.slug} post={post} />
+
+      <p className="line-clamp-3 text-sm leading-7 text-muted-foreground">
+        {post.body}
+      </p>
+
+      <div className={homePageStyles.metaList}>
+        {post.categories?.slice(0, 2).map((category) => (
+          <Badge
+            key={category.id}
+            variant="secondary"
+            className="rounded-full border border-border/60 bg-background px-3 py-1 text-xs font-medium text-foreground"
+          >
+            {category.name}
+          </Badge>
+        ))}
+        {post.tags?.slice(0, 2).map((tag) => (
+          <Badge
+            key={tag.id}
+            variant="secondary"
+            className="rounded-full border border-border/60 bg-background px-3 py-1 text-xs font-medium text-foreground"
+          >
+            {tag.name}
+          </Badge>
         ))}
       </div>
-    </div>
+    </article>
   );
 };
 
-export default memo(HomeBlog);
+export const HomeBlog = ({ posts }: HomeBlogProps) => {
+  return (
+    <HomeSection
+      eyebrow="Writing"
+      title="Notes on engineering, product craft, and frontend systems."
+      description="Recent articles that reflect how I think about implementation detail, UX quality, and team delivery."
+      actionHref="/blog"
+      actionLabel="All posts"
+    >
+      <div className={homePageStyles.featuredGrid}>
+        {posts.slice(0, 3).map((post) => (
+          <BlogPostCard key={post.slug} post={post} />
+        ))}
+      </div>
+    </HomeSection>
+  );
+};

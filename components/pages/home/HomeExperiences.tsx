@@ -1,43 +1,110 @@
-import { memo } from "react";
-import { TExperience } from "../../../types/experience";
-import { SectionHeader } from "@/components/ui/SectionHeader";
-import { useScrollAnimation, useStaggeredAnimation } from "@/hooks";
-import { ExperienceCard } from "@/components/cards/ExperienceCard";
+import Image from "next/image";
+import Link from "next/link";
+import { TExperience } from "@/types/experience";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { ExternalLinkIcon } from "@/components/icons/ExternalLinkIcon";
+import { HomeSection } from "@/components/pages/home/HomeSection";
+import { formatDateRange, homePageStyles } from "@/lib/utils";
 
-type Props = {
+type HomeExperiencesProps = {
   experiences: TExperience[];
 };
 
-const HomeExperiencesComponent = ({ experiences }: Props) => {
-  const { ref: sectionRef, isVisible } = useScrollAnimation({ threshold: 0.2 });
-  const { refs, visibleItems } = useStaggeredAnimation(experiences.length, 150);
-
+const ExperienceCard = ({ experience }: { experience: TExperience }) => {
   return (
-    <div ref={sectionRef} className="py-16">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <SectionHeader
-          title="Work"
-          highlight="Experience"
-          viewAllHref="/experiences"
-          isVisible={isVisible}
-          animated
-        />
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-8">
-          {experiences.map((experience, index) => (
-            <div key={experience.slug} ref={(el) => (refs.current[index] = el)}>
-              <ExperienceCard
-                experience={experience}
-                index={index}
-                isVisible={visibleItems.has(index)}
-              />
-            </div>
-          ))}
+    <article className={homePageStyles.spotlightCard}>
+      <div className="flex items-start gap-4">
+        <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-2xl border border-border/60 bg-muted">
+          <Image
+            src={experience.image.src}
+            alt={experience.company}
+            width={64}
+            height={64}
+            sizes="64px"
+            className="h-full w-full object-cover"
+            loading="lazy"
+          />
+        </div>
+
+        <div className="min-w-0 space-y-2">
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-primary/80">
+            {formatDateRange(experience.from, experience.to)}
+          </p>
+          <h3 className="text-xl font-semibold tracking-tight text-foreground">
+            <Link
+              href={`/experiences/${experience.slug}`}
+              className="transition-colors hover:text-primary"
+            >
+              {experience.company}
+            </Link>
+          </h3>
+          <p className="text-sm font-medium text-muted-foreground">
+            {experience.jobTitle}
+          </p>
         </div>
       </div>
-    </div>
+
+      <p className="text-sm leading-7 text-muted-foreground">
+        {experience.jobDescription}
+      </p>
+
+      <div className={homePageStyles.metaList}>
+        {experience.technologies.slice(0, 4).map((technology) => (
+          <Badge
+            key={technology.id}
+            variant="secondary"
+            className="rounded-full border border-border/60 bg-background px-3 py-1 text-xs font-medium text-foreground"
+          >
+            {technology.name}
+          </Badge>
+        ))}
+      </div>
+
+      <div className="mt-auto flex flex-col gap-3 border-t border-border/60 pt-5 sm:flex-row">
+        <Button
+          asChild
+          variant="outline"
+          className="h-11 flex-1 rounded-full border-border bg-background/80 px-5 text-sm font-semibold"
+        >
+          <Link href={`/experiences/${experience.slug}`}>View role</Link>
+        </Button>
+
+        {experience.companyUrl ? (
+          <Button
+            asChild
+            className="h-11 flex-1 rounded-full px-5 text-sm font-semibold"
+          >
+            <a
+              href={experience.companyUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2"
+            >
+              Company site
+              <ExternalLinkIcon className="h-3.5 w-3.5" />
+            </a>
+          </Button>
+        ) : null}
+      </div>
+    </article>
   );
 };
 
-HomeExperiencesComponent.displayName = "HomeExperiences";
-const HomeExperiences = memo(HomeExperiencesComponent);
-export default HomeExperiences;
+export const HomeExperiences = ({ experiences }: HomeExperiencesProps) => {
+  return (
+    <HomeSection
+      eyebrow="Experience"
+      title="Recent roles where product quality and delivery discipline mattered."
+      description="A snapshot of the teams and environments where I led or contributed to scalable frontend delivery."
+      actionHref="/experiences"
+      actionLabel="All experience"
+    >
+      <div className={homePageStyles.featuredGrid}>
+        {experiences.map((experience) => (
+          <ExperienceCard key={experience.slug} experience={experience} />
+        ))}
+      </div>
+    </HomeSection>
+  );
+};

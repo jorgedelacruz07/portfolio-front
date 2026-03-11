@@ -17,15 +17,14 @@ export const homePageStyles = {
   sectionHeader:
     "flex flex-col gap-4 border-b border-border/60 pb-6 md:flex-row md:items-end md:justify-between",
   sectionCopy: "space-y-3",
-  eyebrow:
-    "text-xs font-semibold uppercase tracking-[0.28em] text-primary/80",
+  eyebrow: "text-xs font-semibold uppercase tracking-[0.28em] text-primary/80",
   title:
     "max-w-3xl text-3xl font-semibold tracking-tight text-foreground sm:text-4xl md:text-5xl",
-  description:
-    "max-w-2xl text-sm leading-7 text-muted-foreground sm:text-base",
+  description: "max-w-2xl text-sm leading-7 text-muted-foreground sm:text-base",
   sectionContent: "mt-8 md:mt-10",
   featuredGrid: "grid gap-5 md:grid-cols-2 xl:grid-cols-3",
-  twoColumn: "grid gap-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(18rem,0.85fr)] lg:items-center",
+  twoColumn:
+    "grid gap-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(18rem,0.85fr)] lg:items-center",
   spotlightCard:
     "relative flex h-full flex-col gap-5 overflow-hidden rounded-[1.5rem] border border-border/70 bg-background/95 p-6 shadow-soft transition-transform duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-soft-lg",
   metaList: "flex flex-wrap gap-2",
