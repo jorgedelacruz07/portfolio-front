@@ -37,11 +37,11 @@ The app currently reads these variables:
 
 ```bash
 VITE_API_URL=
-VITE_GOOGLE_ANALYTICS_ID=
+VITE_GOOGLE_CLIENT_ID=
 ```
 
 - `VITE_API_URL`: Base URL for the portfolio API.
-- `VITE_GOOGLE_ANALYTICS_ID`: Google Analytics measurement ID.
+- `VITE_GOOGLE_CLIENT_ID`: Google Analytics measurement ID.
 
 If `VITE_API_URL` is omitted in development, the data layer falls back to local mock responses from [`lib/api.ts`](/Users/jorge.delacruz/Documents/Personal/portfolio-front/lib/api.ts).
 

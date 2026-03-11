@@ -11,7 +11,7 @@ import { reportWebVitals } from "../lib/analytics";
 import { queryClient } from "../lib/query-client";
 
 const googleAnalyticsId =
-  import.meta.env.VITE_GOOGLE_ANALYTICS_ID ?? "G-4J8T4WP1S7";
+  import.meta.env.VITE_GOOGLE_CLIENT_ID ?? "G-4J8T4WP1S7";
 
 let hasInitializedAnalytics = false;
 let hasStartedWebVitals = false;

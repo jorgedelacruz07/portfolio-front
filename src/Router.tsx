@@ -44,7 +44,7 @@ function RouteChangeTracker() {
 
     window.gtag(
       "config",
-      import.meta.env.VITE_GOOGLE_ANALYTICS_ID ?? "G-4J8T4WP1S7",
+      import.meta.env.VITE_GOOGLE_CLIENT_ID ?? "G-4J8T4WP1S7",
       {
         page_path: pagePath,
         transport_type: "beacon",
