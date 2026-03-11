@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from "react";
 
 interface LazyHydrateProps {
   children: React.ReactNode;
@@ -9,7 +9,7 @@ interface LazyHydrateProps {
 export const LazyHydrate: React.FC<LazyHydrateProps> = ({
   children,
   className,
-  rootMargin = '200px'
+  rootMargin = "200px",
 }) => {
   const [shouldRender, setShouldRender] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -19,7 +19,7 @@ export const LazyHydrate: React.FC<LazyHydrateProps> = ({
     if (shouldRender) return;
 
     // Check if IntersectionObserver is supported
-    if (!('IntersectionObserver' in window)) {
+    if (!("IntersectionObserver" in window)) {
       setShouldRender(true);
       return;
     }
@@ -34,7 +34,7 @@ export const LazyHydrate: React.FC<LazyHydrateProps> = ({
           observer.disconnect();
         }
       },
-      { rootMargin }
+      { rootMargin },
     );
 
     observer.observe(element);
