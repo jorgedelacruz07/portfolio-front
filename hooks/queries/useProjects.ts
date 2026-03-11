@@ -32,7 +32,7 @@ export const useGetProjectBySlug = (slug: string | string[] | undefined) => {
 
   return useQuery({
     queryKey: projectKeys.detail(projectSlug || ""),
-    queryFn: async (): Promise<TProject> => {
+    queryFn: async (): Promise<TProject | null> => {
       if (!projectSlug) {
         throw new Error("Project slug is required");
       }

@@ -32,7 +32,7 @@ export const useGetExperienceBySlug = (slug: string | string[] | undefined) => {
 
   return useQuery({
     queryKey: experienceKeys.detail(experienceSlug || ""),
-    queryFn: async (): Promise<TExperience> => {
+    queryFn: async (): Promise<TExperience | null> => {
       if (!experienceSlug) {
         throw new Error("Experience slug is required");
       }

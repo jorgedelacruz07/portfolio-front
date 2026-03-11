@@ -38,7 +38,7 @@ export const useGetPostBySlug = (slug: string | string[] | undefined) => {
 
   return useQuery({
     queryKey: postKeys.detail(postSlug || ""),
-    queryFn: async (): Promise<TPost> => {
+    queryFn: async (): Promise<TPost | null> => {
       if (!postSlug) {
         throw new Error("Post slug is required");
       }
