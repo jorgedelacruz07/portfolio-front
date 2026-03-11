@@ -54,7 +54,7 @@ export const HomeSection = ({
               <Button
                 asChild
                 variant="outline"
-                className="h-12 px-6 text-sm font-semibold"
+                className="h-9 px-3.5 text-sm font-semibold"
               >
                 <Link to={actionHref}>{actionLabel}</Link>
               </Button>

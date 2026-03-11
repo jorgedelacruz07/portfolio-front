@@ -51,29 +51,27 @@ export const homeMotion = {
 } as const;
 
 export const homePageStyles = {
-  page: "relative mx-auto flex w-full max-w-[92rem] flex-col gap-8 px-2 pb-16 pt-4 sm:px-4 lg:gap-10 lg:px-6 lg:pb-24 lg:pt-8",
-  section: "relative py-4 lg:py-6",
+  page: "relative mx-auto flex w-full max-w-[92rem] flex-col gap-6 px-2 pb-12 pt-3 sm:px-4 lg:gap-8 lg:px-6 lg:pb-20 lg:pt-6",
+  section: "relative py-2 lg:py-3",
   sectionSurface:
-    "glass-panel surface-grid relative overflow-hidden rounded-[2rem] px-6 py-8 shadow-premium sm:px-8 md:px-10 md:py-10",
+    "glass-panel surface-grid relative overflow-hidden rounded-[1.75rem] px-5 py-5 shadow-premium sm:px-6 md:px-6 md:py-6",
   sectionHeader:
-    "relative z-10 flex flex-col gap-6 border-b border-white/10 pb-8 md:flex-row md:items-end md:justify-between",
-  sectionCopy: "space-y-3",
+    "relative z-10 grid gap-4 border-b border-white/10 pb-5 md:grid-cols-[minmax(0,1fr)_auto] md:items-end",
+  sectionCopy: "space-y-2",
   eyebrow:
-    "text-[0.7rem] font-semibold uppercase tracking-[0.34em] text-primary/80",
+    "text-[0.65rem] font-semibold uppercase tracking-[0.3em] text-primary/80",
   title:
-    "max-w-5xl text-4xl font-semibold tracking-[-0.05em] text-foreground sm:text-5xl lg:text-6xl",
-  description:
-    "max-w-2xl text-sm leading-7 text-muted-foreground sm:text-base sm:leading-8",
-  sectionContent: "relative z-10 mt-8 md:mt-10",
-  featuredGrid: "grid gap-6 lg:grid-cols-12",
-  twoColumn:
-    "relative z-10 grid gap-10 lg:grid-cols-[minmax(0,1.16fr)_minmax(24rem,0.94fr)] lg:items-center lg:gap-14",
+    "max-w-4xl text-2xl font-semibold leading-none tracking-tight text-foreground sm:text-3xl lg:text-4xl",
+  description: "max-w-2xl text-sm leading-relaxed text-muted-foreground",
+  sectionContent: "relative z-10 mt-5 md:mt-6",
+  featuredGrid: "grid gap-4 lg:grid-cols-12",
+  twoColumn: "relative z-10 grid gap-4 lg:grid-cols-12 lg:items-start",
   spotlightCard:
-    "group glass-panel relative flex h-full flex-col gap-5 overflow-hidden rounded-[1.75rem] p-6 transition-all duration-500 hover:-translate-y-1.5 hover:border-primary/30 hover:shadow-premium-lg lg:p-7",
-  metaList: "flex flex-wrap gap-2.5",
+    "group glass-panel relative flex h-full flex-col gap-4 overflow-hidden rounded-[1.4rem] p-5 transition-all duration-500 hover:-translate-y-1 hover:border-primary/30 hover:shadow-premium-lg",
+  metaList: "flex flex-wrap gap-2",
   metaBadge:
-    "inline-flex items-center rounded-full border border-white/10 bg-white/[0.04] px-3.5 py-1.5 text-[0.72rem] font-semibold uppercase tracking-[0.2em] text-white/78 backdrop-blur-md",
-  ctaRow: "flex flex-col gap-3 sm:flex-row sm:flex-wrap",
+    "inline-flex items-center rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.16em] text-white/78 backdrop-blur-md",
+  ctaRow: "flex flex-wrap gap-2.5",
   outlineLink:
-    "inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-sm font-semibold text-foreground transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/35 hover:bg-white/[0.07]",
+    "inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-sm font-semibold text-foreground transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/35 hover:bg-white/[0.07]",
 };

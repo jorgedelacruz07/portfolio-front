@@ -1,8 +1,8 @@
 export const profile = {
   name: "Jorge de la Cruz Padilla",
   description: [
-    "I’m a <strong>Senior Software Engineer</strong> with professional experience since <strong>2016</strong>, focused on building scalable, modern, and user-centered web applications. My journey started with <strong>Vue.js</strong>, <strong>Nuxt.js</strong>, and <strong>MySQL</strong>, evolving into full-stack JavaScript development using <strong>React.js</strong>, <strong>TypeScript</strong>, <strong>Tailwind CSS</strong>, and <strong>MongoDB</strong>. On the backend, I specialize in <strong>Node.js</strong> with <strong>Express.js</strong>, delivering robust APIs and cloud-ready solutions.",
-    "I’m passionate about <strong>AI-powered development</strong> and tools like <strong>Cursor</strong> that streamline productivity and code quality. I work on impactful projects that enhance <strong>UX</strong>, <strong>user engagement</strong>, and <strong>data-driven performance</strong>, while collaborating in agile teams using <strong>Notion</strong>, <strong>Jira</strong>, <strong>Slack</strong>, <strong>GitHub</strong>, <strong>Postman</strong>, and <strong>VS Code</strong>.",
+    "I’m a <strong>Senior Software Engineer</strong> building full-stack web products since <strong>2016</strong>, across <strong>React.js</strong>, <strong>Vite.js</strong>, <strong>MongoDB</strong>, <strong>Node.js</strong>, and <strong>Express.js</strong>. I ship frontend experiences, backend APIs, and deployment workflows with <strong>AWS</strong> and <strong>Docker</strong>.",
+    "I use <strong>Claude Code</strong>, <strong>Codex</strong>, <strong>Gemini</strong>, and <strong>Cursor</strong> extensively to accelerate delivery and product iteration. I’ve also applied AI in personal <strong>finance</strong> and <strong>education</strong> projects, turning practical workflows into real user-facing software.",
   ],
   image: "/images/jorge.jpg",
 };

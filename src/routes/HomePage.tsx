@@ -97,7 +97,7 @@ export default function HomePage() {
         <title>Jorge de la Cruz | Senior Software Engineer</title>
         <meta
           name="description"
-          content="Senior Software Engineer specializing in React.js, TypeScript, and Node.js. Building scalable web applications since 2016."
+          content="Senior Software Engineer building full-stack products with React.js, Vite.js, Express.js, MongoDB, AWS, Docker, and AI-native workflows."
         />
         <link rel="preload" as="image" href="/images/jorge.jpg" />
       </Helmet>

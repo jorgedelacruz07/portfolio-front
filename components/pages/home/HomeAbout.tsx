@@ -1,28 +1,25 @@
 import { motion } from "framer-motion";
-import { profile } from "@/data/content";
 import { Badge } from "@/components/ui/badge";
 import { HomeSection } from "@/components/pages/home/HomeSection";
 import { homeMotion } from "@/lib/utils";
 
 const skills = [
   "React.js",
-  "TypeScript",
-  "Node.js",
+  "Vite.js",
   "Express.js",
   "MongoDB",
-  "Tailwind CSS",
-  "React Router",
-  "Vue.js",
-  "Nuxt.js",
-  "MySQL",
-  "Design Systems",
-  "Performance",
+  "AWS",
+  "Docker",
+  "Claude Code",
+  "Codex",
+  "Gemini",
+  "Cursor",
 ];
 
 const stats = [
-  { number: "8+", label: "Years shipping production software" },
-  { number: "50+", label: "Projects delivered across product teams" },
-  { number: "100%", label: "Focus on maintainable and scalable UX" },
+  { number: "8+", label: "Years shipping" },
+  { number: "50+", label: "Projects delivered" },
+  { number: "100%", label: "UX ownership" },
 ];
 
 export const HomeAbout = () => {
@@ -31,49 +28,36 @@ export const HomeAbout = () => {
       eyebrow="About"
       title={
         <>
-          A product-minded engineer with
-          <span className="text-premium-gradient"> frontend architecture </span>
-          depth.
+          Full-stack engineering with
+          <span className="text-premium-gradient"> AI-native delivery.</span>
         </>
       }
-      description="I work across interface systems, delivery quality, and performance budgets so teams can move faster without leaving behind UI debt."
-      contentClassName="space-y-6"
+      description="Apps, APIs, infrastructure, and AI workflows in one stack."
     >
-      <div className="grid gap-6 lg:grid-cols-12">
+      <div className="grid gap-4 lg:grid-cols-12">
         <motion.div
           variants={homeMotion.item}
-          className="glass-panel relative overflow-hidden rounded-[1.9rem] p-6 lg:col-span-7 lg:p-8"
+          className="glass-panel rounded-[1.4rem] p-5 lg:col-span-6"
         >
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,hsl(var(--primary)/0.14),transparent_38%)]" />
-          <div className="relative space-y-5 text-sm leading-8 text-muted-foreground sm:text-base">
-            <div className="space-y-3">
-              <p className="text-[0.7rem] font-semibold uppercase tracking-[0.32em] text-primary/80">
-                Operating style
-              </p>
-              <h3 className="text-2xl font-semibold tracking-[-0.04em] text-foreground sm:text-3xl">
-                Strategy, systems, and implementation detail in the same loop.
-              </h3>
-            </div>
-
-            {profile.description.map((paragraph, index) => (
-              <p key={index} dangerouslySetInnerHTML={{ __html: paragraph }} />
-            ))}
-          </div>
+          <p className="text-sm leading-relaxed text-muted-foreground">
+            I build user-facing apps, backend services, and cloud-ready delivery
+            workflows that stay fast to ship and easy to evolve.
+          </p>
         </motion.div>
 
         <motion.div
           variants={homeMotion.item}
-          className="grid gap-6 sm:grid-cols-2 lg:col-span-5 lg:grid-cols-1"
+          className="grid gap-4 sm:grid-cols-3 lg:col-span-6"
         >
           {stats.map((stat) => (
             <div
               key={stat.label}
-              className="glass-panel rounded-[1.75rem] p-6 lg:p-7"
+              className="glass-panel rounded-[1.4rem] p-5 text-left"
             >
-              <p className="text-4xl font-semibold tracking-[-0.06em] text-foreground">
+              <p className="text-3xl font-semibold leading-none tracking-tight text-foreground">
                 {stat.number}
               </p>
-              <p className="mt-3 max-w-xs text-sm leading-7 text-muted-foreground">
+              <p className="mt-2 text-xs uppercase tracking-[0.18em] text-muted-foreground">
                 {stat.label}
               </p>
             </div>
@@ -82,31 +66,42 @@ export const HomeAbout = () => {
 
         <motion.div
           variants={homeMotion.item}
-          className="glass-panel rounded-[1.9rem] p-6 lg:col-span-4 lg:p-8"
+          className="glass-panel rounded-[1.4rem] p-5 lg:col-span-4"
         >
-          <p className="text-[0.7rem] font-semibold uppercase tracking-[0.32em] text-primary/80">
-            Toolkit
+          <p className="text-xs uppercase tracking-[0.2em] text-primary/80">
+            Operating style
           </p>
-          <h3 className="mt-3 text-2xl font-semibold tracking-[-0.04em] text-foreground">
-            Stack I use to keep product quality high.
-          </h3>
-          <p className="mt-3 text-sm leading-7 text-muted-foreground">
-            Frontend systems, backend delivery, and team tooling that support
-            faster iteration without sacrificing polish.
+          <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+            Product thinking, backend pragmatism, and AI acceleration in the
+            same loop.
           </p>
         </motion.div>
 
         <motion.div
           variants={homeMotion.item}
-          className="glass-panel rounded-[1.9rem] p-6 lg:col-span-8 lg:p-8"
+          className="glass-panel rounded-[1.4rem] p-5 lg:col-span-8"
         >
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-wrap gap-2">
             {skills.map((skill) => (
-              <Badge key={skill} variant="secondary" className="px-4 py-2">
+              <Badge
+                key={skill}
+                variant="secondary"
+                className="px-2.5 py-1 text-[0.65rem]"
+              >
                 {skill}
               </Badge>
             ))}
           </div>
+        </motion.div>
+
+        <motion.div
+          variants={homeMotion.item}
+          className="glass-panel rounded-[1.4rem] p-5 lg:col-span-12"
+        >
+          <p className="text-sm leading-relaxed text-muted-foreground">
+            I have also used AI directly in personal finance and education
+            projects, not just in the dev workflow.
+          </p>
         </motion.div>
       </div>
     </HomeSection>

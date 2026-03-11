@@ -32,6 +32,11 @@ const ExperienceCard = ({
   index: number;
 }) => {
   const isFeatured = index === 0;
+  const summary =
+    experience.jobDescription
+      .split(".")
+      .find((sentence) => sentence.trim())
+      ?.trim() ?? experience.jobDescription;
 
   return (
     <motion.article
@@ -39,27 +44,33 @@ const ExperienceCard = ({
       className={cn(homePageStyles.spotlightCard, getExperienceLayout(index))}
     >
       <div className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
-        <div className="absolute right-0 top-8 h-28 w-28 rounded-full bg-accent/15 blur-3xl" />
+        <div className="absolute right-0 top-8 h-24 w-24 rounded-full bg-accent/15 blur-3xl" />
       </div>
 
-      <div className="flex items-start gap-4">
-        <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-[1.35rem] border border-white/10 bg-black/20">
+      <div className="grid gap-4 sm:grid-cols-[auto_minmax(0,1fr)]">
+        <div className="relative h-14 w-14 overflow-hidden rounded-[1rem] border border-white/10 bg-black/20">
           <OptimizedImage
             src={experience.image.src}
             alt={experience.company}
             className="h-full w-full object-cover"
-            width={64}
-            height={64}
+            width={56}
+            height={56}
           />
         </div>
 
         <div className="min-w-0 space-y-2">
-          <p className="text-[0.7rem] font-semibold uppercase tracking-[0.3em] text-primary/80">
-            {formatDateRange(experience.from, experience.to)}
-          </p>
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-primary/80">
+              {formatDateRange(experience.from, experience.to)}
+            </span>
+            <Badge variant="secondary" className="px-2 py-0.5 text-[0.62rem]">
+              {experience.jobTitle}
+            </Badge>
+          </div>
+
           <h3
             className={cn(
-              "font-semibold tracking-[-0.05em] text-foreground",
+              "font-semibold leading-none tracking-tight text-foreground",
               isFeatured ? "text-3xl" : "text-2xl",
             )}
           >
@@ -70,56 +81,43 @@ const ExperienceCard = ({
               {experience.company}
             </Link>
           </h3>
-          <p className="text-sm font-medium tracking-[0.02em] text-white/72">
-            {experience.jobTitle}
+
+          <p className="text-sm leading-relaxed text-muted-foreground">
+            {summary.endsWith(".") ? summary : `${summary}.`}
           </p>
         </div>
       </div>
 
-      <p
-        className={cn(
-          "text-sm leading-7 text-muted-foreground",
-          isFeatured ? "sm:text-base sm:leading-8" : "",
-        )}
-      >
-        {experience.jobDescription}
-      </p>
-
-      <div className="rounded-[1.4rem] border border-white/10 bg-black/20 p-4">
-        <p className="text-[0.68rem] font-semibold uppercase tracking-[0.24em] text-primary/80">
-          Company context
-        </p>
-        <p className="mt-2 text-sm leading-7 text-muted-foreground">
-          {experience.companyDescription}
-        </p>
-      </div>
-
-      <div className={homePageStyles.metaList}>
+      <div className="flex flex-wrap gap-2">
         {experience.technologies.slice(0, 5).map((technology) => (
-          <Badge key={technology.id} variant="secondary">
+          <Badge
+            key={technology.id}
+            variant="secondary"
+            className="px-2 py-0.5 text-[0.62rem]"
+          >
             {technology.name}
           </Badge>
         ))}
       </div>
 
-      <div className="mt-auto flex flex-col gap-3 border-t border-white/10 pt-5 sm:flex-row">
+      <div className="mt-auto flex flex-wrap gap-2 border-t border-white/10 pt-4">
         <Button
           asChild
           variant="outline"
-          className="h-11 flex-1 text-sm font-semibold"
+          className="h-9 px-3.5 text-sm font-semibold"
         >
-          <Link to={`/experiences/${experience.slug}`}>View role</Link>
+          <Link to={`/experiences/${experience.slug}`}>Role</Link>
         </Button>
 
         {experience.companyUrl ? (
-          <Button asChild className="h-11 flex-1 text-sm font-semibold">
+          <Button asChild className="h-9 px-3.5 text-sm font-semibold">
             <a
               href={experience.companyUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2"
             >
-              Company site
+              Company
               <ExternalLinkIcon className="h-3.5 w-3.5" />
             </a>
           </Button>
@@ -135,12 +133,14 @@ export const HomeExperiences = ({ experiences }: HomeExperiencesProps) => {
       eyebrow="Experience"
       title={
         <>
-          Recent roles where
-          <span className="text-premium-gradient"> product quality </span>
-          and delivery discipline mattered.
+          Teams where
+          <span className="text-premium-gradient">
+            {" "}
+            full-stack quality shipped.
+          </span>
         </>
       }
-      description="A snapshot of the teams and environments where I led or contributed to scalable frontend delivery."
+      description="Roles covering product UI, backend delivery, cloud workflows, and maintainable systems."
       actionHref="/experiences"
       actionLabel="All experience"
     >
