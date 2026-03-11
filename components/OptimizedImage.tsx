@@ -14,6 +14,7 @@ export const OptimizedImage = ({
   className,
   loading,
   decoding,
+  fetchPriority,
   ...props
 }: OptimizedImageProps) => {
   return (
@@ -23,6 +24,9 @@ export const OptimizedImage = ({
       loading={loading ?? "lazy"}
       decoding={decoding ?? "async"}
       className={twMerge(clsx(className))}
+      {...(fetchPriority
+        ? ({ fetchpriority: fetchPriority } as Record<string, string>)
+        : {})}
       {...props}
     />
   );
