@@ -1,6 +1,6 @@
-import Image from "next/image";
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import { TExperience } from "@/types/experience";
+import { OptimizedImage } from "@/components/OptimizedImage";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ExternalLinkIcon } from "@/components/icons/ExternalLinkIcon";
@@ -16,14 +16,12 @@ const ExperienceCard = ({ experience }: { experience: TExperience }) => {
     <article className={homePageStyles.spotlightCard}>
       <div className="flex items-start gap-4">
         <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-2xl border border-border/60 bg-muted">
-          <Image
+          <OptimizedImage
             src={experience.image.src}
             alt={experience.company}
+            className="h-full w-full object-cover"
             width={64}
             height={64}
-            sizes="64px"
-            className="h-full w-full object-cover"
-            loading="lazy"
           />
         </div>
 
@@ -33,7 +31,7 @@ const ExperienceCard = ({ experience }: { experience: TExperience }) => {
           </p>
           <h3 className="text-xl font-semibold tracking-tight text-foreground">
             <Link
-              href={`/experiences/${experience.slug}`}
+              to={`/experiences/${experience.slug}`}
               className="transition-colors hover:text-primary"
             >
               {experience.company}
@@ -67,7 +65,7 @@ const ExperienceCard = ({ experience }: { experience: TExperience }) => {
           variant="outline"
           className="h-11 flex-1 rounded-full border-border bg-background/80 px-5 text-sm font-semibold"
         >
-          <Link href={`/experiences/${experience.slug}`}>View role</Link>
+          <Link to={`/experiences/${experience.slug}`}>View role</Link>
         </Button>
 
         {experience.companyUrl ? (

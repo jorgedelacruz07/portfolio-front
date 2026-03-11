@@ -1,5 +1,5 @@
-import Link from "next/link";
 import { ReactNode } from "react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { cn, homePageStyles } from "@/lib/utils";
 
@@ -42,7 +42,7 @@ export const HomeSection = ({
               variant="outline"
               className="h-11 rounded-full border-border bg-background/80 px-5 text-sm font-semibold"
             >
-              <Link href={actionHref}>{actionLabel}</Link>
+              <Link to={actionHref}>{actionLabel}</Link>
             </Button>
           ) : null}
         </div>

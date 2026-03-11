@@ -6,11 +6,11 @@ import { TCategory } from "../types/category";
 import { ApiError } from "../types/error";
 
 // API Configuration
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 if (!API_BASE_URL) {
   console.warn(
-    "NEXT_PUBLIC_API_URL environment variable is not set. API calls will fail.",
+    "VITE_API_URL environment variable is not set. API calls will fail.",
   );
 }
 
@@ -26,7 +26,7 @@ export const apiClient = axios.create({
 // Request interceptor for logging
 apiClient.interceptors.request.use(
   (config) => {
-    if (process.env.NODE_ENV === "development") {
+    if (import.meta.env.DEV) {
       console.log(
         `[API Request] ${config.method?.toUpperCase()} ${config.url}`,
       );

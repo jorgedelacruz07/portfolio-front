@@ -1,4 +1,4 @@
-import Head from "next/head";
+import { Helmet } from "react-helmet-async";
 import { Navbar } from "./Navbar";
 import { ReactNode } from "react";
 import Footer from "./Footer";
@@ -29,7 +29,7 @@ export const Layout = ({ children }: LayoutProps) => {
 
       <PerformanceMonitor />
       <CursorEffect />
-      <Head>
+      <Helmet>
         <title>
           Jorge de la Cruz - Senior Software Engineer | React & Next.js Expert
         </title>
@@ -70,7 +70,7 @@ export const Layout = ({ children }: LayoutProps) => {
         <link rel="canonical" href="https://jorgedelacruzpadilla.dev" />
         {/* Preload critical LCP image */}
         <link rel="preload" as="image" href="/images/jorge.jpg" />
-      </Head>
+      </Helmet>
       <Navbar />
       <main className="animate-fade-in px-4 sm:px-6 lg:px-8 py-8 md:py-10 mx-auto max-w-5xl min-h-[calc(100vh-8rem)] relative z-10">
         <ErrorBoundary>{children}</ErrorBoundary>

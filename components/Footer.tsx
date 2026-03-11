@@ -1,5 +1,5 @@
 import { socialNetworks } from "./SocialNetworks";
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
@@ -76,7 +76,7 @@ const Footer = () => {
                       className="p-0 h-auto text-muted-foreground hover:text-primary transition-colors duration-200 focus-ring-none link-hover"
                       asChild
                     >
-                      <Link href={link.href}>{link.label}</Link>
+                      <Link to={link.href}>{link.label}</Link>
                     </Button>
                   </li>
                 ))}

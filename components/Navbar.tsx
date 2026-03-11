@@ -1,20 +1,18 @@
-import Link from "next/link";
-import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import classNames from "classnames";
 import { Button } from "@/components/ui/button";
 import { useScrollAnimation } from "@/hooks";
 
 export const Navbar = () => {
-  const router = useRouter();
-  const [, setSelected] = useState("/");
+  const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const { ref: navbarRef, isVisible } = useScrollAnimation({ threshold: 0.1 });
 
   useEffect(() => {
-    setSelected(router.route);
-  }, [router]);
+    setIsMenuOpen(false);
+  }, [location.pathname]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -29,10 +27,10 @@ export const Navbar = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  const navLinkClasses = (path: string) =>
+  const navLinkClasses = (isActive: boolean) =>
     classNames(
       "text-muted-foreground hover:text-foreground transition-colors duration-200 font-medium",
-      router.pathname === path ? "text-foreground font-semibold" : "",
+      isActive ? "text-foreground font-semibold" : "",
     );
 
   const navbarItems = [
@@ -70,7 +68,7 @@ export const Navbar = () => {
           {/* Brand/Logo */}
           <div className="flex items-center">
             <Link
-              href="/"
+              to="/"
               className="text-xl font-bold text-foreground hover:text-primary transition-all duration-300 focus-ring-none hover-scale group"
             >
               <span className="group-hover:animate-pulse">
@@ -83,20 +81,23 @@ export const Navbar = () => {
           <div className="hidden md:block">
             <div className="flex items-center space-x-8">
               {navbarItems.map((item, index) => (
-                <Link
+                <NavLink
                   key={item.href}
-                  href={item.href}
-                  className={classNames(
-                    navLinkClasses(item.href),
-                    "focus-ring-none link-hover hover-scale transition-all duration-300",
-                    isVisible
-                      ? "animate-fade-in-up"
-                      : "opacity-0 translate-y-[-10px]",
-                  )}
+                  to={item.href}
+                  end={item.href === "/"}
+                  className={({ isActive }) =>
+                    classNames(
+                      navLinkClasses(isActive),
+                      "focus-ring-none link-hover hover-scale transition-all duration-300",
+                      isVisible
+                        ? "animate-fade-in-up"
+                        : "opacity-0 translate-y-[-10px]",
+                    )
+                  }
                   style={{ animationDelay: `${index * 100}ms` }}
                 >
                   {item.label}
-                </Link>
+                </NavLink>
               ))}
             </div>
           </div>
@@ -166,23 +167,25 @@ export const Navbar = () => {
       >
         <div className="px-4 py-4 space-y-2">
           {navbarItems.map((item, index) => (
-            <Link
+            <NavLink
               key={item.href}
-              href={item.href}
-              className={classNames(
-                "block px-4 py-3 rounded-lg text-base font-medium transition-all duration-300 hover:bg-muted/50 focus-ring-none hover-scale",
-                navLinkClasses(item.href),
-                isMenuOpen
-                  ? "animate-fade-in-up"
-                  : "opacity-0 translate-y-[-10px]",
-              )}
-              onClick={() => setIsMenuOpen(false)}
+              to={item.href}
+              end={item.href === "/"}
+              className={({ isActive }) =>
+                classNames(
+                  "block px-4 py-3 rounded-lg text-base font-medium transition-all duration-300 hover:bg-muted/50 focus-ring-none hover-scale",
+                  navLinkClasses(isActive),
+                  isMenuOpen
+                    ? "animate-fade-in-up"
+                    : "opacity-0 translate-y-[-10px]",
+                )
+              }
               style={{
                 animationDelay: isMenuOpen ? `${index * 100}ms` : "0ms",
               }}
             >
               {item.label}
-            </Link>
+            </NavLink>
           ))}
         </div>
       </div>

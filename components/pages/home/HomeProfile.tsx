@@ -1,5 +1,5 @@
-import Image from "next/image";
 import { profile } from "@/data/content";
+import { OptimizedImage } from "@/components/OptimizedImage";
 import { SocialNetworks } from "@/components/SocialNetworks";
 import { DownloadIcon } from "@/components/icons/DownloadIcon";
 import { Button } from "@/components/ui/button";
@@ -96,14 +96,13 @@ export const HomeProfile = () => {
                 </span>
               </div>
 
-              <Image
+              <OptimizedImage
                 src={profile.image}
                 alt={profile.name}
                 width={560}
                 height={640}
-                priority
                 fetchPriority="high"
-                sizes="(max-width: 768px) 100vw, 22rem"
+                loading="eager"
                 className="aspect-[4/4.6] w-full object-cover"
               />
             </div>

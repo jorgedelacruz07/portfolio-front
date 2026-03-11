@@ -1,6 +1,6 @@
-import Image from "next/image";
-import Link from "next/link";
 import { format } from "date-fns";
+import { Link } from "react-router-dom";
+import { OptimizedImage } from "@/components/OptimizedImage";
 import { TPost } from "@/types/post";
 import { Badge } from "@/components/ui/badge";
 import { HomeSection } from "@/components/pages/home/HomeSection";
@@ -16,14 +16,12 @@ const BlogPostCard = ({ post }: { post: TPost }) => {
       <div className="flex items-start gap-4">
         {post.image?.src ? (
           <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-2xl border border-border/60 bg-muted">
-            <Image
+            <OptimizedImage
               src={post.image.src}
               alt={post.title}
+              className="h-full w-full object-cover"
               width={56}
               height={56}
-              sizes="56px"
-              className="h-full w-full object-cover"
-              loading="lazy"
             />
           </div>
         ) : null}
@@ -34,7 +32,7 @@ const BlogPostCard = ({ post }: { post: TPost }) => {
           </p>
           <h3 className="text-xl font-semibold tracking-tight text-foreground">
             <Link
-              href={`/blog/${post.slug}`}
+              to={`/blog/${post.slug}`}
               className="transition-colors hover:text-primary"
             >
               {post.title}
