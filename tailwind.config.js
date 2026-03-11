@@ -25,6 +25,10 @@ module.exports = {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
+        surface: {
+          DEFAULT: "hsl(var(--surface))",
+          foreground: "hsl(var(--surface-foreground))",
+        },
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
@@ -95,6 +99,7 @@ module.exports = {
       },
       fontFamily: {
         sans: ["Montserrat", "system-ui", "sans-serif"],
+        display: ["Montserrat", "system-ui", "sans-serif"],
       },
       fontSize: {
         xs: ["0.75rem", { lineHeight: "1rem" }],
@@ -119,8 +124,18 @@ module.exports = {
           "0 10px 25px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
         "soft-xl":
           "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+        premium:
+          "0 30px 80px -44px rgba(15, 23, 42, 0.55), 0 10px 26px -18px rgba(8, 15, 31, 0.5)",
+        "premium-lg":
+          "0 40px 120px -56px rgba(56, 189, 248, 0.5), 0 24px 60px -36px rgba(15, 23, 42, 0.65)",
         glow: "0 0 20px rgba(59, 130, 246, 0.15)",
         "glow-lg": "0 0 40px rgba(59, 130, 246, 0.2)",
+      },
+      backgroundImage: {
+        "hero-radial":
+          "radial-gradient(circle at top, hsl(var(--primary) / 0.22), transparent 45%)",
+        "accent-radial":
+          "radial-gradient(circle, hsl(var(--accent) / 0.18), transparent 60%)",
       },
       animation: {
         "fade-in": "fadeIn 0.6s ease-out forwards",

@@ -30,17 +30,15 @@ export const Layout = ({ children }: LayoutProps) => {
       <PerformanceMonitor />
       <CursorEffect />
       <Helmet>
-        <title>
-          Jorge de la Cruz - Senior Software Engineer | React & Next.js Expert
-        </title>
+        <title>Jorge de la Cruz - Senior Software Engineer</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta
           name="description"
-          content="Senior Software Engineer specializing in React.js, Next.js, TypeScript, and Node.js. Building scalable web applications since 2016. Expert in modern JavaScript development and AI-powered tools."
+          content="Senior Software Engineer specializing in React.js, TypeScript, and Node.js. Building scalable web applications since 2016. Expert in modern JavaScript development and AI-powered tools."
         />
         <meta
           name="keywords"
-          content="Jorge de la Cruz, Software Engineer, React, Next.js, TypeScript, Node.js, Full Stack Developer, Web Development"
+          content="Jorge de la Cruz, Software Engineer, React, TypeScript, Node.js, Full Stack Developer, Web Development"
         />
         <meta name="author" content="Jorge de la Cruz Padilla" />
         <meta
@@ -49,7 +47,7 @@ export const Layout = ({ children }: LayoutProps) => {
         />
         <meta
           property="og:description"
-          content="Senior Software Engineer specializing in React.js, Next.js, TypeScript, and Node.js"
+          content="Senior Software Engineer specializing in React.js, TypeScript, and Node.js"
         />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://jorgedelacruzpadilla.dev" />
@@ -64,7 +62,7 @@ export const Layout = ({ children }: LayoutProps) => {
         />
         <meta
           name="twitter:description"
-          content="Senior Software Engineer specializing in React.js, Next.js, TypeScript, and Node.js"
+          content="Senior Software Engineer specializing in React.js, TypeScript, and Node.js"
         />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <link rel="canonical" href="https://jorgedelacruzpadilla.dev" />

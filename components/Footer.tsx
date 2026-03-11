@@ -15,11 +15,11 @@ const Footer = () => {
 
   const technologies = [
     "React",
-    "Next.js",
     "TypeScript",
     "Node.js",
     "MongoDB",
     "Tailwind CSS",
+    "Firebase",
   ];
 
   return (

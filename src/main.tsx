@@ -5,7 +5,6 @@ import { StrictMode, useEffect } from "react";
 import { createRoot } from "react-dom/client";
 import { RouterProvider } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
-import { ThemeProvider } from "next-themes";
 
 import { router } from "./Router";
 import { reportWebVitals } from "../lib/analytics";
@@ -53,24 +52,24 @@ function initializeAnalytics() {
 
 function App() {
   useEffect(() => {
+    document.documentElement.classList.add("dark");
+
     if (!hasStartedWebVitals) {
       reportWebVitals();
       hasStartedWebVitals = true;
     }
 
     initializeAnalytics();
+
+    return () => {
+      document.documentElement.classList.remove("dark");
+    };
   }, []);
 
   return (
     <HelmetProvider>
       <QueryClientProvider client={queryClient}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem={false}
-        >
-          <RouterProvider router={router} />
-        </ThemeProvider>
+        <RouterProvider router={router} />
       </QueryClientProvider>
     </HelmetProvider>
   );

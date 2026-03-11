@@ -1,14 +1,22 @@
+import { motion } from "framer-motion";
 import { profile } from "@/data/content";
 import { OptimizedImage } from "@/components/OptimizedImage";
 import { SocialNetworks } from "@/components/SocialNetworks";
 import { DownloadIcon } from "@/components/icons/DownloadIcon";
 import { Button } from "@/components/ui/button";
-import { homePageStyles } from "@/lib/utils";
+import { homeMotion, homePageStyles } from "@/lib/utils";
 
 const profileHighlights = [
-  "Next.js architecture",
+  "SPA architecture",
   "Design systems",
   "Performance tuning",
+  "AI-assisted delivery",
+];
+
+const profileStats = [
+  { label: "Years building products", value: "8+" },
+  { label: "Frontend systems shipped", value: "50+" },
+  { label: "Remote from Lima, Peru", value: "UTC-5" },
 ];
 
 export const HomeProfile = () => {
@@ -22,35 +30,84 @@ export const HomeProfile = () => {
   };
 
   return (
-    <section className="relative overflow-hidden rounded-[2rem] border border-border/70 bg-gradient-to-br from-background via-background to-primary/5 px-6 py-10 shadow-soft sm:px-8 md:px-10 md:py-14">
+    <motion.section
+      className="glass-panel surface-grid relative overflow-hidden rounded-[2.25rem] px-6 py-10 shadow-premium lg:px-10 lg:py-14"
+      variants={homeMotion.section}
+      initial="hidden"
+      animate="visible"
+    >
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,hsl(var(--primary)/0.28),transparent_34%),radial-gradient(circle_at_85%_18%,hsl(var(--accent)/0.18),transparent_22%),linear-gradient(180deg,rgba(255,255,255,0.08),transparent_32%)]" />
+      <div className="pointer-events-none absolute inset-y-0 right-0 w-1/2 bg-hero-radial opacity-70 blur-3xl" />
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/60 to-transparent" />
+
       <div className={homePageStyles.twoColumn}>
         <div className="space-y-8">
-          <div className="space-y-4">
-            <p className={homePageStyles.eyebrow}>Senior software engineer</p>
-            <div className="space-y-4">
-              <h1 className="max-w-3xl text-4xl font-semibold tracking-tight text-foreground sm:text-5xl md:text-6xl">
-                Building fast, maintainable product experiences for the web.
+          <motion.div variants={homeMotion.item} className="space-y-5">
+            <div className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-[0.72rem] font-semibold uppercase tracking-[0.24em] text-white/80 backdrop-blur-md">
+              <span className="relative flex h-2.5 w-2.5">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400/70" />
+                <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-400" />
+              </span>
+              Available for senior frontend roles
+            </div>
+
+            <div className="space-y-5">
+              <p className={homePageStyles.eyebrow}>Senior software engineer</p>
+              <h1 className="max-w-4xl font-display text-5xl font-semibold tracking-[-0.075em] text-foreground sm:text-6xl lg:text-7xl">
+                Building
+                <span className="text-premium-gradient">
+                  {" "}
+                  fast, maintainable{" "}
+                </span>
+                product surfaces that feel engineered, not assembled.
               </h1>
-              <p className="max-w-2xl text-base leading-8 text-muted-foreground sm:text-lg">
-                I&apos;m Jorge de la Cruz. I design and ship scalable React and
-                Next.js systems with a strong focus on UI consistency,
-                accessibility, and measurable performance.
+              <p className="max-w-2xl text-base leading-8 text-muted-foreground sm:text-lg sm:leading-9">
+                I&apos;m Jorge de la Cruz. I design and ship scalable React
+                systems with a strong focus on UI consistency, accessibility,
+                and measurable performance. The goal is simple: premium
+                interfaces backed by codebases teams can extend without
+                friction.
               </p>
             </div>
-          </div>
+          </motion.div>
 
-          <div className={homePageStyles.metaList}>
+          <motion.div
+            variants={homeMotion.item}
+            className="grid gap-4 sm:grid-cols-3"
+          >
+            {profileStats.map((stat) => (
+              <div
+                key={stat.label}
+                className="rounded-[1.5rem] border border-white/10 bg-black/20 p-4 backdrop-blur-md"
+              >
+                <p className="text-3xl font-semibold tracking-[-0.05em] text-foreground">
+                  {stat.value}
+                </p>
+                <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                  {stat.label}
+                </p>
+              </div>
+            ))}
+          </motion.div>
+
+          <motion.div
+            variants={homeMotion.item}
+            className={homePageStyles.metaList}
+          >
             {profileHighlights.map((highlight) => (
               <span key={highlight} className={homePageStyles.metaBadge}>
                 {highlight}
               </span>
             ))}
-          </div>
+          </motion.div>
 
-          <div className={homePageStyles.ctaRow}>
+          <motion.div
+            variants={homeMotion.item}
+            className={homePageStyles.ctaRow}
+          >
             <Button
               size="lg"
-              className="h-12 rounded-full px-6 text-sm font-semibold"
+              className="h-12 px-6 text-sm font-semibold"
               onClick={handleDownloadClick}
               asChild
             >
@@ -67,69 +124,94 @@ export const HomeProfile = () => {
               asChild
               size="lg"
               variant="outline"
-              className="h-12 rounded-full border-border bg-background/80 px-6 text-sm font-semibold"
+              className="h-12 px-6 text-sm font-semibold"
             >
               <a href="mailto:jdelacruzp7@gmail.com">Contact me</a>
             </Button>
-          </div>
+          </motion.div>
 
-          <div className="flex items-center gap-4">
-            <div className="h-px flex-1 bg-border/70" />
-            <span className="text-xs font-medium uppercase tracking-[0.24em] text-muted-foreground">
-              Connect
-            </span>
-            <div className="h-px flex-1 bg-border/70" />
-          </div>
-
-          <SocialNetworks />
-        </div>
-
-        <div className="mx-auto w-full max-w-sm">
-          <div className="rounded-[1.75rem] border border-border/70 bg-card/90 p-5 shadow-soft-lg">
-            <div className="relative overflow-hidden rounded-[1.5rem] bg-muted">
-              <div className="absolute inset-x-0 top-0 z-10 flex items-center justify-between bg-gradient-to-b from-background/70 to-transparent px-4 py-4">
-                <span className="rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-emerald-600">
-                  Available
-                </span>
-                <span className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
-                  Lima, Peru
-                </span>
-              </div>
-
-              <OptimizedImage
-                src={profile.image}
-                alt={profile.name}
-                width={560}
-                height={640}
-                fetchPriority="high"
-                loading="eager"
-                className="aspect-[4/4.6] w-full object-cover"
-              />
+          <motion.div variants={homeMotion.item} className="space-y-4">
+            <div className="flex items-center gap-4">
+              <div className="h-px flex-1 bg-gradient-to-r from-transparent via-white/15 to-white/5" />
+              <span className="text-[0.72rem] font-semibold uppercase tracking-[0.24em] text-muted-foreground">
+                Connect
+              </span>
+              <div className="h-px flex-1 bg-gradient-to-r from-white/5 via-white/15 to-transparent" />
             </div>
 
-            <div className="mt-5 grid gap-4 sm:grid-cols-2">
-              <div className="rounded-2xl border border-border/60 bg-background/80 p-4">
-                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
-                  Focus
-                </p>
-                <p className="mt-2 text-sm leading-6 text-foreground">
-                  Product engineering, frontend architecture, and component
-                  systems.
-                </p>
+            <SocialNetworks />
+          </motion.div>
+        </div>
+
+        <motion.div
+          variants={homeMotion.item}
+          className="mx-auto w-full max-w-[28rem]"
+        >
+          <div className="relative">
+            <div className="absolute inset-x-10 top-10 h-48 rounded-full bg-accent-radial opacity-80 blur-3xl" />
+
+            <div className="glass-panel relative overflow-hidden rounded-[2rem] p-4 shadow-premium-lg">
+              <div className="relative overflow-hidden rounded-[1.65rem] bg-muted">
+                <div className="absolute inset-x-0 top-0 z-10 flex items-center justify-between bg-gradient-to-b from-background/75 via-background/35 to-transparent px-5 py-5">
+                  <span className="rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3 py-1 text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-emerald-300">
+                    Shipping now
+                  </span>
+                  <span className="text-[0.68rem] font-semibold uppercase tracking-[0.24em] text-white/65">
+                    Lima, Peru
+                  </span>
+                </div>
+
+                <OptimizedImage
+                  src={profile.image}
+                  alt={profile.name}
+                  width={560}
+                  height={640}
+                  fetchPriority="high"
+                  loading="eager"
+                  className="aspect-[4/4.8] w-full object-cover object-center"
+                />
+
+                <div className="absolute inset-x-4 bottom-4 rounded-[1.4rem] border border-white/10 bg-black/30 p-4 backdrop-blur-xl">
+                  <div className="flex items-start justify-between gap-4">
+                    <div>
+                      <p className="text-[0.68rem] font-semibold uppercase tracking-[0.24em] text-primary/85">
+                        Current focus
+                      </p>
+                      <p className="mt-2 text-base font-semibold tracking-[-0.03em] text-white">
+                        Senior frontend architecture with product-level polish.
+                      </p>
+                    </div>
+                    <div className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-white/70">
+                      React + TypeScript
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div className="rounded-2xl border border-border/60 bg-background/80 p-4">
-                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
-                  Approach
-                </p>
-                <p className="mt-2 text-sm leading-6 text-foreground">
-                  Clean delivery with predictable layouts, typed APIs, and fast
-                  pages.
-                </p>
+
+              <div className="mt-4 grid gap-4 sm:grid-cols-2">
+                <div className="rounded-[1.4rem] border border-white/10 bg-black/20 p-4">
+                  <p className="text-[0.68rem] font-semibold uppercase tracking-[0.24em] text-primary/85">
+                    Focus
+                  </p>
+                  <p className="mt-2 text-sm leading-7 text-foreground">
+                    Product engineering, DX, and systems that keep UX quality
+                    stable at scale.
+                  </p>
+                </div>
+                <div className="rounded-[1.4rem] border border-white/10 bg-black/20 p-4">
+                  <p className="text-[0.68rem] font-semibold uppercase tracking-[0.24em] text-primary/85">
+                    Approach
+                  </p>
+                  <p className="mt-2 text-sm leading-7 text-foreground">
+                    Tight feedback loops, typed APIs, and deliberate motion
+                    rather than visual noise.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
-    </section>
+    </motion.section>
   );
 };

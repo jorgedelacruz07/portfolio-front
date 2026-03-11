@@ -21,5 +21,5 @@
     "incremental": true
   },
   "include": ["src", "types", "vite.config.ts"],
-  "exclude": ["node_modules", ".next", "pages", "next-env.d.ts"]
+  "exclude": ["node_modules"]
 }
