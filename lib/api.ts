@@ -9,9 +9,30 @@ import type { TProject } from "../types/project";
 const API_BASE_URL = import.meta.env.VITE_API_URL?.trim() ?? "";
 const shouldUseMockData = import.meta.env.DEV && !API_BASE_URL;
 
+function isLocalApiUrl(url: string) {
+  if (!url) {
+    return false;
+  }
+
+  try {
+    const parsedUrl = new URL(url);
+    return ["localhost", "127.0.0.1", "0.0.0.0"].includes(
+      parsedUrl.hostname,
+    );
+  } catch {
+    return /(localhost|127\.0\.0\.1|0\.0\.0\.0)/i.test(url);
+  }
+}
+
 if (!API_BASE_URL) {
   console.warn(
     "VITE_API_URL is not configured. Falling back to mock data in development.",
+  );
+}
+
+if (import.meta.env.PROD && isLocalApiUrl(API_BASE_URL)) {
+  console.error(
+    "VITE_API_URL points to a local address in a production build. Rebuild the app with the production API URL before deploying.",
   );
 }
 

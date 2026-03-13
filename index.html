@@ -50,8 +50,7 @@
     <script>
       (() => {
         const GA_ID = "%VITE_GA_ID%";
-        const isValidId =
-          GA_ID && GA_ID !== "undefined" && !GA_ID.includes("%VITE_GA_ID%");
+        const isValidId = /^G-[A-Z0-9]+$/i.test(GA_ID);
 
         if (!isValidId) {
           return;
