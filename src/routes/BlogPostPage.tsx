@@ -61,6 +61,21 @@ export default function BlogPostPage() {
           name="description"
           content={post.body?.slice(0, 160) || post.title}
         />
+        <meta
+          property="og:title"
+          content={`${post.title} | Jorge de la Cruz`}
+        />
+        <meta
+          property="og:description"
+          content={post.body?.slice(0, 160) || post.title}
+        />
+        {post.image?.src && (
+          <meta property="og:image" content={post.image.src} />
+        )}
+        <meta
+          name="twitter:title"
+          content={`${post.title} | Jorge de la Cruz`}
+        />
       </Helmet>
 
       <div className="py-16">

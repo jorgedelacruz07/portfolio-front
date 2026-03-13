@@ -43,11 +43,7 @@ function RouteChangeTracker() {
       googleAnalyticsId === "undefined" ||
       googleAnalyticsId === "";
 
-    if (
-      typeof window === "undefined" ||
-      !window.gtag ||
-      isInvalidId
-    ) {
+    if (typeof window === "undefined" || !window.gtag || isInvalidId) {
       return;
     }
 
