@@ -1,3 +1,4 @@
+import { useLocation } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { Navbar } from "./Navbar";
 import { ReactNode } from "react";
@@ -16,6 +17,9 @@ interface LayoutProps {
 }
 
 export const Layout = ({ children }: LayoutProps) => {
+  const location = useLocation();
+  const currentUrl = `https://jorgedelacruzpadilla.dev${location.pathname}`;
+
   return (
     <div className="min-h-screen bg-background transition-all duration-500 relative overflow-hidden">
       {/* Global background effects */}
@@ -38,7 +42,7 @@ export const Layout = ({ children }: LayoutProps) => {
         />
         <meta
           name="keywords"
-          content="Jorge de la Cruz, Software Engineer, React, TypeScript, Node.js, Full Stack Developer, Web Development"
+          content="Jorge de la Cruz, Software Engineer, React, TypeScript, Node.js, Full Stack Developer, Web Development, AI Tools, Vite, Portfolio"
         />
         <meta name="author" content="Jorge de la Cruz Padilla" />
         <meta
@@ -50,7 +54,7 @@ export const Layout = ({ children }: LayoutProps) => {
           content="Senior Software Engineer specializing in React.js, TypeScript, and Node.js"
         />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://jorgedelacruzpadilla.dev" />
+        <meta property="og:url" content={currentUrl} />
         <meta
           property="og:image"
           content="https://jorgedelacruzpadilla.dev/images/jorge.jpg"
@@ -65,7 +69,7 @@ export const Layout = ({ children }: LayoutProps) => {
           content="Senior Software Engineer specializing in React.js, TypeScript, and Node.js"
         />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-        <link rel="canonical" href="https://jorgedelacruzpadilla.dev" />
+        <link rel="canonical" href={currentUrl} />
         {/* Preload critical LCP image */}
         <link rel="preload" as="image" href="/images/jorge.jpg" />
       </Helmet>

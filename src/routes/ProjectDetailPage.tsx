@@ -61,6 +61,19 @@ export default function ProjectDetailPage() {
       <Helmet>
         <title>{`${project.name} | Jorge de la Cruz`}</title>
         <meta name="description" content={project.description} />
+        <meta
+          property="og:title"
+          content={`${project.name} | Jorge de la Cruz`}
+        />
+        <meta property="og:description" content={project.description} />
+        {project.image?.src && (
+          <meta property="og:image" content={project.image.src} />
+        )}
+        <meta
+          name="twitter:title"
+          content={`${project.name} | Jorge de la Cruz`}
+        />
+        <meta name="twitter:description" content={project.description} />
       </Helmet>
 
       <div className="py-16">

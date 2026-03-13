@@ -67,6 +67,21 @@ export default function ExperienceDetailPage() {
             `${experience.jobTitle} at ${experience.company}`
           }
         />
+        <meta
+          property="og:title"
+          content={`${experience.jobTitle} at ${experience.company} | Jorge de la Cruz`}
+        />
+        <meta
+          property="og:description"
+          content={experience.jobDescription || "Work experience details"}
+        />
+        {experience.image?.src && (
+          <meta property="og:image" content={experience.image.src} />
+        )}
+        <meta
+          name="twitter:title"
+          content={`${experience.jobTitle} at ${experience.company} | Jorge de la Cruz`}
+        />
       </Helmet>
 
       <div className="py-16">
