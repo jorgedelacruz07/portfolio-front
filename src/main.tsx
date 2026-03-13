@@ -60,7 +60,7 @@ function initializeAnalytics() {
 
   window.gtag("js", new Date());
   window.gtag("config", googleAnalyticsId, {
-    page_path: window.location.pathname,
+    send_page_view: false,
     transport_type: "beacon",
     anonymize_ip: true,
   });

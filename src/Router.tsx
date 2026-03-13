@@ -49,10 +49,12 @@ function RouteChangeTracker() {
 
     const pagePath = `${location.pathname}${location.search}${location.hash}`;
 
-    window.gtag("config", googleAnalyticsId, {
+    window.gtag("event", "page_view", {
       page_path: pagePath,
+      page_location: window.location.href,
+      page_title: document.title,
+      send_to: googleAnalyticsId,
       transport_type: "beacon",
-      anonymize_ip: true,
     });
   }, [location.hash, location.pathname, location.search]);
 
