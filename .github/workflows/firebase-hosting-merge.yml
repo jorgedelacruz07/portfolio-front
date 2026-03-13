@@ -22,12 +22,12 @@ jobs:
             exit 1
           fi
 
-          if ! rg -F "googletagmanager.com/gtag/js?id=${VITE_GA_ID}" dist; then
+          if ! grep -R -F "googletagmanager.com/gtag/js?id=${VITE_GA_ID}" dist; then
             echo "Google Analytics script URL with VITE_GA_ID was not found in dist"
             exit 1
           fi
 
-          if ! rg -F "\"${VITE_GA_ID}\"" dist; then
+          if ! grep -R -F "\"${VITE_GA_ID}\"" dist; then
             echo "Google Analytics measurement ID was not embedded in dist"
             exit 1
           fi
