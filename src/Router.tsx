@@ -44,15 +44,11 @@ function RouteChangeTracker() {
 
     const pagePath = `${location.pathname}${location.search}${location.hash}`;
 
-    window.gtag(
-      "config",
-      googleAnalyticsId,
-      {
-        page_path: pagePath,
-        transport_type: "beacon",
-        anonymize_ip: true,
-      },
-    );
+    window.gtag("config", googleAnalyticsId, {
+      page_path: pagePath,
+      transport_type: "beacon",
+      anonymize_ip: true,
+    });
   }, [location.hash, location.pathname, location.search]);
 
   return null;
