@@ -38,7 +38,7 @@ function RouteChangeTracker() {
   const location = useLocation();
 
   useEffect(() => {
-    if (!window.gtag && !googleAnalyticsId) {
+    if (typeof window === "undefined" || !window.gtag || !googleAnalyticsId) {
       return;
     }
 
