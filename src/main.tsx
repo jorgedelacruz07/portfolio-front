@@ -12,11 +12,27 @@ import { queryClient } from "../lib/query-client";
 
 const googleAnalyticsId = import.meta.env.VITE_GA_ID;
 
+// Define gtag property on window if not present to avoid "is not a function" errors
+if (typeof window !== "undefined") {
+  const analyticsWindow = window as Window & { dataLayer?: unknown[][] };
+  analyticsWindow.dataLayer = analyticsWindow.dataLayer ?? [];
+
+  if (!window.gtag) {
+    window.gtag = ((command, targetId, config) => {
+      analyticsWindow.dataLayer?.push([command, targetId, config]);
+    }) as Window["gtag"];
+  }
+}
+
 let hasInitializedAnalytics = false;
 let hasStartedWebVitals = false;
 
 function initializeAnalytics() {
-  if (hasInitializedAnalytics || typeof window === "undefined") {
+  if (
+    hasInitializedAnalytics ||
+    typeof window === "undefined" ||
+    !googleAnalyticsId
+  ) {
     return;
   }
 
@@ -32,15 +48,6 @@ function initializeAnalytics() {
     document.head.appendChild(script);
   }
 
-  const analyticsWindow = window as Window & { dataLayer?: unknown[][] };
-  analyticsWindow.dataLayer = analyticsWindow.dataLayer ?? [];
-
-  if (!window.gtag) {
-    window.gtag = ((command, targetId, config) => {
-      analyticsWindow.dataLayer?.push([command, targetId, config]);
-    }) as Window["gtag"];
-  }
-
   window.gtag("js", new Date());
   window.gtag("config", googleAnalyticsId, {
     page_path: window.location.pathname,
@@ -48,6 +55,9 @@ function initializeAnalytics() {
     anonymize_ip: true,
   });
 }
+
+// Initialize analytics (inject script and config)
+initializeAnalytics();
 
 function App() {
   useEffect(() => {
@@ -57,8 +67,6 @@ function App() {
       reportWebVitals();
       hasStartedWebVitals = true;
     }
-
-    initializeAnalytics();
 
     return () => {
       document.documentElement.classList.remove("dark");
