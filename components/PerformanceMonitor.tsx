@@ -11,10 +11,7 @@ interface PerformanceMetrics {
 export const PerformanceMonitor = () => {
   useEffect(() => {
     // Only run in production and browser environment
-    if (
-      process.env.NODE_ENV !== "production" ||
-      typeof window === "undefined"
-    ) {
+    if (!import.meta.env.PROD || typeof window === "undefined") {
       return;
     }
 
