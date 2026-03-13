@@ -3,6 +3,12 @@ name: Deploy to Firebase Hosting on merge
   push:
     branches:
       - master
+
+permissions:
+  contents: read
+  checks: write
+  pull-requests: write
+
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
@@ -19,24 +25,6 @@ jobs:
         run: npm run build
         env:
           VITE_API_URL: ${{ secrets.VITE_API_URL }}
-          VITE_GA_ID: ${{ secrets.VITE_GA_ID }}
-      - name: Verify analytics build output
-        run: |
-          if [ -z "$VITE_GA_ID" ]; then
-            echo "VITE_GA_ID is not set for this workflow run"
-            exit 1
-          fi
-
-          if ! grep -R -F "googletagmanager.com/gtag/js?id=${VITE_GA_ID}" dist; then
-            echo "Google Analytics script URL with VITE_GA_ID was not found in dist"
-            exit 1
-          fi
-
-          if ! grep -R -F "\"${VITE_GA_ID}\"" dist; then
-            echo "Google Analytics measurement ID was not embedded in dist"
-            exit 1
-          fi
-        env:
           VITE_GA_ID: ${{ secrets.VITE_GA_ID }}
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:

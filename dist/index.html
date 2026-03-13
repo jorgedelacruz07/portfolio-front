@@ -50,19 +50,18 @@
     <script>
       (() => {
         const GA_ID = "G-CBR17S886Q";
-        const isValidId =
-          GA_ID &&
-          GA_ID !== "undefined" &&
-          !GA_ID.includes("G-CBR17S886Q");
+        const isValidId = /^G-[A-Z0-9]+$/i.test(GA_ID);
 
         if (!isValidId) {
           return;
         }
 
         window.dataLayer = window.dataLayer || [];
-        window.gtag = window.gtag || function gtag() {
-          window.dataLayer.push(arguments);
-        };
+        window.gtag =
+          window.gtag ||
+          function gtag() {
+            window.dataLayer.push(arguments);
+          };
 
         window.gtag("js", new Date());
         window.gtag("config", GA_ID, {
@@ -97,7 +96,7 @@
         }
       })();
     </script>
-    <script type="module" crossorigin src="/assets/index-DsR1U-vo.js"></script>
+    <script type="module" crossorigin src="/assets/index-Dus-zI3f.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-oXG0ySKm.css">
   </head>
   <body>
