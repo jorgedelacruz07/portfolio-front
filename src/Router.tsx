@@ -38,7 +38,16 @@ function RouteChangeTracker() {
   const location = useLocation();
 
   useEffect(() => {
-    if (typeof window === "undefined" || !window.gtag || !googleAnalyticsId) {
+    const isInvalidId =
+      !googleAnalyticsId ||
+      googleAnalyticsId === "undefined" ||
+      googleAnalyticsId === "";
+
+    if (
+      typeof window === "undefined" ||
+      !window.gtag ||
+      isInvalidId
+    ) {
       return;
     }
 

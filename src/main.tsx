@@ -28,11 +28,21 @@ let hasInitializedAnalytics = false;
 let hasStartedWebVitals = false;
 
 function initializeAnalytics() {
-  if (
-    hasInitializedAnalytics ||
-    typeof window === "undefined" ||
-    !googleAnalyticsId
-  ) {
+  const isInvalidId =
+    !googleAnalyticsId ||
+    googleAnalyticsId === "undefined" ||
+    googleAnalyticsId === "";
+
+  if (hasInitializedAnalytics || typeof window === "undefined") {
+    return;
+  }
+
+  if (isInvalidId) {
+    if (import.meta.env.PROD) {
+      console.warn(
+        "Google Analytics ID (VITE_GA_ID) is missing or invalid. Analytics will not be initialized.",
+      );
+    }
     return;
   }
 
