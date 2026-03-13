@@ -10,7 +10,7 @@ import { router } from "./Router";
 import { reportWebVitals } from "../lib/analytics";
 import { queryClient } from "../lib/query-client";
 
-const googleAnalyticsId = "G-4J8T4WP1S7";
+const googleAnalyticsId = import.meta.env.VITE_GA_ID;
 
 let hasInitializedAnalytics = false;
 let hasStartedWebVitals = false;

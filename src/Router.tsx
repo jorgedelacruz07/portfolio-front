@@ -24,6 +24,8 @@ const BlogPage = lazy(() => import("./routes/BlogPage"));
 const BlogPostPage = lazy(() => import("./routes/BlogPostPage"));
 const NotFoundPage = lazy(() => import("./routes/NotFoundPage"));
 
+const googleAnalyticsId = import.meta.env.VITE_GA_ID;
+
 function renderLazyRoute(Page: LazyRouteComponent) {
   return (
     <Suspense fallback={<PageLoader />}>
@@ -36,7 +38,7 @@ function RouteChangeTracker() {
   const location = useLocation();
 
   useEffect(() => {
-    if (!window.gtag) {
+    if (!window.gtag && !googleAnalyticsId) {
       return;
     }
 
@@ -44,7 +46,7 @@ function RouteChangeTracker() {
 
     window.gtag(
       "config",
-      "G-4J8T4WP1S7",
+      googleAnalyticsId,
       {
         page_path: pagePath,
         transport_type: "beacon",
