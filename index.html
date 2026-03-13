@@ -47,6 +47,10 @@
       href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap"
     />
     <link rel="preload" as="image" href="/images/jorge.jpg" />
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=%VITE_GA_ID%"
+    ></script>
     <script>
       (() => {
         const GA_ID = "%VITE_GA_ID%";
@@ -69,31 +73,6 @@
           anonymize_ip: true,
           transport_type: "beacon",
         });
-
-        const loadAnalytics = () => {
-          if (window.__portfolioAnalyticsLoaded) {
-            return;
-          }
-
-          window.__portfolioAnalyticsLoaded = true;
-
-          const script = document.createElement("script");
-          script.async = true;
-          script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_ID}`;
-          document.head.appendChild(script);
-        };
-
-        if ("requestIdleCallback" in window) {
-          window.requestIdleCallback(loadAnalytics, { timeout: 2000 });
-        } else {
-          window.addEventListener(
-            "load",
-            () => {
-              window.setTimeout(loadAnalytics, 1);
-            },
-            { once: true },
-          );
-        }
       })();
     </script>
   </head>
