@@ -15,6 +15,24 @@ jobs:
         env:
           VITE_API_URL: ${{ secrets.VITE_API_URL }}
           VITE_GA_ID: ${{ secrets.VITE_GA_ID }}
+      - name: Verify analytics build output
+        run: |
+          if [ -z "$VITE_GA_ID" ]; then
+            echo "VITE_GA_ID is not set for this workflow run"
+            exit 1
+          fi
+
+          if ! rg -F "googletagmanager.com/gtag/js?id=${VITE_GA_ID}" dist; then
+            echo "Google Analytics script URL with VITE_GA_ID was not found in dist"
+            exit 1
+          fi
+
+          if ! rg -F "\"${VITE_GA_ID}\"" dist; then
+            echo "Google Analytics measurement ID was not embedded in dist"
+            exit 1
+          fi
+        env:
+          VITE_GA_ID: ${{ secrets.VITE_GA_ID }}
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
