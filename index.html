@@ -2,15 +2,44 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="alternate icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0ea5e9" />
+    <meta name="application-name" content="Jorge de la Cruz Portfolio" />
+    <meta
+      name="apple-mobile-web-app-title"
+      content="Jorge de la Cruz Portfolio"
+    />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta name="color-scheme" content="dark light" />
     <title>Jorge de la Cruz | Senior Software Engineer</title>
     <meta
       name="description"
       content="Senior Software Engineer specializing in React.js, TypeScript, and Node.js. Building scalable web applications since 2016."
     />
-    <meta name="theme-color" content="#0ea5e9" />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="alternate icon" href="/favicon.ico" />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:title"
+      content="Jorge de la Cruz | Senior Software Engineer"
+    />
+    <meta
+      property="og:description"
+      content="Senior Software Engineer specializing in React.js, TypeScript, and Node.js. Building scalable web applications since 2016."
+    />
+    <meta
+      property="og:image"
+      content="https://jorgedelacruzpadilla.dev/images/jorge.jpg"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="Jorge de la Cruz | Senior Software Engineer"
+    />
+    <meta
+      name="twitter:description"
+      content="Senior Software Engineer specializing in React.js, TypeScript, and Node.js. Building scalable web applications since 2016."
+    />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -18,9 +47,60 @@
       href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap"
     />
     <link rel="preload" as="image" href="/images/jorge.jpg" />
+    <script>
+      (() => {
+        const GA_ID = "%VITE_GA_ID%";
+        const isValidId =
+          GA_ID && GA_ID !== "undefined" && !GA_ID.includes("%VITE_GA_ID%");
+
+        if (!isValidId) {
+          return;
+        }
+
+        window.dataLayer = window.dataLayer || [];
+        window.gtag =
+          window.gtag ||
+          function gtag() {
+            window.dataLayer.push(arguments);
+          };
+
+        window.gtag("js", new Date());
+        window.gtag("config", GA_ID, {
+          send_page_view: false,
+          anonymize_ip: true,
+          transport_type: "beacon",
+        });
+
+        const loadAnalytics = () => {
+          if (window.__portfolioAnalyticsLoaded) {
+            return;
+          }
+
+          window.__portfolioAnalyticsLoaded = true;
+
+          const script = document.createElement("script");
+          script.async = true;
+          script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_ID}`;
+          document.head.appendChild(script);
+        };
+
+        if ("requestIdleCallback" in window) {
+          window.requestIdleCallback(loadAnalytics, { timeout: 2000 });
+        } else {
+          window.addEventListener(
+            "load",
+            () => {
+              window.setTimeout(loadAnalytics, 1);
+            },
+            { once: true },
+          );
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
+    <div id="modal-root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
