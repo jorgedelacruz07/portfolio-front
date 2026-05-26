@@ -9,7 +9,6 @@ const Footer = () => {
   const quickLinks = [
     { label: "Projects", href: "/projects" },
     { label: "Experiences", href: "/experiences" },
-    { label: "Blog", href: "/blog" },
     { label: "About", href: "/#about" },
   ];
 
@@ -23,15 +22,7 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="bg-muted/20 border-t border-border/40 relative overflow-hidden">
-      {/* Background decorative elements */}
-      <div className="absolute inset-0 opacity-5">
-        <div className="absolute top-10 left-10 w-20 h-20 border border-primary/20 rounded rotate-45"></div>
-        <div className="absolute top-20 right-20 w-16 h-16 border border-primary/15 rounded-full"></div>
-        <div className="absolute bottom-20 left-20 w-12 h-12 border border-primary/25 rounded rotate-12"></div>
-        <div className="absolute bottom-10 right-10 w-24 h-24 border border-primary/20 rounded rotate-45"></div>
-      </div>
-
+    <footer className="relative border-t border-white/10 bg-background/55">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Main footer content */}
         <div className="py-12 md:py-16">

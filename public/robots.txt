@@ -1,4 +1,6 @@
 User-agent: *
 Allow: /
+Disallow: /admin
+Disallow: /blog
 
 Sitemap: https://jorgedelacruzpadilla.dev/sitemap.xml

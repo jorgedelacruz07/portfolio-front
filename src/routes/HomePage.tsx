@@ -3,7 +3,6 @@ import { Helmet } from "react-helmet-async";
 
 import { HomeAbout } from "@/components/pages/home/HomeAbout";
 import { HomeProfile } from "@/components/pages/home/HomeProfile";
-import { PageLoader } from "@/components/LoadingSpinner";
 import { Button } from "@/components/ui/button";
 import { useDeferredRender, useHomePageData } from "@/hooks";
 import { cn, homePageStyles } from "@/lib/utils";
@@ -17,12 +16,6 @@ const HomeProjects = lazy(() =>
 const HomeExperiences = lazy(() =>
   import("@/components/pages/home/HomeExperiences").then((module) => ({
     default: module.HomeExperiences,
-  })),
-);
-
-const HomeBlog = lazy(() =>
-  import("@/components/pages/home/HomeBlog").then((module) => ({
-    default: module.HomeBlog,
   })),
 );
 
@@ -73,11 +66,8 @@ function HomeErrorState({ message }: { message: string }) {
 }
 
 export default function HomePage() {
-  const { experiences, projects, posts, isLoading, error } = useHomePageData();
-
-  if (isLoading) {
-    return <PageLoader />;
-  }
+  const { profile, skills, experiences, projects, isLoading, error } =
+    useHomePageData();
 
   if (error) {
     return (
@@ -99,12 +89,13 @@ export default function HomePage() {
           name="description"
           content="Senior Software Engineer building full-stack products with React.js, Vite.js, Express.js, MongoDB, AWS, Docker, and AI-native workflows."
         />
-        <link rel="preload" as="image" href="/images/jorge.jpg" />
       </Helmet>
 
       <div className={homePageStyles.page}>
-        <HomeProfile />
-        <HomeAbout />
+        <HomeProfile cmsProfile={profile} />
+        <HomeAbout cmsSkills={skills} />
+
+        {isLoading ? <DeferredSectionPlaceholder /> : null}
 
         {experiences.length > 0 ? (
           <DeferredSection>
@@ -118,14 +109,6 @@ export default function HomePage() {
           <DeferredSection>
             <Suspense fallback={<DeferredSectionPlaceholder />}>
               <HomeProjects projects={projects} />
-            </Suspense>
-          </DeferredSection>
-        ) : null}
-
-        {posts.length > 0 ? (
-          <DeferredSection>
-            <Suspense fallback={<DeferredSectionPlaceholder />}>
-              <HomeBlog posts={posts} />
             </Suspense>
           </DeferredSection>
         ) : null}

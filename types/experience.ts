@@ -12,6 +12,9 @@ export type TExperience = {
   companyUrl?: string;
   jobTitle: string;
   jobDescription: string;
+  highlights?: string[];
+  displayOrder?: number;
+  visible?: boolean;
   from: string;
   to: string | null;
   technologyIds: string[];

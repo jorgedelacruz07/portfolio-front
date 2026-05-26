@@ -9,10 +9,18 @@ export type TProject = {
   image?: TImage;
   url?: string;
   description: string;
-  from: string;
-  to: string;
-  status: boolean;
-  technologyIds: string[];
+  longDescription?: string | null;
+  links?: {
+    live?: string | null;
+    github?: string | null;
+    caseStudy?: string | null;
+  } | null;
+  featured?: boolean;
+  displayOrder?: number;
+  from: string | null;
+  to: string | null;
+  status?: boolean;
+  technologyIds?: string[];
   technologies: TTechnology[];
   createdAt: string;
   updatedAt: string;

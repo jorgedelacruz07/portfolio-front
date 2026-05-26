@@ -20,8 +20,7 @@ const ExperiencesPage = lazy(() => import("./routes/ExperiencesPage"));
 const ExperienceDetailPage = lazy(
   () => import("./routes/ExperienceDetailPage"),
 );
-const BlogPage = lazy(() => import("./routes/BlogPage"));
-const BlogPostPage = lazy(() => import("./routes/BlogPostPage"));
+const AdminPage = lazy(() => import("./routes/AdminPage"));
 const NotFoundPage = lazy(() => import("./routes/NotFoundPage"));
 
 const googleAnalyticsId = import.meta.env.VITE_GA_ID;
@@ -101,12 +100,8 @@ export const router = createBrowserRouter([
         element: renderLazyRoute(ExperienceDetailPage),
       },
       {
-        path: "blog",
-        element: renderLazyRoute(BlogPage),
-      },
-      {
-        path: "blog/:slug",
-        element: renderLazyRoute(BlogPostPage),
+        path: "admin",
+        element: renderLazyRoute(AdminPage),
       },
       {
         path: "*",

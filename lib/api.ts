@@ -3,7 +3,12 @@ import axios, { AxiosError, type AxiosResponse } from "axios";
 import type { TCategory } from "../types/category";
 import type { TExperience } from "../types/experience";
 import type { ApiError } from "../types/error";
-import type { TPost } from "../types/post";
+import type {
+  TPortfolioContent,
+  TProfile,
+  TSiteSettings,
+  TSkill,
+} from "../types/portfolio";
 import type { TProject } from "../types/project";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL?.trim() ?? "";
@@ -16,9 +21,7 @@ function isLocalApiUrl(url: string) {
 
   try {
     const parsedUrl = new URL(url);
-    return ["localhost", "127.0.0.1", "0.0.0.0"].includes(
-      parsedUrl.hostname,
-    );
+    return ["localhost", "127.0.0.1", "0.0.0.0"].includes(parsedUrl.hostname);
   } catch {
     return /(localhost|127\.0\.0\.1|0\.0\.0\.0)/i.test(url);
   }
@@ -42,6 +45,38 @@ export const apiClient = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
+});
+
+export const adminApiClient = axios.create({
+  baseURL: API_BASE_URL || undefined,
+  timeout: 10000,
+  withCredentials: true,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+let adminCsrfToken = "";
+
+export function setAdminCsrfToken(token: string) {
+  adminCsrfToken = token;
+}
+
+function requireAdminApiUrl() {
+  if (!API_BASE_URL) {
+    throw new Error("VITE_API_URL is required for admin CMS access.");
+  }
+}
+
+adminApiClient.interceptors.request.use((config) => {
+  if (
+    adminCsrfToken &&
+    !["get", "head", "options"].includes(config.method || "")
+  ) {
+    config.headers["x-csrf-token"] = adminCsrfToken;
+  }
+
+  return config;
 });
 
 apiClient.interceptors.request.use(
@@ -76,12 +111,11 @@ apiClient.interceptors.response.use(
 );
 
 export const apiEndpoints = {
+  portfolio: () => "/client/portfolio",
   projects: () => "/client/projects",
   projectBySlug: (slug: string) => `/client/projects/${slug}`,
   experiences: () => "/client/experiences",
   experienceBySlug: (slug: string) => `/client/experiences/${slug}`,
-  posts: () => "/client/posts",
-  postBySlug: (slug: string) => `/client/posts/${slug}`,
   categories: () => "/client/categories",
 } as const;
 
@@ -116,20 +150,55 @@ const mockData = {
       technologies: [{ id: "1", name: "React" }],
     },
   ] as TExperience[],
-  posts: [
-    {
-      id: "1",
-      title: "Blog Post 1",
-      slug: "blog-post-1",
-      body: "<p>This is a test blog post.</p>",
-      image: { src: "/images/placeholder.jpg" },
-      createdAt: "2023-01-01",
-      updatedAt: "2023-01-01",
-      categories: [{ id: "1", name: "Tech" }],
-      tags: [{ id: "1", name: "React" }],
-    },
-  ] as TPost[],
   categories: [{ id: "1", name: "Tech" }] as TCategory[],
+  portfolio: {
+    profile: {
+      name: "Jorge de la Cruz Padilla",
+      headline:
+        "Senior Software Engineer building fast, maintainable full-stack products.",
+      shortBio:
+        "I build user-facing apps, backend services, and cloud-ready delivery workflows with React, Express, MongoDB, AWS, Docker, and AI-assisted delivery.",
+      location: "Lima, Peru",
+      availability: "Available",
+      profileImage: { src: "/images/jorge.jpg" },
+      resumeUrl: "/documents/jorgedelacruz_cv.pdf",
+      contactEmail: "jdelacruzp7@gmail.com",
+      socialLinks: [
+        {
+          label: "LinkedIn",
+          url: "https://www.linkedin.com/in/jorgedelacruz07",
+        },
+        { label: "GitHub", url: "https://github.com/jorgedelacruz07" },
+      ],
+    },
+    settings: {
+      seoTitle: "Jorge de la Cruz | Senior Software Engineer",
+      seoDescription:
+        "Senior Software Engineer building full-stack products with React, Express, MongoDB, AWS, Docker, and AI-assisted delivery workflows.",
+      openGraphImage: "https://jorgedelacruzpadilla.dev/images/jorge.jpg",
+      contactEmail: "jdelacruzp7@gmail.com",
+      availabilityText: "Available for work",
+      footerText: "Jorge de la Cruz. All rights reserved.",
+    },
+    skills: [
+      "React.js",
+      "TypeScript",
+      "Node.js",
+      "Express.js",
+      "MongoDB",
+      "AWS",
+      "Docker",
+      "AI workflows",
+    ].map((name, index) => ({
+      name,
+      category: index < 7 ? "Engineering" : "AI workflow",
+      priority: index,
+      displayOrder: index,
+      visible: true,
+    })),
+    projects: [] as TProject[],
+    experiences: [] as TExperience[],
+  } as TPortfolioContent,
 };
 
 function extractPayload<T>(response: AxiosResponse<T | { data: T }>): T {
@@ -162,7 +231,31 @@ function logFallback(message: string) {
 }
 
 export const api = {
+  getPortfolio: async (): Promise<TPortfolioContent> => {
+    if (shouldUseMockData) {
+      return mockData.portfolio;
+    }
+
+    try {
+      const response = await apiClient.get<
+        TPortfolioContent | { data: TPortfolioContent }
+      >(apiEndpoints.portfolio());
+      return extractPayload(response);
+    } catch (error) {
+      if (shouldUseFallback(error)) {
+        logFallback("API unavailable, using mock portfolio.");
+        return mockData.portfolio;
+      }
+
+      throw error;
+    }
+  },
+
   getProjects: async (): Promise<TProject[]> => {
+    if (shouldUseMockData) {
+      return mockData.projects;
+    }
+
     try {
       const response = await apiClient.get<TProject[] | { data: TProject[] }>(
         apiEndpoints.projects(),
@@ -179,6 +272,10 @@ export const api = {
   },
 
   getProjectBySlug: async (slug: string): Promise<TProject | null> => {
+    if (shouldUseMockData) {
+      return mockData.projects.find((project) => project.slug === slug) ?? null;
+    }
+
     try {
       const response = await apiClient.get<TProject | { data: TProject }>(
         apiEndpoints.projectBySlug(slug),
@@ -201,6 +298,10 @@ export const api = {
   },
 
   getExperiences: async (): Promise<TExperience[]> => {
+    if (shouldUseMockData) {
+      return mockData.experiences;
+    }
+
     try {
       const response = await apiClient.get<
         TExperience[] | { data: TExperience[] }
@@ -217,6 +318,13 @@ export const api = {
   },
 
   getExperienceBySlug: async (slug: string): Promise<TExperience | null> => {
+    if (shouldUseMockData) {
+      return (
+        mockData.experiences.find((experience) => experience.slug === slug) ??
+        null
+      );
+    }
+
     try {
       const response = await apiClient.get<TExperience | { data: TExperience }>(
         apiEndpoints.experienceBySlug(slug),
@@ -241,43 +349,11 @@ export const api = {
     }
   },
 
-  getPosts: async (): Promise<TPost[]> => {
-    try {
-      const response = await apiClient.get<TPost[] | { data: TPost[] }>(
-        apiEndpoints.posts(),
-      );
-      return extractPayload(response);
-    } catch (error) {
-      if (shouldUseFallback(error)) {
-        logFallback("API unavailable, using mock posts.");
-        return mockData.posts;
-      }
-
-      throw error;
-    }
-  },
-
-  getPostBySlug: async (slug: string): Promise<TPost | null> => {
-    try {
-      const response = await apiClient.get<TPost | { data: TPost }>(
-        apiEndpoints.postBySlug(slug),
-      );
-      return extractPayload(response);
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response?.status === 404) {
-        return null;
-      }
-
-      if (shouldUseFallback(error)) {
-        logFallback(`API unavailable, using mock post for slug: ${slug}.`);
-        return mockData.posts.find((post) => post.slug === slug) ?? null;
-      }
-
-      throw error;
-    }
-  },
-
   getCategories: async (): Promise<TCategory[]> => {
+    if (shouldUseMockData) {
+      return mockData.categories;
+    }
+
     try {
       const response = await apiClient.get<TCategory[] | { data: TCategory[] }>(
         apiEndpoints.categories(),
@@ -293,6 +369,110 @@ export const api = {
     }
   },
 } as const;
+
+export const adminApi = {
+  requestCode: async (email: string) => {
+    requireAdminApiUrl();
+    const response = await adminApiClient.post("/admin/auth/request-code", {
+      email,
+    });
+    return response.data;
+  },
+  verifyCode: async (email: string, code: string) => {
+    requireAdminApiUrl();
+    const response = await adminApiClient.post("/admin/auth/verify-code", {
+      email,
+      code,
+    });
+    const payload = extractPayload<{
+      csrfToken: string;
+      expiresAt: string;
+    }>(response);
+    setAdminCsrfToken(payload.csrfToken);
+    return payload;
+  },
+  getSession: async () => {
+    requireAdminApiUrl();
+    const response = await adminApiClient.get<{
+      email: string;
+      csrfToken: string;
+      expiresAt: string;
+    }>("/admin/auth/session");
+    const payload = extractPayload(response);
+    setAdminCsrfToken(payload.csrfToken);
+    return payload;
+  },
+  logout: async () => {
+    requireAdminApiUrl();
+    await adminApiClient.post("/admin/auth/logout");
+    setAdminCsrfToken("");
+  },
+  getPortfolio: async () => {
+    requireAdminApiUrl();
+    const response =
+      await adminApiClient.get<TPortfolioContent>("/client/portfolio");
+    return extractPayload(response);
+  },
+  saveProfile: async (profile: TProfile) => {
+    requireAdminApiUrl();
+    const response = await adminApiClient.put<TProfile>(
+      "/admin/portfolio/profile",
+      profile,
+    );
+    return extractPayload(response);
+  },
+  saveSettings: async (settings: TSiteSettings) => {
+    requireAdminApiUrl();
+    const response = await adminApiClient.put<TSiteSettings>(
+      "/admin/portfolio/settings",
+      settings,
+    );
+    return extractPayload(response);
+  },
+  saveSkills: async (skills: TSkill[]) => {
+    requireAdminApiUrl();
+    const response = await adminApiClient.put<TSkill[]>(
+      "/admin/portfolio/skills",
+      { skills },
+    );
+    return extractPayload(response);
+  },
+  listExperiences: async () => {
+    requireAdminApiUrl();
+    const response =
+      await adminApiClient.get<TExperience[]>("/admin/experiences");
+    return extractPayload(response);
+  },
+  saveExperience: async (experience: TExperience) => {
+    requireAdminApiUrl();
+    const { id, createdAt, updatedAt, technologies, ...payload } = experience;
+    const response = await adminApiClient.put<TExperience>(
+      `/admin/experiences/${id}`,
+      {
+        ...payload,
+        technologyIds: technologies?.map((technology) => technology.id) || [],
+      },
+    );
+    return extractPayload(response);
+  },
+  listProjects: async () => {
+    requireAdminApiUrl();
+    const response = await adminApiClient.get<TProject[]>("/admin/projects");
+    return extractPayload(response);
+  },
+  saveProject: async (project: TProject) => {
+    requireAdminApiUrl();
+    const { id, createdAt, updatedAt, technologies, ...payload } = project;
+    const response = await adminApiClient.put<TProject>(
+      `/admin/projects/${id}`,
+      {
+        ...payload,
+        technologyIds: technologies?.map((technology) => technology.id) || [],
+      },
+    );
+    return extractPayload(response);
+  },
+};
 
 export const handleApiError = (error: unknown): ApiError => {
   if (axios.isAxiosError(error)) {

@@ -13,6 +13,7 @@ type HomeSectionProps = {
   children: ReactNode;
   className?: string;
   contentClassName?: string;
+  id?: string;
 };
 
 export const HomeSection = ({
@@ -24,9 +25,11 @@ export const HomeSection = ({
   children,
   className,
   contentClassName,
+  id,
 }: HomeSectionProps) => {
   return (
     <motion.section
+      id={id}
       className={cn(homePageStyles.section, className)}
       variants={homeMotion.section}
       initial="hidden"

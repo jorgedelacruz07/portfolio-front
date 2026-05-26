@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { HomeSection } from "@/components/pages/home/HomeSection";
 import { homeMotion } from "@/lib/utils";
+import type { TSkill } from "@/types/portfolio";
 
 const skills = [
   "React.js",
@@ -22,9 +23,18 @@ const stats = [
   { number: "100%", label: "UX ownership" },
 ];
 
-export const HomeAbout = () => {
+type HomeAboutProps = {
+  cmsSkills?: TSkill[];
+};
+
+export const HomeAbout = ({ cmsSkills }: HomeAboutProps) => {
+  const visibleSkills = cmsSkills?.length
+    ? cmsSkills.filter((skill) => skill.visible).map((skill) => skill.name)
+    : skills;
+
   return (
     <HomeSection
+      id="about"
       eyebrow="About"
       title={
         <>
@@ -82,7 +92,7 @@ export const HomeAbout = () => {
           className="glass-panel rounded-[1.4rem] p-5 lg:col-span-8"
         >
           <div className="flex flex-wrap gap-2">
-            {skills.map((skill) => (
+            {visibleSkills.map((skill) => (
               <Badge
                 key={skill}
                 variant="secondary"

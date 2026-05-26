@@ -66,6 +66,11 @@ class ErrorBoundaryComponent extends Component<Props, State> {
                     We&apos;re sorry, but something unexpected happened. Please
                     try refreshing the page.
                   </p>
+                  {import.meta.env.DEV && this.state.error ? (
+                    <p className="mt-2 font-mono text-xs text-red-300">
+                      {this.state.error.message}
+                    </p>
+                  ) : null}
                 </div>
                 <div className="mt-4">
                   <button

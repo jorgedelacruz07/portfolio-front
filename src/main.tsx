@@ -7,19 +7,11 @@ import { RouterProvider } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 
 import { router } from "./Router";
-import { reportWebVitals } from "../lib/analytics";
 import { queryClient } from "../lib/query-client";
-
-let hasStartedWebVitals = false;
 
 function App() {
   useEffect(() => {
     document.documentElement.classList.add("dark");
-
-    if (!hasStartedWebVitals) {
-      reportWebVitals();
-      hasStartedWebVitals = true;
-    }
 
     return () => {
       document.documentElement.classList.remove("dark");

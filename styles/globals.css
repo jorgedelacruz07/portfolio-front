@@ -76,26 +76,16 @@ body {
   text-rendering: optimizeLegibility;
   /* Enhanced scroll behavior */
   scroll-behavior: smooth;
-  /* Better background */
   background-color: hsl(var(--background));
   color: hsl(var(--foreground));
-  background-image:
-    radial-gradient(
-      circle at 12% 18%,
-      hsl(var(--primary) / 0.16),
-      transparent 24%
-    ),
-    radial-gradient(
-      circle at 88% 10%,
-      hsl(var(--accent) / 0.12),
-      transparent 20%
-    ),
-    radial-gradient(
-      circle at 50% 84%,
-      hsl(var(--primary) / 0.08),
-      transparent 28%
-    );
-  background-attachment: fixed;
+  min-width: 100%;
+  min-height: 100%;
+  overflow-x: hidden;
+}
+
+#root {
+  min-height: 100vh;
+  width: 100%;
 }
 
 a {

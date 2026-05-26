@@ -5,6 +5,7 @@ import { SocialNetworks } from "@/components/SocialNetworks";
 import { DownloadIcon } from "@/components/icons/DownloadIcon";
 import { Button } from "@/components/ui/button";
 import { homeMotion, homePageStyles } from "@/lib/utils";
+import type { TProfile } from "@/types/portfolio";
 
 const profileHighlights = [
   "Full-stack apps",
@@ -19,7 +20,22 @@ const profileStats = [
   { label: "AI tools", value: "4" },
 ];
 
-export const HomeProfile = () => {
+type HomeProfileProps = {
+  cmsProfile?: TProfile;
+};
+
+export const HomeProfile = ({ cmsProfile }: HomeProfileProps) => {
+  const currentProfile = cmsProfile ?? {
+    name: profile.name,
+    headline: "Building fast, maintainable full-stack products.",
+    shortBio:
+      "React, Vite, Express, MongoDB, AWS, Docker, and AI workflows that ship cleanly in production.",
+    location: "Lima, Peru",
+    availability: "Available",
+    profileImage: { src: profile.image },
+    resumeUrl: "/documents/jorgedelacruz_cv.pdf",
+    contactEmail: "jdelacruzp7@gmail.com",
+  };
   const handleDownloadClick = () => {
     if (typeof window !== "undefined" && window.gtag) {
       window.gtag("event", "download", {
@@ -47,24 +63,31 @@ export const HomeProfile = () => {
           >
             <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-white/80 backdrop-blur-md">
               <span className="h-2 w-2 rounded-full bg-emerald-400" />
-              Available
+              {currentProfile.availability}
             </div>
-            <span className={homePageStyles.metaBadge}>Lima, Peru</span>
+            <span className={homePageStyles.metaBadge}>
+              {currentProfile.location}
+            </span>
           </motion.div>
 
           <motion.div variants={homeMotion.item} className="space-y-3">
             <p className={homePageStyles.eyebrow}>Senior software engineer</p>
             <h1 className="max-w-4xl text-4xl font-semibold leading-none tracking-tight text-foreground sm:text-5xl xl:text-6xl">
-              Building
-              <span className="text-premium-gradient">
-                {" "}
-                fast, maintainable{" "}
-              </span>
-              full-stack products.
+              {currentProfile.headline.includes("fast, maintainable") ? (
+                <>
+                  Building
+                  <span className="text-premium-gradient">
+                    {" "}
+                    fast, maintainable{" "}
+                  </span>
+                  full-stack products.
+                </>
+              ) : (
+                currentProfile.headline
+              )}
             </h1>
             <p className="max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
-              React, Vite, Express, MongoDB, AWS, Docker, and AI workflows that
-              ship cleanly in production.
+              {currentProfile.shortBio}
             </p>
           </motion.div>
 
@@ -110,7 +133,10 @@ export const HomeProfile = () => {
                 asChild
               >
                 <a
-                  href="/documents/jorgedelacruz_cv.pdf"
+                  href={
+                    currentProfile.resumeUrl ||
+                    "/documents/jorgedelacruz_cv.pdf"
+                  }
                   download
                   className="inline-flex items-center gap-2"
                 >
@@ -124,7 +150,7 @@ export const HomeProfile = () => {
                 variant="outline"
                 className="h-10 px-4 text-sm font-semibold"
               >
-                <a href="mailto:jdelacruzp7@gmail.com">Contact</a>
+                <a href={`mailto:${currentProfile.contactEmail}`}>Contact</a>
               </Button>
             </div>
           </motion.div>
@@ -147,8 +173,8 @@ export const HomeProfile = () => {
                 </div>
 
                 <OptimizedImage
-                  src={profile.image}
-                  alt={profile.name}
+                  src={currentProfile.profileImage?.src || profile.image}
+                  alt={currentProfile.name}
                   width={560}
                   height={640}
                   fetchPriority="high"

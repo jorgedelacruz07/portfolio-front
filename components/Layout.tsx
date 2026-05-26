@@ -5,12 +5,6 @@ import { ReactNode } from "react";
 import Footer from "./Footer";
 import { ErrorBoundary } from "./ErrorBoundary";
 import { PerformanceMonitor } from "./PerformanceMonitor";
-import { CursorEffect } from "./CursorEffect";
-import {
-  ParticleEffect,
-  FloatingElements,
-  GradientBackground,
-} from "./ParticleEffect";
 
 interface LayoutProps {
   children: ReactNode;
@@ -21,18 +15,10 @@ export const Layout = ({ children }: LayoutProps) => {
   const currentUrl = `https://jorgedelacruzpadilla.dev${location.pathname}`;
 
   return (
-    <div className="min-h-screen bg-background transition-all duration-500 relative overflow-hidden">
-      {/* Global background effects */}
-      <GradientBackground />
-      <ParticleEffect
-        particleCount={50}
-        className="opacity-20"
-        interactive={true}
-      />
-      <FloatingElements />
-
+    <div className="relative min-h-screen overflow-x-hidden bg-transparent text-foreground">
+      <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(circle_at_18%_8%,hsl(var(--primary)/0.18),transparent_28%),radial-gradient(circle_at_82%_16%,hsl(var(--accent)/0.12),transparent_24%),linear-gradient(180deg,hsl(var(--background)),hsl(var(--background))_42%,hsl(195_38%_7%))]" />
+      <div className="pointer-events-none fixed inset-0 -z-10 bg-[linear-gradient(to_right,hsl(var(--border)/0.05)_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border)/0.05)_1px,transparent_1px)] bg-[size:88px_88px]" />
       <PerformanceMonitor />
-      <CursorEffect />
       <Helmet>
         <title>Jorge de la Cruz - Senior Software Engineer</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -70,11 +56,9 @@ export const Layout = ({ children }: LayoutProps) => {
         />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <link rel="canonical" href={currentUrl} />
-        {/* Preload critical LCP image */}
-        <link rel="preload" as="image" href="/images/jorge.jpg" />
       </Helmet>
       <Navbar />
-      <main className="animate-fade-in relative z-10 mx-auto min-h-[calc(100vh-8rem)] w-full max-w-[96rem] px-4 py-8 sm:px-6 lg:px-8 md:py-10">
+      <main className="relative z-10 min-h-[calc(100vh-8rem)] w-full px-4 py-8 sm:px-6 lg:px-8 md:py-10">
         <ErrorBoundary>{children}</ErrorBoundary>
       </main>
       <Footer />
