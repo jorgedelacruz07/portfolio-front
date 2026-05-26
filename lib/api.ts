@@ -224,10 +224,28 @@ function shouldUseFallback(error: unknown) {
   return shouldUseMockData || isNetworkError(error);
 }
 
+function isNotFoundError(error: unknown) {
+  return axios.isAxiosError(error) && error.response?.status === 404;
+}
+
 function logFallback(message: string) {
   if (import.meta.env.DEV) {
     console.warn(message);
   }
+}
+
+function buildPortfolioPayload({
+  projects = [],
+  experiences = [],
+}: {
+  projects?: TProject[];
+  experiences?: TExperience[];
+}): TPortfolioContent {
+  return {
+    ...mockData.portfolio,
+    projects,
+    experiences,
+  };
 }
 
 export const api = {
@@ -242,9 +260,25 @@ export const api = {
       >(apiEndpoints.portfolio());
       return extractPayload(response);
     } catch (error) {
+      if (isNotFoundError(error)) {
+        const [projectsResult, experiencesResult] = await Promise.allSettled([
+          api.getProjects(),
+          api.getExperiences(),
+        ]);
+
+        return buildPortfolioPayload({
+          projects:
+            projectsResult.status === "fulfilled" ? projectsResult.value : [],
+          experiences:
+            experiencesResult.status === "fulfilled"
+              ? experiencesResult.value
+              : [],
+        });
+      }
+
       if (shouldUseFallback(error)) {
         logFallback("API unavailable, using mock portfolio.");
-        return mockData.portfolio;
+        return buildPortfolioPayload({});
       }
 
       throw error;
