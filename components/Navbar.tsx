@@ -92,14 +92,16 @@ export const Navbar = () => {
             variant="ghost"
             size="sm"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            aria-label="Toggle menu"
-            className="h-8 w-8 p-0"
+            aria-label="Toggle navigation menu"
+            aria-expanded={isMenuOpen}
+            className="flex h-11 w-11 items-center justify-center p-0 text-foreground hover:bg-secondary"
           >
             <svg
               className="h-5 w-5"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
+              aria-hidden="true"
             >
               {isMenuOpen ? (
                 <path

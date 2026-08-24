@@ -1,18 +1,33 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { api, handleApiError } from "@/lib/api";
+import { projectKeys } from "./queries/useProjects";
+import { experienceKeys } from "./queries/useExperiences";
 
 /**
  * Consolidated hook for fetching all data needed by the home page.
- * Handles loading and error states for CMS-backed homepage content.
+ * Automatically seeds the TanStack Query cache for individual sub-collections
+ * so navigation to /projects and /experiences is 0ms instant without extra network requests.
  *
  * @returns Object containing profile, skills, experiences, projects, loading state, and error state
  */
 export const useHomePageData = () => {
+  const queryClient = useQueryClient();
+
   const { data, isLoading, error } = useQuery({
     queryKey: ["portfolio", "public"],
     queryFn: async () => {
       try {
-        return await api.getPortfolio();
+        const result = await api.getPortfolio();
+
+        // Seed individual query caches for instant zero-latency page transitions
+        if (result?.projects) {
+          queryClient.setQueryData(projectKeys.lists(), result.projects);
+        }
+        if (result?.experiences) {
+          queryClient.setQueryData(experienceKeys.lists(), result.experiences);
+        }
+
+        return result;
       } catch (error) {
         throw handleApiError(error);
       }

@@ -1,8 +1,8 @@
 import { motion } from "framer-motion";
+import { Download } from "lucide-react";
 import { profile } from "@/data/content";
 import { OptimizedImage } from "@/components/OptimizedImage";
 import { SocialNetworks } from "@/components/SocialNetworks";
-import { DownloadIcon } from "@/components/icons/DownloadIcon";
 import { Button } from "@/components/ui/button";
 import { homeMotion } from "@/lib/utils";
 import type { TProfile } from "@/types/portfolio";
@@ -109,7 +109,7 @@ export const HomeProfile = ({ cmsProfile }: HomeProfileProps) => {
                 download
                 className="flex items-center gap-2 font-mono text-xs font-semibold"
               >
-                <DownloadIcon className="h-4 w-4" />
+                <Download className="h-4 w-4" />
                 Download CV
               </a>
             </Button>

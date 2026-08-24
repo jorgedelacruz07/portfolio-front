@@ -5,7 +5,8 @@
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="alternate icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#0ea5e9" />
+    <meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
     <meta name="application-name" content="Jorge de la Cruz Portfolio" />
     <meta
       name="apple-mobile-web-app-title"
@@ -16,7 +17,7 @@
     <title>Jorge de la Cruz | Senior Software Engineer</title>
     <meta
       name="description"
-      content="Senior Software Engineer specializing in React.js, TypeScript, and Node.js. Building scalable web applications since 2016."
+      content="Senior Software Engineer specializing in React.js, TypeScript, Node.js, and Native MongoDB Architecture. Building fast, scalable full-stack products."
     />
     <meta property="og:type" content="website" />
     <meta
@@ -25,7 +26,7 @@
     />
     <meta
       property="og:description"
-      content="Senior Software Engineer specializing in React.js, TypeScript, and Node.js. Building scalable web applications since 2016."
+      content="Senior Software Engineer specializing in React.js, TypeScript, Node.js, and Native MongoDB Architecture."
     />
     <meta
       property="og:image"
@@ -38,15 +39,47 @@
     />
     <meta
       name="twitter:description"
-      content="Senior Software Engineer specializing in React.js, TypeScript, and Node.js. Building scalable web applications since 2016."
+      content="Senior Software Engineer specializing in React.js, TypeScript, Node.js, and Native MongoDB Architecture."
     />
+
+    <!-- Font Optimization with preconnect & display=swap -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap"
     />
-    <link rel="preload" as="image" href="/images/jorge.jpg" />
+
+    <!-- LCP Hero Image Preload -->
+    <link rel="preload" as="image" href="/images/jorge.jpg" fetchpriority="high" />
+
+    <!-- Schema.org JSON-LD Structured Data for Rich SEO & 100 Lighthouse SEO Score -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Jorge de la Cruz Padilla",
+        "jobTitle": "Senior Software Engineer",
+        "url": "https://jorgedelacruzpadilla.dev",
+        "image": "https://jorgedelacruzpadilla.dev/images/jorge.jpg",
+        "sameAs": [
+          "https://github.com/jorgedelacruz07",
+          "https://www.linkedin.com/in/jorgedelacruz07"
+        ],
+        "knowsAbout": [
+          "React.js",
+          "TypeScript",
+          "Node.js",
+          "Express.js",
+          "MongoDB",
+          "Cloud Architecture",
+          "Vite",
+          "Web Performance"
+        ]
+      }
+    </script>
+
+    <!-- Google Analytics (Beacon transport, non-blocking) -->
     <script>
       (() => {
         const GA_ID = "%VITE_GA_ID%";
