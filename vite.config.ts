@@ -31,7 +31,10 @@ export default defineConfig({
             if (id.includes("lucide-react")) {
               return "lucide-icons";
             }
-            if (id.includes("react-router-dom") || id.includes("@remix-run/router")) {
+            if (
+              id.includes("react-router-dom") ||
+              id.includes("@remix-run/router")
+            ) {
               return "react-router";
             }
           }
