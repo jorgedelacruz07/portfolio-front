@@ -2,9 +2,13 @@ import type { ImgHTMLAttributes } from "react";
 import { clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
-type OptimizedImageProps = ImgHTMLAttributes<HTMLImageElement> & {
+type OptimizedImageProps = Omit<
+  ImgHTMLAttributes<HTMLImageElement>,
+  "fetchPriority"
+> & {
   src: string;
   alt: string;
+  fetchPriority?: "high" | "low" | "auto";
 };
 
 export const OptimizedImage = ({
@@ -22,7 +26,7 @@ export const OptimizedImage = ({
       alt={alt}
       loading={loading}
       decoding={decoding}
-      fetchPriority={fetchPriority}
+      fetchpriority={fetchPriority}
       className={twMerge(clsx(className))}
       {...props}
     />

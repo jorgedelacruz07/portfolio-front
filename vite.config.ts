@@ -2,11 +2,11 @@ import { fileURLToPath, URL } from "node:url";
 
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
-  plugins: [react(), tsconfigPaths()],
+  plugins: [react()],
   resolve: {
+    tsconfigPaths: true,
     alias: {
       "@": fileURLToPath(new URL(".", import.meta.url)),
     },
@@ -31,10 +31,7 @@ export default defineConfig({
             if (id.includes("lucide-react")) {
               return "lucide-icons";
             }
-            if (
-              id.includes("react-router-dom") ||
-              id.includes("@remix-run/router")
-            ) {
+            if (id.includes("react-router")) {
               return "react-router";
             }
           }
