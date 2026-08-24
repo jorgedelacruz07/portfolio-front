@@ -15,11 +15,7 @@ type LazyRouteComponent = LazyExoticComponent<ComponentType>;
 
 const HomePage = lazy(() => import("./routes/HomePage"));
 const ProjectsPage = lazy(() => import("./routes/ProjectsPage"));
-const ProjectDetailPage = lazy(() => import("./routes/ProjectDetailPage"));
 const ExperiencesPage = lazy(() => import("./routes/ExperiencesPage"));
-const ExperienceDetailPage = lazy(
-  () => import("./routes/ExperienceDetailPage"),
-);
 const AdminPage = lazy(() => import("./routes/AdminPage"));
 const NotFoundPage = lazy(() => import("./routes/NotFoundPage"));
 
@@ -88,16 +84,8 @@ export const router = createBrowserRouter([
         element: renderLazyRoute(ProjectsPage),
       },
       {
-        path: "projects/:slug",
-        element: renderLazyRoute(ProjectDetailPage),
-      },
-      {
         path: "experiences",
         element: renderLazyRoute(ExperiencesPage),
-      },
-      {
-        path: "experiences/:slug",
-        element: renderLazyRoute(ExperienceDetailPage),
       },
       {
         path: "admin",

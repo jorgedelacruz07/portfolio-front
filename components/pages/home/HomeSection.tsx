@@ -36,7 +36,7 @@ export const HomeSection = ({
       whileInView="visible"
       viewport={{ once: true, amount: 0.15 }}
     >
-      <div className="flex flex-col gap-4 border-b border-border/80 pb-6 sm:flex-row sm:items-end sm:justify-between">
+      <div className="flex flex-col gap-3 border-b border-border/70 pb-3 sm:pb-4 sm:flex-row sm:items-end sm:justify-between">
         <motion.div
           className={homePageStyles.sectionHeader}
           variants={homeMotion.item}
@@ -54,7 +54,7 @@ export const HomeSection = ({
               asChild
               variant="outline"
               size="sm"
-              className="font-mono text-xs"
+              className="font-mono text-xs hover:border-primary/40 hover:text-primary transition-all"
             >
               <Link to={actionHref} className="flex items-center gap-1.5">
                 <span>{actionLabel}</span>
@@ -66,7 +66,7 @@ export const HomeSection = ({
       </div>
 
       <motion.div
-        className={cn("pt-2", contentClassName)}
+        className={cn("pt-1", contentClassName)}
         variants={homeMotion.item}
       >
         {children}

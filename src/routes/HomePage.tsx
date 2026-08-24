@@ -26,7 +26,7 @@ type DeferredSectionProps = {
 
 function DeferredSectionPlaceholder() {
   return (
-    <div className="min-h-[18rem] rounded-xl border border-border/40 bg-card/20 animate-pulse" />
+    <div className="min-h-[4rem] rounded-xl border border-border/40 bg-card/20 animate-pulse" />
   );
 }
 
@@ -34,7 +34,7 @@ function DeferredSection({ children, className }: DeferredSectionProps) {
   const { ref, shouldRender } = useDeferredRender();
 
   return (
-    <div ref={ref} className={cn("min-h-[24rem]", className)}>
+    <div ref={ref} className={cn("min-h-0", className)}>
       {shouldRender ? children : <DeferredSectionPlaceholder />}
     </div>
   );

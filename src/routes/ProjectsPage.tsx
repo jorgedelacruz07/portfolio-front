@@ -1,9 +1,7 @@
-import { useMemo, useState } from "react";
+import { forwardRef, useMemo, useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { Link } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import {
-  ArrowRight,
   ExternalLink,
   FolderGit2,
   Layers,
@@ -13,7 +11,6 @@ import {
 } from "lucide-react";
 
 import { LoadingSpinner } from "@/components/LoadingSpinner";
-import { OptimizedImage } from "@/components/OptimizedImage";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useGetProjects } from "@/hooks";
@@ -108,12 +105,23 @@ export default function ProjectsPage() {
       if (searchQuery.trim()) {
         const query = searchQuery.toLowerCase().trim();
         const matchesName = project.name.toLowerCase().includes(query);
-        const matchesDesc = project.description.toLowerCase().includes(query);
-        const matchesType = project.type?.toLowerCase().includes(query);
+        const matchesDesc = (project.description || "")
+          .toLowerCase()
+          .includes(query);
+        const matchesLongDesc = (project.longDescription || "")
+          .toLowerCase()
+          .includes(query);
+        const matchesType = (project.type || "").toLowerCase().includes(query);
         const matchesTech = project.technologies?.some((t) =>
           t.name.toLowerCase().includes(query),
         );
-        return matchesName || matchesDesc || matchesType || matchesTech;
+        return (
+          matchesName ||
+          matchesDesc ||
+          matchesLongDesc ||
+          matchesType ||
+          matchesTech
+        );
       }
 
       return true;
@@ -185,20 +193,20 @@ export default function ProjectsPage() {
         />
       </Helmet>
 
-      <main className="relative mx-auto max-w-5xl px-4 py-10 sm:px-6 md:py-16">
-        <div className="space-y-10">
+      <main className="relative mx-auto max-w-5xl px-4 py-8 sm:px-6 md:py-16">
+        <div className="space-y-8 sm:space-y-10">
           {/* Header Section */}
-          <header className="space-y-4 border-b border-border/70 pb-8">
+          <header className="space-y-3 sm:space-y-4 border-b border-border/70 pb-6 sm:pb-8">
             <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 font-mono text-[0.6875rem] font-medium uppercase tracking-widest text-primary">
               <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
               <span>Selected Works // {projects.length} Projects</span>
             </div>
 
-            <h1 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl lg:text-5xl">
+            <h1 className="text-2xl font-extrabold tracking-tight text-foreground sm:text-4xl lg:text-5xl">
               Projects & Engineering Systems
             </h1>
 
-            <p className="max-w-2xl text-base leading-relaxed text-muted-foreground">
+            <p className="max-w-2xl text-sm sm:text-base leading-relaxed text-muted-foreground">
               Production web applications, full-stack client architectures, and
               high-performance tools engineered with modern TypeScript, React,
               Node.js, and scalable cloud workflows.
@@ -208,7 +216,7 @@ export default function ProjectsPage() {
           {/* Interactive Search & Filter Controls */}
           <section
             aria-label="Project search and filters"
-            className="space-y-4 rounded-xl border border-border/60 bg-card/40 p-4 backdrop-blur-md"
+            className="space-y-4 rounded-2xl border border-border/60 bg-card/40 p-4 sm:p-5 backdrop-blur-md"
           >
             {/* Search bar & Type filter row */}
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -220,7 +228,7 @@ export default function ProjectsPage() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search by title, description, or stack..."
-                  className="w-full rounded-lg border border-border/80 bg-background/80 py-2 pl-9 pr-8 text-sm text-foreground placeholder:text-muted-foreground/70 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                  className="w-full rounded-xl border border-border/80 bg-background/80 py-2 pl-9 pr-8 text-sm text-foreground placeholder:text-muted-foreground/70 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all"
                 />
                 {searchQuery ? (
                   <button
@@ -239,7 +247,7 @@ export default function ProjectsPage() {
                 <button
                   type="button"
                   onClick={() => setSelectedType("all")}
-                  className={`rounded-lg px-3 py-1.5 font-mono text-xs transition-all ${
+                  className={`rounded-lg px-2.5 sm:px-3 py-1.5 font-mono text-xs transition-all ${
                     selectedType === "all"
                       ? "bg-primary text-primary-foreground font-semibold shadow-sm"
                       : "bg-secondary/70 text-muted-foreground hover:bg-secondary hover:text-foreground"
@@ -252,7 +260,7 @@ export default function ProjectsPage() {
                   <button
                     type="button"
                     onClick={() => setSelectedType("featured")}
-                    className={`inline-flex items-center gap-1 rounded-lg px-3 py-1.5 font-mono text-xs transition-all ${
+                    className={`inline-flex items-center gap-1 rounded-lg px-2.5 sm:px-3 py-1.5 font-mono text-xs transition-all ${
                       selectedType === "featured"
                         ? "bg-primary text-primary-foreground font-semibold shadow-sm"
                         : "bg-secondary/70 text-muted-foreground hover:bg-secondary hover:text-foreground"
@@ -274,7 +282,7 @@ export default function ProjectsPage() {
                       onClick={() =>
                         setSelectedType(selectedType === type ? "all" : type)
                       }
-                      className={`rounded-lg px-3 py-1.5 font-mono text-xs transition-all ${
+                      className={`rounded-lg px-2.5 sm:px-3 py-1.5 font-mono text-xs transition-all ${
                         selectedType.toLowerCase() === type.toLowerCase()
                           ? "bg-primary text-primary-foreground font-semibold shadow-sm"
                           : "bg-secondary/70 text-muted-foreground hover:bg-secondary hover:text-foreground"
@@ -379,7 +387,7 @@ export default function ProjectsPage() {
               variants={containerVariants}
               initial="hidden"
               animate="visible"
-              className="grid gap-6 md:grid-cols-2"
+              className="grid gap-5 sm:gap-6 md:grid-cols-2"
             >
               <AnimatePresence mode="popLayout">
                 {filteredProjects.map((project) => (
@@ -403,179 +411,146 @@ interface ProjectCardProps {
   onSelectTech: (tech: string) => void;
 }
 
-function ProjectCard({ project, onSelectTech }: ProjectCardProps) {
-  // Generate a stylish monogram when image is not present
-  const monogram = useMemo(() => {
-    if (!project.name) return "PR";
-    const words = project.name.trim().split(/\s+/);
-    if (words.length >= 2) {
-      return `${words[0][0]}${words[1][0]}`.toUpperCase();
-    }
-    return project.name.slice(0, 2).toUpperCase();
-  }, [project.name]);
+const ProjectCard = forwardRef<HTMLElement, ProjectCardProps>(
+  function ProjectCard({ project, onSelectTech }, ref) {
+    const displayDescription =
+      project.description &&
+      project.description.trim().toLowerCase() !==
+        project.name.trim().toLowerCase()
+        ? project.description
+        : project.longDescription ||
+          project.description ||
+          "Production web application and system architecture.";
 
-  return (
-    <motion.article
-      layout
-      variants={cardVariants}
-      className="craft-card craft-card-interactive group flex flex-col justify-between overflow-hidden rounded-2xl p-6 transition-all"
-    >
-      <div className="space-y-4">
-        {/* Top Header: Badge, Type & Date */}
-        <div className="flex items-center justify-between gap-2">
-          <div className="flex items-center gap-2">
-            <Badge
-              variant="secondary"
-              className="font-mono text-[0.6875rem] font-medium tracking-wide bg-secondary/80 text-foreground/90 border border-border/70"
-            >
-              {project.type || "Web App"}
-            </Badge>
+    return (
+      <motion.article
+        ref={ref}
+        layout
+        variants={cardVariants}
+        className="craft-card craft-card-interactive group flex flex-col justify-between overflow-hidden rounded-2xl p-6 transition-all hover:border-primary/40"
+      >
+        <div className="space-y-4">
+          {/* Top Header: Badge, Type & Date */}
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <div className="flex items-center gap-2">
+              <Badge
+                variant="secondary"
+                className="bg-secondary/90 font-mono text-[0.6875rem] font-medium tracking-wide text-foreground/90 border border-border/70"
+              >
+                {project.type || "Web App"}
+              </Badge>
 
-            {project.featured ? (
-              <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 font-mono text-[0.6875rem] font-semibold text-primary">
-                <Sparkles className="h-2.5 w-2.5" />
-                <span>Featured</span>
+              {project.featured ? (
+                <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 font-mono text-[0.6875rem] font-semibold text-primary border border-primary/20">
+                  <Sparkles className="h-2.5 w-2.5" />
+                  <span>Featured</span>
+                </span>
+              ) : null}
+            </div>
+
+            {project.from ? (
+              <span className="font-mono text-[0.6875rem] text-muted-foreground">
+                {formatDateRange(project.from, project.to)}
               </span>
             ) : null}
           </div>
 
-          {project.from ? (
-            <span className="font-mono text-[0.6875rem] text-muted-foreground">
-              {formatDateRange(project.from, project.to)}
-            </span>
-          ) : null}
-        </div>
-
-        {/* Project Visual & Title */}
-        <div className="flex items-start gap-4 pt-1">
-          {project.image?.src ? (
-            <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl border border-border/80 bg-muted shadow-sm group-hover:border-primary/40 transition-colors">
-              <OptimizedImage
-                src={project.image.src}
-                alt={project.name || "Project"}
-                width={56}
-                height={56}
-                className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-              />
-            </div>
-          ) : (
-            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl border border-border/80 bg-gradient-to-br from-secondary/80 to-muted text-primary shadow-sm group-hover:border-primary/40 group-hover:text-primary transition-colors">
-              <span className="font-mono text-base font-bold tracking-tight">
-                {monogram}
-              </span>
-            </div>
-          )}
-
-          <div className="min-w-0 flex-1 space-y-1">
-            <h2 className="text-xl font-bold tracking-tight text-foreground transition-colors group-hover:text-primary">
-              <Link
-                to={`/projects/${project.slug}`}
-                className="inline-flex items-center gap-1.5 hover:underline"
-              >
-                <span>{project.name || "Untitled Project"}</span>
-                <ArrowRight className="h-4 w-4 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all text-primary" />
-              </Link>
+          {/* Project Title & Hostname */}
+          <div className="space-y-1">
+            <h2 className="text-xl font-bold tracking-tight text-foreground transition-colors group-hover:text-primary sm:text-2xl">
+              {project.url ? (
+                <a
+                  href={project.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 hover:underline"
+                >
+                  <span>{project.name}</span>
+                  <ExternalLink className="h-4 w-4 opacity-70 group-hover:opacity-100 transition-opacity text-primary" />
+                </a>
+              ) : (
+                <span>{project.name}</span>
+              )}
             </h2>
 
             {project.url ? (
-              <a
-                href={project.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 font-mono text-xs text-muted-foreground/80 hover:text-primary transition-colors"
-              >
-                <span>{formatHostname(project.url)}</span>
-                <ExternalLink className="h-3 w-3" />
-              </a>
-            ) : null}
-          </div>
-        </div>
-
-        {/* Description */}
-        <p className="line-clamp-3 text-sm leading-relaxed text-muted-foreground pt-1">
-          {project.description || "No description provided for this project."}
-        </p>
-
-        {/* Technology Pills */}
-        {project.technologies?.length ? (
-          <div className="flex flex-wrap gap-1.5 pt-2">
-            {project.technologies.slice(0, 5).map((tech) => (
-              <button
-                key={tech.id}
-                type="button"
-                onClick={() => onSelectTech(tech.name)}
-                className="craft-pill cursor-pointer hover:border-primary/40 hover:text-primary"
-                title={`Filter by ${tech.name}`}
-              >
-                {tech.name}
-              </button>
-            ))}
-            {project.technologies.length > 5 ? (
-              <span className="self-center font-mono text-[0.6875rem] text-muted-foreground">
-                +{project.technologies.length - 5} more
+              <span className="block font-mono text-xs text-muted-foreground/80">
+                {formatHostname(project.url)}
               </span>
             ) : null}
           </div>
-        ) : null}
-      </div>
 
-      {/* Card Actions Footer */}
-      <div className="mt-6 flex items-center gap-2.5 border-t border-border/50 pt-4">
-        <Button
-          variant="outline"
-          size="sm"
-          className="flex-1 font-mono text-xs hover:border-primary/40 hover:text-primary transition-all"
-          asChild
-        >
-          <Link
-            to={`/projects/${project.slug}`}
-            className="flex items-center justify-center gap-1.5"
-          >
-            <span>Overview & Stack</span>
-            <ArrowRight className="h-3.5 w-3.5" />
-          </Link>
-        </Button>
+          {/* Project Description */}
+          <p className="text-sm leading-relaxed text-muted-foreground">
+            {displayDescription}
+          </p>
 
-        {project.url ? (
-          <Button
-            size="sm"
-            className="flex-1 font-mono text-xs bg-primary text-primary-foreground hover:bg-primary/90 transition-all"
-            asChild
-          >
-            <a
-              href={project.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center gap-1.5"
-            >
-              <span>Live preview</span>
-              <ExternalLink className="h-3.5 w-3.5" />
-            </a>
-          </Button>
-        ) : null}
+          {project.longDescription &&
+          project.longDescription !== displayDescription ? (
+            <p className="text-xs font-mono leading-relaxed text-muted-foreground/90 border-l-2 border-primary/30 pl-3">
+              {project.longDescription}
+            </p>
+          ) : null}
 
-        {project.links?.github ? (
-          <Button
-            variant="ghost"
-            size="sm"
-            className="font-mono text-xs px-2.5 text-muted-foreground hover:text-foreground"
-            asChild
-          >
-            <a
-              href={project.links.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              title="View source code"
-              className="flex items-center gap-1"
-            >
-              <FolderGit2 className="h-4 w-4" />
-            </a>
-          </Button>
+          {/* Technology Pills */}
+          {project.technologies?.length ? (
+            <div className="flex flex-wrap gap-1.5 pt-1">
+              {project.technologies.map((tech) => (
+                <button
+                  key={tech.id}
+                  type="button"
+                  onClick={() => onSelectTech(tech.name)}
+                  className="craft-pill cursor-pointer hover:border-primary/40 hover:text-primary transition-all text-[0.6875rem]"
+                  title={`Filter by ${tech.name}`}
+                >
+                  {tech.name}
+                </button>
+              ))}
+            </div>
+          ) : null}
+        </div>
+
+        {/* Card Actions Footer */}
+        {project.url || project.links?.github ? (
+          <div className="mt-6 flex items-center gap-2.5 border-t border-border/50 pt-4">
+            {project.url ? (
+              <Button
+                size="sm"
+                className="flex-1 font-mono text-xs bg-primary text-primary-foreground hover:bg-primary/90 transition-all gap-1.5 shadow-sm"
+                asChild
+              >
+                <a href={project.url} target="_blank" rel="noopener noreferrer">
+                  <span>Live demo</span>
+                  <ExternalLink className="h-3.5 w-3.5" />
+                </a>
+              </Button>
+            ) : null}
+
+            {project.links?.github ? (
+              <Button
+                variant="outline"
+                size="sm"
+                className="font-mono text-xs px-3 text-muted-foreground hover:text-foreground hover:border-border transition-all gap-1.5"
+                asChild
+              >
+                <a
+                  href={project.links.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title="View source code"
+                >
+                  <FolderGit2 className="h-4 w-4" />
+                  <span className="hidden sm:inline">Code</span>
+                </a>
+              </Button>
+            ) : null}
+          </div>
         ) : null}
-      </div>
-    </motion.article>
-  );
-}
+      </motion.article>
+    );
+  },
+);
+ProjectCard.displayName = "ProjectCard";
 
 function formatHostname(url: string): string {
   try {

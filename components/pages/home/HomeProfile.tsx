@@ -42,14 +42,14 @@ export const HomeProfile = ({ cmsProfile }: HomeProfileProps) => {
 
   return (
     <motion.section
-      className="relative pt-4 pb-2 md:pt-8"
+      className="relative pt-1 pb-0 md:pt-3"
       variants={homeMotion.section}
       initial="hidden"
       animate="visible"
     >
-      <div className="grid items-start gap-12 lg:grid-cols-12">
+      <div className="grid items-center gap-8 lg:grid-cols-12 lg:gap-10">
         {/* Left Column: Headline, Bio & Actions */}
-        <div className="space-y-6 lg:col-span-8">
+        <div className="space-y-4 lg:col-span-8">
           {/* Status & Location Pill */}
           <motion.div
             variants={homeMotion.item}
@@ -68,15 +68,15 @@ export const HomeProfile = ({ cmsProfile }: HomeProfileProps) => {
           </motion.div>
 
           {/* Main Headline */}
-          <motion.div variants={homeMotion.item} className="space-y-4">
-            <h1 className="text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
+          <motion.div variants={homeMotion.item} className="space-y-2.5">
+            <h1 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
               Jorge de la Cruz
             </h1>
-            <p className="text-xl font-medium text-foreground/90 sm:text-2xl">
+            <p className="text-lg font-medium text-foreground/90 sm:text-xl md:text-2xl">
               Senior Software Engineer crafting fast, resilient full-stack web
               applications.
             </p>
-            <p className="max-w-2xl text-base leading-relaxed text-muted-foreground">
+            <p className="max-w-2xl text-sm sm:text-base leading-relaxed text-muted-foreground">
               {currentProfile.shortBio}
             </p>
           </motion.div>
@@ -84,10 +84,13 @@ export const HomeProfile = ({ cmsProfile }: HomeProfileProps) => {
           {/* Engineering Focus Areas */}
           <motion.div
             variants={homeMotion.item}
-            className="flex flex-wrap gap-2 pt-1"
+            className="flex flex-wrap gap-1.5 pt-0.5"
           >
             {focusAreas.map((area) => (
-              <span key={area} className="craft-pill">
+              <span
+                key={area}
+                className="craft-pill text-[0.6875rem] sm:text-xs"
+              >
                 {area}
               </span>
             ))}
@@ -96,9 +99,9 @@ export const HomeProfile = ({ cmsProfile }: HomeProfileProps) => {
           {/* Action Buttons & Socials */}
           <motion.div
             variants={homeMotion.item}
-            className="flex flex-wrap items-center gap-4 pt-2"
+            className="flex flex-wrap items-center gap-3 pt-1"
           >
-            <Button size="lg" onClick={handleDownloadClick} asChild>
+            <Button size="default" onClick={handleDownloadClick} asChild>
               <a
                 href={
                   currentProfile.resumeUrl || "/documents/jorgedelacruz_cv.pdf"
@@ -110,7 +113,7 @@ export const HomeProfile = ({ cmsProfile }: HomeProfileProps) => {
                 Download CV
               </a>
             </Button>
-            <Button asChild size="lg" variant="outline">
+            <Button asChild size="default" variant="outline">
               <a
                 href={`mailto:${currentProfile.contactEmail}`}
                 className="font-mono text-xs font-semibold"
@@ -118,7 +121,7 @@ export const HomeProfile = ({ cmsProfile }: HomeProfileProps) => {
                 Get in touch
               </a>
             </Button>
-            <div className="border-l border-border pl-4">
+            <div className="border-l border-border/80 pl-3">
               <SocialNetworks />
             </div>
           </motion.div>
@@ -129,8 +132,8 @@ export const HomeProfile = ({ cmsProfile }: HomeProfileProps) => {
           variants={homeMotion.item}
           className="flex justify-center lg:col-span-4 lg:justify-end"
         >
-          <div className="relative w-full max-w-[280px]">
-            <div className="craft-card overflow-hidden rounded-2xl p-2">
+          <div className="relative w-full max-w-[240px] sm:max-w-[260px]">
+            <div className="craft-card overflow-hidden rounded-2xl p-1.5">
               <OptimizedImage
                 src={currentProfile.profileImage?.src || profile.image}
                 alt={currentProfile.name}

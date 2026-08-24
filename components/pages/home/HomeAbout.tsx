@@ -28,8 +28,8 @@ const engineeringPillars = [
     skills: [
       "Node.js",
       "Express.js",
-      "MongoDB",
-      "Prisma ORM",
+      "MongoDB Native Driver",
+      "MongoDB Atlas",
       "REST APIs",
       "CORS & Auth",
     ],
@@ -61,25 +61,25 @@ export const HomeAbout = ({ cmsSkills }: HomeAboutProps) => {
       title="Engineering pillars & core stack"
       description="Architectural discipline across user experience, backend services, and cloud infrastructure."
     >
-      <div className="grid gap-6 md:grid-cols-3">
+      <div className="grid gap-4 sm:gap-5 md:grid-cols-3">
         {engineeringPillars.map((pillar) => (
           <motion.div
             key={pillar.title}
             variants={homeMotion.item}
-            className="craft-card flex flex-col justify-between rounded-xl p-6"
+            className="craft-card flex flex-col justify-between rounded-2xl p-5 sm:p-6"
           >
-            <div className="space-y-3">
-              <h3 className="text-lg font-semibold tracking-tight text-foreground">
+            <div className="space-y-2.5">
+              <h3 className="text-base sm:text-lg font-bold tracking-tight text-foreground">
                 {pillar.title}
               </h3>
-              <p className="text-sm leading-relaxed text-muted-foreground">
+              <p className="text-xs sm:text-sm leading-relaxed text-muted-foreground">
                 {pillar.description}
               </p>
             </div>
 
-            <div className="mt-6 flex flex-wrap gap-1.5 border-t border-border/60 pt-4">
+            <div className="mt-4 flex flex-wrap gap-1.5 border-t border-border/60 pt-3">
               {pillar.skills.map((skill) => (
-                <span key={skill} className="craft-pill">
+                <span key={skill} className="craft-pill text-[0.6875rem]">
                   {skill}
                 </span>
               ))}
@@ -91,13 +91,13 @@ export const HomeAbout = ({ cmsSkills }: HomeAboutProps) => {
       {dynamicSkills.length > 0 ? (
         <motion.div
           variants={homeMotion.item}
-          className="mt-6 flex flex-wrap items-center gap-2 rounded-xl border border-border/70 bg-card/40 p-4"
+          className="mt-4 flex flex-wrap items-center gap-1.5 rounded-xl border border-border/70 bg-card/40 p-3"
         >
-          <span className="font-mono text-xs font-semibold text-muted-foreground">
+          <span className="font-mono text-xs font-semibold text-muted-foreground mr-1">
             All Technologies:
           </span>
           {dynamicSkills.map((skill) => (
-            <span key={skill} className="craft-pill">
+            <span key={skill} className="craft-pill text-[0.6875rem]">
               {skill}
             </span>
           ))}

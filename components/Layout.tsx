@@ -57,7 +57,7 @@ export const Layout = ({ children }: LayoutProps) => {
         <link rel="canonical" href={currentUrl} />
       </Helmet>
       <Navbar />
-      <main className="relative z-10 min-h-[calc(100vh-8rem)] w-full px-4 py-8 sm:px-6 lg:px-8 md:py-10">
+      <main className="relative z-10 min-h-[calc(100vh-8rem)] w-full px-4 py-4 sm:px-6 lg:px-8 sm:py-6">
         <ErrorBoundary>{children}</ErrorBoundary>
       </main>
       <Footer />
