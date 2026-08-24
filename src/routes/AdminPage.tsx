@@ -103,9 +103,7 @@ function LoginForm({ onSession }: { onSession: (session: Session) => void }) {
         ) : null}
       </div>
       {message ? (
-        <p className="mt-4 text-xs text-muted-foreground">
-          {message}
-        </p>
+        <p className="mt-4 text-xs text-muted-foreground">{message}</p>
       ) : null}
       <button
         className="mt-6 w-full rounded-lg bg-foreground px-4 py-2 text-sm font-semibold text-background transition hover:opacity-90 disabled:opacity-60"
@@ -125,7 +123,9 @@ function LoginForm({ onSession }: { onSession: (session: Session) => void }) {
 function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
     <section className="craft-card rounded-xl p-6">
-      <h2 className="text-lg font-semibold tracking-tight text-foreground">{title}</h2>
+      <h2 className="text-lg font-semibold tracking-tight text-foreground">
+        {title}
+      </h2>
       <div className="mt-5 space-y-4">{children}</div>
     </section>
   );

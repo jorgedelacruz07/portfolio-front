@@ -25,10 +25,14 @@ export default function ExperienceDetailPage() {
       <div className="flex min-h-[60vh] items-center justify-center">
         <div className="space-y-4 text-center">
           <h1 className="text-2xl font-bold text-foreground">
-            {error instanceof Error ? "Error loading experience" : "Experience not found"}
+            {error instanceof Error
+              ? "Error loading experience"
+              : "Experience not found"}
           </h1>
           <p className="text-sm text-muted-foreground">
-            {error instanceof Error ? error.message : "The requested experience could not be found."}
+            {error instanceof Error
+              ? error.message
+              : "The requested experience could not be found."}
           </p>
           <Button variant="outline" size="sm" asChild>
             <Link to="/experiences">Back to Experiences</Link>
@@ -108,7 +112,12 @@ export default function ExperienceDetailPage() {
               </div>
 
               {experience.companyUrl ? (
-                <Button size="sm" variant="outline" className="font-mono text-xs shrink-0" asChild>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="font-mono text-xs shrink-0"
+                  asChild
+                >
                   <a
                     href={experience.companyUrl}
                     target="_blank"
@@ -164,4 +173,3 @@ export default function ExperienceDetailPage() {
     </>
   );
 }
-

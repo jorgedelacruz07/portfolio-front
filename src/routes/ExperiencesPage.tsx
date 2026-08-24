@@ -72,7 +72,8 @@ export default function ExperiencesPage() {
               Professional Journey & Experience
             </h1>
             <p className="max-w-2xl text-base leading-relaxed text-muted-foreground">
-              A comprehensive track record of software engineering roles, team leadership, and product delivery.
+              A comprehensive track record of software engineering roles, team
+              leadership, and product delivery.
             </p>
           </div>
 
@@ -135,7 +136,9 @@ export default function ExperiencesPage() {
                           </span>
                         ))}
                       </div>
-                    ) : <div />}
+                    ) : (
+                      <div />
+                    )}
 
                     <div className="flex items-center gap-2 shrink-0">
                       <Button
