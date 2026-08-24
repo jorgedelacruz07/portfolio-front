@@ -1,119 +1,108 @@
 import { motion } from "framer-motion";
-import { Badge } from "@/components/ui/badge";
 import { HomeSection } from "@/components/pages/home/HomeSection";
 import { homeMotion } from "@/lib/utils";
 import type { TSkill } from "@/types/portfolio";
-
-const skills = [
-  "React.js",
-  "Vite.js",
-  "Express.js",
-  "MongoDB",
-  "AWS",
-  "Docker",
-  "Claude Code",
-  "Codex",
-  "Gemini",
-  "Cursor",
-];
-
-const stats = [
-  { number: "8+", label: "Years shipping" },
-  { number: "50+", label: "Projects delivered" },
-  { number: "100%", label: "UX ownership" },
-];
 
 type HomeAboutProps = {
   cmsSkills?: TSkill[];
 };
 
+const engineeringPillars = [
+  {
+    title: "Frontend Architecture",
+    description:
+      "Building high-performance, accessible, and scalable client applications. Focused on Core Web Vitals, state management, and design system engineering.",
+    skills: [
+      "React.js",
+      "TypeScript",
+      "Vite.js",
+      "Tailwind CSS",
+      "TanStack Query",
+      "Framer Motion",
+    ],
+  },
+  {
+    title: "Backend & Systems",
+    description:
+      "Designing clean, maintainable APIs and data access layers. Experience with caching strategies, database optimization, and secure authentication.",
+    skills: [
+      "Node.js",
+      "Express.js",
+      "MongoDB",
+      "Prisma ORM",
+      "REST APIs",
+      "CORS & Auth",
+    ],
+  },
+  {
+    title: "Cloud & Delivery",
+    description:
+      "Deploying scalable cloud workloads with automated CI/CD pipelines, containerization, and modern agentic engineering tooling.",
+    skills: [
+      "AWS",
+      "Docker",
+      "GitHub Actions",
+      "GCP Cloud Run",
+      "Micro-services",
+      "AI Workflows",
+    ],
+  },
+];
+
 export const HomeAbout = ({ cmsSkills }: HomeAboutProps) => {
-  const visibleSkills = cmsSkills?.length
-    ? cmsSkills.filter((skill) => skill.visible).map((skill) => skill.name)
-    : skills;
+  const dynamicSkills = cmsSkills?.length
+    ? cmsSkills.filter((s) => s.visible !== false).map((s) => s.name)
+    : [];
 
   return (
     <HomeSection
       id="about"
-      eyebrow="About"
-      title={
-        <>
-          Full-stack engineering with
-          <span className="text-premium-gradient"> AI-native delivery.</span>
-        </>
-      }
-      description="Apps, APIs, infrastructure, and AI workflows in one stack."
+      eyebrow="Capabilities"
+      title="Engineering pillars & core stack"
+      description="Architectural discipline across user experience, backend services, and cloud infrastructure."
     >
-      <div className="grid gap-4 lg:grid-cols-12">
-        <motion.div
-          variants={homeMotion.item}
-          className="glass-panel rounded-[1.4rem] p-5 lg:col-span-6"
-        >
-          <p className="text-sm leading-relaxed text-muted-foreground">
-            I build user-facing apps, backend services, and cloud-ready delivery
-            workflows that stay fast to ship and easy to evolve.
-          </p>
-        </motion.div>
-
-        <motion.div
-          variants={homeMotion.item}
-          className="grid gap-4 sm:grid-cols-3 lg:col-span-6"
-        >
-          {stats.map((stat) => (
-            <div
-              key={stat.label}
-              className="glass-panel rounded-[1.4rem] p-5 text-left"
-            >
-              <p className="text-3xl font-semibold leading-none tracking-tight text-foreground">
-                {stat.number}
-              </p>
-              <p className="mt-2 text-xs uppercase tracking-[0.18em] text-muted-foreground">
-                {stat.label}
+      <div className="grid gap-6 md:grid-cols-3">
+        {engineeringPillars.map((pillar) => (
+          <motion.div
+            key={pillar.title}
+            variants={homeMotion.item}
+            className="craft-card flex flex-col justify-between rounded-xl p-6"
+          >
+            <div className="space-y-3">
+              <h3 className="text-lg font-semibold tracking-tight text-foreground">
+                {pillar.title}
+              </h3>
+              <p className="text-sm leading-relaxed text-muted-foreground">
+                {pillar.description}
               </p>
             </div>
+
+            <div className="mt-6 flex flex-wrap gap-1.5 border-t border-border/60 pt-4">
+              {pillar.skills.map((skill) => (
+                <span key={skill} className="craft-pill">
+                  {skill}
+                </span>
+              ))}
+            </div>
+          </motion.div>
+        ))}
+      </div>
+
+      {dynamicSkills.length > 0 ? (
+        <motion.div
+          variants={homeMotion.item}
+          className="mt-6 flex flex-wrap items-center gap-2 rounded-xl border border-border/70 bg-card/40 p-4"
+        >
+          <span className="font-mono text-xs font-semibold text-muted-foreground">
+            All Technologies:
+          </span>
+          {dynamicSkills.map((skill) => (
+            <span key={skill} className="craft-pill">
+              {skill}
+            </span>
           ))}
         </motion.div>
-
-        <motion.div
-          variants={homeMotion.item}
-          className="glass-panel rounded-[1.4rem] p-5 lg:col-span-4"
-        >
-          <p className="text-xs uppercase tracking-[0.2em] text-primary/80">
-            Operating style
-          </p>
-          <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-            Product thinking, backend pragmatism, and AI acceleration in the
-            same loop.
-          </p>
-        </motion.div>
-
-        <motion.div
-          variants={homeMotion.item}
-          className="glass-panel rounded-[1.4rem] p-5 lg:col-span-8"
-        >
-          <div className="flex flex-wrap gap-2">
-            {visibleSkills.map((skill) => (
-              <Badge
-                key={skill}
-                variant="secondary"
-                className="px-2.5 py-1 text-[0.65rem]"
-              >
-                {skill}
-              </Badge>
-            ))}
-          </div>
-        </motion.div>
-
-        <motion.div
-          variants={homeMotion.item}
-          className="glass-panel rounded-[1.4rem] p-5 lg:col-span-12"
-        >
-          <p className="text-sm leading-relaxed text-muted-foreground">
-            I have also used AI directly in personal finance and education
-            projects, not just in the dev workflow.
-          </p>
-        </motion.div>
-      </div>
+      ) : null}
     </HomeSection>
   );
 };

@@ -34,44 +34,43 @@ export const HomeSection = ({
       variants={homeMotion.section}
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, amount: 0.2 }}
+      viewport={{ once: true, amount: 0.15 }}
     >
-      <div className={homePageStyles.sectionSurface}>
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,hsl(var(--primary)/0.18),transparent_34%)] opacity-80" />
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent" />
-
-        <div className={homePageStyles.sectionHeader}>
-          <motion.div
-            className={homePageStyles.sectionCopy}
-            variants={homeMotion.item}
-          >
-            <p className={homePageStyles.eyebrow}>{eyebrow}</p>
-            <h2 className={homePageStyles.title}>{title}</h2>
-            {description ? (
-              <p className={homePageStyles.description}>{description}</p>
-            ) : null}
-          </motion.div>
-
-          {actionHref ? (
-            <motion.div variants={homeMotion.item}>
-              <Button
-                asChild
-                variant="outline"
-                className="h-9 px-3.5 text-sm font-semibold"
-              >
-                <Link to={actionHref}>{actionLabel}</Link>
-              </Button>
-            </motion.div>
-          ) : null}
-        </div>
-
+      <div className="flex flex-col gap-4 border-b border-border/80 pb-6 sm:flex-row sm:items-end sm:justify-between">
         <motion.div
-          className={cn(homePageStyles.sectionContent, contentClassName)}
+          className={homePageStyles.sectionHeader}
           variants={homeMotion.item}
         >
-          {children}
+          <span className={homePageStyles.eyebrow}>{eyebrow}</span>
+          <h2 className={homePageStyles.title}>{title}</h2>
+          {description ? (
+            <p className={homePageStyles.description}>{description}</p>
+          ) : null}
         </motion.div>
+
+        {actionHref ? (
+          <motion.div variants={homeMotion.item} className="shrink-0">
+            <Button
+              asChild
+              variant="outline"
+              size="sm"
+              className="font-mono text-xs"
+            >
+              <Link to={actionHref} className="flex items-center gap-1.5">
+                <span>{actionLabel}</span>
+                <span aria-hidden="true">→</span>
+              </Link>
+            </Button>
+          </motion.div>
+        ) : null}
       </div>
+
+      <motion.div
+        className={cn("pt-2", contentClassName)}
+        variants={homeMotion.item}
+      >
+        {children}
+      </motion.div>
     </motion.section>
   );
 };

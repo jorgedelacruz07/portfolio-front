@@ -1,13 +1,12 @@
-import { format } from "date-fns";
 import { Helmet } from "react-helmet-async";
 import { Link, useParams } from "react-router-dom";
 
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { OptimizedImage } from "@/components/OptimizedImage";
 import { ExternalLinkIcon } from "@/components/icons/ExternalLinkIcon";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useGetExperienceBySlug } from "@/hooks";
+import { formatDateRange } from "@/lib/utils";
 
 export default function ExperienceDetailPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -15,40 +14,23 @@ export default function ExperienceDetailPage() {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto flex min-h-screen items-center justify-center">
+      <div className="flex min-h-[60vh] items-center justify-center">
         <LoadingSpinner />
       </div>
     );
   }
 
-  if (error) {
+  if (error || !experience) {
     return (
-      <div className="container mx-auto flex min-h-screen items-center justify-center">
+      <div className="flex min-h-[60vh] items-center justify-center">
         <div className="space-y-4 text-center">
-          <h1 className="text-3xl font-bold text-foreground">
-            Error loading experience
+          <h1 className="text-2xl font-bold text-foreground">
+            {error instanceof Error ? "Error loading experience" : "Experience not found"}
           </h1>
-          <p className="text-lg text-muted-foreground">
-            {error instanceof Error
-              ? error.message
-              : "An unexpected error occurred"}
+          <p className="text-sm text-muted-foreground">
+            {error instanceof Error ? error.message : "The requested experience could not be found."}
           </p>
-          <Button variant="outline" asChild>
-            <Link to="/experiences">Back to Experiences</Link>
-          </Button>
-        </div>
-      </div>
-    );
-  }
-
-  if (!experience) {
-    return (
-      <div className="container mx-auto flex min-h-screen items-center justify-center">
-        <div className="space-y-4 text-center">
-          <h1 className="text-3xl font-bold text-foreground">
-            Experience not found
-          </h1>
-          <Button variant="outline" asChild>
+          <Button variant="outline" size="sm" asChild>
             <Link to="/experiences">Back to Experiences</Link>
           </Button>
         </div>
@@ -84,117 +66,102 @@ export default function ExperienceDetailPage() {
         />
       </Helmet>
 
-      <div className="py-16">
-        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-          <article className="space-y-8">
-            <header className="space-y-6">
-              <div className="flex items-center gap-4">
-                {experience.image?.src ? (
-                  <div className="relative h-20 w-20 overflow-hidden rounded-lg ring-2 ring-border/50">
-                    <OptimizedImage
-                      src={experience.image.src}
-                      alt={experience.company}
-                      width={80}
-                      height={80}
-                      className="h-full w-full object-cover"
-                    />
-                  </div>
-                ) : null}
+      <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 md:py-16">
+        <div className="space-y-8">
+          {/* Back link */}
+          <Link
+            to="/experiences"
+            className="inline-flex items-center gap-1.5 font-mono text-xs text-muted-foreground transition-colors hover:text-foreground"
+          >
+            <span>←</span>
+            <span>All experience</span>
+          </Link>
 
-                <div className="flex-1">
-                  <h1 className="text-4xl font-bold text-foreground md:text-5xl">
-                    {experience.jobTitle}
-                  </h1>
-                  <div className="mt-2 flex items-center gap-4">
-                    <h2 className="text-xl text-muted-foreground">
-                      {experience.company}
-                    </h2>
-                    {experience.companyUrl ? (
-                      <Button variant="outline" size="sm" asChild>
-                        <a
-                          href={experience.companyUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center"
-                        >
-                          Visit Company
-                          <ExternalLinkIcon className="ml-2 h-4 w-4" />
-                        </a>
-                      </Button>
-                    ) : null}
-                  </div>
+          {/* Header */}
+          <header className="space-y-4 border-b border-border/80 pb-6">
+            <div className="flex items-start gap-4">
+              {experience.image?.src ? (
+                <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl border border-border bg-muted shadow-subtle">
+                  <OptimizedImage
+                    src={experience.image.src}
+                    alt={experience.company}
+                    width={56}
+                    height={56}
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+              ) : null}
+
+              <div className="min-w-0 flex-1 space-y-1">
+                <h1 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
+                  {experience.jobTitle}
+                </h1>
+                <div className="flex flex-wrap items-center gap-3 pt-1">
+                  <span className="text-lg font-medium text-foreground/85">
+                    {experience.company}
+                  </span>
+                  <span className="text-border">•</span>
+                  <span className="font-mono text-xs text-muted-foreground">
+                    {formatDateRange(experience.from, experience.to)}
+                  </span>
                 </div>
               </div>
 
-              <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                <time>
-                  {format(new Date(experience.from), "MMMM yyyy")} -{" "}
-                  {experience.to
-                    ? format(new Date(experience.to), "MMMM yyyy")
-                    : "Present"}
-                </time>
-              </div>
-            </header>
+              {experience.companyUrl ? (
+                <Button size="sm" variant="outline" className="font-mono text-xs shrink-0" asChild>
+                  <a
+                    href={experience.companyUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-1.5"
+                  >
+                    <span>Website</span>
+                    <ExternalLinkIcon className="h-3.5 w-3.5" />
+                  </a>
+                </Button>
+              ) : null}
+            </div>
+          </header>
 
-            <div className="prose prose-lg max-w-none dark:prose-invert">
-              <p className="text-lg leading-relaxed text-muted-foreground">
-                {experience.jobDescription}
+          {/* Role Details */}
+          <div className="craft-card rounded-xl p-6 sm:p-8 space-y-4">
+            <h2 className="text-lg font-semibold text-foreground">
+              Role & Responsibilities
+            </h2>
+            <p className="text-base leading-relaxed text-muted-foreground whitespace-pre-line">
+              {experience.jobDescription}
+            </p>
+          </div>
+
+          {experience.companyDescription ? (
+            <div className="craft-card rounded-xl p-6 sm:p-8 space-y-3">
+              <h2 className="text-base font-semibold text-foreground">
+                About {experience.company}
+              </h2>
+              <p className="text-sm leading-relaxed text-muted-foreground">
+                {experience.companyDescription}
               </p>
             </div>
+          ) : null}
 
-            {experience.companyDescription ? (
-              <div className="space-y-4">
-                <h2 className="text-2xl font-semibold text-foreground">
-                  About {experience.company}
-                </h2>
-                <p className="text-lg leading-relaxed text-muted-foreground">
-                  {experience.companyDescription}
-                </p>
+          {/* Technologies */}
+          {experience.technologies?.length ? (
+            <div className="space-y-3 pt-2">
+              <h3 className="font-mono text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                Technologies & Tools
+              </h3>
+              <div className="flex flex-wrap gap-2">
+                {experience.technologies.map((tech) => (
+                  <span key={tech.id} className="craft-pill text-xs">
+                    {tech.name}
+                  </span>
+                ))}
               </div>
-            ) : null}
-
-            {experience.technologies?.length ? (
-              <div className="space-y-4">
-                <h2 className="text-2xl font-semibold text-foreground">
-                  Technologies Used
-                </h2>
-                <div className="flex flex-wrap gap-2">
-                  {experience.technologies.map((tech) => (
-                    <Badge
-                      key={tech.id}
-                      variant="secondary"
-                      className="bg-muted/50 text-sm font-medium transition-colors duration-200 hover:bg-primary/10 hover:text-primary"
-                    >
-                      {tech.name}
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-            ) : null}
-
-            <footer className="border-t border-border/40 pt-8">
-              <Button variant="outline" asChild>
-                <Link to="/experiences" className="inline-flex items-center">
-                  <svg
-                    className="mr-2 h-4 w-4"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M10 19l-7-7m0 0l7-7m-7 7h18"
-                    />
-                  </svg>
-                  Back to Experiences
-                </Link>
-              </Button>
-            </footer>
-          </article>
+            </div>
+          ) : null}
         </div>
       </div>
     </>
   );
 }
+

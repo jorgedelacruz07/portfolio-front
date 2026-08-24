@@ -6,91 +6,84 @@ import { ExternalLinkIcon } from "@/components/icons/ExternalLinkIcon";
 import { HomeSection } from "@/components/pages/home/HomeSection";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { cn, homeMotion, homePageStyles } from "@/lib/utils";
+import { homeMotion } from "@/lib/utils";
 
 type HomeProjectsProps = {
   projects: TProject[];
 };
 
-type ProjectShowcaseCardProps = {
-  project: TProject;
-};
-
-const ProjectShowcaseCard = ({ project }: ProjectShowcaseCardProps) => {
+const ProjectShowcaseCard = ({ project }: { project: TProject }) => {
   return (
     <motion.article
       variants={homeMotion.item}
-      className={cn(homePageStyles.spotlightCard, "h-full")}
+      className="craft-card craft-card-interactive flex flex-col justify-between overflow-hidden rounded-xl p-5"
     >
-      <div className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
-        <div className="absolute inset-x-8 top-0 h-20 rounded-full bg-primary/20 blur-3xl" />
-      </div>
-
-      <div className="relative overflow-hidden rounded-[1.2rem] border border-white/10 bg-black/25 aspect-[16/10]">
-        {project.image?.src ? (
-          <OptimizedImage
-            src={project.image.src}
-            alt={project.name}
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
-            width={960}
-            height={640}
-          />
-        ) : null}
-
-        <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent" />
-        <div className="absolute inset-x-3 top-3 flex items-center justify-between gap-2">
-          <Badge variant="secondary" className="px-2 py-0.5 text-[0.62rem]">
-            {project.type}
-          </Badge>
-        </div>
-      </div>
-
-      <div className="grid gap-3">
-        <div className="space-y-2">
-          <h3 className="text-2xl font-semibold leading-none tracking-tight text-foreground">
-            <Link
-              to={`/projects/${project.slug}`}
-              className="transition-colors hover:text-primary"
+      <div className="space-y-4">
+        {/* Project Image Preview */}
+        <div className="relative aspect-[16/9] w-full overflow-hidden rounded-lg border border-border/80 bg-muted">
+          {project.image?.src ? (
+            <OptimizedImage
+              src={project.image.src}
+              alt={project.name}
+              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+              width={800}
+              height={450}
+            />
+          ) : null}
+          <div className="absolute right-2.5 top-2.5">
+            <Badge
+              variant="secondary"
+              className="bg-background/80 backdrop-blur-md"
             >
-              {project.name}
-            </Link>
+              {project.type || "Web App"}
+            </Badge>
+          </div>
+        </div>
+
+        {/* Info */}
+        <div className="space-y-2">
+          <h3 className="text-lg font-semibold tracking-tight text-foreground transition-colors hover:text-primary">
+            <Link to={`/projects/${project.slug}`}>{project.name}</Link>
           </h3>
-          <p className="text-sm leading-relaxed text-muted-foreground">
+          <p className="line-clamp-2 text-sm leading-relaxed text-muted-foreground">
             {project.description}
           </p>
         </div>
 
-        <div className="flex flex-wrap gap-2">
-          {project.technologies.slice(0, 4).map((technology) => (
-            <Badge
-              key={technology.id}
-              variant="secondary"
-              className="px-2 py-0.5 text-[0.62rem]"
-            >
-              {technology.name}
-            </Badge>
+        {/* Tech Badges */}
+        <div className="flex flex-wrap gap-1.5 pt-1">
+          {project.technologies.slice(0, 4).map((tech) => (
+            <span key={tech.id} className="craft-pill">
+              {tech.name}
+            </span>
           ))}
+          {project.technologies.length > 4 ? (
+            <span className="font-mono text-[0.6875rem] text-muted-foreground">
+              +{project.technologies.length - 4}
+            </span>
+          ) : null}
         </div>
       </div>
 
-      <div className="mt-auto flex flex-wrap gap-2 border-t border-white/10 pt-4">
+      {/* Footer Actions */}
+      <div className="mt-6 flex items-center justify-between gap-3 border-t border-border/60 pt-4">
         <Button
           asChild
           variant="outline"
-          className="h-9 px-3.5 text-sm font-semibold"
+          size="sm"
+          className="flex-1 font-mono text-xs"
         >
           <Link to={`/projects/${project.slug}`}>Case study</Link>
         </Button>
-
         {project.url ? (
-          <Button asChild className="h-9 px-3.5 text-sm font-semibold">
+          <Button asChild size="sm" className="flex-1 font-mono text-xs">
             <a
               href={project.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2"
+              className="flex items-center justify-center gap-1.5"
             >
-              Live
+              <span>Live demo</span>
               <ExternalLinkIcon className="h-3.5 w-3.5" />
             </a>
           </Button>
@@ -103,21 +96,13 @@ const ProjectShowcaseCard = ({ project }: ProjectShowcaseCardProps) => {
 export const HomeProjects = ({ projects }: HomeProjectsProps) => {
   return (
     <HomeSection
-      eyebrow="Selected work"
-      title={
-        <>
-          Products built across
-          <span className="text-premium-gradient">
-            {" "}
-            app, API, and AI layers.
-          </span>
-        </>
-      }
-      description="Selected work spanning React apps, backend systems, and AI-assisted product delivery."
+      eyebrow="Selected Work"
+      title="Featured applications & systems"
+      description="Production products showcasing frontend architecture, performant APIs, and clean UX execution."
       actionHref="/projects"
       actionLabel="All projects"
     >
-      <div className="grid auto-rows-fr gap-4 md:grid-cols-2 xl:grid-cols-3">
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {projects.map((project) => (
           <ProjectShowcaseCard key={project.slug} project={project} />
         ))}

@@ -1,4 +1,3 @@
-import { format } from "date-fns";
 import { Helmet } from "react-helmet-async";
 import { Link, useParams } from "react-router-dom";
 
@@ -8,6 +7,7 @@ import { ExternalLinkIcon } from "@/components/icons/ExternalLinkIcon";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useGetProjectBySlug } from "@/hooks";
+import { formatDateRange } from "@/lib/utils";
 
 export default function ProjectDetailPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -15,40 +15,23 @@ export default function ProjectDetailPage() {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto flex min-h-screen items-center justify-center">
+      <div className="flex min-h-[60vh] items-center justify-center">
         <LoadingSpinner />
       </div>
     );
   }
 
-  if (error) {
+  if (error || !project) {
     return (
-      <div className="container mx-auto flex min-h-screen items-center justify-center">
+      <div className="flex min-h-[60vh] items-center justify-center">
         <div className="space-y-4 text-center">
-          <h1 className="text-3xl font-bold text-foreground">
-            Error loading project
+          <h1 className="text-2xl font-bold text-foreground">
+            {error instanceof Error ? "Error loading project" : "Project not found"}
           </h1>
-          <p className="text-lg text-muted-foreground">
-            {error instanceof Error
-              ? error.message
-              : "An unexpected error occurred"}
+          <p className="text-sm text-muted-foreground">
+            {error instanceof Error ? error.message : "The requested project could not be found."}
           </p>
-          <Button variant="outline" asChild>
-            <Link to="/projects">Back to Projects</Link>
-          </Button>
-        </div>
-      </div>
-    );
-  }
-
-  if (!project) {
-    return (
-      <div className="container mx-auto flex min-h-screen items-center justify-center">
-        <div className="space-y-4 text-center">
-          <h1 className="text-3xl font-bold text-foreground">
-            Project not found
-          </h1>
-          <Button variant="outline" asChild>
+          <Button variant="outline" size="sm" asChild>
             <Link to="/projects">Back to Projects</Link>
           </Button>
         </div>
@@ -61,138 +44,99 @@ export default function ProjectDetailPage() {
       <Helmet>
         <title>{`${project.name} | Jorge de la Cruz`}</title>
         <meta name="description" content={project.description} />
-        <meta
-          property="og:title"
-          content={`${project.name} | Jorge de la Cruz`}
-        />
+        <meta property="og:title" content={`${project.name} | Jorge de la Cruz`} />
         <meta property="og:description" content={project.description} />
         {project.image?.src && (
           <meta property="og:image" content={project.image.src} />
         )}
-        <meta
-          name="twitter:title"
-          content={`${project.name} | Jorge de la Cruz`}
-        />
+        <meta name="twitter:title" content={`${project.name} | Jorge de la Cruz`} />
         <meta name="twitter:description" content={project.description} />
       </Helmet>
 
-      <div className="py-16">
-        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-          <article className="space-y-8">
-            <header className="space-y-6">
-              <div className="flex items-center gap-4">
-                {project.image?.src ? (
-                  <div className="relative h-20 w-20 overflow-hidden rounded-lg ring-2 ring-border/50">
-                    <OptimizedImage
-                      src={project.image.src}
-                      alt={project.name}
-                      width={80}
-                      height={80}
-                      className="h-full w-full object-cover"
-                    />
-                  </div>
-                ) : null}
+      <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 md:py-16">
+        <div className="space-y-8">
+          {/* Back link */}
+          <Link
+            to="/projects"
+            className="inline-flex items-center gap-1.5 font-mono text-xs text-muted-foreground transition-colors hover:text-foreground"
+          >
+            <span>←</span>
+            <span>All projects</span>
+          </Link>
 
-                <div className="flex-1">
-                  <h1 className="text-4xl font-bold text-foreground md:text-5xl">
-                    {project.name}
-                  </h1>
-                  <div className="mt-2 flex items-center gap-4">
-                    {project.type ? (
-                      <Badge
-                        variant="secondary"
-                        className="text-sm font-medium"
-                      >
-                        {project.type}
-                      </Badge>
-                    ) : null}
-                    {project.url ? (
-                      <Button variant="outline" size="sm" asChild>
-                        <a
-                          href={project.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center"
-                        >
-                          Visit Project
-                          <ExternalLinkIcon className="ml-2 h-4 w-4" />
-                        </a>
-                      </Button>
-                    ) : null}
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                <time>
-                  {format(new Date(project.from), "MMMM yyyy")} -{" "}
-                  {project.to
-                    ? format(new Date(project.to), "MMMM yyyy")
-                    : "Present"}
-                </time>
-              </div>
-            </header>
-
-            {project.image?.src ? (
-              <div className="aspect-video overflow-hidden rounded-lg shadow-lg">
-                <OptimizedImage
-                  src={project.image.src}
-                  alt={project.name}
-                  width={800}
-                  height={450}
-                  className="h-full w-full object-cover"
-                />
-              </div>
-            ) : null}
-
-            <div className="prose prose-lg max-w-none dark:prose-invert">
-              <p className="text-lg leading-relaxed text-muted-foreground">
-                {project.description}
-              </p>
+          {/* Header */}
+          <header className="space-y-4 border-b border-border/80 pb-6">
+            <div className="flex flex-wrap items-center gap-3">
+              <Badge variant="secondary">{project.type || "Web App"}</Badge>
+              {project.from ? (
+                <span className="font-mono text-xs text-muted-foreground">
+                  {formatDateRange(project.from, project.to)}
+                </span>
+              ) : null}
             </div>
 
-            {project.technologies?.length ? (
-              <div className="space-y-4">
-                <h2 className="text-2xl font-semibold text-foreground">
-                  Technologies Used
-                </h2>
-                <div className="flex flex-wrap gap-2">
-                  {project.technologies.map((tech) => (
-                    <Badge
-                      key={tech.id}
-                      variant="secondary"
-                      className="bg-muted/50 text-sm font-medium transition-colors duration-200 hover:bg-primary/10 hover:text-primary"
-                    >
-                      {tech.name}
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-            ) : null}
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <h1 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
+                {project.name}
+              </h1>
 
-            <footer className="border-t border-border/40 pt-8">
-              <Button variant="outline" asChild>
-                <Link to="/projects" className="inline-flex items-center">
-                  <svg
-                    className="mr-2 h-4 w-4"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
+              {project.url ? (
+                <Button size="sm" className="font-mono text-xs shrink-0" asChild>
+                  <a
+                    href={project.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-1.5"
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M10 19l-7-7m0 0l7-7m-7 7h18"
-                    />
-                  </svg>
-                  Back to Projects
-                </Link>
-              </Button>
-            </footer>
-          </article>
+                    <span>Visit live project</span>
+                    <ExternalLinkIcon className="h-3.5 w-3.5" />
+                  </a>
+                </Button>
+              ) : null}
+            </div>
+          </header>
+
+          {/* Preview Image */}
+          {project.image?.src ? (
+            <div className="relative aspect-[16/9] overflow-hidden rounded-xl border border-border bg-muted shadow-card">
+              <OptimizedImage
+                src={project.image.src}
+                alt={project.name}
+                width={960}
+                height={540}
+                className="h-full w-full object-cover"
+              />
+            </div>
+          ) : null}
+
+          {/* Description */}
+          <div className="craft-card rounded-xl p-6 sm:p-8 space-y-4">
+            <h2 className="text-lg font-semibold text-foreground">
+              Overview & Architecture
+            </h2>
+            <p className="text-base leading-relaxed text-muted-foreground whitespace-pre-line">
+              {project.description}
+            </p>
+          </div>
+
+          {/* Technologies */}
+          {project.technologies?.length ? (
+            <div className="space-y-3 pt-2">
+              <h3 className="font-mono text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                Stack & Technologies
+              </h3>
+              <div className="flex flex-wrap gap-2">
+                {project.technologies.map((tech) => (
+                  <span key={tech.id} className="craft-pill text-xs">
+                    {tech.name}
+                  </span>
+                ))}
+              </div>
+            </div>
+          ) : null}
         </div>
       </div>
     </>
   );
 }
+

@@ -1,150 +1,71 @@
 import { socialNetworks } from "./SocialNetworks";
 import { Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
 
-  const quickLinks = [
+  const navLinks = [
+    { label: "Home", href: "/" },
     { label: "Projects", href: "/projects" },
     { label: "Experiences", href: "/experiences" },
-    { label: "About", href: "/#about" },
-  ];
-
-  const technologies = [
-    "React",
-    "TypeScript",
-    "Node.js",
-    "MongoDB",
-    "Tailwind CSS",
-    "Firebase",
   ];
 
   return (
-    <footer className="relative border-t border-white/10 bg-background/55">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Main footer content */}
-        <div className="py-12 md:py-16">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
-            {/* Brand Section */}
-            <div className="lg:col-span-1">
-              <div className="space-y-4">
-                <div className="flex items-center space-x-2">
-                  <div className="w-8 h-8 bg-primary/20 rounded-lg flex items-center justify-center">
-                    <span className="text-primary font-mono font-bold text-sm">
-                      {"</>"}
-                    </span>
-                  </div>
-                  <h3 className="text-xl font-bold text-foreground">
-                    Jorge de la Cruz
-                  </h3>
-                </div>
-                <p className="text-muted-foreground text-sm leading-relaxed">
-                  Senior Software Engineer crafting digital experiences with
-                  modern technologies and clean code.
-                </p>
-                <div className="flex items-center space-x-2">
-                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                  <span className="text-xs text-muted-foreground font-mono">
-                    Available for work
-                  </span>
-                </div>
-              </div>
+    <footer className="border-t border-border/80 bg-background/50 py-12 text-sm text-muted-foreground">
+      <div className="mx-auto max-w-5xl px-4 sm:px-6">
+        <div className="flex flex-col gap-8 md:flex-row md:items-center md:justify-between">
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <span className="font-mono text-sm font-semibold text-foreground">
+                Jorge de la Cruz
+              </span>
+              <span className="text-border">•</span>
+              <span className="font-mono text-xs">Lima, PE (UTC-5)</span>
             </div>
+            <p className="text-xs text-muted-foreground">
+              Senior Software Engineer — React, TypeScript, Node.js & Cloud
+              Systems.
+            </p>
+          </div>
 
-            {/* Quick Links */}
-            <div>
-              <h4 className="text-lg font-semibold text-foreground mb-4 flex items-center">
-                <span className="w-1 h-4 bg-primary mr-2"></span>
-                Quick Links
-              </h4>
-              <ul className="space-y-3">
-                {quickLinks.map((link) => (
-                  <li key={link.href}>
-                    <Button
-                      variant="ghost"
-                      className="p-0 h-auto text-muted-foreground hover:text-primary transition-colors duration-200 focus-ring-none link-hover"
-                      asChild
-                    >
-                      <Link to={link.href}>{link.label}</Link>
-                    </Button>
-                  </li>
-                ))}
-              </ul>
-            </div>
+          <div className="flex flex-wrap items-center gap-6">
+            <nav className="flex items-center gap-4 text-xs font-medium">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  to={link.href}
+                  className="transition-colors hover:text-foreground"
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </nav>
 
-            {/* Technologies */}
-            <div>
-              <h4 className="text-lg font-semibold text-foreground mb-4 flex items-center">
-                <span className="w-1 h-4 bg-primary mr-2"></span>
-                Tech Stack
-              </h4>
-              <div className="flex flex-wrap gap-2">
-                {technologies.map((tech) => (
-                  <Badge
-                    key={tech}
-                    variant="secondary"
-                    className="text-xs font-medium bg-muted/50 hover:bg-primary/10 hover:text-primary transition-colors duration-200"
+            <div className="flex items-center gap-3 border-l border-border/80 pl-6">
+              {socialNetworks.map((social) => {
+                const Icon = social.icon;
+                return (
+                  <a
+                    key={social.id}
+                    href={social.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={social.name}
+                    className="text-muted-foreground transition-colors hover:text-foreground"
                   >
-                    {tech}
-                  </Badge>
-                ))}
-              </div>
-            </div>
-
-            {/* Contact & Social */}
-            <div>
-              <h4 className="text-lg font-semibold text-foreground mb-4 flex items-center">
-                <span className="w-1 h-4 bg-primary mr-2"></span>
-                Connect
-              </h4>
-              <div className="space-y-4">
-                <div className="flex items-center space-x-3">
-                  {socialNetworks.map((social) => {
-                    const Icon = social.icon;
-                    return (
-                      <Button
-                        key={social.id}
-                        variant="ghost"
-                        size="sm"
-                        className="p-2 h-auto text-muted-foreground hover:text-primary transition-colors duration-200 focus-ring-none btn-hover"
-                        asChild
-                      >
-                        <a
-                          href={social.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          aria-label={social.name}
-                        >
-                          <Icon width={20} height={20} />
-                        </a>
-                      </Button>
-                    );
-                  })}
-                </div>
-                <div className="text-sm text-muted-foreground">
-                  <p>Let&apos;s build something amazing together</p>
-                </div>
-              </div>
+                    <Icon width={16} height={16} />
+                  </a>
+                );
+              })}
             </div>
           </div>
         </div>
 
-        {/* Bottom section */}
-        <div className="py-6 border-t border-border/40">
-          <div className="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
-            <div className="text-sm text-muted-foreground">
-              <p>© {currentYear} Jorge de la Cruz. All rights reserved.</p>
-            </div>
-            <div className="flex items-center space-x-4 text-sm text-muted-foreground">
-              <span className="font-mono">Built with</span>
-              <div className="flex items-center space-x-1">
-                <span className="text-red-500">♥</span>
-                <span>and</span>
-                <span className="text-primary font-mono">{"<code>"}</span>
-              </div>
-            </div>
+        <div className="mt-8 flex flex-col items-start justify-between gap-4 border-t border-border/60 pt-6 text-xs text-muted-foreground sm:flex-row sm:items-center">
+          <p>© {currentYear} Jorge de la Cruz Padilla. All rights reserved.</p>
+          <div className="flex items-center gap-2 font-mono text-[0.6875rem]">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+            <span>Available for select engineering opportunities</span>
           </div>
         </div>
       </div>

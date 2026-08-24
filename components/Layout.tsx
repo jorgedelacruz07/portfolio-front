@@ -15,9 +15,8 @@ export const Layout = ({ children }: LayoutProps) => {
   const currentUrl = `https://jorgedelacruzpadilla.dev${location.pathname}`;
 
   return (
-    <div className="relative min-h-screen overflow-x-hidden bg-transparent text-foreground">
-      <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(circle_at_18%_8%,hsl(var(--primary)/0.18),transparent_28%),radial-gradient(circle_at_82%_16%,hsl(var(--accent)/0.12),transparent_24%),linear-gradient(180deg,hsl(var(--background)),hsl(var(--background))_42%,hsl(195_38%_7%))]" />
-      <div className="pointer-events-none fixed inset-0 -z-10 bg-[linear-gradient(to_right,hsl(var(--border)/0.05)_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border)/0.05)_1px,transparent_1px)] bg-[size:88px_88px]" />
+    <div className="relative min-h-screen overflow-x-hidden bg-background text-foreground selection:bg-primary/20 selection:text-foreground">
+      <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.1),rgba(255,255,255,0))]" />
       <PerformanceMonitor />
       <Helmet>
         <title>Jorge de la Cruz - Senior Software Engineer</title>

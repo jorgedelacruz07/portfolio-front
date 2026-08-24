@@ -26,7 +26,7 @@ type DeferredSectionProps = {
 
 function DeferredSectionPlaceholder() {
   return (
-    <div className="min-h-[24rem] rounded-[2rem] border border-dashed border-border/70 bg-card/40" />
+    <div className="min-h-[18rem] rounded-xl border border-border/40 bg-card/20 animate-pulse" />
   );
 }
 

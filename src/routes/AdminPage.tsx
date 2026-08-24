@@ -19,9 +19,9 @@ type Session = {
 type SaveState = "idle" | "saving" | "saved" | "error";
 
 const inputClass =
-  "w-full rounded-lg border border-white/10 bg-black/25 px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/70";
+  "w-full rounded-lg border border-border bg-muted/40 px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/70 focus:border-primary/50 focus:outline-none focus:ring-1 focus:ring-primary/50";
 const labelClass =
-  "space-y-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground";
+  "space-y-1.5 font-mono text-xs font-semibold uppercase tracking-wider text-muted-foreground";
 
 function Field({
   label,
@@ -39,13 +39,13 @@ function Field({
       {label}
       {textarea ? (
         <textarea
-          className={`${inputClass} min-h-28 resize-y normal-case tracking-normal`}
+          className={`${inputClass} min-h-28 resize-y normal-case tracking-normal font-sans`}
           value={value}
           onChange={(event) => onChange(event.target.value)}
         />
       ) : (
         <input
-          className={`${inputClass} normal-case tracking-normal`}
+          className={`${inputClass} normal-case tracking-normal font-sans`}
           value={value}
           onChange={(event) => onChange(event.target.value)}
         />
@@ -85,15 +85,15 @@ function LoginForm({ onSession }: { onSession: (session: Session) => void }) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="mx-auto mt-12 max-w-md rounded-2xl border border-white/10 bg-card/80 p-6 shadow-premium"
+      className="craft-card mx-auto mt-12 max-w-md rounded-xl p-6"
     >
-      <p className="text-xs font-semibold uppercase tracking-[0.22em] text-primary">
-        Admin access
+      <p className="font-mono text-xs font-semibold uppercase tracking-wider text-primary">
+        Admin Access
       </p>
-      <h1 className="mt-3 text-3xl font-semibold tracking-tight">
-        Manage portfolio content
+      <h1 className="mt-2 text-2xl font-bold tracking-tight text-foreground">
+        Manage Portfolio Content
       </h1>
-      <p className="mt-3 text-sm leading-6 text-muted-foreground">
+      <p className="mt-2 text-sm text-muted-foreground">
         Use your primary admin email. Access is restricted server-side.
       </p>
       <div className="mt-6 space-y-4">
@@ -103,12 +103,12 @@ function LoginForm({ onSession }: { onSession: (session: Session) => void }) {
         ) : null}
       </div>
       {message ? (
-        <p className="mt-4 text-sm leading-6 text-muted-foreground">
+        <p className="mt-4 text-xs text-muted-foreground">
           {message}
         </p>
       ) : null}
       <button
-        className="mt-6 w-full rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground transition hover:opacity-90 disabled:opacity-60"
+        className="mt-6 w-full rounded-lg bg-foreground px-4 py-2 text-sm font-semibold text-background transition hover:opacity-90 disabled:opacity-60"
         disabled={isSubmitting}
         type="submit"
       >
@@ -124,8 +124,8 @@ function LoginForm({ onSession }: { onSession: (session: Session) => void }) {
 
 function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <section className="rounded-2xl border border-white/10 bg-card/75 p-5 shadow-premium">
-      <h2 className="text-xl font-semibold tracking-tight">{title}</h2>
+    <section className="craft-card rounded-xl p-6">
+      <h2 className="text-lg font-semibold tracking-tight text-foreground">{title}</h2>
       <div className="mt-5 space-y-4">{children}</div>
     </section>
   );
@@ -237,21 +237,21 @@ export default function AdminPage() {
         <meta name="robots" content="noindex, nofollow" />
       </Helmet>
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 pb-14">
-        <header className="flex flex-col gap-4 rounded-2xl border border-white/10 bg-card/75 p-5 shadow-premium md:flex-row md:items-center md:justify-between">
+        <header className="craft-card flex flex-col gap-4 rounded-xl p-5 md:flex-row md:items-center md:justify-between">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-primary">
-              CMS dashboard
+            <p className="font-mono text-xs font-semibold uppercase tracking-wider text-primary">
+              CMS Dashboard
             </p>
-            <h1 className="mt-2 text-3xl font-semibold tracking-tight">
-              Portfolio content
+            <h1 className="mt-1 text-2xl font-bold tracking-tight text-foreground">
+              Portfolio Content
             </h1>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Signed in as {session.email}. Session expires{" "}
-              {new Date(session.expiresAt).toLocaleString()}.
+            <p className="mt-1 text-xs text-muted-foreground">
+              Signed in as {session.email} • Session expires{" "}
+              {new Date(session.expiresAt).toLocaleTimeString()}.
             </p>
           </div>
           <button
-            className="rounded-lg border border-white/10 px-4 py-2 text-sm font-semibold text-muted-foreground hover:text-foreground"
+            className="rounded-lg border border-border px-3 py-1.5 font-mono text-xs text-muted-foreground hover:bg-muted hover:text-foreground"
             onClick={logout}
             type="button"
           >
@@ -260,7 +260,7 @@ export default function AdminPage() {
         </header>
 
         {!content || !profile || !settings ? (
-          <div className="rounded-2xl border border-white/10 bg-card/75 p-6 text-muted-foreground">
+          <div className="craft-card rounded-xl p-6 text-sm text-muted-foreground">
             Loading content...
           </div>
         ) : (

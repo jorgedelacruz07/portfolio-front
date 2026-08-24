@@ -1,190 +1,161 @@
 import { useEffect, useState } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
-import classNames from "classnames";
 import { Button } from "@/components/ui/button";
-import { useScrollAnimation } from "@/hooks";
+import { cn } from "@/lib/utils";
 
 export const Navbar = () => {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const { ref: navbarRef, isVisible } = useScrollAnimation({ threshold: 0.1 });
 
   useEffect(() => {
     setIsMenuOpen(false);
   }, [location.pathname]);
 
   useEffect(() => {
+    let ticking = false;
+
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setIsScrolled(window.scrollY > 20);
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
-
-  const navLinkClasses = (isActive: boolean) =>
-    classNames(
-      "text-muted-foreground hover:text-foreground transition-colors duration-200 font-medium",
-      isActive ? "text-foreground font-semibold" : "",
-    );
-
   const navbarItems = [
-    {
-      label: "Home",
-      href: "/",
-    },
-    {
-      label: "Experiences",
-      href: "/experiences",
-    },
-    {
-      label: "Projects",
-      href: "/projects",
-    },
+    { label: "Home", href: "/" },
+    { label: "Projects", href: "/projects" },
+    { label: "Experiences", href: "/experiences" },
   ];
 
   return (
-    <nav
-      ref={navbarRef}
-      className={classNames(
-        "sticky top-0 z-50 transition-all duration-500",
+    <header
+      className={cn(
+        "sticky top-0 z-50 w-full transition-all duration-200",
         isScrolled
-          ? "bg-background/95 backdrop-blur-md supports-[backdrop-filter]:bg-background/60 border-b border-border/40 shadow-lg"
+          ? "border-b border-border/80 bg-background/80 backdrop-blur-md shadow-subtle"
           : "bg-transparent",
-        isVisible ? "animate-fade-in-down" : "opacity-0 translate-y-[-20px]",
       )}
     >
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          {/* Brand/Logo */}
-          <div className="flex items-center">
-            <Link
-              to="/"
-              className="text-xl font-bold text-foreground hover:text-primary transition-all duration-300 focus-ring-none hover-scale group"
-            >
-              <span className="group-hover:animate-pulse">
-                Jorge de la Cruz
-              </span>
-            </Link>
-          </div>
+      <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4 sm:px-6">
+        {/* Brand */}
+        <Link
+          to="/"
+          className="flex items-center gap-2 font-mono text-sm font-semibold tracking-tight text-foreground transition-opacity hover:opacity-80"
+        >
+          <span className="h-2 w-2 rounded-full bg-primary" />
+          <span>jorgedelacruz</span>
+        </Link>
 
-          {/* Desktop Menu */}
-          <div className="hidden md:block">
-            <div className="flex items-center space-x-8">
-              {navbarItems.map((item, index) => (
-                <NavLink
-                  key={item.href}
-                  to={item.href}
-                  end={item.href === "/"}
-                  className={({ isActive }) =>
-                    classNames(
-                      navLinkClasses(isActive),
-                      "focus-ring-none link-hover hover-scale transition-all duration-300",
-                      isVisible
-                        ? "animate-fade-in-up"
-                        : "opacity-0 translate-y-[-10px]",
-                    )
-                  }
-                  style={{ animationDelay: `${index * 100}ms` }}
-                >
-                  {item.label}
-                </NavLink>
-              ))}
-            </div>
-          </div>
-
-          {/* Mobile Menu Button */}
-          <div className="md:hidden">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={toggleMenu}
-              className="p-2 focus-ring-none hover-scale transition-all duration-300"
-              aria-label="Toggle menu"
-            >
-              <div className="relative w-6 h-6">
-                <svg
-                  className={classNames(
-                    "absolute inset-0 h-6 w-6 transition-all duration-300",
-                    isMenuOpen ? "rotate-90 opacity-0" : "rotate-0 opacity-100",
-                  )}
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 6h16M4 12h16M4 18h16"
-                  />
-                </svg>
-                <svg
-                  className={classNames(
-                    "absolute inset-0 h-6 w-6 transition-all duration-300",
-                    isMenuOpen
-                      ? "rotate-0 opacity-100"
-                      : "-rotate-90 opacity-0",
-                  )}
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              </div>
-            </Button>
-          </div>
-        </div>
-      </div>
-
-      {/* Mobile Menu */}
-      <div
-        className={classNames(
-          "md:hidden transition-all duration-500 ease-in-out overflow-hidden",
-          isScrolled
-            ? "bg-background/95 backdrop-blur-md supports-[backdrop-filter]:bg-background/60 border-t border-border/40 shadow-lg"
-            : "bg-background/95 backdrop-blur-md supports-[backdrop-filter]:bg-background/60 border-t border-border/40 shadow-lg",
-          {
-            "max-h-96 opacity-100": isMenuOpen,
-            "max-h-0 opacity-0": !isMenuOpen,
-          },
-        )}
-      >
-        <div className="px-4 py-4 space-y-2">
-          {navbarItems.map((item, index) => (
+        {/* Desktop Menu */}
+        <nav className="hidden items-center gap-1 md:flex">
+          {navbarItems.map((item) => (
             <NavLink
               key={item.href}
               to={item.href}
               end={item.href === "/"}
               className={({ isActive }) =>
-                classNames(
-                  "block px-4 py-3 rounded-lg text-base font-medium transition-all duration-300 hover:bg-muted/50 focus-ring-none hover-scale",
-                  navLinkClasses(isActive),
-                  isMenuOpen
-                    ? "animate-fade-in-up"
-                    : "opacity-0 translate-y-[-10px]",
+                cn(
+                  "rounded-md px-3 py-1.5 text-sm font-medium transition-colors",
+                  isActive
+                    ? "bg-secondary text-foreground"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50",
                 )
               }
-              style={{
-                animationDelay: isMenuOpen ? `${index * 100}ms` : "0ms",
-              }}
             >
               {item.label}
             </NavLink>
           ))}
+          <div className="ml-3 pl-3 border-l border-border/80">
+            <Button size="sm" variant="outline" asChild>
+              <a
+                href="/documents/jorgedelacruz_cv.pdf"
+                download
+                className="font-mono text-xs"
+              >
+                Resume
+              </a>
+            </Button>
+          </div>
+        </nav>
+
+        {/* Mobile Menu Button */}
+        <div className="md:hidden">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            aria-label="Toggle menu"
+            className="h-8 w-8 p-0"
+          >
+            <svg
+              className="h-5 w-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              {isMenuOpen ? (
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              ) : (
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              )}
+            </svg>
+          </Button>
         </div>
       </div>
-    </nav>
+
+      {/* Mobile Menu dropdown */}
+      {isMenuOpen ? (
+        <div className="border-b border-border/80 bg-background/95 px-4 py-4 backdrop-blur-lg md:hidden">
+          <nav className="flex flex-col space-y-1">
+            {navbarItems.map((item) => (
+              <NavLink
+                key={item.href}
+                to={item.href}
+                end={item.href === "/"}
+                className={({ isActive }) =>
+                  cn(
+                    "rounded-md px-3 py-2 text-sm font-medium transition-colors",
+                    isActive
+                      ? "bg-secondary text-foreground"
+                      : "text-muted-foreground hover:text-foreground",
+                  )
+                }
+              >
+                {item.label}
+              </NavLink>
+            ))}
+            <div className="pt-2">
+              <Button size="sm" variant="outline" className="w-full" asChild>
+                <a
+                  href="/documents/jorgedelacruz_cv.pdf"
+                  download
+                  className="font-mono text-xs"
+                >
+                  Download CV
+                </a>
+              </Button>
+            </div>
+          </nav>
+        </div>
+      ) : null}
+    </header>
   );
 };

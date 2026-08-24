@@ -2,126 +2,114 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { TExperience } from "@/types/experience";
 import { OptimizedImage } from "@/components/OptimizedImage";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { ExternalLinkIcon } from "@/components/icons/ExternalLinkIcon";
 import { HomeSection } from "@/components/pages/home/HomeSection";
-import { cn, formatDateRange, homeMotion, homePageStyles } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { formatDateRange, homeMotion } from "@/lib/utils";
 
 type HomeExperiencesProps = {
   experiences: TExperience[];
 };
 
-const getExperienceLayout = (index: number) => {
-  if (index === 0) {
-    return "lg:col-span-7";
-  }
-
-  if (index === 1) {
-    return "lg:col-span-5";
-  }
-
-  return "lg:col-span-6";
-};
-
-const ExperienceCard = ({
+const ExperienceTimelineItem = ({
   experience,
-  index,
+  isLast,
 }: {
   experience: TExperience;
-  index: number;
+  isLast: boolean;
 }) => {
-  const isFeatured = index === 0;
-  const summary =
-    experience.jobDescription
-      .split(".")
-      .find((sentence) => sentence.trim())
-      ?.trim() ?? experience.jobDescription;
-
   return (
     <motion.article
       variants={homeMotion.item}
-      className={cn(homePageStyles.spotlightCard, getExperienceLayout(index))}
+      className="relative flex gap-6 pb-8 last:pb-0"
     >
-      <div className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
-        <div className="absolute right-0 top-8 h-24 w-24 rounded-full bg-accent/15 blur-3xl" />
-      </div>
-
-      <div className="grid gap-4 sm:grid-cols-[auto_minmax(0,1fr)]">
-        <div className="relative h-14 w-14 overflow-hidden rounded-[1rem] border border-white/10 bg-black/20">
-          <OptimizedImage
-            src={experience.image.src}
-            alt={experience.company}
-            className="h-full w-full object-cover"
-            width={56}
-            height={56}
-          />
-        </div>
-
-        <div className="min-w-0 space-y-2">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-primary/80">
-              {formatDateRange(experience.from, experience.to)}
+      {/* Timeline line and bullet */}
+      <div className="relative flex flex-col items-center">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-border bg-card">
+          {experience.image?.src ? (
+            <OptimizedImage
+              src={experience.image.src}
+              alt={experience.company}
+              className="h-full w-full object-cover"
+              width={40}
+              height={40}
+            />
+          ) : (
+            <span className="font-mono text-xs font-semibold text-primary">
+              {experience.company.slice(0, 2).toUpperCase()}
             </span>
-            <Badge variant="secondary" className="px-2 py-0.5 text-[0.62rem]">
-              {experience.jobTitle}
-            </Badge>
-          </div>
-
-          <h3
-            className={cn(
-              "font-semibold leading-none tracking-tight text-foreground",
-              isFeatured ? "text-3xl" : "text-2xl",
-            )}
-          >
-            <Link
-              to={`/experiences/${experience.slug}`}
-              className="transition-colors hover:text-primary"
-            >
-              {experience.company}
-            </Link>
-          </h3>
-
-          <p className="text-sm leading-relaxed text-muted-foreground">
-            {summary.endsWith(".") ? summary : `${summary}.`}
-          </p>
+          )}
         </div>
-      </div>
-
-      <div className="flex flex-wrap gap-2">
-        {experience.technologies.slice(0, 5).map((technology) => (
-          <Badge
-            key={technology.id}
-            variant="secondary"
-            className="px-2 py-0.5 text-[0.62rem]"
-          >
-            {technology.name}
-          </Badge>
-        ))}
-      </div>
-
-      <div className="mt-auto flex flex-wrap gap-2 border-t border-white/10 pt-4">
-        <Button
-          asChild
-          variant="outline"
-          className="h-9 px-3.5 text-sm font-semibold"
-        >
-          <Link to={`/experiences/${experience.slug}`}>Role</Link>
-        </Button>
-
-        {experience.companyUrl ? (
-          <Button asChild className="h-9 px-3.5 text-sm font-semibold">
-            <a
-              href={experience.companyUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2"
-            >
-              Company
-              <ExternalLinkIcon className="h-3.5 w-3.5" />
-            </a>
-          </Button>
+        {!isLast ? (
+          <div className="w-px flex-1 bg-border/60 my-2" aria-hidden="true" />
         ) : null}
+      </div>
+
+      {/* Content */}
+      <div className="craft-card craft-card-interactive flex-1 rounded-xl p-5">
+        <div className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between">
+          <div className="space-y-0.5">
+            <h3 className="text-base font-semibold tracking-tight text-foreground">
+              <Link
+                to={`/experiences/${experience.slug}`}
+                className="transition-colors hover:text-primary"
+              >
+                {experience.jobTitle}
+              </Link>
+            </h3>
+            <p className="text-sm font-medium text-foreground/80">
+              {experience.company}
+            </p>
+          </div>
+          <span className="font-mono text-xs text-muted-foreground sm:text-right">
+            {formatDateRange(experience.from, experience.to)}
+          </span>
+        </div>
+
+        {experience.jobDescription ? (
+          <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+            {experience.jobDescription}
+          </p>
+        ) : null}
+
+        {experience.technologies?.length ? (
+          <div className="mt-4 flex flex-wrap gap-1.5 border-t border-border/60 pt-3">
+            {experience.technologies.map((tech) => (
+              <span key={tech.id} className="craft-pill">
+                {tech.name}
+              </span>
+            ))}
+          </div>
+        ) : null}
+
+        <div className="mt-4 flex items-center gap-3">
+          <Button
+            asChild
+            variant="outline"
+            size="sm"
+            className="font-mono text-xs"
+          >
+            <Link to={`/experiences/${experience.slug}`}>View details</Link>
+          </Button>
+          {experience.companyUrl ? (
+            <Button
+              asChild
+              variant="ghost"
+              size="sm"
+              className="font-mono text-xs text-muted-foreground hover:text-foreground"
+            >
+              <a
+                href={experience.companyUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1"
+              >
+                <span>Website</span>
+                <ExternalLinkIcon className="h-3 w-3" />
+              </a>
+            </Button>
+          ) : null}
+        </div>
       </div>
     </motion.article>
   );
@@ -130,26 +118,18 @@ const ExperienceCard = ({
 export const HomeExperiences = ({ experiences }: HomeExperiencesProps) => {
   return (
     <HomeSection
-      eyebrow="Experience"
-      title={
-        <>
-          Teams where
-          <span className="text-premium-gradient">
-            {" "}
-            full-stack quality shipped.
-          </span>
-        </>
-      }
-      description="Roles covering product UI, backend delivery, cloud workflows, and maintainable systems."
+      eyebrow="Career Journey"
+      title="Professional work & trajectory"
+      description="Track record across product engineering, team collaboration, and full-stack software delivery."
       actionHref="/experiences"
-      actionLabel="All experience"
+      actionLabel="Full career history"
     >
-      <div className={homePageStyles.featuredGrid}>
+      <div className="space-y-2 pt-2">
         {experiences.map((experience, index) => (
-          <ExperienceCard
+          <ExperienceTimelineItem
             key={experience.slug}
             experience={experience}
-            index={index}
+            isLast={index === experiences.length - 1}
           />
         ))}
       </div>

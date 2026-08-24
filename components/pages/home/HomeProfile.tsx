@@ -4,20 +4,14 @@ import { OptimizedImage } from "@/components/OptimizedImage";
 import { SocialNetworks } from "@/components/SocialNetworks";
 import { DownloadIcon } from "@/components/icons/DownloadIcon";
 import { Button } from "@/components/ui/button";
-import { homeMotion, homePageStyles } from "@/lib/utils";
+import { homeMotion } from "@/lib/utils";
 import type { TProfile } from "@/types/portfolio";
 
-const profileHighlights = [
-  "Full-stack apps",
-  "AWS + Docker",
-  "AI workflows",
-  "React + Express",
-];
-
-const profileStats = [
-  { label: "Years", value: "8+" },
-  { label: "Projects", value: "50+" },
-  { label: "AI tools", value: "4" },
+const focusAreas = [
+  "React & TypeScript Architecture",
+  "Node.js & Cloud APIs",
+  "Performance & Web Vitals",
+  "Design Systems & UX Engineering",
 ];
 
 type HomeProfileProps = {
@@ -29,13 +23,14 @@ export const HomeProfile = ({ cmsProfile }: HomeProfileProps) => {
     name: profile.name,
     headline: "Building fast, maintainable full-stack products.",
     shortBio:
-      "React, Vite, Express, MongoDB, AWS, Docker, and AI workflows that ship cleanly in production.",
+      "Senior Software Engineer focused on building fast, scalable user interfaces and resilient backend systems with React, TypeScript, Node.js, and cloud infrastructure.",
     location: "Lima, Peru",
-    availability: "Available",
+    availability: "Available for work",
     profileImage: { src: profile.image },
     resumeUrl: "/documents/jorgedelacruz_cv.pdf",
     contactEmail: "jdelacruzp7@gmail.com",
   };
+
   const handleDownloadClick = () => {
     if (typeof window !== "undefined" && window.gtag) {
       window.gtag("event", "download", {
@@ -47,160 +42,104 @@ export const HomeProfile = ({ cmsProfile }: HomeProfileProps) => {
 
   return (
     <motion.section
-      className="glass-panel surface-grid relative overflow-hidden rounded-[1.9rem] px-5 py-5 shadow-premium md:px-6 md:py-6"
+      className="relative pt-4 pb-2 md:pt-8"
       variants={homeMotion.section}
       initial="hidden"
       animate="visible"
     >
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,hsl(var(--primary)/0.24),transparent_30%),radial-gradient(circle_at_85%_15%,hsl(var(--accent)/0.16),transparent_18%)]" />
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent" />
-
-      <div className={homePageStyles.twoColumn}>
-        <div className="space-y-4 lg:col-span-7">
+      <div className="grid items-start gap-12 lg:grid-cols-12">
+        {/* Left Column: Headline, Bio & Actions */}
+        <div className="space-y-6 lg:col-span-8">
+          {/* Status & Location Pill */}
           <motion.div
             variants={homeMotion.item}
-            className="flex flex-wrap items-center gap-2"
+            className="flex flex-wrap items-center gap-2.5"
           >
-            <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-white/80 backdrop-blur-md">
-              <span className="h-2 w-2 rounded-full bg-emerald-400" />
-              {currentProfile.availability}
+            <div className="inline-flex items-center gap-2 rounded-full border border-border bg-secondary/60 px-3 py-1 font-mono text-xs text-foreground">
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+              </span>
+              <span>{currentProfile.availability}</span>
             </div>
-            <span className={homePageStyles.metaBadge}>
+            <span className="font-mono text-xs text-muted-foreground">
               {currentProfile.location}
             </span>
           </motion.div>
 
-          <motion.div variants={homeMotion.item} className="space-y-3">
-            <p className={homePageStyles.eyebrow}>Senior software engineer</p>
-            <h1 className="max-w-4xl text-4xl font-semibold leading-none tracking-tight text-foreground sm:text-5xl xl:text-6xl">
-              {currentProfile.headline.includes("fast, maintainable") ? (
-                <>
-                  Building
-                  <span className="text-premium-gradient">
-                    {" "}
-                    fast, maintainable{" "}
-                  </span>
-                  full-stack products.
-                </>
-              ) : (
-                currentProfile.headline
-              )}
+          {/* Main Headline */}
+          <motion.div variants={homeMotion.item} className="space-y-4">
+            <h1 className="text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
+              Jorge de la Cruz
             </h1>
-            <p className="max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
+            <p className="text-xl font-medium text-foreground/90 sm:text-2xl">
+              Senior Software Engineer crafting fast, resilient full-stack web
+              applications.
+            </p>
+            <p className="max-w-2xl text-base leading-relaxed text-muted-foreground">
               {currentProfile.shortBio}
             </p>
           </motion.div>
 
+          {/* Engineering Focus Areas */}
           <motion.div
             variants={homeMotion.item}
-            className="grid gap-3 sm:grid-cols-3"
+            className="flex flex-wrap gap-2 pt-1"
           >
-            {profileStats.map((stat) => (
-              <div
-                key={stat.label}
-                className="rounded-[1.2rem] border border-white/10 bg-black/20 p-4 backdrop-blur-md"
-              >
-                <p className="text-2xl font-semibold tracking-tight text-foreground">
-                  {stat.value}
-                </p>
-                <p className="mt-1 text-xs uppercase tracking-[0.18em] text-muted-foreground">
-                  {stat.label}
-                </p>
-              </div>
+            {focusAreas.map((area) => (
+              <span key={area} className="craft-pill">
+                {area}
+              </span>
             ))}
           </motion.div>
 
+          {/* Action Buttons & Socials */}
           <motion.div
             variants={homeMotion.item}
-            className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_auto]"
+            className="flex flex-wrap items-center gap-4 pt-2"
           >
-            <div className="space-y-3">
-              <div className={homePageStyles.metaList}>
-                {profileHighlights.map((highlight) => (
-                  <span key={highlight} className={homePageStyles.metaBadge}>
-                    {highlight}
-                  </span>
-                ))}
-              </div>
+            <Button size="lg" onClick={handleDownloadClick} asChild>
+              <a
+                href={
+                  currentProfile.resumeUrl || "/documents/jorgedelacruz_cv.pdf"
+                }
+                download
+                className="flex items-center gap-2 font-mono text-xs font-semibold"
+              >
+                <DownloadIcon className="h-4 w-4" />
+                Download CV
+              </a>
+            </Button>
+            <Button asChild size="lg" variant="outline">
+              <a
+                href={`mailto:${currentProfile.contactEmail}`}
+                className="font-mono text-xs font-semibold"
+              >
+                Get in touch
+              </a>
+            </Button>
+            <div className="border-l border-border pl-4">
               <SocialNetworks />
-            </div>
-
-            <div className="flex flex-wrap gap-2 lg:justify-end">
-              <Button
-                size="lg"
-                className="h-10 px-4 text-sm font-semibold"
-                onClick={handleDownloadClick}
-                asChild
-              >
-                <a
-                  href={
-                    currentProfile.resumeUrl ||
-                    "/documents/jorgedelacruz_cv.pdf"
-                  }
-                  download
-                  className="inline-flex items-center gap-2"
-                >
-                  <DownloadIcon className="h-4 w-4" />
-                  CV
-                </a>
-              </Button>
-              <Button
-                asChild
-                size="lg"
-                variant="outline"
-                className="h-10 px-4 text-sm font-semibold"
-              >
-                <a href={`mailto:${currentProfile.contactEmail}`}>Contact</a>
-              </Button>
             </div>
           </motion.div>
         </div>
 
+        {/* Right Column: Editorial Profile Photo */}
         <motion.div
           variants={homeMotion.item}
-          className="lg:col-span-5 lg:pl-2"
+          className="flex justify-center lg:col-span-4 lg:justify-end"
         >
-          <div className="mx-auto grid max-w-[24rem] gap-3">
-            <div className="glass-panel relative overflow-hidden rounded-[1.35rem] p-2.5 shadow-premium-lg">
-              <div className="relative overflow-hidden rounded-[1.2rem] bg-muted">
-                <div className="absolute inset-x-0 top-0 z-10 flex items-center justify-between bg-gradient-to-b from-background/75 to-transparent px-4 py-4">
-                  <span className="rounded-full border border-white/10 bg-black/25 px-2.5 py-1 text-[0.6rem] font-semibold uppercase tracking-[0.18em] text-white/70">
-                    Shipping now
-                  </span>
-                  <span className="text-[0.6rem] font-semibold uppercase tracking-[0.18em] text-white/60">
-                    AWS + Docker
-                  </span>
-                </div>
-
-                <OptimizedImage
-                  src={currentProfile.profileImage?.src || profile.image}
-                  alt={currentProfile.name}
-                  width={560}
-                  height={640}
-                  fetchPriority="high"
-                  loading="eager"
-                  className="aspect-[4/4.75] w-full object-cover object-center"
-                />
-              </div>
-            </div>
-
-            <div className="grid gap-3 sm:grid-cols-2">
-              <div className="rounded-[1.2rem] border border-white/10 bg-black/20 p-4 backdrop-blur-md">
-                <p className="text-xs uppercase tracking-[0.18em] text-primary/80">
-                  Focus
-                </p>
-                <p className="mt-2 text-sm leading-relaxed text-foreground">
-                  Full-stack delivery, product UX, and production-ready systems.
-                </p>
-              </div>
-              <div className="rounded-[1.2rem] border border-white/10 bg-black/20 p-4 backdrop-blur-md">
-                <p className="text-xs uppercase tracking-[0.18em] text-primary/80">
-                  Approach
-                </p>
-                <p className="mt-2 text-sm leading-relaxed text-foreground">
-                  Claude Code, Codex, Gemini, and Cursor in the daily loop.
-                </p>
-              </div>
+          <div className="relative w-full max-w-[280px]">
+            <div className="craft-card overflow-hidden rounded-2xl p-2">
+              <OptimizedImage
+                src={currentProfile.profileImage?.src || profile.image}
+                alt={currentProfile.name}
+                width={560}
+                height={640}
+                fetchPriority="high"
+                loading="eager"
+                className="aspect-[4/5] w-full rounded-xl object-cover object-center grayscale contrast-[1.05] transition-all duration-300 hover:grayscale-0"
+              />
             </div>
           </div>
         </motion.div>
