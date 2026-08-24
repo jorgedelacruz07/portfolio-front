@@ -8,19 +8,21 @@ type OptimizedImageProps = Omit<
 > & {
   src: string;
   alt: string;
+  avifSrc?: string;
   fetchPriority?: "high" | "low" | "auto";
 };
 
 export const OptimizedImage = ({
   src,
   alt,
+  avifSrc,
   className,
   loading = "lazy",
   decoding = "async",
   fetchPriority,
   ...props
 }: OptimizedImageProps) => {
-  return (
+  const imageElement = (
     <img
       src={src}
       alt={alt}
@@ -31,4 +33,15 @@ export const OptimizedImage = ({
       {...props}
     />
   );
+
+  if (avifSrc) {
+    return (
+      <picture className="contents">
+        <source srcSet={avifSrc} type="image/avif" />
+        {imageElement}
+      </picture>
+    );
+  }
+
+  return imageElement;
 };

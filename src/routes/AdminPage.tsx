@@ -1,6 +1,6 @@
 import { FormEvent, ReactNode, useEffect, useMemo, useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { adminApi } from "@/lib/api";
+import { adminApi } from "@/lib/admin-api";
 import type {
   TPortfolioContent,
   TProfile,

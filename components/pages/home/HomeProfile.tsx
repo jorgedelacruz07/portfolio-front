@@ -117,11 +117,13 @@ export const HomeProfile = ({ cmsProfile }: HomeProfileProps) => {
             <div className="craft-card overflow-hidden rounded-2xl p-1.5">
               <OptimizedImage
                 src={currentProfile.profileImage?.src || profile.image}
+                avifSrc="/images/jorge.avif"
                 alt={currentProfile.name}
-                width={560}
-                height={640}
+                width={480}
+                height={600}
                 fetchPriority="high"
                 loading="eager"
+                decoding="async"
                 className="aspect-[4/5] w-full rounded-xl object-cover object-center grayscale contrast-[1.05] transition-all duration-300 hover:grayscale-0"
               />
             </div>

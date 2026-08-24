@@ -13,7 +13,8 @@ import { PageLoader } from "@/components/LoadingSpinner";
 
 type LazyRouteComponent = LazyExoticComponent<ComponentType>;
 
-const HomePage = lazy(() => import("./routes/HomePage"));
+import HomePage from "./routes/HomePage";
+
 const ProjectsPage = lazy(() => import("./routes/ProjectsPage"));
 const ExperiencesPage = lazy(() => import("./routes/ExperiencesPage"));
 const AdminPage = lazy(() => import("./routes/AdminPage"));
@@ -77,7 +78,7 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: renderLazyRoute(HomePage),
+        element: <HomePage />,
       },
       {
         path: "projects",

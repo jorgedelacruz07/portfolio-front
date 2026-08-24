@@ -66,6 +66,7 @@ body {
     Oxygen,
     Ubuntu,
     sans-serif;
+  font-size-adjust: from-font;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;

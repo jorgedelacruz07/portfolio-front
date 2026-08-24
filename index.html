@@ -50,32 +50,27 @@
       content="Senior Software Engineer specializing in React.js, TypeScript, Node.js, and Native MongoDB Architecture."
     />
 
-    <!-- Font Optimization with preconnect & non-blocking stylesheet -->
+    <!-- Font Optimization with preconnect, primary font preload & stylesheet -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="preload"
-      as="style"
-      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap"
+      as="font"
+      type="font/woff2"
+      href="https://fonts.gstatic.com/s/montserrat/v31/JTUSjIg1_i6t8kCHKm459WlhyyTh89Y.woff2"
+      crossorigin
     />
     <link
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap"
-      media="print"
-      onload="this.media = 'all'"
     />
-    <noscript>
-      <link
-        rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap"
-      />
-    </noscript>
 
     <!-- LCP Hero Image Preload -->
     <link
       rel="preload"
       as="image"
-      href="/images/jorge.jpg"
+      type="image/avif"
+      href="/images/jorge.avif"
       fetchpriority="high"
     />
 
