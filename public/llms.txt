@@ -1,0 +1,19 @@
+# Jorge de la Cruz - Senior Software Engineer
+
+> Personal portfolio, production engineering projects, professional experience, and technical architecture of Jorge de la Cruz Padilla, Senior Software Engineer specializing in React, TypeScript, Node.js, Express, and Native MongoDB Architecture.
+
+## Core Profile
+- **Name:** Jorge de la Cruz Padilla
+- **Role:** Senior Software Engineer
+- **Location:** Lima, Peru (UTC-5)
+- **Website:** https://jorgedelacruzpadilla.dev
+- **GitHub:** https://github.com/jorgedelacruz07
+- **LinkedIn:** https://www.linkedin.com/in/jorgedelacruz07
+
+## Key Pages & Resources
+- [Home Page](https://jorgedelacruzpadilla.dev/): Biography, engineering capabilities, featured projects, and career timeline.
+- [Projects Showcase](https://jorgedelacruzpadilla.dev/projects): Complete directory of production applications, frontend architectures, and full-stack tools.
+- [Professional Experience](https://jorgedelacruzpadilla.dev/experiences): Detailed career history, engineering milestones, and technology stack.
+- [Resume / Curriculum Vitae](https://jorgedelacruzpadilla.dev/documents/jorgedelacruz_cv.pdf): Downloadable CV.
+- [Sitemap](https://jorgedelacruzpadilla.dev/sitemap.xml): XML sitemap.
+- [Robots.txt](https://jorgedelacruzpadilla.dev/robots.txt): Crawler rules.

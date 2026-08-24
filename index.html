@@ -50,13 +50,26 @@
       content="Senior Software Engineer specializing in React.js, TypeScript, Node.js, and Native MongoDB Architecture."
     />
 
-    <!-- Font Optimization with preconnect & display=swap -->
+    <!-- Font Optimization with preconnect & non-blocking stylesheet -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      rel="stylesheet"
+      rel="preload"
+      as="style"
       href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap"
     />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap"
+      media="print"
+      onload="this.media = 'all'"
+    />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap"
+      />
+    </noscript>
 
     <!-- LCP Hero Image Preload -->
     <link
@@ -92,7 +105,7 @@
       }
     </script>
 
-    <!-- Google Analytics (Beacon transport, non-blocking) -->
+    <!-- Google Analytics (Deferred, non-blocking via requestIdleCallback/load) -->
     <script>
       (() => {
         const GA_ID = "%VITE_GA_ID%";
@@ -102,24 +115,35 @@
           return;
         }
 
-        const script = document.createElement("script");
-        script.async = true;
-        script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_ID}`;
-        document.head.appendChild(script);
+        const initGA = () => {
+          if (window.__gaInitialized) return;
+          window.__gaInitialized = true;
 
-        window.dataLayer = window.dataLayer || [];
-        window.gtag =
-          window.gtag ||
-          function gtag() {
-            window.dataLayer.push(arguments);
-          };
+          const script = document.createElement("script");
+          script.async = true;
+          script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_ID}`;
+          document.head.appendChild(script);
 
-        window.gtag("js", new Date());
-        window.gtag("config", GA_ID, {
-          send_page_view: false,
-          anonymize_ip: true,
-          transport_type: "beacon",
-        });
+          window.dataLayer = window.dataLayer || [];
+          window.gtag =
+            window.gtag ||
+            function gtag() {
+              window.dataLayer.push(arguments);
+            };
+
+          window.gtag("js", new Date());
+          window.gtag("config", GA_ID, {
+            send_page_view: false,
+            anonymize_ip: true,
+            transport_type: "beacon",
+          });
+        };
+
+        if ("requestIdleCallback" in window) {
+          window.requestIdleCallback(initGA, { timeout: 3000 });
+        } else {
+          window.addEventListener("load", initGA, { passive: true });
+        }
       })();
     </script>
   </head>

@@ -1,10 +1,8 @@
-import { motion } from "framer-motion";
 import { Download } from "lucide-react";
 import { profile } from "@/data/content";
 import { OptimizedImage } from "@/components/OptimizedImage";
 import { SocialNetworks } from "@/components/SocialNetworks";
 import { Button } from "@/components/ui/button";
-import { homeMotion } from "@/lib/utils";
 import type { TProfile } from "@/types/portfolio";
 
 const focusAreas = [
@@ -41,20 +39,12 @@ export const HomeProfile = ({ cmsProfile }: HomeProfileProps) => {
   };
 
   return (
-    <motion.section
-      className="relative pt-1 pb-0 md:pt-3"
-      variants={homeMotion.section}
-      initial="hidden"
-      animate="visible"
-    >
+    <section className="relative pt-1 pb-0 md:pt-3">
       <div className="grid items-center gap-8 lg:grid-cols-12 lg:gap-10">
         {/* Left Column: Headline, Bio & Actions */}
         <div className="space-y-4 lg:col-span-8">
           {/* Status & Location Pill */}
-          <motion.div
-            variants={homeMotion.item}
-            className="flex flex-wrap items-center gap-2.5"
-          >
+          <div className="flex flex-wrap items-center gap-2.5">
             <div className="inline-flex items-center gap-2 rounded-full border border-border bg-secondary/60 px-3 py-1 font-mono text-xs text-foreground">
               <span className="relative flex h-2 w-2">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
@@ -65,10 +55,10 @@ export const HomeProfile = ({ cmsProfile }: HomeProfileProps) => {
             <span className="font-mono text-xs text-muted-foreground">
               {currentProfile.location}
             </span>
-          </motion.div>
+          </div>
 
           {/* Main Headline */}
-          <motion.div variants={homeMotion.item} className="space-y-2.5">
+          <div className="space-y-2.5">
             <h1 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
               Jorge de la Cruz
             </h1>
@@ -79,13 +69,10 @@ export const HomeProfile = ({ cmsProfile }: HomeProfileProps) => {
             <p className="max-w-2xl text-sm sm:text-base leading-relaxed text-muted-foreground">
               {currentProfile.shortBio}
             </p>
-          </motion.div>
+          </div>
 
           {/* Engineering Focus Areas */}
-          <motion.div
-            variants={homeMotion.item}
-            className="flex flex-wrap gap-1.5 pt-0.5"
-          >
+          <div className="flex flex-wrap gap-1.5 pt-0.5">
             {focusAreas.map((area) => (
               <span
                 key={area}
@@ -94,13 +81,10 @@ export const HomeProfile = ({ cmsProfile }: HomeProfileProps) => {
                 {area}
               </span>
             ))}
-          </motion.div>
+          </div>
 
           {/* Action Buttons & Socials */}
-          <motion.div
-            variants={homeMotion.item}
-            className="flex flex-wrap items-center gap-3 pt-1"
-          >
+          <div className="flex flex-wrap items-center gap-3 pt-1">
             <Button size="default" onClick={handleDownloadClick} asChild>
               <a
                 href={
@@ -124,14 +108,11 @@ export const HomeProfile = ({ cmsProfile }: HomeProfileProps) => {
             <div className="border-l border-border/80 pl-3">
               <SocialNetworks />
             </div>
-          </motion.div>
+          </div>
         </div>
 
         {/* Right Column: Editorial Profile Photo */}
-        <motion.div
-          variants={homeMotion.item}
-          className="flex justify-center lg:col-span-4 lg:justify-end"
-        >
+        <div className="flex justify-center lg:col-span-4 lg:justify-end">
           <div className="relative w-full max-w-[240px] sm:max-w-[260px]">
             <div className="craft-card overflow-hidden rounded-2xl p-1.5">
               <OptimizedImage
@@ -145,8 +126,8 @@ export const HomeProfile = ({ cmsProfile }: HomeProfileProps) => {
               />
             </div>
           </div>
-        </motion.div>
+        </div>
       </div>
-    </motion.section>
+    </section>
   );
 };
