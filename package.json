@@ -12,6 +12,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "analyze": "npm run build",
+    "og:generate": "node scripts/generate-og-image.js",
     "quick": "npm run lint && npm run format && npm run build"
   },
   "dependencies": {

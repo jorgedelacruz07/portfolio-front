@@ -138,7 +138,7 @@ const mockData = {
       seoTitle: "Jorge de la Cruz | Senior Software Engineer",
       seoDescription:
         "Senior Software Engineer building full-stack products with React, Express, MongoDB, AWS, Docker, and AI-assisted delivery workflows.",
-      openGraphImage: "https://jorgedelacruzpadilla.dev/images/jorge.jpg",
+      openGraphImage: "https://jorgedelacruzpadilla.dev/images/og-image.png",
       contactEmail: "jdelacruzp7@gmail.com",
       availabilityText: "Available for work",
       footerText: "Jorge de la Cruz. All rights reserved.",

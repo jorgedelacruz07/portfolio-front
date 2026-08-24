@@ -32,26 +32,43 @@ export const Layout = ({ children }: LayoutProps) => {
         <meta name="author" content="Jorge de la Cruz Padilla" />
         <meta
           property="og:title"
-          content="Jorge de la Cruz - Senior Software Engineer"
+          content="Jorge de la Cruz | Senior Software Engineer"
         />
         <meta
           property="og:description"
-          content="Senior Software Engineer specializing in React.js, TypeScript, and Node.js"
+          content="Senior Software Engineer specializing in React.js, TypeScript, Node.js, and Native MongoDB Architecture. Building fast, scalable full-stack products."
         />
         <meta property="og:type" content="website" />
         <meta property="og:url" content={currentUrl} />
         <meta
           property="og:image"
-          content="https://jorgedelacruzpadilla.dev/images/jorge.jpg"
+          content="https://jorgedelacruzpadilla.dev/images/og-image.png"
+        />
+        <meta property="og:image:type" content="image/png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta
+          property="og:image:alt"
+          content="Jorge de la Cruz - Senior Software Engineer"
         />
         <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@jorgedelacruz07" />
+        <meta name="twitter:creator" content="@jorgedelacruz07" />
         <meta
           name="twitter:title"
-          content="Jorge de la Cruz - Senior Software Engineer"
+          content="Jorge de la Cruz | Senior Software Engineer"
         />
         <meta
           name="twitter:description"
-          content="Senior Software Engineer specializing in React.js, TypeScript, and Node.js"
+          content="Senior Software Engineer specializing in React.js, TypeScript, Node.js, and Native MongoDB Architecture. Building fast, scalable full-stack products."
+        />
+        <meta
+          name="twitter:image"
+          content="https://jorgedelacruzpadilla.dev/images/og-image.png"
+        />
+        <meta
+          name="twitter:image:alt"
+          content="Jorge de la Cruz - Senior Software Engineer"
         />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <link rel="canonical" href={currentUrl} />
