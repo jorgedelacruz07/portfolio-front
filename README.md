@@ -4,7 +4,7 @@ Personal portfolio frontend built as a Vite + React SPA with React Router, TanSt
 
 ## Stack
 
-- Vite + React 18
+- Vite + React (versions in `package.json`)
 - React Router for client-side routing
 - TanStack Query for remote data fetching and caching
 - Tailwind CSS with shared home-page layout tokens
@@ -43,16 +43,16 @@ VITE_GA_ID=
 - `VITE_API_URL`: Base URL for the portfolio API.
 - `VITE_GA_ID`: Google Analytics measurement ID.
 
-If `VITE_API_URL` is omitted in development, the data layer falls back to local mock responses from [`lib/api.ts`](/Users/jorge.delacruz/Documents/Personal/portfolio-front/lib/api.ts).
+If `VITE_API_URL` is omitted in development, the data layer falls back to local mock responses from [`lib/api.ts`](lib/api.ts).
 
 ## Project Structure
 
-- [`src/main.tsx`](/Users/jorge.delacruz/Documents/Personal/portfolio-front/src/main.tsx): App bootstrap, analytics initialization, and providers.
-- [`src/Router.tsx`](/Users/jorge.delacruz/Documents/Personal/portfolio-front/src/Router.tsx): Route definitions and route-level lazy loading.
-- [`src/routes/HomePage.tsx`](/Users/jorge.delacruz/Documents/Personal/portfolio-front/src/routes/HomePage.tsx): Home route with deferred below-the-fold sections.
-- [`components/pages/home/HomeSection.tsx`](/Users/jorge.delacruz/Documents/Personal/portfolio-front/components/pages/home/HomeSection.tsx): Shared home-page section shell.
-- [`hooks/useDeferredRender.ts`](/Users/jorge.delacruz/Documents/Personal/portfolio-front/hooks/useDeferredRender.ts): Intersection Observer gate for deferred section mounting.
-- [`lib/utils.ts`](/Users/jorge.delacruz/Documents/Personal/portfolio-front/lib/utils.ts): Shared utility functions and home-page style tokens.
+- [`src/main.tsx`](src/main.tsx): App bootstrap, analytics initialization, and providers.
+- [`src/Router.tsx`](src/Router.tsx): Route definitions and route-level lazy loading.
+- [`src/routes/HomePage.tsx`](src/routes/HomePage.tsx): Home route with deferred below-the-fold sections.
+- [`components/pages/home/HomeSection.tsx`](components/pages/home/HomeSection.tsx): Shared home-page section shell.
+- [`hooks/useDeferredRender.ts`](hooks/useDeferredRender.ts): Intersection Observer gate for deferred section mounting.
+- [`lib/utils.ts`](lib/utils.ts): Shared utility functions and home-page style tokens.
 
 ## Recent Architecture Notes
 
