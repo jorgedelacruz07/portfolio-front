@@ -15,7 +15,7 @@ This document reflects the current Vite + React SPA architecture after the recen
 
 - [`src/routes/HomePage.tsx`](src/routes/HomePage.tsx) now mounts projects, experiences, and blog sections only when they approach the viewport.
 - [`components/pages/home/HomeSection.tsx`](components/pages/home/HomeSection.tsx) provides a single section shell for spacing, heading structure, and CTA alignment.
-- [`components/pages/home/HomeProjects.tsx`](components/pages/home/HomeProjects.tsx), [`components/pages/home/HomeExperiences.tsx`](components/pages/home/HomeExperiences.tsx), and [`components/pages/home/HomeBlog.tsx`](components/pages/home/HomeBlog.tsx) now use simpler presentational card structures instead of the older home-only card layer.
+- [`components/pages/home/HomeProjects.tsx`](components/pages/home/HomeProjects.tsx), [`components/pages/home/HomeExperiences.tsx`](components/pages/home/HomeExperiences.tsx) use simpler presentational card structures instead of the older home-only card layer.
 - Legacy files removed during the cleanup included the previous home card components, `LazyHydrate`, and several unused UI helpers.
 
 ## Key Files
@@ -41,3 +41,5 @@ npm run build
 ```
 
 For deeper inspection, review the generated `dist/` output and profile route transitions, first paint, and deferred section loading in the browser.
+
+Historical path note: this record previously referenced `components/pages/home/HomeBlog.tsx`; that file is absent from the reviewed checkout. Verify current home imports before applying earlier optimization notes. Performance figures in this document describe their original measurements, not a new benchmark run.
