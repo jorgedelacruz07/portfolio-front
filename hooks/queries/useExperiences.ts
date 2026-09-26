@@ -6,8 +6,7 @@ import { TExperience } from "../../types/experience";
 export const experienceKeys = {
   all: ["experiences"] as const,
   lists: () => [...experienceKeys.all, "list"] as const,
-  list: (filters: Record<string, unknown>) =>
-    [...experienceKeys.lists(), { filters }] as const,
+  list: (filters: Record<string, unknown>) => [...experienceKeys.lists(), { filters }] as const,
   details: () => [...experienceKeys.all, "detail"] as const,
   detail: (slug: string) => [...experienceKeys.details(), slug] as const,
 };

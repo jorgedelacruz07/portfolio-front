@@ -1,12 +1,7 @@
 import { FormEvent, ReactNode, useEffect, useMemo, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { adminApi } from "@/lib/admin-api";
-import type {
-  TPortfolioContent,
-  TProfile,
-  TSiteSettings,
-  TSkill,
-} from "@/types/portfolio";
+import type { TPortfolioContent, TProfile, TSiteSettings, TSkill } from "@/types/portfolio";
 import type { TExperience } from "@/types/experience";
 import type { TProject } from "@/types/project";
 
@@ -20,8 +15,7 @@ type SaveState = "idle" | "saving" | "saved" | "error";
 
 const inputClass =
   "w-full rounded-lg border border-border bg-muted/40 px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/70 focus:border-primary/50 focus:outline-none focus:ring-1 focus:ring-primary/50";
-const labelClass =
-  "space-y-1.5 font-mono text-xs font-semibold uppercase tracking-wider text-muted-foreground";
+const labelClass = "space-y-1.5 font-mono text-xs font-semibold uppercase tracking-wider text-muted-foreground";
 
 function Field({
   label,
@@ -83,38 +77,23 @@ function LoginForm({ onSession }: { onSession: (session: Session) => void }) {
   }
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="craft-card mx-auto mt-12 max-w-md rounded-xl p-6"
-    >
-      <p className="font-mono text-xs font-semibold uppercase tracking-wider text-primary">
-        Admin Access
-      </p>
-      <h1 className="mt-2 text-2xl font-bold tracking-tight text-foreground">
-        Manage Portfolio Content
-      </h1>
+    <form onSubmit={handleSubmit} className="craft-card mx-auto mt-12 max-w-md rounded-xl p-6">
+      <p className="font-mono text-xs font-semibold uppercase tracking-wider text-primary">Admin Access</p>
+      <h1 className="mt-2 text-2xl font-bold tracking-tight text-foreground">Manage Portfolio Content</h1>
       <p className="mt-2 text-sm text-muted-foreground">
         Use your primary admin email. Access is restricted server-side.
       </p>
       <div className="mt-6 space-y-4">
         <Field label="Email" value={email} onChange={setEmail} />
-        {step === "code" ? (
-          <Field label="Six-digit code" value={code} onChange={setCode} />
-        ) : null}
+        {step === "code" ? <Field label="Six-digit code" value={code} onChange={setCode} /> : null}
       </div>
-      {message ? (
-        <p className="mt-4 text-xs text-muted-foreground">{message}</p>
-      ) : null}
+      {message ? <p className="mt-4 text-xs text-muted-foreground">{message}</p> : null}
       <button
         className="mt-6 w-full rounded-lg bg-foreground px-4 py-2 text-sm font-semibold text-background transition hover:opacity-90 disabled:opacity-60"
         disabled={isSubmitting}
         type="submit"
       >
-        {isSubmitting
-          ? "Working..."
-          : step === "email"
-            ? "Request code"
-            : "Sign in"}
+        {isSubmitting ? "Working..." : step === "email" ? "Request code" : "Sign in"}
       </button>
     </form>
   );
@@ -123,21 +102,13 @@ function LoginForm({ onSession }: { onSession: (session: Session) => void }) {
 function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
     <section className="craft-card rounded-xl p-6">
-      <h2 className="text-lg font-semibold tracking-tight text-foreground">
-        {title}
-      </h2>
+      <h2 className="text-lg font-semibold tracking-tight text-foreground">{title}</h2>
       <div className="mt-5 space-y-4">{children}</div>
     </section>
   );
 }
 
-function SaveButton({
-  state,
-  onClick,
-}: {
-  state: SaveState;
-  onClick: () => void;
-}) {
+function SaveButton({ state, onClick }: { state: SaveState; onClick: () => void }) {
   return (
     <button
       type="button"
@@ -169,15 +140,13 @@ export default function AdminPage() {
   useEffect(() => {
     if (!session) return;
 
-    Promise.all([
-      adminApi.getPortfolio(),
-      adminApi.listProjects(),
-      adminApi.listExperiences(),
-    ]).then(([portfolio, projectList, experienceList]) => {
-      setContent(portfolio);
-      setProjects(projectList);
-      setExperiences(experienceList);
-    });
+    Promise.all([adminApi.getPortfolio(), adminApi.listProjects(), adminApi.listExperiences()]).then(
+      ([portfolio, projectList, experienceList]) => {
+        setContent(portfolio);
+        setProjects(projectList);
+        setExperiences(experienceList);
+      },
+    );
   }, [session]);
 
   const profile = content?.profile;
@@ -219,11 +188,7 @@ export default function AdminPage() {
   }
 
   if (isLoading) {
-    return (
-      <div className="py-20 text-center text-muted-foreground">
-        Loading admin...
-      </div>
-    );
+    return <div className="py-20 text-center text-muted-foreground">Loading admin...</div>;
   }
 
   if (!session) {
@@ -239,15 +204,10 @@ export default function AdminPage() {
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 pb-14">
         <header className="craft-card flex flex-col gap-4 rounded-xl p-5 md:flex-row md:items-center md:justify-between">
           <div>
-            <p className="font-mono text-xs font-semibold uppercase tracking-wider text-primary">
-              CMS Dashboard
-            </p>
-            <h1 className="mt-1 text-2xl font-bold tracking-tight text-foreground">
-              Portfolio Content
-            </h1>
+            <p className="font-mono text-xs font-semibold uppercase tracking-wider text-primary">CMS Dashboard</p>
+            <h1 className="mt-1 text-2xl font-bold tracking-tight text-foreground">Portfolio Content</h1>
             <p className="mt-1 text-xs text-muted-foreground">
-              Signed in as {session.email} • Session expires{" "}
-              {new Date(session.expiresAt).toLocaleTimeString()}.
+              Signed in as {session.email} • Session expires {new Date(session.expiresAt).toLocaleTimeString()}.
             </p>
           </div>
           <button
@@ -260,17 +220,11 @@ export default function AdminPage() {
         </header>
 
         {!content || !profile || !settings ? (
-          <div className="craft-card rounded-xl p-6 text-sm text-muted-foreground">
-            Loading content...
-          </div>
+          <div className="craft-card rounded-xl p-6 text-sm text-muted-foreground">Loading content...</div>
         ) : (
           <div className="grid gap-6 lg:grid-cols-2">
             <Section title="Profile">
-              <Field
-                label="Name"
-                value={profile.name}
-                onChange={(name) => updateProfile({ name })}
-              />
+              <Field label="Name" value={profile.name} onChange={(name) => updateProfile({ name })} />
               <Field
                 label="Headline"
                 value={profile.headline}
@@ -283,11 +237,7 @@ export default function AdminPage() {
                 onChange={(shortBio) => updateProfile({ shortBio })}
                 textarea
               />
-              <Field
-                label="Location"
-                value={profile.location}
-                onChange={(location) => updateProfile({ location })}
-              />
+              <Field label="Location" value={profile.location} onChange={(location) => updateProfile({ location })} />
               <Field
                 label="Availability"
                 value={profile.availability}
@@ -298,10 +248,7 @@ export default function AdminPage() {
                 value={profile.contactEmail}
                 onChange={(contactEmail) => updateProfile({ contactEmail })}
               />
-              <SaveButton
-                state={saveState}
-                onClick={() => persist(() => adminApi.saveProfile(profile))}
-              />
+              <SaveButton state={saveState} onClick={() => persist(() => adminApi.saveProfile(profile))} />
             </Section>
 
             <Section title="Site settings">
@@ -313,27 +260,20 @@ export default function AdminPage() {
               <Field
                 label="SEO description"
                 value={settings.seoDescription}
-                onChange={(seoDescription) =>
-                  updateSettings({ seoDescription })
-                }
+                onChange={(seoDescription) => updateSettings({ seoDescription })}
                 textarea
               />
               <Field
                 label="Open Graph image"
                 value={settings.openGraphImage || ""}
-                onChange={(openGraphImage) =>
-                  updateSettings({ openGraphImage })
-                }
+                onChange={(openGraphImage) => updateSettings({ openGraphImage })}
               />
               <Field
                 label="Footer text"
                 value={settings.footerText}
                 onChange={(footerText) => updateSettings({ footerText })}
               />
-              <SaveButton
-                state={saveState}
-                onClick={() => persist(() => adminApi.saveSettings(settings))}
-              />
+              <SaveButton state={saveState} onClick={() => persist(() => adminApi.saveSettings(settings))} />
             </Section>
 
             <Section title="Skills">
@@ -345,16 +285,12 @@ export default function AdminPage() {
                   <input
                     className={inputClass}
                     value={skill.name}
-                    onChange={(event) =>
-                      updateSkill(index, { name: event.target.value })
-                    }
+                    onChange={(event) => updateSkill(index, { name: event.target.value })}
                   />
                   <input
                     className={inputClass}
                     value={skill.category}
-                    onChange={(event) =>
-                      updateSkill(index, { category: event.target.value })
-                    }
+                    onChange={(event) => updateSkill(index, { category: event.target.value })}
                   />
                   <input
                     className={inputClass}
@@ -370,9 +306,7 @@ export default function AdminPage() {
                     <input
                       type="checkbox"
                       checked={skill.visible}
-                      onChange={(event) =>
-                        updateSkill(index, { visible: event.target.checked })
-                      }
+                      onChange={(event) => updateSkill(index, { visible: event.target.checked })}
                     />
                     Visible
                   </label>
@@ -400,10 +334,7 @@ export default function AdminPage() {
                 >
                   Add skill
                 </button>
-                <SaveButton
-                  state={saveState}
-                  onClick={() => persist(() => adminApi.saveSkills(skills))}
-                />
+                <SaveButton state={saveState} onClick={() => persist(() => adminApi.saveSkills(skills))} />
               </div>
             </Section>
 
@@ -462,10 +393,7 @@ export default function AdminPage() {
                       setProjects(next);
                     }}
                   />
-                  <SaveButton
-                    state={saveState}
-                    onClick={() => persist(() => adminApi.saveProject(project))}
-                  />
+                  <SaveButton state={saveState} onClick={() => persist(() => adminApi.saveProject(project))} />
                 </div>
               ))}
             </Section>
@@ -540,12 +468,7 @@ export default function AdminPage() {
                       setExperiences(next);
                     }}
                   />
-                  <SaveButton
-                    state={saveState}
-                    onClick={() =>
-                      persist(() => adminApi.saveExperience(experience))
-                    }
-                  />
+                  <SaveButton state={saveState} onClick={() => persist(() => adminApi.saveExperience(experience))} />
                 </div>
               ))}
             </Section>

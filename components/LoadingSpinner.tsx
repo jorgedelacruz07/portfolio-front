@@ -7,11 +7,7 @@ interface LoadingSpinnerProps {
   text?: string;
 }
 
-export const LoadingSpinner: FC<LoadingSpinnerProps> = ({
-  size = "md",
-  className,
-  text = "Loading...",
-}) => {
+export const LoadingSpinner: FC<LoadingSpinnerProps> = ({ size = "md", className, text = "Loading..." }) => {
   const [dots, setDots] = useState("");
 
   useEffect(() => {
@@ -29,20 +25,10 @@ export const LoadingSpinner: FC<LoadingSpinnerProps> = ({
   };
 
   return (
-    <div
-      className={classNames(
-        "flex flex-col items-center justify-center space-y-4",
-        className,
-      )}
-    >
+    <div className={classNames("flex flex-col items-center justify-center space-y-4", className)}>
       <div className="relative">
         {/* Outer ring */}
-        <div
-          className={classNames(
-            "border-4 border-primary/20 rounded-full animate-spin",
-            sizeClasses[size],
-          )}
-        />
+        <div className={classNames("border-4 border-primary/20 rounded-full animate-spin", sizeClasses[size])} />
 
         {/* Inner ring */}
         <div
@@ -94,32 +80,17 @@ export const SkeletonCard: FC<{ className?: string }> = ({ className }) => (
   </div>
 );
 
-export const SkeletonText: FC<{ lines?: number; className?: string }> = ({
-  lines = 3,
-  className,
-}) => (
+export const SkeletonText: FC<{ lines?: number; className?: string }> = ({ lines = 3, className }) => (
   <div className={classNames("animate-pulse space-y-2", className)}>
     {Array.from({ length: lines }).map((_, i) => (
-      <div
-        key={i}
-        className={classNames(
-          "h-4 bg-muted-foreground/20 rounded",
-          i === lines - 1 ? "w-3/4" : "w-full",
-        )}
-      />
+      <div key={i} className={classNames("h-4 bg-muted-foreground/20 rounded", i === lines - 1 ? "w-3/4" : "w-full")} />
     ))}
   </div>
 );
 
-export const SkeletonAvatar: FC<{ size?: number; className?: string }> = ({
-  size = 40,
-  className,
-}) => (
+export const SkeletonAvatar: FC<{ size?: number; className?: string }> = ({ size = 40, className }) => (
   <div
-    className={classNames(
-      "animate-pulse bg-muted-foreground/20 rounded-full",
-      className,
-    )}
+    className={classNames("animate-pulse bg-muted-foreground/20 rounded-full", className)}
     style={{ width: size, height: size }}
   />
 );
@@ -145,27 +116,16 @@ export const ProgressiveLoader: FC<{
 
   if (isLoading || !showContent) {
     return (
-      <div className={classNames("transition-opacity duration-300", className)}>
-        {fallback || <LoadingSpinner />}
-      </div>
+      <div className={classNames("transition-opacity duration-300", className)}>{fallback || <LoadingSpinner />}</div>
     );
   }
 
-  return (
-    <div className={classNames("transition-opacity duration-300", className)}>
-      {children}
-    </div>
-  );
+  return <div className={classNames("transition-opacity duration-300", className)}>{children}</div>;
 };
 
 // Page loading component
 export const PageLoader: FC<{ className?: string }> = ({ className }) => (
-  <div
-    className={classNames(
-      "min-h-screen flex items-center justify-center bg-background",
-      className,
-    )}
-  >
+  <div className={classNames("min-h-screen flex items-center justify-center bg-background", className)}>
     <div className="text-center space-y-6">
       <div className="relative">
         {/* Animated logo or brand */}
@@ -180,9 +140,7 @@ export const PageLoader: FC<{ className?: string }> = ({ className }) => (
       </div>
 
       <div className="space-y-2">
-        <h2 className="text-lg font-semibold text-foreground">
-          Loading Portfolio
-        </h2>
+        <h2 className="text-lg font-semibold text-foreground">Loading Portfolio</h2>
         <LoadingSpinner size="sm" text="Preparing your experience" />
       </div>
     </div>

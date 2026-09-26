@@ -13,28 +13,16 @@ type HomeExperiencesProps = {
   experiences: TExperience[];
 };
 
-const ExperienceTimelineItem = ({
-  experience,
-  isLast,
-}: {
-  experience: TExperience;
-  isLast: boolean;
-}) => {
+const ExperienceTimelineItem = ({ experience, isLast }: { experience: TExperience; isLast: boolean }) => {
   const theme = useMemo(
     () => getCompanyTheme(experience.slug, experience.company),
     [experience.slug, experience.company],
   );
 
-  const monogram = useMemo(
-    () => getCompanyMonogram(experience.company),
-    [experience.company],
-  );
+  const monogram = useMemo(() => getCompanyMonogram(experience.company), [experience.company]);
 
   return (
-    <motion.div
-      variants={homeMotion.item}
-      className="relative flex gap-3.5 sm:gap-5 pb-6 sm:pb-7 last:pb-0 group"
-    >
+    <motion.div variants={homeMotion.item} className="relative flex gap-3.5 sm:gap-5 pb-6 sm:pb-7 last:pb-0 group">
       {/* Continuous Vertical Timeline Track Spine */}
       {!isLast ? (
         <div
@@ -59,9 +47,7 @@ const ExperienceTimelineItem = ({
               height={40}
             />
           ) : (
-            <span className="font-mono text-[0.6875rem] sm:text-xs font-bold tracking-tight">
-              {monogram}
-            </span>
+            <span className="font-mono text-[0.6875rem] sm:text-xs font-bold tracking-tight">{monogram}</span>
           )}
         </div>
       </div>
@@ -77,9 +63,7 @@ const ExperienceTimelineItem = ({
               </h3>
 
               <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm">
-                <span className="font-semibold text-foreground/90">
-                  {experience.company}
-                </span>
+                <span className="font-semibold text-foreground/90">{experience.company}</span>
                 {experience.companyFrom ? (
                   <>
                     <span className="text-border">•</span>
@@ -102,9 +86,7 @@ const ExperienceTimelineItem = ({
 
           {/* Job Description */}
           {experience.jobDescription ? (
-            <p className="text-xs sm:text-sm leading-relaxed text-muted-foreground">
-              {experience.jobDescription}
-            </p>
+            <p className="text-xs sm:text-sm leading-relaxed text-muted-foreground">{experience.jobDescription}</p>
           ) : null}
 
           {/* Technology Badges */}
@@ -127,11 +109,7 @@ const ExperienceTimelineItem = ({
                 size="sm"
                 className="h-7 font-mono text-xs text-muted-foreground hover:text-foreground hover:bg-secondary/60 -ml-2 px-2 gap-1.5"
               >
-                <a
-                  href={experience.companyUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+                <a href={experience.companyUrl} target="_blank" rel="noopener noreferrer">
                   <span>Company website</span>
                   <ExternalLink className="h-3 w-3" />
                 </a>

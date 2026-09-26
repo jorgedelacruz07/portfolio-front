@@ -43,12 +43,7 @@ class ErrorBoundaryComponent extends Component<Props, State> {
           <div className="max-w-md w-full bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6">
             <div className="flex items-center">
               <div className="flex-shrink-0">
-                <svg
-                  className="h-8 w-8 text-red-400"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
+                <svg className="h-8 w-8 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -58,18 +53,11 @@ class ErrorBoundaryComponent extends Component<Props, State> {
                 </svg>
               </div>
               <div className="ml-3">
-                <h3 className="text-sm font-medium text-gray-800 dark:text-gray-200">
-                  Something went wrong
-                </h3>
+                <h3 className="text-sm font-medium text-gray-800 dark:text-gray-200">Something went wrong</h3>
                 <div className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-                  <p>
-                    We&apos;re sorry, but something unexpected happened. Please
-                    try refreshing the page.
-                  </p>
+                  <p>We&apos;re sorry, but something unexpected happened. Please try refreshing the page.</p>
                   {import.meta.env.DEV && this.state.error ? (
-                    <p className="mt-2 font-mono text-xs text-red-300">
-                      {this.state.error.message}
-                    </p>
+                    <p className="mt-2 font-mono text-xs text-red-300">{this.state.error.message}</p>
                   ) : null}
                 </div>
                 <div className="mt-4">

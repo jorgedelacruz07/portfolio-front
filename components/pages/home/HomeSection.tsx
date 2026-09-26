@@ -37,15 +37,10 @@ export const HomeSection = ({
       viewport={{ once: true, amount: 0.15 }}
     >
       <div className="flex flex-col gap-3 border-b border-border/70 pb-3 sm:pb-4 sm:flex-row sm:items-end sm:justify-between">
-        <motion.div
-          className={homePageStyles.sectionHeader}
-          variants={homeMotion.item}
-        >
+        <motion.div className={homePageStyles.sectionHeader} variants={homeMotion.item}>
           <span className={homePageStyles.eyebrow}>{eyebrow}</span>
           <h2 className={homePageStyles.title}>{title}</h2>
-          {description ? (
-            <p className={homePageStyles.description}>{description}</p>
-          ) : null}
+          {description ? <p className={homePageStyles.description}>{description}</p> : null}
         </motion.div>
 
         {actionHref ? (
@@ -65,10 +60,7 @@ export const HomeSection = ({
         ) : null}
       </div>
 
-      <motion.div
-        className={cn("pt-1", contentClassName)}
-        variants={homeMotion.item}
-      >
+      <motion.div className={cn("pt-1", contentClassName)} variants={homeMotion.item}>
         {children}
       </motion.div>
     </motion.section>

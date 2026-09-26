@@ -6,9 +6,7 @@ function sendToAnalytics(metric: any) {
     window.gtag("event", metric.name, {
       event_category: "Web Vitals",
       event_label: metric.id,
-      value: Math.round(
-        metric.name === "CLS" ? metric.value * 1000 : metric.value,
-      ),
+      value: Math.round(metric.name === "CLS" ? metric.value * 1000 : metric.value),
       non_interaction: true,
     });
   }

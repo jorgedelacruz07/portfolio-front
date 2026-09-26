@@ -23,9 +23,7 @@ function isLocalApiUrl(url: string) {
 }
 
 if (!API_BASE_URL) {
-  console.warn(
-    "VITE_API_URL is not configured. Falling back to mock data in development.",
-  );
+  console.warn("VITE_API_URL is not configured. Falling back to mock data in development.");
 }
 
 if (import.meta.env.PROD && isLocalApiUrl(API_BASE_URL)) {
@@ -45,9 +43,7 @@ export const apiClient = axios.create({
 apiClient.interceptors.request.use(
   (config) => {
     if (import.meta.env.DEV) {
-      console.log(
-        `[API Request] ${config.method?.toUpperCase()} ${config.url}`,
-      );
+      console.log(`[API Request] ${config.method?.toUpperCase()} ${config.url}`);
     }
 
     return config;
@@ -104,8 +100,7 @@ const mockData = {
       slug: "company-a",
       jobTitle: "Developer",
       jobDescription: "Worked on frontend delivery and UI quality.",
-      companyDescription:
-        "A product company used as development fallback data.",
+      companyDescription: "A product company used as development fallback data.",
       companyUrl: "https://example.com",
       from: "2020-01-01",
       to: "2022-01-01",
@@ -117,8 +112,7 @@ const mockData = {
   portfolio: {
     profile: {
       name: "Jorge de la Cruz Padilla",
-      headline:
-        "Senior Software Engineer building fast, maintainable full-stack products.",
+      headline: "Senior Software Engineer building fast, maintainable full-stack products.",
       shortBio:
         "I build user-facing apps, backend services, and cloud-ready delivery workflows with React, Express, MongoDB, AWS, Docker, and AI-assisted delivery.",
       location: "Lima, Peru",
@@ -143,22 +137,15 @@ const mockData = {
       availabilityText: "Available for work",
       footerText: "Jorge de la Cruz. All rights reserved.",
     },
-    skills: [
-      "React.js",
-      "TypeScript",
-      "Node.js",
-      "Express.js",
-      "MongoDB",
-      "AWS",
-      "Docker",
-      "AI workflows",
-    ].map((name, index) => ({
-      name,
-      category: index < 7 ? "Engineering" : "AI workflow",
-      priority: index,
-      displayOrder: index,
-      visible: true,
-    })),
+    skills: ["React.js", "TypeScript", "Node.js", "Express.js", "MongoDB", "AWS", "Docker", "AI workflows"].map(
+      (name, index) => ({
+        name,
+        category: index < 7 ? "Engineering" : "AI workflow",
+        priority: index,
+        displayOrder: index,
+        visible: true,
+      }),
+    ),
     projects: [] as TProject[],
     experiences: [] as TExperience[],
   } as TPortfolioContent,
@@ -167,12 +154,7 @@ const mockData = {
 function extractPayload<T>(response: AxiosResponse<T | { data: T }>): T {
   const payload = response.data as T | { data: T };
 
-  if (
-    payload &&
-    typeof payload === "object" &&
-    "data" in payload &&
-    payload.data !== undefined
-  ) {
+  if (payload && typeof payload === "object" && "data" in payload && payload.data !== undefined) {
     return payload.data;
   }
 
@@ -218,24 +200,15 @@ export const api = {
     }
 
     try {
-      const response = await apiClient.get<
-        TPortfolioContent | { data: TPortfolioContent }
-      >(apiEndpoints.portfolio());
+      const response = await apiClient.get<TPortfolioContent | { data: TPortfolioContent }>(apiEndpoints.portfolio());
       return extractPayload(response);
     } catch (error) {
       if (isNotFoundError(error)) {
-        const [projectsResult, experiencesResult] = await Promise.allSettled([
-          api.getProjects(),
-          api.getExperiences(),
-        ]);
+        const [projectsResult, experiencesResult] = await Promise.allSettled([api.getProjects(), api.getExperiences()]);
 
         return buildPortfolioPayload({
-          projects:
-            projectsResult.status === "fulfilled" ? projectsResult.value : [],
-          experiences:
-            experiencesResult.status === "fulfilled"
-              ? experiencesResult.value
-              : [],
+          projects: projectsResult.status === "fulfilled" ? projectsResult.value : [],
+          experiences: experiencesResult.status === "fulfilled" ? experiencesResult.value : [],
         });
       }
 
@@ -254,9 +227,7 @@ export const api = {
     }
 
     try {
-      const response = await apiClient.get<TProject[] | { data: TProject[] }>(
-        apiEndpoints.projects(),
-      );
+      const response = await apiClient.get<TProject[] | { data: TProject[] }>(apiEndpoints.projects());
       return extractPayload(response);
     } catch (error) {
       if (shouldUseFallback(error)) {
@@ -274,9 +245,7 @@ export const api = {
     }
 
     try {
-      const response = await apiClient.get<TProject | { data: TProject }>(
-        apiEndpoints.projectBySlug(slug),
-      );
+      const response = await apiClient.get<TProject | { data: TProject }>(apiEndpoints.projectBySlug(slug));
       return extractPayload(response);
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.status === 404) {
@@ -285,9 +254,7 @@ export const api = {
 
       if (shouldUseFallback(error)) {
         logFallback(`API unavailable, using mock project for slug: ${slug}.`);
-        return (
-          mockData.projects.find((project) => project.slug === slug) ?? null
-        );
+        return mockData.projects.find((project) => project.slug === slug) ?? null;
       }
 
       throw error;
@@ -300,9 +267,7 @@ export const api = {
     }
 
     try {
-      const response = await apiClient.get<
-        TExperience[] | { data: TExperience[] }
-      >(apiEndpoints.experiences());
+      const response = await apiClient.get<TExperience[] | { data: TExperience[] }>(apiEndpoints.experiences());
       return extractPayload(response);
     } catch (error) {
       if (shouldUseFallback(error)) {
@@ -316,16 +281,11 @@ export const api = {
 
   getExperienceBySlug: async (slug: string): Promise<TExperience | null> => {
     if (shouldUseMockData) {
-      return (
-        mockData.experiences.find((experience) => experience.slug === slug) ??
-        null
-      );
+      return mockData.experiences.find((experience) => experience.slug === slug) ?? null;
     }
 
     try {
-      const response = await apiClient.get<TExperience | { data: TExperience }>(
-        apiEndpoints.experienceBySlug(slug),
-      );
+      const response = await apiClient.get<TExperience | { data: TExperience }>(apiEndpoints.experienceBySlug(slug));
       return extractPayload(response);
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.status === 404) {
@@ -333,13 +293,8 @@ export const api = {
       }
 
       if (shouldUseFallback(error)) {
-        logFallback(
-          `API unavailable, using mock experience for slug: ${slug}.`,
-        );
-        return (
-          mockData.experiences.find((experience) => experience.slug === slug) ??
-          null
-        );
+        logFallback(`API unavailable, using mock experience for slug: ${slug}.`);
+        return mockData.experiences.find((experience) => experience.slug === slug) ?? null;
       }
 
       throw error;
@@ -352,9 +307,7 @@ export const api = {
     }
 
     try {
-      const response = await apiClient.get<TCategory[] | { data: TCategory[] }>(
-        apiEndpoints.categories(),
-      );
+      const response = await apiClient.get<TCategory[] | { data: TCategory[] }>(apiEndpoints.categories());
       return extractPayload(response);
     } catch (error) {
       if (shouldUseFallback(error)) {

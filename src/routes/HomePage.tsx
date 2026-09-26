@@ -25,9 +25,7 @@ type DeferredSectionProps = {
 };
 
 function DeferredSectionPlaceholder() {
-  return (
-    <div className="min-h-[4rem] rounded-xl border border-border/40 bg-card/20 animate-pulse" />
-  );
+  return <div className="min-h-[4rem] rounded-xl border border-border/40 bg-card/20 animate-pulse" />;
 }
 
 function DeferredSection({ children, className }: DeferredSectionProps) {
@@ -44,15 +42,11 @@ function HomeErrorState({ message }: { message: string }) {
   return (
     <div className="flex min-h-[60vh] items-center justify-center">
       <div className="max-w-lg rounded-[2rem] border border-border/70 bg-card/85 p-8 text-center shadow-soft">
-        <p className="text-xs font-semibold uppercase tracking-[0.28em] text-primary/80">
-          Content error
-        </p>
+        <p className="text-xs font-semibold uppercase tracking-[0.28em] text-primary/80">Content error</p>
         <h1 className="mt-3 text-3xl font-semibold tracking-tight text-foreground">
           The homepage content could not be loaded.
         </h1>
-        <p className="mt-4 text-sm leading-7 text-muted-foreground">
-          {message}
-        </p>
+        <p className="mt-4 text-sm leading-7 text-muted-foreground">{message}</p>
         <Button
           onClick={() => window.location.reload()}
           variant="outline"
@@ -66,16 +60,13 @@ function HomeErrorState({ message }: { message: string }) {
 }
 
 export default function HomePage() {
-  const { profile, skills, experiences, projects, isLoading, error } =
-    useHomePageData();
+  const { profile, skills, experiences, projects, isLoading, error } = useHomePageData();
 
   if (error) {
     return (
       <HomeErrorState
         message={
-          error instanceof Error
-            ? error.message
-            : "An unexpected error occurred while fetching the latest data."
+          error instanceof Error ? error.message : "An unexpected error occurred while fetching the latest data."
         }
       />
     );

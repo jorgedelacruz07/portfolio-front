@@ -6,8 +6,7 @@ import { TProject } from "../../types/project";
 export const projectKeys = {
   all: ["projects"] as const,
   lists: () => [...projectKeys.all, "list"] as const,
-  list: (filters: Record<string, unknown>) =>
-    [...projectKeys.lists(), { filters }] as const,
+  list: (filters: Record<string, unknown>) => [...projectKeys.lists(), { filters }] as const,
   details: () => [...projectKeys.all, "detail"] as const,
   detail: (slug: string) => [...projectKeys.details(), slug] as const,
 };

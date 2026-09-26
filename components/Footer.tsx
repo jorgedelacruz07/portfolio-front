@@ -16,26 +16,19 @@ const Footer = () => {
         <div className="flex flex-col gap-8 md:flex-row md:items-center md:justify-between">
           <div className="space-y-2">
             <div className="flex items-center gap-2">
-              <span className="font-mono text-sm font-semibold text-foreground">
-                Jorge de la Cruz
-              </span>
+              <span className="font-mono text-sm font-semibold text-foreground">Jorge de la Cruz</span>
               <span className="text-border">•</span>
               <span className="font-mono text-xs">Lima, PE (UTC-5)</span>
             </div>
             <p className="text-xs text-muted-foreground">
-              Senior Software Engineer — React, TypeScript, Node.js & Cloud
-              Systems.
+              Senior Software Engineer — React, TypeScript, Node.js & Cloud Systems.
             </p>
           </div>
 
           <div className="flex flex-wrap items-center gap-6">
             <nav className="flex items-center gap-4 text-xs font-medium">
               {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  to={link.href}
-                  className="transition-colors hover:text-foreground"
-                >
+                <Link key={link.href} to={link.href} className="transition-colors hover:text-foreground">
                   {link.label}
                 </Link>
               ))}

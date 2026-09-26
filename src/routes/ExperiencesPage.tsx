@@ -1,16 +1,7 @@
 import { forwardRef, useMemo, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { AnimatePresence, motion } from "framer-motion";
-import {
-  Briefcase,
-  CheckCircle2,
-  ExternalLink,
-  Layers,
-  MapPin,
-  Search,
-  Sparkles,
-  X,
-} from "lucide-react";
+import { Briefcase, CheckCircle2, ExternalLink, Layers, MapPin, Search, Sparkles, X } from "lucide-react";
 
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { OptimizedImage } from "@/components/OptimizedImage";
@@ -70,12 +61,7 @@ export default function ExperiencesPage() {
   const filteredExperiences = useMemo(() => {
     return experiences.filter((experience) => {
       // Tech filter
-      if (
-        selectedTech &&
-        !experience.technologies?.some(
-          (t) => t.name.toLowerCase() === selectedTech.toLowerCase(),
-        )
-      ) {
+      if (selectedTech && !experience.technologies?.some((t) => t.name.toLowerCase() === selectedTech.toLowerCase())) {
         return false;
       }
 
@@ -84,21 +70,11 @@ export default function ExperiencesPage() {
         const query = searchQuery.toLowerCase().trim();
         const matchesCompany = experience.company.toLowerCase().includes(query);
         const matchesTitle = experience.jobTitle.toLowerCase().includes(query);
-        const matchesDesc = (experience.jobDescription || "")
-          .toLowerCase()
-          .includes(query);
-        const matchesCompanyDesc = (experience.companyDescription || "")
-          .toLowerCase()
-          .includes(query);
-        const matchesLocation = (experience.companyFrom || "")
-          .toLowerCase()
-          .includes(query);
-        const matchesTech = experience.technologies?.some((t) =>
-          t.name.toLowerCase().includes(query),
-        );
-        const matchesHighlights = experience.highlights?.some((h) =>
-          h.toLowerCase().includes(query),
-        );
+        const matchesDesc = (experience.jobDescription || "").toLowerCase().includes(query);
+        const matchesCompanyDesc = (experience.companyDescription || "").toLowerCase().includes(query);
+        const matchesLocation = (experience.companyFrom || "").toLowerCase().includes(query);
+        const matchesTech = experience.technologies?.some((t) => t.name.toLowerCase().includes(query));
+        const matchesHighlights = experience.highlights?.some((h) => h.toLowerCase().includes(query));
 
         return (
           matchesCompany ||
@@ -137,20 +113,11 @@ export default function ExperiencesPage() {
           <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-destructive/10 text-destructive">
             <X className="h-6 w-6" />
           </div>
-          <h1 className="text-2xl font-bold tracking-tight text-foreground">
-            Error loading experiences
-          </h1>
+          <h1 className="text-2xl font-bold tracking-tight text-foreground">Error loading experiences</h1>
           <p className="text-sm leading-relaxed text-muted-foreground">
-            {error instanceof Error
-              ? error.message
-              : "Unable to retrieve professional experience history."}
+            {error instanceof Error ? error.message : "Unable to retrieve professional experience history."}
           </p>
-          <Button
-            onClick={() => window.location.reload()}
-            variant="outline"
-            size="sm"
-            className="mt-2"
-          >
+          <Button onClick={() => window.location.reload()} variant="outline" size="sm" className="mt-2">
             Try Again
           </Button>
         </div>
@@ -161,17 +128,12 @@ export default function ExperiencesPage() {
   return (
     <>
       <Helmet>
-        <title>
-          Professional Experience & Career History | Jorge de la Cruz
-        </title>
+        <title>Professional Experience & Career History | Jorge de la Cruz</title>
         <meta
           name="description"
           content="Track record across software engineering roles, team collaboration, system architecture, and product delivery."
         />
-        <meta
-          property="og:title"
-          content="Professional Experience | Jorge de la Cruz"
-        />
+        <meta property="og:title" content="Professional Experience | Jorge de la Cruz" />
         <meta
           property="og:description"
           content="Track record of software engineering roles, team leadership, and product delivery."
@@ -192,9 +154,8 @@ export default function ExperiencesPage() {
             </h1>
 
             <p className="max-w-2xl text-sm sm:text-base leading-relaxed text-muted-foreground">
-              A comprehensive history of engineering positions, distributed
-              collaborations, architectural milestones, and scalable web
-              delivery.
+              A comprehensive history of engineering positions, distributed collaborations, architectural milestones,
+              and scalable web delivery.
             </p>
           </header>
 
@@ -229,11 +190,8 @@ export default function ExperiencesPage() {
               {/* Status summary pill */}
               <div className="flex items-center gap-2">
                 <span className="font-mono text-xs text-muted-foreground">
-                  Showing{" "}
-                  <strong className="font-semibold text-foreground">
-                    {filteredExperiences.length}
-                  </strong>{" "}
-                  of {experiences.length} roles
+                  Showing <strong className="font-semibold text-foreground">{filteredExperiences.length}</strong> of{" "}
+                  {experiences.length} roles
                 </span>
               </div>
             </div>
@@ -246,17 +204,14 @@ export default function ExperiencesPage() {
                   <span>Stack:</span>
                 </span>
                 {allTechnologies.map((tech) => {
-                  const isSelected =
-                    selectedTech?.toLowerCase() === tech.toLowerCase();
+                  const isSelected = selectedTech?.toLowerCase() === tech.toLowerCase();
                   return (
                     <button
                       key={tech}
                       type="button"
                       onClick={() => setSelectedTech(isSelected ? null : tech)}
                       className={`craft-pill cursor-pointer transition-colors ${
-                        isSelected
-                          ? "border-primary bg-primary/15 text-primary font-semibold"
-                          : ""
+                        isSelected ? "border-primary bg-primary/15 text-primary font-semibold" : ""
                       }`}
                     >
                       {tech}
@@ -284,29 +239,16 @@ export default function ExperiencesPage() {
               <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-muted text-muted-foreground">
                 <Briefcase className="h-6 w-6" />
               </div>
-              <h2 className="text-xl font-semibold text-foreground">
-                No matching career experiences
-              </h2>
+              <h2 className="text-xl font-semibold text-foreground">No matching career experiences</h2>
               <p className="mt-2 max-w-md text-sm text-muted-foreground">
-                No roles matched your active search query or technology filter.
-                Try adjusting your search terms.
+                No roles matched your active search query or technology filter. Try adjusting your search terms.
               </p>
-              <Button
-                onClick={resetFilters}
-                variant="outline"
-                size="sm"
-                className="mt-6 font-mono text-xs"
-              >
+              <Button onClick={resetFilters} variant="outline" size="sm" className="mt-6 font-mono text-xs">
                 Clear all filters
               </Button>
             </div>
           ) : (
-            <motion.div
-              variants={containerVariants}
-              initial="hidden"
-              animate="visible"
-              className="space-y-6"
-            >
+            <motion.div variants={containerVariants} initial="hidden" animate="visible" className="space-y-6">
               <AnimatePresence mode="popLayout">
                 {filteredExperiences.map((experience) => (
                   <ExperienceCard
@@ -329,136 +271,131 @@ interface ExperienceCardProps {
   onSelectTech: (tech: string) => void;
 }
 
-const ExperienceCard = forwardRef<HTMLElement, ExperienceCardProps>(
-  function ExperienceCard({ experience, onSelectTech }, ref) {
-    return (
-      <motion.article
-        ref={ref}
-        layout
-        variants={cardVariants}
-        className="craft-card craft-card-interactive group relative overflow-hidden rounded-2xl p-6 sm:p-7 space-y-5 transition-all hover:border-primary/40"
-      >
-        {/* Top Header Row */}
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
-          <div className="flex items-start gap-3.5">
-            {experience.image?.src ? (
-              <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-xl border border-border/80 bg-card shadow-sm">
-                <OptimizedImage
-                  src={experience.image.src}
-                  alt={experience.company}
-                  width={44}
-                  height={44}
-                  className="h-full w-full object-cover"
-                />
-              </div>
-            ) : null}
-
-            <div className="space-y-1">
-              <h2 className="text-xl font-bold tracking-tight text-foreground transition-colors group-hover:text-primary sm:text-2xl">
-                {experience.jobTitle}
-              </h2>
-
-              <div className="flex flex-wrap items-center gap-2 text-sm">
-                <span className="font-semibold text-foreground/90">
-                  {experience.company}
-                </span>
-                {experience.companyFrom ? (
-                  <>
-                    <span className="text-border">•</span>
-                    <span className="inline-flex items-center gap-1 text-muted-foreground text-xs">
-                      <MapPin className="h-3.5 w-3.5 text-muted-foreground/70" />
-                      <span>{experience.companyFrom}</span>
-                    </span>
-                  </>
-                ) : null}
-              </div>
-            </div>
-          </div>
-
-          {/* Date Range Badge */}
-          <div className="shrink-0">
-            <span className="inline-flex items-center rounded-lg border border-border/70 bg-secondary/80 px-2.5 py-1 font-mono text-xs font-medium text-foreground/90">
-              {formatDateRange(experience.from, experience.to)}
-            </span>
-          </div>
-        </div>
-
-        {/* Company Overview Subtitle */}
-        {experience.companyDescription ? (
-          <p className="text-xs font-mono text-muted-foreground/90 border-l-2 border-primary/40 pl-3">
-            {experience.companyDescription}
-          </p>
-        ) : null}
-
-        {/* Job Description */}
-        <p className="text-sm leading-relaxed text-muted-foreground">
-          {experience.jobDescription || "No role description provided."}
-        </p>
-
-        {/* Highlights / Key Accomplishments */}
-        {experience.highlights?.length ? (
-          <div className="space-y-2 pt-1">
-            <h3 className="inline-flex items-center gap-1 font-mono text-[0.6875rem] font-semibold uppercase tracking-wider text-muted-foreground">
-              <Sparkles className="h-3 w-3 text-primary" />
-              <span>Key Responsibilities & Highlights</span>
-            </h3>
-            <div className="grid gap-2 sm:grid-cols-2">
-              {experience.highlights.map((highlight, idx) => (
-                <div
-                  key={idx}
-                  className="flex items-start gap-2 text-xs leading-relaxed text-foreground/80 bg-card/60 border border-border/50 rounded-lg p-2.5"
-                >
-                  <CheckCircle2 className="h-3.5 w-3.5 text-primary shrink-0 mt-0.5" />
-                  <span>{highlight}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        ) : null}
-
-        {/* Technology Pills & Action Links Footer */}
-        <div className="flex flex-col gap-4 border-t border-border/60 pt-4 sm:flex-row sm:items-center sm:justify-between">
-          {experience.technologies?.length ? (
-            <div className="flex flex-wrap gap-1.5">
-              {experience.technologies.map((tech) => (
-                <button
-                  key={tech.id}
-                  type="button"
-                  onClick={() => onSelectTech(tech.name)}
-                  className="craft-pill cursor-pointer hover:border-primary/40 hover:text-primary transition-all text-[0.6875rem]"
-                  title={`Filter by ${tech.name}`}
-                >
-                  {tech.name}
-                </button>
-              ))}
-            </div>
-          ) : (
-            <div />
-          )}
-
-          {/* Action buttons */}
-          {experience.companyUrl ? (
-            <div className="flex items-center gap-2.5 shrink-0">
-              <Button
-                variant="outline"
-                size="sm"
-                className="font-mono text-xs text-muted-foreground hover:text-foreground gap-1.5"
-                asChild
-              >
-                <a
-                  href={experience.companyUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <span>Company website</span>
-                  <ExternalLink className="h-3.5 w-3.5" />
-                </a>
-              </Button>
+const ExperienceCard = forwardRef<HTMLElement, ExperienceCardProps>(function ExperienceCard(
+  { experience, onSelectTech },
+  ref,
+) {
+  return (
+    <motion.article
+      ref={ref}
+      layout
+      variants={cardVariants}
+      className="craft-card craft-card-interactive group relative overflow-hidden rounded-2xl p-6 sm:p-7 space-y-5 transition-all hover:border-primary/40"
+    >
+      {/* Top Header Row */}
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+        <div className="flex items-start gap-3.5">
+          {experience.image?.src ? (
+            <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-xl border border-border/80 bg-card shadow-sm">
+              <OptimizedImage
+                src={experience.image.src}
+                alt={experience.company}
+                width={44}
+                height={44}
+                className="h-full w-full object-cover"
+              />
             </div>
           ) : null}
+
+          <div className="space-y-1">
+            <h2 className="text-xl font-bold tracking-tight text-foreground transition-colors group-hover:text-primary sm:text-2xl">
+              {experience.jobTitle}
+            </h2>
+
+            <div className="flex flex-wrap items-center gap-2 text-sm">
+              <span className="font-semibold text-foreground/90">{experience.company}</span>
+              {experience.companyFrom ? (
+                <>
+                  <span className="text-border">•</span>
+                  <span className="inline-flex items-center gap-1 text-muted-foreground text-xs">
+                    <MapPin className="h-3.5 w-3.5 text-muted-foreground/70" />
+                    <span>{experience.companyFrom}</span>
+                  </span>
+                </>
+              ) : null}
+            </div>
+          </div>
         </div>
-      </motion.article>
-    );
-  },
-);
+
+        {/* Date Range Badge */}
+        <div className="shrink-0">
+          <span className="inline-flex items-center rounded-lg border border-border/70 bg-secondary/80 px-2.5 py-1 font-mono text-xs font-medium text-foreground/90">
+            {formatDateRange(experience.from, experience.to)}
+          </span>
+        </div>
+      </div>
+
+      {/* Company Overview Subtitle */}
+      {experience.companyDescription ? (
+        <p className="text-xs font-mono text-muted-foreground/90 border-l-2 border-primary/40 pl-3">
+          {experience.companyDescription}
+        </p>
+      ) : null}
+
+      {/* Job Description */}
+      <p className="text-sm leading-relaxed text-muted-foreground">
+        {experience.jobDescription || "No role description provided."}
+      </p>
+
+      {/* Highlights / Key Accomplishments */}
+      {experience.highlights?.length ? (
+        <div className="space-y-2 pt-1">
+          <h3 className="inline-flex items-center gap-1 font-mono text-[0.6875rem] font-semibold uppercase tracking-wider text-muted-foreground">
+            <Sparkles className="h-3 w-3 text-primary" />
+            <span>Key Responsibilities & Highlights</span>
+          </h3>
+          <div className="grid gap-2 sm:grid-cols-2">
+            {experience.highlights.map((highlight, idx) => (
+              <div
+                key={idx}
+                className="flex items-start gap-2 text-xs leading-relaxed text-foreground/80 bg-card/60 border border-border/50 rounded-lg p-2.5"
+              >
+                <CheckCircle2 className="h-3.5 w-3.5 text-primary shrink-0 mt-0.5" />
+                <span>{highlight}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : null}
+
+      {/* Technology Pills & Action Links Footer */}
+      <div className="flex flex-col gap-4 border-t border-border/60 pt-4 sm:flex-row sm:items-center sm:justify-between">
+        {experience.technologies?.length ? (
+          <div className="flex flex-wrap gap-1.5">
+            {experience.technologies.map((tech) => (
+              <button
+                key={tech.id}
+                type="button"
+                onClick={() => onSelectTech(tech.name)}
+                className="craft-pill cursor-pointer hover:border-primary/40 hover:text-primary transition-all text-[0.6875rem]"
+                title={`Filter by ${tech.name}`}
+              >
+                {tech.name}
+              </button>
+            ))}
+          </div>
+        ) : (
+          <div />
+        )}
+
+        {/* Action buttons */}
+        {experience.companyUrl ? (
+          <div className="flex items-center gap-2.5 shrink-0">
+            <Button
+              variant="outline"
+              size="sm"
+              className="font-mono text-xs text-muted-foreground hover:text-foreground gap-1.5"
+              asChild
+            >
+              <a href={experience.companyUrl} target="_blank" rel="noopener noreferrer">
+                <span>Company website</span>
+                <ExternalLink className="h-3.5 w-3.5" />
+              </a>
+            </Button>
+          </div>
+        ) : null}
+      </div>
+    </motion.article>
+  );
+});
 ExperienceCard.displayName = "ExperienceCard";

@@ -1,10 +1,4 @@
-import {
-  type ComponentType,
-  type LazyExoticComponent,
-  Suspense,
-  lazy,
-  useEffect,
-} from "react";
+import { type ComponentType, type LazyExoticComponent, Suspense, lazy, useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import { Outlet, createBrowserRouter, useLocation } from "react-router-dom";
 
@@ -34,10 +28,7 @@ function RouteChangeTracker() {
   const location = useLocation();
 
   useEffect(() => {
-    const isInvalidId =
-      !googleAnalyticsId ||
-      googleAnalyticsId === "undefined" ||
-      googleAnalyticsId === "";
+    const isInvalidId = !googleAnalyticsId || googleAnalyticsId === "undefined" || googleAnalyticsId === "";
 
     if (typeof window === "undefined" || !window.gtag || isInvalidId) {
       return;

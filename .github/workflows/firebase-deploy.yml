@@ -4,10 +4,10 @@ name: Deploy to Firebase Hosting on merge
     branches:
       - master
     paths-ignore:
-      - '**.md'
-      - 'docs/**'
-      - 'reports/**'
-      - 'prompts/**'
+      - "**.md"
+      - "docs/**"
+      - "reports/**"
+      - "prompts/**"
 
 # COST GUARD (2026-09-26): newest push wins; skip docs-only runs.
 concurrency:

@@ -39,9 +39,7 @@ export const Navbar = () => {
     <header
       className={cn(
         "sticky top-0 z-50 w-full transition-[background-color,border-color,box-shadow] duration-200",
-        isScrolled
-          ? "border-b border-border/80 bg-background/80 backdrop-blur-md shadow-subtle"
-          : "bg-transparent",
+        isScrolled ? "border-b border-border/80 bg-background/80 backdrop-blur-md shadow-subtle" : "bg-transparent",
       )}
     >
       <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4 sm:px-6">
@@ -75,11 +73,7 @@ export const Navbar = () => {
           ))}
           <div className="ml-3 pl-3 border-l border-border/80">
             <Button size="sm" variant="outline" asChild>
-              <a
-                href="/documents/jorgedelacruz_cv.pdf"
-                download
-                className="font-mono text-xs"
-              >
+              <a href="/documents/jorgedelacruz_cv.pdf" download className="font-mono text-xs">
                 Resume
               </a>
             </Button>
@@ -96,27 +90,11 @@ export const Navbar = () => {
             aria-expanded={isMenuOpen}
             className="flex h-11 w-11 items-center justify-center p-0 text-foreground hover:bg-secondary"
           >
-            <svg
-              className="h-5 w-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              aria-hidden="true"
-            >
+            <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               {isMenuOpen ? (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               ) : (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
               )}
             </svg>
           </Button>
@@ -135,9 +113,7 @@ export const Navbar = () => {
                 className={({ isActive }) =>
                   cn(
                     "rounded-md px-3 py-2 text-sm font-medium transition-colors",
-                    isActive
-                      ? "bg-secondary text-foreground"
-                      : "text-muted-foreground hover:text-foreground",
+                    isActive ? "bg-secondary text-foreground" : "text-muted-foreground hover:text-foreground",
                   )
                 }
               >
@@ -146,11 +122,7 @@ export const Navbar = () => {
             ))}
             <div className="pt-2">
               <Button size="sm" variant="outline" className="w-full" asChild>
-                <a
-                  href="/documents/jorgedelacruz_cv.pdf"
-                  download
-                  className="font-mono text-xs"
-                >
+                <a href="/documents/jorgedelacruz_cv.pdf" download className="font-mono text-xs">
                   Download CV
                 </a>
               </Button>

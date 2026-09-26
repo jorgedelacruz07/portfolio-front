@@ -9,12 +9,7 @@ const __dirname = path.dirname(__filename);
 const rootDir = path.resolve(__dirname, "..");
 const publicImagesDir = path.join(rootDir, "public", "images");
 const jorgeImagePath = path.join(publicImagesDir, "jorge.jpg");
-const tempHtmlPath = path.join(
-  rootDir,
-  "node_modules",
-  ".cache",
-  "og-card.html",
-);
+const tempHtmlPath = path.join(rootDir, "node_modules", ".cache", "og-card.html");
 
 fs.mkdirSync(path.dirname(tempHtmlPath), { recursive: true });
 
@@ -353,11 +348,7 @@ fs.writeFileSync(tempHtmlPath, htmlContent, "utf8");
 const outPngPath = path.join(publicImagesDir, "og-image.png");
 const outJpgPath = path.join(publicImagesDir, "og-image.jpg");
 
-const chromePaths = [
-  "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
-  "google-chrome",
-  "chromium",
-];
+const chromePaths = ["/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", "google-chrome", "chromium"];
 
 const chromePath = chromePaths.find((p) => {
   try {
