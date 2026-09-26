@@ -3,6 +3,16 @@ name: Deploy to Firebase Hosting on merge
   push:
     branches:
       - master
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+      - 'reports/**'
+      - 'prompts/**'
+
+# COST GUARD (2026-09-26): newest push wins; skip docs-only runs.
+concurrency:
+  group: portfolio-front-live
+  cancel-in-progress: true
 
 permissions:
   contents: read
@@ -12,6 +22,7 @@ permissions:
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - name: Setup Node.js
