@@ -73,7 +73,12 @@ export const Navbar = () => {
           ))}
           <div className="ml-3 pl-3 border-l border-border/80">
             <Button size="sm" variant="outline" asChild>
-              <a href="/documents/jorgedelacruz_cv.pdf" download className="font-mono text-xs">
+              <a
+                href="/documents/jorgedelacruz_cv.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-mono text-xs"
+              >
                 Resume
               </a>
             </Button>
@@ -122,8 +127,13 @@ export const Navbar = () => {
             ))}
             <div className="pt-2">
               <Button size="sm" variant="outline" className="w-full" asChild>
-                <a href="/documents/jorgedelacruz_cv.pdf" download className="font-mono text-xs">
-                  Download CV
+                <a
+                  href="/documents/jorgedelacruz_cv.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-mono text-xs"
+                >
+                  Resume
                 </a>
               </Button>
             </div>

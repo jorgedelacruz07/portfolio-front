@@ -1,6 +1,6 @@
 import { forwardRef, useMemo, useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, type Variants } from "framer-motion";
 import { Briefcase, CheckCircle2, ExternalLink, Layers, MapPin, Search, Sparkles, X } from "lucide-react";
 
 import { LoadingSpinner } from "@/components/LoadingSpinner";
@@ -21,7 +21,7 @@ const containerVariants = {
   },
 };
 
-const cardVariants = {
+const cardVariants: Variants = {
   hidden: { opacity: 0, y: 16 },
   visible: {
     opacity: 1,

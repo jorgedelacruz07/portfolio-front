@@ -65,3 +65,13 @@ If `VITE_API_URL` is omitted in development, the data layer falls back to local 
 - Production output is generated in `dist/`.
 - Firebase Hosting should serve `dist/` and rewrite unknown routes to `/index.html`.
 - Run `npm run build` before deployment to verify the optimized bundle.
+
+Production builds require an absolute HTTP(S) `VITE_API_URL` pointing to the remote
+API; missing, invalid, or loopback addresses fail the build. Set the GitHub Actions
+`VITE_API_URL` secret before releasing. `VITE_GA_ID` remains optional.
+
+Run the configuration regression checks with:
+
+```bash
+node --test tests/production-env.test.mjs
+```

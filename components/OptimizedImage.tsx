@@ -25,7 +25,7 @@ export const OptimizedImage = ({
       alt={alt}
       loading={loading}
       decoding={decoding}
-      fetchpriority={fetchPriority}
+      {...{ fetchpriority: fetchPriority }}
       className={twMerge(clsx(className))}
       {...props}
     />

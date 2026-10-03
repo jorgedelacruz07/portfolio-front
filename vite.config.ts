@@ -1,10 +1,30 @@
+import process from "node:process";
 import { fileURLToPath, URL } from "node:url";
 
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
+import { validateProductionApiUrl } from "./config/validateProductionEnv.ts";
+
 export default defineConfig({
-  plugins: [react()],
+  envDir: process.env.DOPPLER_PROJECT && process.env.DOPPLER_CONFIG ? false : undefined,
+  plugins: [
+    react(),
+    {
+      name: "validate-production-api-url",
+      configResolved(config) {
+        const shouldValidate =
+          Boolean(process.env.CI) ||
+          Boolean(process.env.GITHUB_ACTIONS) ||
+          process.env.VITE_VERIFY_PROD_URL === "true" ||
+          process.env.npm_lifecycle_event === "deploy";
+
+        if (config.command === "build" && shouldValidate) {
+          validateProductionApiUrl(config.env.VITE_API_URL);
+        }
+      },
+    },
+  ],
   resolve: {
     tsconfigPaths: true,
     alias: {
