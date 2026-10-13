@@ -1,13 +1,9 @@
 name: Deploy to Firebase Hosting on merge
 "on":
-  push:
-    branches:
-      - master
-    paths-ignore:
-      - "**.md"
-      - "docs/**"
-      - "reports/**"
-      - "prompts/**"
+  # Auto-deploy on push disabled to preserve GitHub Actions quota (0 min billed).
+  # Use local deploy: `project-deploy portfolio client` (~20s, 0 min),
+  # or trigger manually via Actions tab with workflow_dispatch.
+  workflow_dispatch:
 
 # COST GUARD (2026-09-26): newest push wins; skip docs-only runs.
 concurrency:
