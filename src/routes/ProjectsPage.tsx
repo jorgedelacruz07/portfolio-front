@@ -420,9 +420,10 @@ const ProjectCard = forwardRef<HTMLElement, ProjectCardProps>(function ProjectCa
         <p className="text-sm leading-relaxed text-muted-foreground">{displayDescription}</p>
 
         {project.longDescription && project.longDescription !== displayDescription ? (
-          <p className="text-xs font-mono leading-relaxed text-muted-foreground/90 border-l-2 border-primary/30 pl-3">
-            {project.longDescription}
-          </p>
+          <details className="border-l-2 border-primary/30 pl-3 text-sm text-muted-foreground">
+            <summary className="cursor-pointer font-medium text-foreground">Read case study</summary>
+            <p className="mt-3 whitespace-pre-line leading-relaxed">{project.longDescription}</p>
+          </details>
         ) : null}
 
         {/* Technology Pills */}
@@ -444,7 +445,7 @@ const ProjectCard = forwardRef<HTMLElement, ProjectCardProps>(function ProjectCa
       </div>
 
       {/* Card Actions Footer */}
-      {project.url || project.links?.github ? (
+      {project.url || project.links?.github || project.links?.caseStudy ? (
         <div className="mt-6 flex items-center gap-2.5 border-t border-border/50 pt-4">
           {project.url ? (
             <Button
@@ -469,6 +470,13 @@ const ProjectCard = forwardRef<HTMLElement, ProjectCardProps>(function ProjectCa
               <a href={project.links.github} target="_blank" rel="noopener noreferrer" title="View source code">
                 <FolderGit2 className="h-4 w-4" />
                 <span className="hidden sm:inline">Code</span>
+              </a>
+            </Button>
+          ) : null}
+          {project.links?.caseStudy ? (
+            <Button variant="outline" size="sm" asChild>
+              <a href={project.links.caseStudy} target="_blank" rel="noopener noreferrer">
+                Case study
               </a>
             </Button>
           ) : null}

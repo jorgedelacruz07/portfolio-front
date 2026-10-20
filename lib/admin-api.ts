@@ -120,11 +120,28 @@ export const adminApi = {
     const response = await adminApiClient.get<TProject[]>("/admin/projects");
     return extractPayload(response);
   },
+  importProjectDraft: async (draft: unknown) => {
+    requireAdminApiUrl();
+    const response = await adminApiClient.post<TProject>("/admin/projects/import-draft", draft);
+    return extractPayload(response);
+  },
   saveProject: async (project: TProject) => {
     requireAdminApiUrl();
-    const { id, createdAt, updatedAt, technologies, ...payload } = project;
+    const { id, technologies } = project;
     const response = await adminApiClient.put<TProject>(`/admin/projects/${id}`, {
-      ...payload,
+      slug: project.slug,
+      name: project.name,
+      type: project.type,
+      url: project.url,
+      description: project.description,
+      longDescription: project.longDescription,
+      links: project.links,
+      featured: project.featured,
+      displayOrder: project.displayOrder,
+      image: project.image,
+      from: project.from,
+      to: project.to,
+      status: project.status ?? false,
       technologyIds: technologies?.map((technology) => technology.id) || [],
     });
     return extractPayload(response);

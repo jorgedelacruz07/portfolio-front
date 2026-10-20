@@ -2,6 +2,27 @@
 
 Personal portfolio frontend built as a Vite + React SPA with React Router, TanStack Query, Tailwind CSS, and React Helmet Async.
 
+The admin Projects section can preview and import curated `*.draft.json` files.
+Import always creates a hidden project; reviewing the file, importing it, and
+making it visible are separate actions. The editor preserves the long description,
+links, featured flag and display order. Public project cards show the long
+description in an accessible case-study disclosure. The source manifest and
+private report remain outside this frontend; see the workspace README.
+
+Optional browser verification: build with a synthetic API origin and Doppler
+markers to skip local dotenv files, then serve an isolated loopback preview:
+
+```bash
+DOPPLER_PROJECT=verification DOPPLER_CONFIG=verification VITE_API_URL=https://api.example.com npm run build
+DOPPLER_PROJECT=verification DOPPLER_CONFIG=verification npm run start -- --host 127.0.0.1 --port 5197
+```
+
+In another shell, run `node scripts/drafts-browser-smoke.mjs`. If Playwright is
+installed elsewhere, set `PORTFOLIO_PLAYWRIGHT_PATH` to that installation. The
+script mocks the API, blocks other external requests, and checks desktop/mobile
+review, hidden import, separate publication and case-study rendering. Screenshots
+go to `.cache/drafts-browser/`. It never contacts the deployed API or a database.
+
 ## Stack
 
 - Vite + React (versions in `package.json`)

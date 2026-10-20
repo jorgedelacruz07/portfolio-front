@@ -1,6 +1,8 @@
 import { FormEvent, ReactNode, useEffect, useMemo, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { adminApi } from "@/lib/admin-api";
+import { ProjectDraftImport } from "@/components/admin/ProjectDraftImport";
+import { ProjectEditor } from "@/components/admin/ProjectEditor";
 import type { TPortfolioContent, TProfile, TSiteSettings, TSkill } from "@/types/portfolio";
 import type { TExperience } from "@/types/experience";
 import type { TProject } from "@/types/project";
@@ -339,62 +341,15 @@ export default function AdminPage() {
             </Section>
 
             <Section title="Projects">
-              {projects.map((project, index) => (
-                <div
+              <ProjectDraftImport onImported={(project) => setProjects((current) => [project, ...current])} />
+              {projects.map((project) => (
+                <ProjectEditor
                   key={project.id}
-                  className="grid gap-3 rounded-xl border border-white/10 bg-black/20 p-3 md:grid-cols-[1fr_5rem_auto]"
-                >
-                  <input
-                    className={inputClass}
-                    value={project.name}
-                    onChange={(event) => {
-                      const next = [...projects];
-                      next[index] = { ...project, name: event.target.value };
-                      setProjects(next);
-                    }}
-                  />
-                  <input
-                    className={inputClass}
-                    type="number"
-                    value={project.displayOrder || 0}
-                    onChange={(event) => {
-                      const next = [...projects];
-                      next[index] = {
-                        ...project,
-                        displayOrder: Number(event.target.value),
-                      };
-                      setProjects(next);
-                    }}
-                  />
-                  <label className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <input
-                      type="checkbox"
-                      checked={project.status ?? true}
-                      onChange={(event) => {
-                        const next = [...projects];
-                        next[index] = {
-                          ...project,
-                          status: event.target.checked,
-                        };
-                        setProjects(next);
-                      }}
-                    />
-                    Visible
-                  </label>
-                  <textarea
-                    className={`${inputClass} md:col-span-3`}
-                    value={project.description}
-                    onChange={(event) => {
-                      const next = [...projects];
-                      next[index] = {
-                        ...project,
-                        description: event.target.value,
-                      };
-                      setProjects(next);
-                    }}
-                  />
-                  <SaveButton state={saveState} onClick={() => persist(() => adminApi.saveProject(project))} />
-                </div>
+                  project={project}
+                  onChange={(updated) => {
+                    setProjects((current) => current.map((item) => (item.id === updated.id ? updated : item)));
+                  }}
+                />
               ))}
             </Section>
 
