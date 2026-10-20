@@ -121,6 +121,12 @@ try {
     assert.equal(await review.isChecked(), false);
     assert.equal(await importButton.isDisabled(), true);
     assert.equal(calls.length, 0);
+    const technologyInput = page.getByLabel("Existing technology names (comma separated)");
+    await technologyInput.fill("React");
+    await technologyInput.press("End");
+    await technologyInput.pressSequentially(", TypeScript");
+    assert.equal(await technologyInput.inputValue(), "React, TypeScript");
+    await technologyInput.fill("");
     await review.check();
     await importButton.click();
     await page.getByText("Draft imported. Review the project below before making it visible.").waitFor();

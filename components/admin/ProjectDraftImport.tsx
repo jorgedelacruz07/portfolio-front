@@ -9,6 +9,7 @@ export function ProjectDraftImport({ onImported }: { onImported: (project: TProj
   const [reviewed, setReviewed] = useState(false);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
+  const [technologyInput, setTechnologyInput] = useState("");
   const selection = useRef(0);
   const field = "w-full rounded-lg border border-border bg-muted/40 px-3 py-2 text-sm";
 
@@ -65,7 +66,10 @@ export function ProjectDraftImport({ onImported }: { onImported: (project: TProj
             try {
               if (file.size > 40000) throw new Error("Choose a draft smaller than 40 KB.");
               const parsed = readProjectDraft(await file.text());
-              if (current === selection.current) setDraft(parsed);
+              if (current === selection.current) {
+                setDraft(parsed);
+                setTechnologyInput((parsed.project.technologyNames || []).join(", "));
+              }
             } catch (error) {
               if (current === selection.current)
                 setMessage(error instanceof Error ? error.message : "Invalid draft file.");
@@ -111,15 +115,16 @@ export function ProjectDraftImport({ onImported }: { onImported: (project: TProj
             Existing technology names (comma separated)
             <input
               className={field}
-              value={(draft.project.technologyNames || []).join(", ")}
-              onChange={(e) =>
+              value={technologyInput}
+              onChange={(e) => {
+                setTechnologyInput(e.target.value);
                 update({
                   technologyNames: e.target.value
                     .split(",")
                     .map((name) => name.trim())
                     .filter(Boolean),
-                })
-              }
+                });
+              }}
             />
           </label>
           {(["live", "github", "caseStudy"] as const).map((key) => (
