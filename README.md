@@ -88,8 +88,8 @@ If `VITE_API_URL` is omitted in development, the data layer falls back to local 
 - Run `npm run build` before deployment to verify the optimized bundle.
 
 Production builds require an absolute HTTP(S) `VITE_API_URL` pointing to the remote
-API; missing, invalid, or loopback addresses fail the build. Set the GitHub Actions
-`VITE_API_URL` secret before releasing. `VITE_GA_ID` remains optional.
+API; missing, invalid, or loopback addresses fail the build. Set `VITE_API_URL` in the
+Doppler `portfolio-front` config before releasing (`npm run deploy` builds locally). `VITE_GA_ID` remains optional.
 
 Run the configuration regression checks with:
 
