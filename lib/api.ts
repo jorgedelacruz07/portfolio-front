@@ -1,4 +1,4 @@
-import axios, { AxiosError, type AxiosResponse } from "axios";
+import axios, { AxiosError, type AxiosRequestConfig, type AxiosResponse } from "axios";
 
 import type { TCategory } from "../types/category";
 import type { TExperience } from "../types/experience";
@@ -8,31 +8,6 @@ import type { TPortfolioContent } from "../types/portfolio";
 import type { TProject } from "../types/project";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL?.trim() ?? "";
-const shouldUseMockData = import.meta.env.DEV && !API_BASE_URL;
-
-function isLocalApiUrl(url: string) {
-  if (!url) {
-    return false;
-  }
-
-  try {
-    const parsedUrl = new URL(url);
-    return ["localhost", "127.0.0.1", "0.0.0.0"].includes(parsedUrl.hostname);
-  } catch {
-    return /(localhost|127\.0\.0\.1|0\.0\.0\.0)/i.test(url);
-  }
-}
-
-if (import.meta.env.DEV && !API_BASE_URL) {
-  console.warn("VITE_API_URL is not configured. Falling back to mock data in development.");
-}
-
-if (import.meta.env.PROD && isLocalApiUrl(API_BASE_URL)) {
-  console.error(
-    "VITE_API_URL points to a local address in a production build. Rebuild the app with the production API URL before deploying.",
-  );
-}
-
 export const apiClient = axios.create({
   baseURL: API_BASE_URL || undefined,
   // Cloud Run scales to zero; a cold start plus the Atlas handshake can take well over 10s.
@@ -81,109 +56,6 @@ export const apiEndpoints = {
   github: () => "/client/github",
 } as const;
 
-const mockData = {
-  projects: [
-    {
-      id: "1",
-      name: "Project 1",
-      slug: "project-1",
-      type: "Web App",
-      description: "This is a test project",
-      image: { src: "/images/placeholder.jpg" },
-      technologies: [{ id: "1", name: "React" }],
-      url: "https://example.com",
-      from: "2023-01-01",
-      to: null,
-    },
-  ] as TProject[],
-  experiences: [
-    {
-      id: "1",
-      company: "Company A",
-      slug: "company-a",
-      jobTitle: "Developer",
-      jobDescription: "Worked on frontend delivery and UI quality.",
-      companyDescription: "A product company used as development fallback data.",
-      companyUrl: "https://example.com",
-      from: "2020-01-01",
-      to: "2022-01-01",
-      image: { src: "/images/placeholder.jpg" },
-      technologies: [{ id: "1", name: "React" }],
-    },
-  ] as TExperience[],
-  categories: [{ id: "1", name: "Tech" }] as TCategory[],
-  portfolio: {
-    profile: {
-      name: "Jorge de la Cruz Padilla",
-      headline: "Senior Software Engineer building fast, maintainable full-stack products.",
-      shortBio:
-        "I build user-facing apps, backend services, and cloud-ready delivery workflows with React, Express, MongoDB, AWS, Docker, and AI-assisted delivery.",
-      location: "Lima, Peru",
-      availability: "Available",
-      profileImage: { src: "/images/jorge.jpg" },
-      resumeUrl: "/documents/jorgedelacruz_cv.pdf",
-      contactEmail: "jdelacruzp7@gmail.com",
-      socialLinks: [
-        {
-          label: "LinkedIn",
-          url: "https://www.linkedin.com/in/jorgedelacruz07",
-        },
-        { label: "GitHub", url: "https://github.com/jorgedelacruz07" },
-      ],
-    },
-    settings: {
-      seoTitle: "Jorge de la Cruz | Senior Software Engineer",
-      seoDescription:
-        "Senior Software Engineer building full-stack products with React, Express, MongoDB, AWS, Docker, and AI-assisted delivery workflows.",
-      openGraphImage: "https://jorgedelacruzpadilla.dev/images/og-image.png",
-      contactEmail: "jdelacruzp7@gmail.com",
-      availabilityText: "Available for work",
-      footerText: "Jorge de la Cruz. All rights reserved.",
-    },
-    skills: ["React.js", "TypeScript", "Node.js", "Express.js", "MongoDB", "AWS", "Docker", "AI workflows"].map(
-      (name, index) => ({
-        name,
-        category: index < 7 ? "Engineering" : "AI workflow",
-        priority: index,
-        displayOrder: index,
-        visible: true,
-      }),
-    ),
-    projects: [] as TProject[],
-    experiences: [] as TExperience[],
-  } as TPortfolioContent,
-};
-
-// Development-only sample so the GitHub section can be built without a token or a running API.
-function buildMockGithubStats(): TGithubStats {
-  const start = Date.UTC(2025, 9, 26);
-  const calendar = Array.from({ length: 53 }, (_, week) => ({
-    date: new Date(start + week * 7 * 86_400_000).toISOString().slice(0, 10),
-    counts: Array.from({ length: 7 }, (_, day) => ((week * 7 + day) % 11 === 0 ? 0 : ((week * 5 + day * 3) % 9) * 2)),
-  }));
-
-  return {
-    login: "jorgedelacruz07",
-    url: "https://github.com/jorgedelacruz07",
-    createdAt: "2014-08-27T02:48:33Z",
-    followers: 13,
-    following: 23,
-    repositories: { total: 59, public: 3, activeLast30Days: 29 },
-    contributions: { lastYear: 9014, commits: 160, pullRequests: 1, reviews: 0, issues: 0, private: 8852 },
-    streaks: { current: 29, longest: 75 },
-    calendar,
-    languages: [
-      { name: "TypeScript", color: "#3178c6", percent: 84 },
-      { name: "JavaScript", color: "#f1e05a", percent: 6.4 },
-      { name: "CSS", color: "#663399", percent: 5.1 },
-      { name: "Shell", color: "#89e051", percent: 1.6 },
-    ],
-    projects: [],
-    source: "graphql",
-    updatedAt: new Date().toISOString(),
-  };
-}
-
 function extractPayload<T>(response: AxiosResponse<T | { data: T }>): T {
   const payload = response.data as T | { data: T };
 
@@ -194,180 +66,37 @@ function extractPayload<T>(response: AxiosResponse<T | { data: T }>): T {
   return payload as T;
 }
 
-function isNetworkError(error: unknown) {
-  return axios.isAxiosError(error) && !error.response;
+// Public content always comes from the configured API in every environment.
+// Missing configuration, failed requests and unsupported endpoints must stay observable.
+async function getPayload<T>(path: string, config?: AxiosRequestConfig): Promise<T> {
+  if (!API_BASE_URL) {
+    throw new Error("VITE_API_URL is required to load portfolio content.");
+  }
+  const response = await apiClient.get<T | { data: T }>(path, config);
+  return extractPayload(response);
 }
 
-// Placeholder content is for local development only. In production a failed request must surface as an
-// error (with retry) instead of silently rendering an empty portfolio.
-function shouldUseFallback(error: unknown) {
-  return import.meta.env.DEV && (shouldUseMockData || isNetworkError(error));
-}
-
-function isNotFoundError(error: unknown) {
-  return axios.isAxiosError(error) && error.response?.status === 404;
-}
-
-function logFallback(message: string) {
-  if (import.meta.env.DEV) {
-    console.warn(message);
+async function getOptionalPayload<T>(path: string): Promise<T | null> {
+  try {
+    return await getPayload<T>(path);
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response?.status === 404) {
+      return null;
+    }
+    throw error;
   }
 }
 
-function buildPortfolioPayload({
-  projects = [],
-  experiences = [],
-}: {
-  projects?: TProject[];
-  experiences?: TExperience[];
-}): TPortfolioContent {
-  return {
-    ...mockData.portfolio,
-    projects,
-    experiences,
-  };
-}
-
 export const api = {
-  getPortfolio: async (): Promise<TPortfolioContent> => {
-    if (shouldUseMockData) {
-      return mockData.portfolio;
-    }
-
-    try {
-      const response = await apiClient.get<TPortfolioContent | { data: TPortfolioContent }>(apiEndpoints.portfolio());
-      return extractPayload(response);
-    } catch (error) {
-      if (isNotFoundError(error)) {
-        const [projects, experiences] = await Promise.all([api.getProjects(), api.getExperiences()]);
-
-        return buildPortfolioPayload({ projects, experiences });
-      }
-
-      if (shouldUseFallback(error)) {
-        logFallback("API unavailable, using mock portfolio.");
-        return buildPortfolioPayload({});
-      }
-
-      throw error;
-    }
-  },
-
-  getProjects: async (): Promise<TProject[]> => {
-    if (shouldUseMockData) {
-      return mockData.projects;
-    }
-
-    try {
-      const response = await apiClient.get<TProject[] | { data: TProject[] }>(apiEndpoints.projects());
-      return extractPayload(response);
-    } catch (error) {
-      if (shouldUseFallback(error)) {
-        logFallback("API unavailable, using mock projects.");
-        return mockData.projects;
-      }
-
-      throw error;
-    }
-  },
-
-  getProjectBySlug: async (slug: string): Promise<TProject | null> => {
-    if (shouldUseMockData) {
-      return mockData.projects.find((project) => project.slug === slug) ?? null;
-    }
-
-    try {
-      const response = await apiClient.get<TProject | { data: TProject }>(apiEndpoints.projectBySlug(slug));
-      return extractPayload(response);
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response?.status === 404) {
-        return null;
-      }
-
-      if (shouldUseFallback(error)) {
-        logFallback(`API unavailable, using mock project for slug: ${slug}.`);
-        return mockData.projects.find((project) => project.slug === slug) ?? null;
-      }
-
-      throw error;
-    }
-  },
-
-  getExperiences: async (): Promise<TExperience[]> => {
-    if (shouldUseMockData) {
-      return mockData.experiences;
-    }
-
-    try {
-      const response = await apiClient.get<TExperience[] | { data: TExperience[] }>(apiEndpoints.experiences());
-      return extractPayload(response);
-    } catch (error) {
-      if (shouldUseFallback(error)) {
-        logFallback("API unavailable, using mock experiences.");
-        return mockData.experiences;
-      }
-
-      throw error;
-    }
-  },
-
-  getExperienceBySlug: async (slug: string): Promise<TExperience | null> => {
-    if (shouldUseMockData) {
-      return mockData.experiences.find((experience) => experience.slug === slug) ?? null;
-    }
-
-    try {
-      const response = await apiClient.get<TExperience | { data: TExperience }>(apiEndpoints.experienceBySlug(slug));
-      return extractPayload(response);
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response?.status === 404) {
-        return null;
-      }
-
-      if (shouldUseFallback(error)) {
-        logFallback(`API unavailable, using mock experience for slug: ${slug}.`);
-        return mockData.experiences.find((experience) => experience.slug === slug) ?? null;
-      }
-
-      throw error;
-    }
-  },
-
-  getGithubStats: async (): Promise<TGithubStats> => {
-    if (shouldUseMockData) {
-      return buildMockGithubStats();
-    }
-
-    try {
-      const response = await apiClient.get<TGithubStats | { data: TGithubStats }>(apiEndpoints.github());
-      return extractPayload(response);
-    } catch (error) {
-      if (shouldUseFallback(error)) {
-        logFallback("API unavailable, using mock GitHub statistics.");
-        return buildMockGithubStats();
-      }
-
-      throw error;
-    }
-  },
-
-  getCategories: async (): Promise<TCategory[]> => {
-    if (shouldUseMockData) {
-      return mockData.categories;
-    }
-
-    try {
-      const response = await apiClient.get<TCategory[] | { data: TCategory[] }>(apiEndpoints.categories());
-      return extractPayload(response);
-    } catch (error) {
-      if (shouldUseFallback(error)) {
-        logFallback("API unavailable, using mock categories.");
-        return mockData.categories;
-      }
-
-      throw error;
-    }
-  },
+  getPortfolio: () => getPayload<TPortfolioContent>(apiEndpoints.portfolio()),
+  getProjects: () => getPayload<TProject[]>(apiEndpoints.projects()),
+  getProjectBySlug: (slug: string) => getOptionalPayload<TProject>(apiEndpoints.projectBySlug(slug)),
+  getExperiences: () => getPayload<TExperience[]>(apiEndpoints.experiences()),
+  getExperienceBySlug: (slug: string) => getOptionalPayload<TExperience>(apiEndpoints.experienceBySlug(slug)),
+  // Revalidate even an older cached REST response after the server's token is configured.
+  // The API still caches GitHub upstream responses, so this does not add provider requests.
+  getGithubStats: () => getPayload<TGithubStats>(apiEndpoints.github(), { headers: { "Cache-Control": "no-cache" } }),
+  getCategories: () => getPayload<TCategory[]>(apiEndpoints.categories()),
 } as const;
 
 export { adminApi, setAdminCsrfToken } from "./admin-api";

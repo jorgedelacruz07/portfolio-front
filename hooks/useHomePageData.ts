@@ -1,5 +1,6 @@
 import { queryOptions, useQuery, useQueryClient, type QueryClient } from "@tanstack/react-query";
 import { api, handleApiError } from "@/lib/api";
+import { orderPublicProjects } from "@/lib/project-order";
 import { projectKeys } from "./queries/useProjects";
 import { experienceKeys } from "./queries/useExperiences";
 
@@ -38,7 +39,7 @@ export const useHomePageData = () => {
     settings: data?.settings,
     skills: data?.skills ?? [],
     experiences: data?.experiences.slice(0, 3) ?? [],
-    projects: data?.projects.slice(0, 3) ?? [],
+    projects: orderPublicProjects(data?.projects ?? []).slice(0, 3),
     isLoading,
     error,
     refetch,

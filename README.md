@@ -30,7 +30,7 @@ go to `.cache/drafts-browser/`. It never contacts the deployed API or a database
 - TanStack Query for remote data fetching and caching
 - Tailwind CSS with shared home-page layout tokens
 - React Helmet Async for document metadata
-- Axios for API access with development fallback data
+- Axios for API access with the same public data flow in development and production
 
 ## Scripts
 
@@ -64,7 +64,27 @@ VITE_GA_ID=
 - `VITE_API_URL`: Base URL for the portfolio API.
 - `VITE_GA_ID`: Google Analytics measurement ID.
 
-If `VITE_API_URL` is omitted in development, the data layer falls back to local mock responses from [`lib/api.ts`](lib/api.ts).
+`VITE_API_URL` is required in every environment. Missing configuration, network
+errors and unsupported endpoints surface as errors; public content is never
+silently replaced with sample profiles, projects or GitHub statistics.
+
+GitHub activity revalidates its HTTP response and retries incomplete results
+every minute while the page is active, as well as on return to the tab or network
+reconnection. An unavailable response keeps the section visible with a retry
+button. Complete statistics retain their 30-minute query cache; the API's
+upstream cache avoids extra GitHub calls.
+
+Public project ordering uses CMS `featured` and `displayOrder` on both Home and
+Projects. Unranked historical projects preserve their existing relative order.
+The reviewed public catalog and GitHub profile synchronization tools live in the
+parent workspace; neither the frontend nor the browser copies private project
+documentation into public content.
+
+`CompanyLogo` is shared by Home and Experiences. It uses an explicit CMS
+`companyLogo`, then a verified local brand asset, then the legacy image, and
+finally a monogram if images fail. Logos use `object-contain`; locally hosted
+filenames include a content hash to avoid stale immutable image caches.
+Sources and verification dates are recorded in `docs/company-logo-sources.json`.
 
 ## Project Structure
 

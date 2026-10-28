@@ -4,7 +4,7 @@ import { AnimatePresence, motion, type Variants } from "framer-motion";
 import { Briefcase, CheckCircle2, ExternalLink, Layers, MapPin, Search, Sparkles, X } from "lucide-react";
 
 import { LoadingSpinner } from "@/components/LoadingSpinner";
-import { OptimizedImage } from "@/components/OptimizedImage";
+import { CompanyLogo } from "@/components/CompanyLogo";
 import { Button } from "@/components/ui/button";
 import { useGetExperiences } from "@/hooks";
 import { formatDateRange } from "@/lib/utils";
@@ -284,17 +284,7 @@ const ExperienceCard = forwardRef<HTMLElement, ExperienceCardProps>(function Exp
       {/* Top Header Row */}
       <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex items-start gap-3.5">
-          {experience.image?.src ? (
-            <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-xl border border-border/80 bg-card shadow-sm">
-              <OptimizedImage
-                src={experience.image.src}
-                alt={experience.company}
-                width={44}
-                height={44}
-                className="h-full w-full object-cover"
-              />
-            </div>
-          ) : null}
+          <CompanyLogo experience={experience} className="h-11 w-11" />
 
           <div className="space-y-1">
             <h2 className="text-xl font-bold tracking-tight text-foreground transition-colors group-hover:text-primary sm:text-2xl">

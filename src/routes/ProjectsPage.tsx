@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useGetProjects } from "@/hooks";
 import { formatDateRange } from "@/lib/utils";
+import { orderPublicProjects } from "@/lib/project-order";
 import { TProject } from "@/types/project";
 
 const containerVariants = {
@@ -70,7 +71,7 @@ export default function ProjectsPage() {
 
   // Filtered projects
   const filteredProjects = useMemo(() => {
-    return projects.filter((project) => {
+    return orderPublicProjects(projects).filter((project) => {
       // Type filter
       if (selectedType === "featured" && !project.featured) {
         return false;
@@ -144,13 +145,10 @@ export default function ProjectsPage() {
         <title>Projects & Engineering Work | Jorge de la Cruz</title>
         <meta
           name="description"
-          content="Production web applications, client products, and frontend architecture systems engineered with React, TypeScript, Node.js, and Cloud Infrastructure."
+          content="Selected products, personal tools, and client work built with TypeScript, React, Node.js, and other stacks."
         />
         <meta property="og:title" content="Projects & Engineering Work | Jorge de la Cruz" />
-        <meta
-          property="og:description"
-          content="Production web applications, client products, and frontend architecture systems."
-        />
+        <meta property="og:description" content="Selected products, personal tools, and client work." />
       </Helmet>
 
       <main className="relative mx-auto max-w-5xl px-4 py-8 sm:px-6 md:py-16">
@@ -167,8 +165,8 @@ export default function ProjectsPage() {
             </h1>
 
             <p className="max-w-2xl text-sm sm:text-base leading-relaxed text-muted-foreground">
-              Production web applications, full-stack client architectures, and high-performance tools engineered with
-              modern TypeScript, React, Node.js, and scalable cloud workflows.
+              Products, personal tools, and client work across finance, education, and other domains. Explore each
+              project's stack, design decisions, and availability.
             </p>
           </header>
 

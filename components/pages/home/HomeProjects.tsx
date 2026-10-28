@@ -145,7 +145,7 @@ export const HomeProjects = ({ projects }: HomeProjectsProps) => {
     <HomeSection
       eyebrow="Selected Work"
       title="Featured applications & systems"
-      description="Production products showcasing frontend architecture, performant APIs, and clean UX execution."
+      description="Selected products and tools spanning personal finance, education, and developer workflows."
       actionHref="/projects"
       actionLabel="All projects"
     >

@@ -6,7 +6,7 @@ export const githubKeys = {
   stats: ["github", "stats"] as const,
 };
 
-/** Optional enrichment: a failure just hides the GitHub section, so it retries once and stays quiet. */
+/** Recover incomplete activity without requiring the visitor to reload the page. */
 export const useGithubStats = () => {
   return useQuery({
     queryKey: githubKeys.stats,
@@ -17,7 +17,11 @@ export const useGithubStats = () => {
         throw handleApiError(error);
       }
     },
-    staleTime: 30 * 60 * 1000,
+    staleTime: (query) => (query.state.data?.contributions && query.state.data.calendar ? 30 * 60 * 1000 : 0),
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
+    refetchOnMount: true,
+    refetchInterval: (query) => (query.state.data?.contributions && query.state.data.calendar ? false : 60_000),
     retry: 1,
   });
 };

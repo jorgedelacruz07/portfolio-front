@@ -1,12 +1,10 @@
-import { useMemo } from "react";
 import { motion } from "framer-motion";
 import { ExternalLink, MapPin } from "lucide-react";
 
 import { TExperience } from "@/types/experience";
-import { OptimizedImage } from "@/components/OptimizedImage";
+import { CompanyLogo } from "@/components/CompanyLogo";
 import { HomeSection } from "@/components/pages/home/HomeSection";
 import { Button } from "@/components/ui/button";
-import { getCompanyMonogram, getCompanyTheme } from "@/lib/company-themes";
 import { formatDateRange, homeMotion } from "@/lib/utils";
 
 type HomeExperiencesProps = {
@@ -14,13 +12,6 @@ type HomeExperiencesProps = {
 };
 
 const ExperienceTimelineItem = ({ experience, isLast }: { experience: TExperience; isLast: boolean }) => {
-  const theme = useMemo(
-    () => getCompanyTheme(experience.slug, experience.company),
-    [experience.slug, experience.company],
-  );
-
-  const monogram = useMemo(() => getCompanyMonogram(experience.company), [experience.company]);
-
   return (
     <motion.div variants={homeMotion.item} className="relative flex gap-3.5 sm:gap-5 pb-6 sm:pb-7 last:pb-0 group">
       {/* Continuous Vertical Timeline Track Spine */}
@@ -33,23 +24,10 @@ const ExperienceTimelineItem = ({ experience, isLast }: { experience: TExperienc
 
       {/* Timeline Node / Anchor */}
       <div className="relative z-10 shrink-0">
-        <div
-          className={`flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center overflow-hidden rounded-xl border shadow-sm transition-all duration-300 group-hover:scale-105 group-hover:ring-2 group-hover:ring-primary/20 ${
-            experience.image?.src ? "border-border/80 bg-card" : theme.iconBg
-          }`}
-        >
-          {experience.image?.src ? (
-            <OptimizedImage
-              src={experience.image.src}
-              alt={experience.company}
-              className="h-full w-full object-cover"
-              width={40}
-              height={40}
-            />
-          ) : (
-            <span className="font-mono text-[0.6875rem] sm:text-xs font-bold tracking-tight">{monogram}</span>
-          )}
-        </div>
+        <CompanyLogo
+          experience={experience}
+          className="h-8 w-8 sm:h-10 sm:w-10 transition-all duration-300 group-hover:scale-105 group-hover:ring-2 group-hover:ring-primary/20"
+        />
       </div>
 
       {/* Timeline Content Card */}
