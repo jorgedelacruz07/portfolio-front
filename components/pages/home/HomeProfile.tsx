@@ -46,10 +46,7 @@ export const HomeProfile = ({ cmsProfile }: HomeProfileProps) => {
           {/* Status & Location Pill */}
           <div className="flex flex-wrap items-center gap-2.5">
             <div className="inline-flex items-center gap-2 rounded-full border border-border bg-secondary/60 px-3 py-1 font-mono text-xs text-foreground">
-              <span className="relative flex h-2 w-2">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
-              </span>
+              <span className="h-2 w-2 rounded-full bg-emerald-500" />
               <span>{currentProfile.availability}</span>
             </div>
             <span className="font-mono text-xs text-muted-foreground">{currentProfile.location}</span>

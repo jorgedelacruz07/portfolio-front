@@ -1,25 +1,19 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { queryOptions, useQuery, useQueryClient, type QueryClient } from "@tanstack/react-query";
 import { api, handleApiError } from "@/lib/api";
 import { projectKeys } from "./queries/useProjects";
 import { experienceKeys } from "./queries/useExperiences";
 
 /**
- * Consolidated hook for fetching all data needed by the home page.
- * Automatically seeds the TanStack Query cache for individual sub-collections
- * so navigation to /projects and /experiences is 0ms instant without extra network requests.
- *
- * @returns Object containing profile, skills, experiences, projects, loading state, and error state
+ * Single request for the whole public site. It also seeds the per-collection caches so the
+ * /projects and /experiences pages open without another network round trip.
  */
-export const useHomePageData = () => {
-  const queryClient = useQueryClient();
-
-  const { data, isLoading, error } = useQuery({
+export const portfolioQuery = (queryClient: QueryClient) =>
+  queryOptions({
     queryKey: ["portfolio", "public"],
     queryFn: async () => {
       try {
         const result = await api.getPortfolio();
 
-        // Seed individual query caches for instant zero-latency page transitions
         if (result?.projects) {
           queryClient.setQueryData(projectKeys.lists(), result.projects);
         }
@@ -34,17 +28,19 @@ export const useHomePageData = () => {
     },
   });
 
+/** Data for the home page: profile, skills and the first three experiences and projects. */
+export const useHomePageData = () => {
+  const queryClient = useQueryClient();
+  const { data, isLoading, error, refetch } = useQuery(portfolioQuery(queryClient));
+
   return {
     profile: data?.profile,
     settings: data?.settings,
     skills: data?.skills ?? [],
-    /** Featured experiences (first 3) */
     experiences: data?.experiences.slice(0, 3) ?? [],
-    /** Featured projects (first 3) */
     projects: data?.projects.slice(0, 3) ?? [],
-    /** Whether any data is still loading */
     isLoading,
-    /** First error encountered, if any */
     error,
+    refetch,
   };
 };

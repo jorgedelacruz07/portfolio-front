@@ -39,7 +39,7 @@ export const Navbar = () => {
     <header
       className={cn(
         "sticky top-0 z-50 w-full transition-[background-color,border-color,box-shadow] duration-200",
-        isScrolled ? "border-b border-border/80 bg-background/80 backdrop-blur-md shadow-subtle" : "bg-transparent",
+        isScrolled ? "border-b border-border/80 bg-background" : "bg-transparent",
       )}
     >
       <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4 sm:px-6">
@@ -108,7 +108,7 @@ export const Navbar = () => {
 
       {/* Mobile Menu dropdown */}
       {isMenuOpen ? (
-        <div className="border-b border-border/80 bg-background/95 px-4 py-4 backdrop-blur-lg md:hidden">
+        <div className="border-b border-border/80 bg-background px-4 py-4 md:hidden">
           <nav className="flex flex-col space-y-1">
             {navbarItems.map((item) => (
               <NavLink

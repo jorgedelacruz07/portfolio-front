@@ -30,7 +30,7 @@ export const SocialNetworks: FC = () => {
             href={social.url}
             target="_blank"
             rel="noreferrer"
-            className="group inline-flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.04] text-foreground/80 backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-primary/35 hover:bg-white/[0.08] hover:text-primary"
+            className="group inline-flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.04] text-foreground/80 transition-all duration-300 hover:border-primary/35 hover:bg-white/[0.08] hover:text-primary"
             aria-label={`Visit my ${social.name} profile`}
           >
             <Icon width={22} height={22} />

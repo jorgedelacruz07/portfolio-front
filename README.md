@@ -89,7 +89,9 @@ If `VITE_API_URL` is omitted in development, the data layer falls back to local 
 
 Production builds require an absolute HTTP(S) `VITE_API_URL` pointing to the remote
 API; missing, invalid, or loopback addresses fail the build. Set `VITE_API_URL` in the
-Doppler `portfolio-front` config before releasing (`npm run deploy` builds locally). `VITE_GA_ID` remains optional.
+Doppler `portfolio` project, `prd` config, before releasing. `npm run deploy` reads it with
+`doppler run -c prd` and sets `VITE_VERIFY_PROD_URL=true`, so a missing or local URL fails the build
+instead of shipping a bundle that calls `localhost`. Only `VITE_API_URL` is injected; to enable analytics add `VITE_GA_ID` to `prd` and to the `--only-secrets` list in the `deploy` script.
 
 Run the configuration regression checks with:
 

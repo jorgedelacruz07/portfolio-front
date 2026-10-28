@@ -16,7 +16,6 @@ export const Layout = ({ children }: LayoutProps) => {
 
   return (
     <div className="relative min-h-screen overflow-x-hidden bg-background text-foreground selection:bg-primary/20 selection:text-foreground">
-      <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.1),rgba(255,255,255,0))]" />
       <PerformanceMonitor />
       <Helmet>
         <title>Jorge de la Cruz - Senior Software Engineer</title>

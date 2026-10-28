@@ -7,7 +7,13 @@ import { RouterProvider } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 
 import { router } from "./Router";
+import { portfolioQuery } from "../hooks/useHomePageData";
 import { queryClient } from "../lib/query-client";
+
+// Start the data request before React mounts so it overlaps with parsing and rendering.
+if (window.location.pathname === "/") {
+  void queryClient.prefetchQuery(portfolioQuery(queryClient));
+}
 
 function App() {
   useEffect(() => {

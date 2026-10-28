@@ -15,19 +15,18 @@ const containerVariants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.08,
+      staggerChildren: 0.04,
       delayChildren: 0.05,
     },
   },
 };
 
 const cardVariants: Variants = {
-  hidden: { opacity: 0, y: 16 },
+  hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    y: 0,
     transition: {
-      duration: 0.45,
+      duration: 0.3,
       ease: [0.16, 1, 0.3, 1],
     },
   },
@@ -145,7 +144,7 @@ export default function ExperiencesPage() {
           {/* Header Section */}
           <header className="space-y-3 sm:space-y-4 border-b border-border/70 pb-6 sm:pb-8">
             <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 font-mono text-[0.6875rem] font-medium uppercase tracking-widest text-primary">
-              <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
+              <span className="h-1.5 w-1.5 rounded-full bg-primary" />
               <span>Career Track Record // {experiences.length} Roles</span>
             </div>
 
@@ -162,7 +161,7 @@ export default function ExperiencesPage() {
           {/* Search & Filter Toolbar */}
           <section
             aria-label="Experience search and filters"
-            className="space-y-4 rounded-2xl border border-border/60 bg-card/40 p-4 sm:p-5 backdrop-blur-md"
+            className="space-y-4 rounded-2xl border border-border/60 bg-card/40 p-4 sm:p-5"
           >
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               {/* Search input */}

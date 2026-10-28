@@ -13,9 +13,12 @@ function formatDateLabel(value: string) {
     return value;
   }
 
+  // Dates are stored as calendar days (YYYY-MM-DD, parsed as UTC midnight). Formatting them in the
+  // viewer's zone would shift the first of a month back to the previous month west of UTC.
   return new Intl.DateTimeFormat("en", {
     month: "short",
     year: "numeric",
+    timeZone: "UTC",
   }).format(date);
 }
 
@@ -25,25 +28,23 @@ export function formatDateRange(from: string, to: string | null): string {
 
 export const homeMotion = {
   section: {
-    hidden: { opacity: 0, y: 20 },
+    hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      y: 0,
       transition: {
-        duration: 0.5,
+        duration: 0.3,
         ease: [0.16, 1, 0.3, 1],
         when: "beforeChildren",
-        staggerChildren: 0.08,
+        staggerChildren: 0.04,
       },
     },
   } satisfies Variants,
   item: {
-    hidden: { opacity: 0, y: 14 },
+    hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      y: 0,
       transition: {
-        duration: 0.45,
+        duration: 0.3,
         ease: [0.16, 1, 0.3, 1],
       },
     },

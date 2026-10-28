@@ -130,7 +130,6 @@ img {
 .craft-card {
   border: 1px solid hsl(var(--border) / 0.7);
   background: hsl(var(--card) / 0.6);
-  backdrop-filter: blur(12px);
   transition:
     border-color 0.2s ease,
     background-color 0.2s ease,
@@ -145,8 +144,6 @@ img {
 
 .craft-card-interactive:hover {
   border-color: hsl(var(--primary) / 0.4);
-  transform: translateY(-2px);
-  box-shadow: 0 12px 32px -8px rgba(0, 0, 0, 0.4);
 }
 
 .craft-pill {

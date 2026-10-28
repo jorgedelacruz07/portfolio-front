@@ -13,7 +13,7 @@
     "format:check": "prettier --check .",
     "analyze": "npm run build",
     "og:generate": "node scripts/generate-og-image.js",
-    "deploy": "npm run build && firebase deploy --only hosting --project portfolio-489421",
+    "deploy": "doppler run -p portfolio -c prd --only-secrets=VITE_API_URL -- env VITE_VERIFY_PROD_URL=true npm run build && firebase deploy --only hosting --project portfolio-489421",
     "quick": "npm run lint && npm run format && npm run build"
   },
   "dependencies": {

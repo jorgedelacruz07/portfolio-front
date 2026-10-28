@@ -2,6 +2,7 @@ import axios, { AxiosError, type AxiosResponse } from "axios";
 
 import type { TCategory } from "../types/category";
 import type { TExperience } from "../types/experience";
+import type { TGithubStats } from "../types/github";
 import type { ApiError } from "../types/error";
 import type { TPortfolioContent } from "../types/portfolio";
 import type { TProject } from "../types/project";
@@ -22,7 +23,7 @@ function isLocalApiUrl(url: string) {
   }
 }
 
-if (!API_BASE_URL) {
+if (import.meta.env.DEV && !API_BASE_URL) {
   console.warn("VITE_API_URL is not configured. Falling back to mock data in development.");
 }
 
@@ -34,7 +35,8 @@ if (import.meta.env.PROD && isLocalApiUrl(API_BASE_URL)) {
 
 export const apiClient = axios.create({
   baseURL: API_BASE_URL || undefined,
-  timeout: 10000,
+  // Cloud Run scales to zero; a cold start plus the Atlas handshake can take well over 10s.
+  timeout: 25000,
   headers: {
     "Content-Type": "application/json",
   },
@@ -76,6 +78,7 @@ export const apiEndpoints = {
   experiences: () => "/client/experiences",
   experienceBySlug: (slug: string) => `/client/experiences/${slug}`,
   categories: () => "/client/categories",
+  github: () => "/client/github",
 } as const;
 
 const mockData = {
@@ -151,6 +154,36 @@ const mockData = {
   } as TPortfolioContent,
 };
 
+// Development-only sample so the GitHub section can be built without a token or a running API.
+function buildMockGithubStats(): TGithubStats {
+  const start = Date.UTC(2025, 9, 26);
+  const calendar = Array.from({ length: 53 }, (_, week) => ({
+    date: new Date(start + week * 7 * 86_400_000).toISOString().slice(0, 10),
+    counts: Array.from({ length: 7 }, (_, day) => ((week * 7 + day) % 11 === 0 ? 0 : ((week * 5 + day * 3) % 9) * 2)),
+  }));
+
+  return {
+    login: "jorgedelacruz07",
+    url: "https://github.com/jorgedelacruz07",
+    createdAt: "2014-08-27T02:48:33Z",
+    followers: 13,
+    following: 23,
+    repositories: { total: 59, public: 3, activeLast30Days: 29 },
+    contributions: { lastYear: 9014, commits: 160, pullRequests: 1, reviews: 0, issues: 0, private: 8852 },
+    streaks: { current: 29, longest: 75 },
+    calendar,
+    languages: [
+      { name: "TypeScript", color: "#3178c6", percent: 84 },
+      { name: "JavaScript", color: "#f1e05a", percent: 6.4 },
+      { name: "CSS", color: "#663399", percent: 5.1 },
+      { name: "Shell", color: "#89e051", percent: 1.6 },
+    ],
+    projects: [],
+    source: "graphql",
+    updatedAt: new Date().toISOString(),
+  };
+}
+
 function extractPayload<T>(response: AxiosResponse<T | { data: T }>): T {
   const payload = response.data as T | { data: T };
 
@@ -165,8 +198,10 @@ function isNetworkError(error: unknown) {
   return axios.isAxiosError(error) && !error.response;
 }
 
+// Placeholder content is for local development only. In production a failed request must surface as an
+// error (with retry) instead of silently rendering an empty portfolio.
 function shouldUseFallback(error: unknown) {
-  return shouldUseMockData || isNetworkError(error);
+  return import.meta.env.DEV && (shouldUseMockData || isNetworkError(error));
 }
 
 function isNotFoundError(error: unknown) {
@@ -204,12 +239,9 @@ export const api = {
       return extractPayload(response);
     } catch (error) {
       if (isNotFoundError(error)) {
-        const [projectsResult, experiencesResult] = await Promise.allSettled([api.getProjects(), api.getExperiences()]);
+        const [projects, experiences] = await Promise.all([api.getProjects(), api.getExperiences()]);
 
-        return buildPortfolioPayload({
-          projects: projectsResult.status === "fulfilled" ? projectsResult.value : [],
-          experiences: experiencesResult.status === "fulfilled" ? experiencesResult.value : [],
-        });
+        return buildPortfolioPayload({ projects, experiences });
       }
 
       if (shouldUseFallback(error)) {
@@ -295,6 +327,24 @@ export const api = {
       if (shouldUseFallback(error)) {
         logFallback(`API unavailable, using mock experience for slug: ${slug}.`);
         return mockData.experiences.find((experience) => experience.slug === slug) ?? null;
+      }
+
+      throw error;
+    }
+  },
+
+  getGithubStats: async (): Promise<TGithubStats> => {
+    if (shouldUseMockData) {
+      return buildMockGithubStats();
+    }
+
+    try {
+      const response = await apiClient.get<TGithubStats | { data: TGithubStats }>(apiEndpoints.github());
+      return extractPayload(response);
+    } catch (error) {
+      if (shouldUseFallback(error)) {
+        logFallback("API unavailable, using mock GitHub statistics.");
+        return buildMockGithubStats();
       }
 
       throw error;

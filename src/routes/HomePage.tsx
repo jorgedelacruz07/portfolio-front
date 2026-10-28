@@ -19,13 +19,19 @@ const HomeExperiences = lazy(() =>
   })),
 );
 
+const HomeGithub = lazy(() =>
+  import("@/components/pages/home/HomeGithub").then((module) => ({
+    default: module.HomeGithub,
+  })),
+);
+
 type DeferredSectionProps = {
   children: ReactNode;
   className?: string;
 };
 
 function DeferredSectionPlaceholder() {
-  return <div className="min-h-[4rem] rounded-xl border border-border/40 bg-card/20 animate-pulse" />;
+  return <div className="min-h-[4rem] rounded-xl border border-border/40 bg-card/20" />;
 }
 
 function DeferredSection({ children, className }: DeferredSectionProps) {
@@ -34,6 +40,21 @@ function DeferredSection({ children, className }: DeferredSectionProps) {
   return (
     <div ref={ref} className={cn("min-h-0", className)}>
       {shouldRender ? children : <DeferredSectionPlaceholder />}
+    </div>
+  );
+}
+
+/** The GitHub block is optional: it reserves no space and only fetches once it is near the viewport. */
+function DeferredGithub() {
+  const { ref, shouldRender } = useDeferredRender();
+
+  return (
+    <div ref={ref}>
+      {shouldRender ? (
+        <Suspense fallback={null}>
+          <HomeGithub />
+        </Suspense>
+      ) : null}
     </div>
   );
 }
@@ -103,6 +124,8 @@ export default function HomePage() {
             </Suspense>
           </DeferredSection>
         ) : null}
+
+        <DeferredGithub />
       </div>
     </>
   );
