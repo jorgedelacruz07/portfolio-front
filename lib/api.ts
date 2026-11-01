@@ -29,11 +29,18 @@ apiClient.interceptors.request.use(
         window.location.hostname === "127.0.0.1" ||
         window.location.hostname.endsWith(".local");
 
-      if (
-        !isLocalBrowser &&
-        (!config.baseURL || config.baseURL.includes("localhost") || config.baseURL.includes("127.0.0.1"))
-      ) {
-        config.baseURL = PRODUCTION_API_URL;
+      if (!isLocalBrowser) {
+        if (!config.baseURL || config.baseURL.includes("localhost") || config.baseURL.includes("127.0.0.1")) {
+          config.baseURL = PRODUCTION_API_URL;
+        }
+        if (config.url && (config.url.startsWith("http://localhost") || config.url.startsWith("http://127.0.0.1"))) {
+          try {
+            const parsed = new URL(config.url);
+            config.url = `${PRODUCTION_API_URL}${parsed.pathname}${parsed.search}`;
+          } catch {
+            config.url = PRODUCTION_API_URL;
+          }
+        }
       }
     }
 

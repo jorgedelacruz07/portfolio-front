@@ -2,8 +2,9 @@ import axios, { type AxiosResponse } from "axios";
 import type { TPortfolioContent, TProfile, TSiteSettings, TSkill } from "../types/portfolio";
 import type { TExperience } from "../types/experience";
 import type { TProject } from "../types/project";
+import { PRODUCTION_API_URL, resolveApiBaseUrl } from "./api-url.ts";
 
-const API_BASE_URL = import.meta.env.VITE_API_URL?.trim() ?? "";
+const API_BASE_URL = resolveApiBaseUrl(import.meta.env.VITE_API_URL);
 
 export const adminApiClient = axios.create({
   baseURL: API_BASE_URL || undefined,
@@ -21,12 +22,35 @@ export function setAdminCsrfToken(token: string) {
 }
 
 function requireAdminApiUrl() {
-  if (!API_BASE_URL) {
+  const effectiveBaseUrl = resolveApiBaseUrl(API_BASE_URL);
+  if (!effectiveBaseUrl) {
     throw new Error("VITE_API_URL is required for admin CMS access.");
   }
 }
 
 adminApiClient.interceptors.request.use((config) => {
+  // Defense-in-depth: Ensure no request to localhost leaves a non-local browser
+  if (typeof window !== "undefined") {
+    const isLocalBrowser =
+      window.location.hostname === "localhost" ||
+      window.location.hostname === "127.0.0.1" ||
+      window.location.hostname.endsWith(".local");
+
+    if (!isLocalBrowser) {
+      if (!config.baseURL || config.baseURL.includes("localhost") || config.baseURL.includes("127.0.0.1")) {
+        config.baseURL = PRODUCTION_API_URL;
+      }
+      if (config.url && (config.url.startsWith("http://localhost") || config.url.startsWith("http://127.0.0.1"))) {
+        try {
+          const parsed = new URL(config.url);
+          config.url = `${PRODUCTION_API_URL}${parsed.pathname}${parsed.search}`;
+        } catch {
+          config.url = PRODUCTION_API_URL;
+        }
+      }
+    }
+  }
+
   if (adminCsrfToken && !["get", "head", "options"].includes(config.method || "")) {
     config.headers["x-csrf-token"] = adminCsrfToken;
   }
