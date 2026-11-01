@@ -17,7 +17,8 @@ export default defineConfig({
           Boolean(process.env.CI) ||
           Boolean(process.env.GITHUB_ACTIONS) ||
           process.env.VITE_VERIFY_PROD_URL === "true" ||
-          process.env.npm_lifecycle_event === "deploy";
+          process.env.npm_lifecycle_event === "deploy" ||
+          process.env.npm_lifecycle_event === "build:prod";
 
         if (config.command === "build" && shouldValidate) {
           validateProductionApiUrl(config.env.VITE_API_URL);

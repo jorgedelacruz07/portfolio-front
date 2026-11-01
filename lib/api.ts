@@ -6,8 +6,11 @@ import type { TGithubStats } from "../types/github";
 import type { ApiError } from "../types/error";
 import type { TPortfolioContent } from "../types/portfolio";
 import type { TProject } from "../types/project";
+import { PRODUCTION_API_URL, resolveApiBaseUrl } from "./api-url.ts";
 
-const API_BASE_URL = import.meta.env.VITE_API_URL?.trim() ?? "";
+export { PRODUCTION_API_URL, resolveApiBaseUrl };
+
+const API_BASE_URL = resolveApiBaseUrl(import.meta.env.VITE_API_URL);
 export const apiClient = axios.create({
   baseURL: API_BASE_URL || undefined,
   // Cloud Run scales to zero; a cold start plus the Atlas handshake can take well over 10s.
@@ -19,6 +22,21 @@ export const apiClient = axios.create({
 
 apiClient.interceptors.request.use(
   (config) => {
+    // Defense-in-depth: Ensure no request to localhost leaves a non-local browser
+    if (typeof window !== "undefined") {
+      const isLocalBrowser =
+        window.location.hostname === "localhost" ||
+        window.location.hostname === "127.0.0.1" ||
+        window.location.hostname.endsWith(".local");
+
+      if (
+        !isLocalBrowser &&
+        (!config.baseURL || config.baseURL.includes("localhost") || config.baseURL.includes("127.0.0.1"))
+      ) {
+        config.baseURL = PRODUCTION_API_URL;
+      }
+    }
+
     if (import.meta.env.DEV) {
       console.log(`[API Request] ${config.method?.toUpperCase()} ${config.url}`);
     }
@@ -69,7 +87,8 @@ function extractPayload<T>(response: AxiosResponse<T | { data: T }>): T {
 // Public content always comes from the configured API in every environment.
 // Missing configuration, failed requests and unsupported endpoints must stay observable.
 async function getPayload<T>(path: string, config?: AxiosRequestConfig): Promise<T> {
-  if (!API_BASE_URL) {
+  const effectiveBaseUrl = resolveApiBaseUrl(API_BASE_URL);
+  if (!effectiveBaseUrl) {
     throw new Error("VITE_API_URL is required to load portfolio content.");
   }
   const response = await apiClient.get<T | { data: T }>(path, config);
