@@ -3,7 +3,6 @@ import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 
 import { HomeSection } from "@/components/pages/home/HomeSection";
-import { Button } from "@/components/ui/button";
 import { useGithubStats } from "@/hooks";
 import { cn, homeMotion } from "@/lib/utils";
 import type { TGithubCalendarWeek } from "@/types/github";
@@ -46,28 +45,15 @@ const Stat = ({ label, value, note }: { label: string; value: string; note?: str
   </motion.div>
 );
 
-/** GitHub activity stays visible while loading or recovering from an unavailable response. */
+/** Keep GitHub activity out of the page until a complete snapshot is available. */
 export const HomeGithub = () => {
-  const { data, isPending, isFetching, refetch } = useGithubStats();
+  const { data, isError } = useGithubStats();
 
   const cells = useMemo(() => (data?.calendar ? buildCells(data.calendar) : []), [data?.calendar]);
   const levelOf = useMemo(() => buildLevelFn(cells), [cells]);
 
-  if (!data?.contributions || !data.calendar) {
-    return (
-      <HomeSection id="github-activity" eyebrow="GitHub" title="Activity & statistics">
-        <div className="craft-card space-y-3 rounded-2xl p-4 sm:p-5">
-          <p role="status" className="text-sm text-muted-foreground">
-            {isPending ? "Loading GitHub activity…" : "GitHub activity is temporarily unavailable."}
-          </p>
-          {!isPending ? (
-            <Button variant="outline" size="sm" disabled={isFetching} onClick={() => void refetch()}>
-              {isFetching ? "Retrying…" : "Try again"}
-            </Button>
-          ) : null}
-        </div>
-      </HomeSection>
-    );
+  if (isError || !data?.contributions || !data.calendar) {
+    return null;
   }
 
   const { contributions, streaks, repositories, languages } = data;
