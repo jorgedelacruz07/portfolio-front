@@ -42,8 +42,12 @@ npm run lint
 npm run lint:fix
 npm run format
 npm run format:check
+npm test
 npm run quick
 ```
+
+`npm test` runs the Node test suite. `npm run quick` runs lint, formatting,
+tests and build; its formatting step may modify files.
 
 ## Development
 
