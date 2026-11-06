@@ -1,27 +1,28 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- Background with subtle shadow -->
-  <rect width="32" height="32" rx="8" fill="url(#paint0_linear_1_2)"/>
-  <rect width="32" height="32" rx="8" fill="url(#paint1_linear_1_2)" fill-opacity="0.1"/>
-  
-  <!-- Text with better typography and spacing -->
-  <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="white" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="700" font-size="12" letter-spacing="0.5">
-    <tspan x="50%" y="50%" dy="0">J</tspan>
-    <tspan x="50%" y="50%" dy="0" dx="6">d</tspan>
-    <tspan x="50%" y="50%" dy="0" dx="12">C</tspan>
-  </text>
-
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
   <defs>
-    <!-- Main gradient -->
-    <linearGradient id="paint0_linear_1_2" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#164E63"/>
-      <stop offset="1" stop-color="#155E75"/>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#09090b"/>
+      <stop offset="100%" stop-color="#141418"/>
     </linearGradient>
-    
-    <!-- Overlay gradient for depth -->
-    <linearGradient id="paint1_linear_1_2" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
-      <stop stop-color="white" stop-opacity="0.2"/>
-      <stop offset="1" stop-color="black" stop-opacity="0.2"/>
+    <linearGradient id="tealGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2dd4bf"/>
+      <stop offset="100%" stop-color="#0d9488"/>
+    </linearGradient>
+    <linearGradient id="borderGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2dd4bf" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#27272a" stop-opacity="0.6"/>
     </linearGradient>
   </defs>
-</svg> 
+
+  <!-- Background squircle -->
+  <rect x="16" y="16" width="480" height="480" rx="116" fill="url(#bgGrad)"/>
+  <rect x="16" y="16" width="480" height="480" rx="116" fill="none" stroke="url(#borderGrad)" stroke-width="14"/>
+
+  <!-- Signature Brand Teal Dot -->
+  <circle cx="395" cy="115" r="18" fill="url(#tealGrad)"/>
+
+  <!-- Monogram JdC: bold craft typography -->
+  <text x="245" y="325" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-weight="800" font-size="220" text-anchor="middle" fill="#fafafa" letter-spacing="-6">
+    J<tspan font-size="140" font-weight="700" fill="url(#tealGrad)" dx="2" dy="-35">d</tspan><tspan font-size="200" font-weight="800" fill="#fafafa" dx="2" dy="35">C</tspan>
+  </text>
+</svg>
