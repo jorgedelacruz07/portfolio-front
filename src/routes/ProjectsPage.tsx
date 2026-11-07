@@ -3,7 +3,7 @@ import { Helmet } from "react-helmet-async";
 import { AnimatePresence, motion, type Variants } from "framer-motion";
 import { ExternalLink, FolderGit2, Layers, Search, Sparkles, X } from "lucide-react";
 
-import { LoadingSpinner } from "@/components/LoadingSpinner";
+import { PageSkeleton } from "@/components/PageSkeleton";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useGetProjects } from "@/hooks";
@@ -113,11 +113,7 @@ export default function ProjectsPage() {
   };
 
   if (isLoading) {
-    return (
-      <div className="flex min-h-[60vh] items-center justify-center">
-        <LoadingSpinner />
-      </div>
-    );
+    return <PageSkeleton variant="listing" />;
   }
 
   if (error) {

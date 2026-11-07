@@ -3,7 +3,7 @@ import { Helmet } from "react-helmet-async";
 import { AnimatePresence, motion, type Variants } from "framer-motion";
 import { Briefcase, CheckCircle2, ExternalLink, Layers, MapPin, Search, Sparkles, X } from "lucide-react";
 
-import { LoadingSpinner } from "@/components/LoadingSpinner";
+import { PageSkeleton } from "@/components/PageSkeleton";
 import { CompanyLogo } from "@/components/CompanyLogo";
 import { Button } from "@/components/ui/button";
 import { useGetExperiences } from "@/hooks";
@@ -98,11 +98,7 @@ export default function ExperiencesPage() {
   };
 
   if (isLoading) {
-    return (
-      <div className="flex min-h-[60vh] items-center justify-center">
-        <LoadingSpinner />
-      </div>
-    );
+    return <PageSkeleton variant="listing" />;
   }
 
   if (error) {

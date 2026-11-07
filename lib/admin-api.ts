@@ -4,10 +4,13 @@ import type { TExperience } from "../types/experience";
 import type { TProject } from "../types/project";
 import type {
   Article,
+  ArticleChannelDelivery,
+  ArticleChannelReadiness,
   ArticleReview,
   ArticleRevision,
   ArticleRevisionSummary,
   ArticleSummary,
+  WebsitePublicationStatus,
   ReviewDecision,
 } from "../types/article";
 import { PRODUCTION_API_URL, resolveApiBaseUrl } from "./api-url.ts";
@@ -242,6 +245,97 @@ export const adminApi = {
     requireAdminApiUrl();
     const response = await adminApiClient.get<ArticleReview>(
       `/admin/articles/${id}/revisions/${revisionNumber}/review`,
+    );
+    return extractPayload(response);
+  },
+  getArticleDeliveryReadiness: async (id: string) => {
+    requireAdminApiUrl();
+    const response = await adminApiClient.get<{ channels: ArticleChannelReadiness[] }>(
+      `/admin/articles/${id}/deliveries/readiness`,
+    );
+    return extractPayload(response);
+  },
+  getArticleChannelDelivery: async (id: string, revisionNumber: number, channel: "linkedin" | "x") => {
+    requireAdminApiUrl();
+    const response = await adminApiClient.get<{ delivery: ArticleChannelDelivery | null }>(
+      `/admin/articles/${id}/deliveries/${revisionNumber}/${channel}`,
+    );
+    return extractPayload(response);
+  },
+  publishArticleChannel: async (
+    id: string,
+    delivery: Pick<ArticleChannelDelivery, "revisionId" | "revisionNumber" | "contentSha256" | "channel">,
+    idempotencyKey: string,
+  ) => {
+    requireAdminApiUrl();
+    const response = await adminApiClient.post<{ delivery: ArticleChannelDelivery }>(
+      `/admin/articles/${id}/deliveries`,
+      delivery,
+      { headers: { "Idempotency-Key": idempotencyKey } },
+    );
+    return extractPayload(response).delivery;
+  },
+  retryArticleChannel: async (
+    id: string,
+    revisionNumber: number,
+    channel: "linkedin" | "x",
+    idempotencyKey: string,
+  ) => {
+    requireAdminApiUrl();
+    const response = await adminApiClient.post<{ delivery: ArticleChannelDelivery }>(
+      `/admin/articles/${id}/deliveries/${revisionNumber}/${channel}/retry`,
+      {},
+      { headers: { "Idempotency-Key": idempotencyKey } },
+    );
+    return extractPayload(response).delivery;
+  },
+  reconcileArticleChannel: async (
+    id: string,
+    revisionNumber: number,
+    channel: "linkedin" | "x",
+    idempotencyKey: string,
+    reconciliation: { remotePostExists: boolean; providerPostId?: string },
+  ) => {
+    requireAdminApiUrl();
+    const response = await adminApiClient.post<{ delivery: ArticleChannelDelivery }>(
+      `/admin/articles/${id}/deliveries/${revisionNumber}/${channel}/reconcile`,
+      reconciliation,
+      { headers: { "Idempotency-Key": idempotencyKey } },
+    );
+    return extractPayload(response).delivery;
+  },
+  getWebsitePublication: async (id: string) => {
+    requireAdminApiUrl();
+    const response = await adminApiClient.get<WebsitePublicationStatus>(`/admin/articles/${id}/publication`);
+    return extractPayload(response);
+  },
+  publishWebsiteArticle: async (
+    id: string,
+    revisionId: string,
+    revisionNumber: number,
+    contentSha256: string,
+    idempotencyKey: string,
+  ) => {
+    requireAdminApiUrl();
+    const response = await adminApiClient.post<WebsitePublicationStatus>(
+      `/admin/articles/${id}/publication`,
+      { command: "publish", destination: "portfolio", revisionId, revisionNumber, contentSha256 },
+      { headers: { "Idempotency-Key": idempotencyKey } },
+    );
+    return extractPayload(response);
+  },
+  unpublishWebsiteArticle: async (
+    id: string,
+    revisionId: string,
+    revisionNumber: number,
+    contentSha256: string,
+    idempotencyKey: string,
+  ) => {
+    requireAdminApiUrl();
+    const response = await adminApiClient.post<WebsitePublicationStatus>(
+      `/admin/articles/${id}/publication`,
+      { command: "unpublish", destination: "portfolio", revisionId, revisionNumber, contentSha256 },
+      { headers: { "Idempotency-Key": idempotencyKey } },
     );
     return extractPayload(response);
   },

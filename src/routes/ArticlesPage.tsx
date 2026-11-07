@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowRight, BookOpen, Clock, Newspaper, Search, X } from "lucide-react";
 
-import { LoadingSpinner } from "@/components/LoadingSpinner";
+import { PageSkeleton } from "@/components/PageSkeleton";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useGetArticles } from "@/hooks";
@@ -57,11 +57,7 @@ export default function ArticlesPage() {
   }, [articles, selectedType, searchQuery]);
 
   if (isLoading) {
-    return (
-      <div className="flex min-h-[60vh] items-center justify-center">
-        <LoadingSpinner />
-      </div>
-    );
+    return <PageSkeleton variant="articles" />;
   }
 
   if (error) {

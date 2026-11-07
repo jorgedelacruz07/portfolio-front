@@ -1,6 +1,7 @@
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { adminApi } from "@/lib/admin-api";
+import { ArticleDeliveryControls } from "@/components/admin/ArticleDeliveryControls";
 import type {
   Article,
   ArticleChannel,
@@ -593,6 +594,10 @@ export function ArticleEditor() {
                 </div>
               ) : null}
             </div>
+          ) : null}
+
+          {selectedArticle && !isCreatingNew ? (
+            <ArticleDeliveryControls article={selectedArticle} review={reviewState} />
           ) : null}
 
           {/* Primary Form Fields */}

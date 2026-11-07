@@ -1,4 +1,5 @@
 import { FC } from "react";
+import { PageSkeleton } from "@/components/PageSkeleton";
 
 interface LoadingSpinnerProps {
   className?: string;
@@ -12,7 +13,5 @@ export const LoadingSpinner: FC<LoadingSpinnerProps> = ({ className, text = "Loa
   </p>
 );
 
-/** Route fallback: reserves the page area so the layout does not jump, without drawing a loader. */
-export const PageLoader: FC<{ className?: string }> = ({ className }) => (
-  <div className={["min-h-[60vh]", className].filter(Boolean).join(" ")} aria-busy="true" />
-);
+/** Route fallback: mirrors page content while the lazy route module loads. */
+export const PageLoader: FC<{ className?: string }> = ({ className }) => <PageSkeleton className={className} />;

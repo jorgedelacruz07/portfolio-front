@@ -3,7 +3,7 @@ import { Helmet } from "react-helmet-async";
 import { Link, useParams } from "react-router-dom";
 import { ArrowLeft, Check, Clock, Copy, ExternalLink, Newspaper, Share2 } from "lucide-react";
 
-import { LoadingSpinner } from "@/components/LoadingSpinner";
+import { PageSkeleton } from "@/components/PageSkeleton";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { LinkedinIcon } from "@/components/svgs/Linkedin";
@@ -38,11 +38,7 @@ export default function ArticleDetailPage() {
   const [copied, setCopied] = useState(false);
 
   if (isLoading) {
-    return (
-      <div className="flex min-h-[60vh] items-center justify-center">
-        <LoadingSpinner />
-      </div>
-    );
+    return <PageSkeleton variant="article" />;
   }
 
   // Fail-closed not-found state when article is missing, unpublished, or error occurs

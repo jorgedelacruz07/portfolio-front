@@ -125,6 +125,41 @@ export interface ArticleReview {
   decisions: ReviewDecision[];
 }
 
+export type ArticleDeliveryState = "queued" | "dispatching" | "succeeded" | "failed" | "unknown" | "revoked";
+
+export interface ArticleChannelDelivery {
+  id: string;
+  articleId: string;
+  revisionId: string;
+  revisionNumber: number;
+  channel: "linkedin" | "x";
+  contentSha256: string;
+  idempotencyKey: string;
+  state: ArticleDeliveryState;
+  attemptCount: number;
+  providerPostId: string | null;
+  errorCode: string | null;
+  events: Array<{ state: ArticleDeliveryState; at: string; errorCode?: string; providerPostId?: string }>;
+  createdAt: string;
+  updatedAt: string;
+  replayed: boolean;
+}
+
+export interface ArticleChannelReadiness {
+  channel: "linkedin" | "x";
+  state: "ready" | "not_configured" | "not_connected" | "cost_blocked";
+  canPublish: boolean;
+}
+
+export interface WebsitePublicationStatus {
+  articleId: string;
+  published: boolean;
+  publishedRevisionNumber: number | null;
+  publishedRevisionId: string | null;
+  publishedAt: string | null;
+  destination: "portfolio";
+}
+
 export interface PublicArticleSummary {
   id: string;
   slug: string;

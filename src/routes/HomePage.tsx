@@ -31,7 +31,33 @@ type DeferredSectionProps = {
 };
 
 function DeferredSectionPlaceholder() {
-  return <div className="min-h-[4rem] rounded-xl border border-border/40 bg-card/20" />;
+  return (
+    <section
+      className="space-y-5 rounded-2xl border border-border/50 bg-card/20 p-4 sm:space-y-6 sm:p-6"
+      aria-hidden="true"
+    >
+      <div className="space-y-3 border-b border-border/40 pb-5">
+        <div className="h-3 w-28 motion-safe:animate-pulse rounded-full bg-muted/70" />
+        <div className="h-7 w-3/4 max-w-md motion-safe:animate-pulse rounded-lg bg-muted/70" />
+        <div className="h-4 w-full max-w-xl motion-safe:animate-pulse rounded-lg bg-muted/60" />
+      </div>
+      <div className="grid gap-4 md:grid-cols-3">
+        {Array.from({ length: 3 }, (_, index) => (
+          <div key={index} className="space-y-4 rounded-xl border border-border/40 bg-background/30 p-4">
+            <div className="h-5 w-2/3 motion-safe:animate-pulse rounded-lg bg-muted/70" />
+            <div className="space-y-2">
+              <div className="h-3 w-full motion-safe:animate-pulse rounded-lg bg-muted/60" />
+              <div className="h-3 w-5/6 motion-safe:animate-pulse rounded-lg bg-muted/60" />
+            </div>
+            <div className="flex gap-2">
+              <div className="h-5 w-14 motion-safe:animate-pulse rounded-full bg-muted/60" />
+              <div className="h-5 w-16 motion-safe:animate-pulse rounded-full bg-muted/60" />
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
 }
 
 function DeferredSection({ children, className }: DeferredSectionProps) {
