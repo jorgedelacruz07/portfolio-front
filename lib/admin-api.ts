@@ -115,6 +115,56 @@ export const adminApi = {
     await adminApiClient.post("/admin/auth/logout");
     setAdminCsrfToken("");
   },
+  getSocialIntegrations: async () => {
+    requireAdminApiUrl();
+    const response = await adminApiClient.get<{
+      accounts: {
+        linkedin: {
+          configured: boolean;
+          connected: boolean;
+          valid: boolean;
+          expiresAt: number | null;
+          ownerVerified: boolean;
+        };
+        x: {
+          configured: boolean;
+          costApproved: boolean;
+          connected: boolean;
+          valid: boolean;
+          expiresAt: number | null;
+          ownerVerified: boolean;
+        };
+      };
+    }>("/admin/integrations/social");
+    return extractPayload(response);
+  },
+  getSocialAuthorizationUrl: async (provider: "linkedin" | "x") => {
+    requireAdminApiUrl();
+    const response = await adminApiClient.get<{ authorizationUrl: string }>(
+      `/admin/integrations/social/${provider}/connect`,
+    );
+    return extractPayload(response).authorizationUrl;
+  },
+  completeSocialOAuth: async (
+    provider: "linkedin" | "x",
+    callback: { code?: string; state?: string; error?: string },
+  ) => {
+    requireAdminApiUrl();
+    const response = await adminApiClient.post<{
+      connected: boolean;
+      provider: string;
+      ownerVerified: boolean;
+      accountId: string;
+    }>(`/admin/integrations/social/${provider}/callback`, callback);
+    return extractPayload(response);
+  },
+  disconnectSocial: async (provider: "linkedin" | "x") => {
+    requireAdminApiUrl();
+    const response = await adminApiClient.post<{ connected: boolean; provider: string }>(
+      `/admin/integrations/social/${provider}/disconnect`,
+    );
+    return extractPayload(response);
+  },
   getPortfolio: async () => {
     requireAdminApiUrl();
     const response = await adminApiClient.get<TPortfolioContent>("/client/portfolio");

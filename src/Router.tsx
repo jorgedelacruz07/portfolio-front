@@ -14,6 +14,7 @@ const ExperiencesPage = lazy(() => import("./routes/ExperiencesPage"));
 const ArticlesPage = lazy(() => import("./routes/ArticlesPage"));
 const ArticleDetailPage = lazy(() => import("./routes/ArticleDetailPage"));
 const AdminPage = lazy(() => import("./routes/AdminPage"));
+const SocialOAuthCallbackPage = lazy(() => import("./routes/SocialOAuthCallbackPage"));
 const NotFoundPage = lazy(() => import("./routes/NotFoundPage"));
 
 const googleAnalyticsId = import.meta.env.VITE_GA_ID;
@@ -92,6 +93,10 @@ export const router = createBrowserRouter([
       {
         path: "admin",
         element: renderLazyRoute(AdminPage),
+      },
+      {
+        path: "admin/oauth/:provider/callback",
+        element: renderLazyRoute(SocialOAuthCallbackPage),
       },
       {
         path: "*",

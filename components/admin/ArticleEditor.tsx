@@ -2,6 +2,7 @@ import { FormEvent, useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { adminApi } from "@/lib/admin-api";
 import { ArticleDeliveryControls } from "@/components/admin/ArticleDeliveryControls";
+import { SocialAccountConnections } from "@/components/admin/SocialAccountConnections";
 import type {
   Article,
   ArticleChannel,
@@ -412,6 +413,8 @@ export function ArticleEditor() {
           + New Article Draft
         </button>
       </div>
+
+      <SocialAccountConnections />
 
       {statusMessage ? (
         <div
