@@ -9,7 +9,16 @@ describe("article delivery controls and API contract", () => {
   const emptyWebsite = { articleId: "article-1", published: false, publishedRevisionNumber: null };
 
   it("keeps destinations independent across every selected-channel combination", () => {
-    for (const selected of [[], ["portfolio"], ["linkedin"], ["x"], ["portfolio", "linkedin"], ["portfolio", "x"], ["linkedin", "x"], ["portfolio", "linkedin", "x"]]) {
+    for (const selected of [
+      [],
+      ["portfolio"],
+      ["linkedin"],
+      ["x"],
+      ["portfolio", "linkedin"],
+      ["portfolio", "x"],
+      ["linkedin", "x"],
+      ["portfolio", "linkedin", "x"],
+    ]) {
       for (const destination of ["portfolio", "linkedin", "x"]) {
         const result = getDestinationActions({
           destination,
@@ -26,13 +35,36 @@ describe("article delivery controls and API contract", () => {
   });
 
   it("fails closed for stale or ineligible revisions and a blocked X cost gate", () => {
-    const base = { destination: "linkedin", selected: true, approved: false, readiness: ready, delivery: null, website: emptyWebsite, revisionNumber: 1 };
+    const base = {
+      destination: "linkedin",
+      selected: true,
+      approved: false,
+      readiness: ready,
+      delivery: null,
+      website: emptyWebsite,
+      revisionNumber: 1,
+    };
     assert.equal(getDestinationActions(base).canPublish, false);
-    assert.equal(getDestinationActions({ ...base, destination: "x", approved: true, readiness: { channel: "x", state: "cost_blocked", canPublish: false } }).canPublish, false);
+    assert.equal(
+      getDestinationActions({
+        ...base,
+        destination: "x",
+        approved: true,
+        readiness: { channel: "x", state: "cost_blocked", canPublish: false },
+      }).canPublish,
+      false,
+    );
   });
 
   it("allows retry only for a definitive failed outcome and manual reconciliation for unknown", () => {
-    const base = { destination: "linkedin", selected: true, approved: true, readiness: ready, website: emptyWebsite, revisionNumber: 3 };
+    const base = {
+      destination: "linkedin",
+      selected: true,
+      approved: true,
+      readiness: ready,
+      website: emptyWebsite,
+      revisionNumber: 3,
+    };
     const failed = getDestinationActions({ ...base, delivery: { state: "failed" } });
     const unknown = getDestinationActions({ ...base, delivery: { state: "unknown" } });
     const succeeded = getDestinationActions({ ...base, delivery: { state: "succeeded" } });
@@ -57,12 +89,16 @@ describe("article delivery controls and API contract", () => {
       captured = config;
       return { status: 201, statusText: "Created", headers: {}, config, data: { delivery: { state: "queued" } } };
     };
-    await adminApi.publishArticleChannel("article-1", {
-      revisionId: "revision-2",
-      revisionNumber: 2,
-      contentSha256: "ab".repeat(32),
-      channel: "linkedin",
-    }, "client-key-00000001");
+    await adminApi.publishArticleChannel(
+      "article-1",
+      {
+        revisionId: "revision-2",
+        revisionNumber: 2,
+        contentSha256: "ab".repeat(32),
+        channel: "linkedin",
+      },
+      "client-key-00000001",
+    );
     assert.equal(captured.url, "/admin/articles/article-1/deliveries");
     const sentBody = typeof captured.data === "string" ? JSON.parse(captured.data) : captured.data;
     assert.equal(sentBody.revisionId, "revision-2");
@@ -103,7 +139,11 @@ describe("article delivery controls and API contract", () => {
   });
 
   it("renders native keyboard-operable controls with an accessible delivery section", async () => {
-    const vite = await createServer({ configFile: "vite.config.ts", server: { middlewareMode: true }, appType: "custom" });
+    const vite = await createServer({
+      configFile: "vite.config.ts",
+      server: { middlewareMode: true },
+      appType: "custom",
+    });
     try {
       const { ArticleDeliveryControls } = await vite.ssrLoadModule("/components/admin/ArticleDeliveryControls.tsx");
       const { createElement } = await import("react");
@@ -115,8 +155,12 @@ describe("article delivery controls and API contract", () => {
           revisionNumber: 2,
           contentSha256: "ab".repeat(32),
           publicContent: {
-            slug: "example", title: "Example", excerpt: "Summary", targetChannels: ["portfolio"],
-            seo: { canonicalUrl: null }, socialVariants: { linkedin: null, x: null },
+            slug: "example",
+            title: "Example",
+            excerpt: "Summary",
+            targetChannels: ["portfolio"],
+            seo: { canonicalUrl: null },
+            socialVariants: { linkedin: null, x: null },
           },
         },
       };
