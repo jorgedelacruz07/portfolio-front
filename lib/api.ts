@@ -6,11 +6,12 @@ import type { TGithubStats } from "../types/github";
 import type { ApiError } from "../types/error";
 import type { TPortfolioContent } from "../types/portfolio";
 import type { TProject } from "../types/project";
+import type { PublicArticle, PublicArticleSummary } from "../types/article";
 import { PRODUCTION_API_URL, resolveApiBaseUrl } from "./api-url.ts";
 
 export { PRODUCTION_API_URL, resolveApiBaseUrl };
 
-const API_BASE_URL = resolveApiBaseUrl(import.meta.env.VITE_API_URL);
+const API_BASE_URL = resolveApiBaseUrl(import.meta.env?.VITE_API_URL);
 export const apiClient = axios.create({
   baseURL: API_BASE_URL || undefined,
   // Cloud Run scales to zero; a cold start plus the Atlas handshake can take well over 10s.
@@ -44,7 +45,7 @@ apiClient.interceptors.request.use(
       }
     }
 
-    if (import.meta.env.DEV) {
+    if (import.meta.env?.DEV) {
       console.log(`[API Request] ${config.method?.toUpperCase()} ${config.url}`);
     }
 
@@ -79,6 +80,8 @@ export const apiEndpoints = {
   experienceBySlug: (slug: string) => `/client/experiences/${slug}`,
   categories: () => "/client/categories",
   github: () => "/client/github",
+  articles: () => "/client/articles",
+  articleBySlug: (slug: string) => `/client/articles/${encodeURIComponent(slug)}`,
 } as const;
 
 function extractPayload<T>(response: AxiosResponse<T | { data: T }>): T {
@@ -94,7 +97,7 @@ function extractPayload<T>(response: AxiosResponse<T | { data: T }>): T {
 // Public content always comes from the configured API in every environment.
 // Missing configuration, failed requests and unsupported endpoints must stay observable.
 async function getPayload<T>(path: string, config?: AxiosRequestConfig): Promise<T> {
-  const effectiveBaseUrl = resolveApiBaseUrl(API_BASE_URL);
+  const effectiveBaseUrl = resolveApiBaseUrl(apiClient.defaults.baseURL || API_BASE_URL);
   if (!effectiveBaseUrl) {
     throw new Error("VITE_API_URL is required to load portfolio content.");
   }
@@ -123,9 +126,19 @@ export const api = {
   // The API still caches GitHub upstream responses, so this does not add provider requests.
   getGithubStats: () => getPayload<TGithubStats>(apiEndpoints.github(), { headers: { "Cache-Control": "no-cache" } }),
   getCategories: () => getPayload<TCategory[]>(apiEndpoints.categories()),
+  getArticles: async (): Promise<PublicArticleSummary[]> => {
+    const res = await getPayload<{ articles: PublicArticleSummary[] } | PublicArticleSummary[]>(
+      apiEndpoints.articles(),
+    );
+    if (res && typeof res === "object" && "articles" in res && Array.isArray(res.articles)) {
+      return res.articles;
+    }
+    return Array.isArray(res) ? res : [];
+  },
+  getArticleBySlug: (slug: string) => getOptionalPayload<PublicArticle>(apiEndpoints.articleBySlug(slug)),
 } as const;
 
-export { adminApi, setAdminCsrfToken } from "./admin-api";
+export { adminApi, setAdminCsrfToken } from "./admin-api.ts";
 
 export const handleApiError = (error: unknown): ApiError => {
   if (axios.isAxiosError(error)) {

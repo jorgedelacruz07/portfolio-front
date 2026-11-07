@@ -124,3 +124,23 @@ export interface ArticleReview {
   blockers: string[];
   decisions: ReviewDecision[];
 }
+
+export interface PublicArticleSummary {
+  id: string;
+  slug: string;
+  contentType: ArticleContentType;
+  title: string;
+  excerpt: string;
+  readingTimeMinutes: number;
+  publishedAt: string;
+  publishedRevisionNumber: number;
+}
+
+export interface PublicArticle {
+  id: string;
+  slug: string;
+  contentType: ArticleContentType;
+  publishedAt: string;
+  publishedRevisionNumber: number;
+  publicContent: ArticlePublicContent;
+}

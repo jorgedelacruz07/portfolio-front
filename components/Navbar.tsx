@@ -31,6 +31,7 @@ export const Navbar = () => {
 
   const navbarItems = [
     { label: "Home", href: "/" },
+    { label: "Articles", href: "/articles" },
     { label: "Projects", href: "/projects" },
     { label: "Experiences", href: "/experiences" },
   ];

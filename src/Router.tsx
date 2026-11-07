@@ -11,6 +11,8 @@ import HomePage from "./routes/HomePage";
 
 const ProjectsPage = lazy(() => import("./routes/ProjectsPage"));
 const ExperiencesPage = lazy(() => import("./routes/ExperiencesPage"));
+const ArticlesPage = lazy(() => import("./routes/ArticlesPage"));
+const ArticleDetailPage = lazy(() => import("./routes/ArticleDetailPage"));
 const AdminPage = lazy(() => import("./routes/AdminPage"));
 const NotFoundPage = lazy(() => import("./routes/NotFoundPage"));
 
@@ -78,6 +80,14 @@ export const router = createBrowserRouter([
       {
         path: "experiences",
         element: renderLazyRoute(ExperiencesPage),
+      },
+      {
+        path: "articles",
+        element: renderLazyRoute(ArticlesPage),
+      },
+      {
+        path: "articles/:slug",
+        element: renderLazyRoute(ArticleDetailPage),
       },
       {
         path: "admin",
