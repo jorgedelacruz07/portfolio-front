@@ -1,8 +1,10 @@
-import { FormEvent, ReactNode, useEffect, useMemo, useState } from "react";
+import { FormEvent, ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
+import axios from "axios";
 import { adminApi } from "@/lib/admin-api";
 import { ProjectDraftImport } from "@/components/admin/ProjectDraftImport";
 import { ProjectEditor } from "@/components/admin/ProjectEditor";
+import { ArticleEditor } from "@/components/admin/ArticleEditor";
 import type { TPortfolioContent, TProfile, TSiteSettings, TSkill } from "@/types/portfolio";
 import type { TExperience } from "@/types/experience";
 import type { TProject } from "@/types/project";
@@ -50,54 +52,218 @@ function Field({
   );
 }
 
-function LoginForm({ onSession }: { onSession: (session: Session) => void }) {
-  const [email, setEmail] = useState("");
-  const [code, setCode] = useState("");
-  const [step, setStep] = useState<"email" | "code">("email");
-  const [message, setMessage] = useState("");
+function GoogleLoginForm({
+  onSession,
+  sessionExpired,
+}: {
+  onSession: (session: Session) => void;
+  sessionExpired?: boolean;
+}) {
+  const [manualToken, setManualToken] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [statusMessage, setStatusMessage] = useState<{
+    type: "error" | "denied" | "unconfigured" | "script_error";
+    text: string;
+  } | null>(null);
+  const buttonContainerRef = useRef<HTMLDivElement | null>(null);
 
-  async function handleSubmit(event: FormEvent) {
-    event.preventDefault();
+  const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+
+  const handleCredential = async (credential: string) => {
+    if (!credential || !credential.trim()) return;
     setIsSubmitting(true);
-    setMessage("");
+    setStatusMessage(null);
 
     try {
-      if (step === "email") {
-        await adminApi.requestCode(email);
-        setStep("code");
-        setMessage("If access is allowed, a sign-in code will arrive shortly.");
+      await adminApi.loginWithGoogle(credential.trim());
+      const session = await adminApi.getSession();
+      onSession(session);
+    } catch (err: unknown) {
+      const is401 = axios.isAxiosError(err) && err.response?.status === 401;
+      if (is401) {
+        setStatusMessage({
+          type: "denied",
+          text: "Access denied. Your Google account is not authorized to access this administration console.",
+        });
       } else {
-        const session = await adminApi.verifyCode(email, code);
-        onSession({ email, ...session });
+        setStatusMessage({
+          type: "error",
+          text: "The sign-in attempt could not be completed. Please check your connection and try again.",
+        });
       }
-    } catch {
-      setMessage("The sign-in attempt could not be completed.");
     } finally {
       setIsSubmitting(false);
     }
-  }
+  };
+
+  useEffect(() => {
+    if (!clientId) {
+      setStatusMessage({
+        type: "unconfigured",
+        text: "Google Sign-In is not configured. VITE_GOOGLE_CLIENT_ID is required.",
+      });
+      return;
+    }
+
+    let isMounted = true;
+
+    function renderGsiButton() {
+      if (!window.google?.accounts?.id || !buttonContainerRef.current) return;
+      try {
+        window.google.accounts.id.initialize({
+          client_id: clientId,
+          callback: (response) => {
+            if (response.credential) {
+              handleCredential(response.credential);
+            }
+          },
+          cancel_on_tap_outside: true,
+        });
+
+        buttonContainerRef.current.innerHTML = "";
+        window.google.accounts.id.renderButton(buttonContainerRef.current, {
+          type: "standard",
+          theme: "filled_black",
+          size: "large",
+          text: "signin_with",
+          shape: "rectangular",
+          logo_alignment: "left",
+          width: 320,
+        });
+      } catch {
+        if (isMounted) {
+          setStatusMessage({
+            type: "script_error",
+            text: "Google Sign-In button could not be initialized.",
+          });
+        }
+      }
+    }
+
+    if (window.google?.accounts?.id) {
+      renderGsiButton();
+    } else {
+      const existingScript = document.getElementById("google-gsi-client");
+      if (!existingScript) {
+        const script = document.createElement("script");
+        script.id = "google-gsi-client";
+        script.src = "https://accounts.google.com/gsi/client";
+        script.async = true;
+        script.defer = true;
+        script.onload = () => {
+          if (isMounted) renderGsiButton();
+        };
+        script.onerror = () => {
+          if (isMounted) {
+            setStatusMessage({
+              type: "script_error",
+              text: "Google Sign-In service could not be loaded. Please check your network or content blocker.",
+            });
+          }
+        };
+        document.head.appendChild(script);
+      } else {
+        existingScript.addEventListener("load", renderGsiButton);
+      }
+    }
+
+    return () => {
+      isMounted = false;
+    };
+  }, [clientId]);
 
   return (
-    <form onSubmit={handleSubmit} className="craft-card mx-auto mt-12 max-w-md rounded-xl p-6">
+    <div className="craft-card mx-auto mt-12 max-w-md rounded-xl p-6">
       <p className="font-mono text-xs font-semibold uppercase tracking-wider text-primary">Admin Access</p>
       <h1 className="mt-2 text-2xl font-bold tracking-tight text-foreground">Manage Portfolio Content</h1>
       <p className="mt-2 text-sm text-muted-foreground">
-        Use your primary admin email. Access is restricted server-side.
+        Sign in with an authorized Google account. Access is restricted server-side against the allowlist.
       </p>
-      <div className="mt-6 space-y-4">
-        <Field label="Email" value={email} onChange={setEmail} />
-        {step === "code" ? <Field label="Six-digit code" value={code} onChange={setCode} /> : null}
+
+      {sessionExpired && !statusMessage ? (
+        <div
+          role="alert"
+          aria-live="assertive"
+          className="mt-4 rounded-lg border border-amber-500/30 bg-amber-500/10 p-3 text-xs text-amber-200"
+        >
+          Your session has expired. Please sign in again with your Google account.
+        </div>
+      ) : null}
+
+      {statusMessage ? (
+        <div
+          role="alert"
+          aria-live="assertive"
+          className={`mt-4 rounded-lg border p-3 text-xs ${
+            statusMessage.type === "denied"
+              ? "border-red-500/30 bg-red-500/10 text-red-200"
+              : statusMessage.type === "unconfigured"
+                ? "border-yellow-500/30 bg-yellow-500/10 text-yellow-200"
+                : "border-red-500/30 bg-red-500/10 text-red-200"
+          }`}
+        >
+          <p>{statusMessage.text}</p>
+          {statusMessage.type !== "unconfigured" ? (
+            <button
+              type="button"
+              onClick={() => setStatusMessage(null)}
+              className="mt-2 font-mono text-[11px] underline hover:opacity-80"
+            >
+              Dismiss and retry
+            </button>
+          ) : null}
+        </div>
+      ) : null}
+
+      <div className="mt-6 flex flex-col items-center gap-3">
+        {isSubmitting ? (
+          <div role="status" aria-live="polite" className="flex items-center gap-2 py-4 text-xs text-muted-foreground">
+            <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+            Verifying credentials with server...
+          </div>
+        ) : (
+          <div
+            ref={buttonContainerRef}
+            role="region"
+            aria-label="Google Sign-In"
+            className="flex min-h-[44px] w-full items-center justify-center"
+          />
+        )}
       </div>
-      {message ? <p className="mt-4 text-xs text-muted-foreground">{message}</p> : null}
-      <button
-        className="mt-6 w-full rounded-lg bg-foreground px-4 py-2 text-sm font-semibold text-background transition hover:opacity-90 disabled:opacity-60"
-        disabled={isSubmitting}
-        type="submit"
-      >
-        {isSubmitting ? "Working..." : step === "email" ? "Request code" : "Sign in"}
-      </button>
-    </form>
+
+      <details className="mt-6 border-t border-border pt-4 text-xs text-muted-foreground">
+        <summary className="cursor-pointer font-mono hover:text-foreground">
+          Manual ID token input (testing / fallback)
+        </summary>
+        <form
+          onSubmit={(e: FormEvent) => {
+            e.preventDefault();
+            handleCredential(manualToken);
+          }}
+          className="mt-3 space-y-3"
+        >
+          <label htmlFor="manual-token-input" className="block font-mono text-[11px] uppercase text-muted-foreground">
+            Google ID Token
+          </label>
+          <input
+            id="manual-token-input"
+            type="password"
+            className={inputClass}
+            value={manualToken}
+            onChange={(e) => setManualToken(e.target.value)}
+            placeholder="Paste Google ID token for manual sign-in"
+            disabled={isSubmitting}
+          />
+          <button
+            type="submit"
+            disabled={isSubmitting || !manualToken.trim()}
+            className="w-full rounded-lg bg-foreground px-4 py-2 font-mono text-xs font-semibold text-background hover:opacity-90 disabled:opacity-50"
+          >
+            {isSubmitting ? "Authenticating..." : "Sign in with token"}
+          </button>
+        </form>
+      </details>
+    </div>
   );
 }
 
@@ -125,6 +291,7 @@ function SaveButton({ state, onClick }: { state: SaveState; onClick: () => void 
 
 export default function AdminPage() {
   const [session, setSession] = useState<Session | null>(null);
+  const [sessionExpired, setSessionExpired] = useState(false);
   const [content, setContent] = useState<TPortfolioContent | null>(null);
   const [projects, setProjects] = useState<TProject[]>([]);
   const [experiences, setExperiences] = useState<TExperience[]>([]);
@@ -134,7 +301,10 @@ export default function AdminPage() {
   useEffect(() => {
     adminApi
       .getSession()
-      .then(setSession)
+      .then((s) => {
+        setSession(s);
+        setSessionExpired(false);
+      })
       .catch(() => setSession(null))
       .finally(() => setIsLoading(false));
   }, []);
@@ -142,13 +312,19 @@ export default function AdminPage() {
   useEffect(() => {
     if (!session) return;
 
-    Promise.all([adminApi.getPortfolio(), adminApi.listProjects(), adminApi.listExperiences()]).then(
-      ([portfolio, projectList, experienceList]) => {
+    Promise.all([adminApi.getPortfolio(), adminApi.listProjects(), adminApi.listExperiences()])
+      .then(([portfolio, projectList, experienceList]) => {
         setContent(portfolio);
         setProjects(projectList);
         setExperiences(experienceList);
-      },
-    );
+      })
+      .catch((err) => {
+        if (axios.isAxiosError(err) && err.response?.status === 401) {
+          setSession(null);
+          setContent(null);
+          setSessionExpired(true);
+        }
+      });
   }, [session]);
 
   const profile = content?.profile;
@@ -178,15 +354,28 @@ export default function AdminPage() {
       await action();
       setSaveState("saved");
       setTimeout(() => setSaveState("idle"), 1400);
-    } catch {
+    } catch (err) {
+      if (axios.isAxiosError(err) && err.response?.status === 401) {
+        setSession(null);
+        setContent(null);
+        setSessionExpired(true);
+      }
       setSaveState("error");
     }
   }
 
   async function logout() {
-    await adminApi.logout();
+    try {
+      await adminApi.logout();
+    } catch {
+      // Ignore network errors on logout
+    }
+    if (typeof window !== "undefined" && window.google?.accounts?.id) {
+      window.google.accounts.id.disableAutoSelect();
+    }
     setSession(null);
     setContent(null);
+    setSessionExpired(false);
   }
 
   if (isLoading) {
@@ -194,7 +383,15 @@ export default function AdminPage() {
   }
 
   if (!session) {
-    return <LoginForm onSession={setSession} />;
+    return (
+      <GoogleLoginForm
+        onSession={(nextSession) => {
+          setSession(nextSession);
+          setSessionExpired(false);
+        }}
+        sessionExpired={sessionExpired}
+      />
+    );
   }
 
   return (
@@ -429,6 +626,8 @@ export default function AdminPage() {
             </Section>
           </div>
         )}
+
+        <ArticleEditor />
 
         {saveState === "error" ? (
           <p className="rounded-lg border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-200">

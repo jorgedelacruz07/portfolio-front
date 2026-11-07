@@ -2,9 +2,17 @@ import axios, { type AxiosResponse } from "axios";
 import type { TPortfolioContent, TProfile, TSiteSettings, TSkill } from "../types/portfolio";
 import type { TExperience } from "../types/experience";
 import type { TProject } from "../types/project";
+import type {
+  Article,
+  ArticleReview,
+  ArticleRevision,
+  ArticleRevisionSummary,
+  ArticleSummary,
+  ReviewDecision,
+} from "../types/article";
 import { PRODUCTION_API_URL, resolveApiBaseUrl } from "./api-url.ts";
 
-const API_BASE_URL = resolveApiBaseUrl(import.meta.env.VITE_API_URL);
+const API_BASE_URL = resolveApiBaseUrl(import.meta.env?.VITE_API_URL);
 
 export const adminApiClient = axios.create({
   baseURL: API_BASE_URL || undefined,
@@ -21,8 +29,12 @@ export function setAdminCsrfToken(token: string) {
   adminCsrfToken = token;
 }
 
+export function getAdminCsrfToken(): string {
+  return adminCsrfToken;
+}
+
 function requireAdminApiUrl() {
-  const effectiveBaseUrl = resolveApiBaseUrl(API_BASE_URL);
+  const effectiveBaseUrl = resolveApiBaseUrl(adminApiClient.defaults.baseURL || API_BASE_URL);
   if (!effectiveBaseUrl) {
     throw new Error("VITE_API_URL is required for admin CMS access.");
   }
@@ -69,18 +81,13 @@ function extractPayload<T>(response: AxiosResponse<T | { data: T }>): T {
 }
 
 export const adminApi = {
-  requestCode: async (email: string) => {
+  loginWithGoogle: async (credential: string) => {
     requireAdminApiUrl();
-    const response = await adminApiClient.post("/admin/auth/request-code", {
-      email,
-    });
-    return response.data;
-  },
-  verifyCode: async (email: string, code: string) => {
-    requireAdminApiUrl();
-    const response = await adminApiClient.post("/admin/auth/verify-code", {
-      email,
-      code,
+    const response = await adminApiClient.post<{
+      csrfToken: string;
+      expiresAt: string;
+    }>("/admin/auth/google", {
+      credential,
     });
     const payload = extractPayload<{
       csrfToken: string;
@@ -168,6 +175,91 @@ export const adminApi = {
       status: project.status ?? false,
       technologyIds: technologies?.map((technology) => technology.id) || [],
     });
+    return extractPayload(response);
+  },
+  listArticles: async (limit?: number, cursor?: string) => {
+    requireAdminApiUrl();
+    const params = new URLSearchParams();
+    if (limit) params.set("limit", String(limit));
+    if (cursor) params.set("cursor", cursor);
+    const query = params.toString() ? `?${params.toString()}` : "";
+    const response = await adminApiClient.get<{
+      items: ArticleSummary[];
+      nextCursor?: string | null;
+    }>(`/admin/articles${query}`);
+    return extractPayload(response);
+  },
+  getArticle: async (id: string) => {
+    requireAdminApiUrl();
+    const response = await adminApiClient.get<Article>(`/admin/articles/${id}`);
+    return extractPayload(response);
+  },
+  createArticleDraft: async (draft: unknown, idempotencyKey?: string) => {
+    requireAdminApiUrl();
+    const headers: Record<string, string> = {};
+    if (idempotencyKey) headers["Idempotency-Key"] = idempotencyKey;
+    const response = await adminApiClient.post<{
+      article: Article;
+      revision: ArticleRevisionSummary;
+      replayed: boolean;
+    }>("/admin/articles", draft, { headers });
+    return extractPayload(response);
+  },
+  createArticleRevision: async (
+    id: string,
+    expectedRevisionNumber: number,
+    draft: unknown,
+    idempotencyKey?: string,
+  ) => {
+    requireAdminApiUrl();
+    const headers: Record<string, string> = {};
+    if (idempotencyKey) headers["Idempotency-Key"] = idempotencyKey;
+    const response = await adminApiClient.post<{
+      article: Article;
+      revision: ArticleRevisionSummary;
+      replayed: boolean;
+    }>(`/admin/articles/${id}/revisions`, { expectedRevisionNumber, draft }, { headers });
+    return extractPayload(response);
+  },
+  getArticleRevision: async (id: string, revisionNumber: number) => {
+    requireAdminApiUrl();
+    const response = await adminApiClient.get<ArticleRevision>(`/admin/articles/${id}/revisions/${revisionNumber}`);
+    return extractPayload(response);
+  },
+  listArticleRevisions: async (id: string, limit?: number, after?: number) => {
+    requireAdminApiUrl();
+    const params = new URLSearchParams();
+    if (limit) params.set("limit", String(limit));
+    if (after) params.set("after", String(after));
+    const query = params.toString() ? `?${params.toString()}` : "";
+    const response = await adminApiClient.get<{
+      items: ArticleRevisionSummary[];
+      nextAfter?: string | null;
+    }>(`/admin/articles/${id}/revisions${query}`);
+    return extractPayload(response);
+  },
+  getArticleReview: async (id: string, revisionNumber: number) => {
+    requireAdminApiUrl();
+    const response = await adminApiClient.get<ArticleReview>(
+      `/admin/articles/${id}/revisions/${revisionNumber}/review`,
+    );
+    return extractPayload(response);
+  },
+  decideArticleReview: async (
+    id: string,
+    revisionNumber: number,
+    command: "submit" | "approve" | "request_changes" | "revoke",
+    note?: string,
+    idempotencyKey?: string,
+  ) => {
+    requireAdminApiUrl();
+    const headers: Record<string, string> = {};
+    if (idempotencyKey) headers["Idempotency-Key"] = idempotencyKey;
+    const response = await adminApiClient.post<{
+      review: ArticleReview;
+      decision: ReviewDecision;
+      replayed: boolean;
+    }>(`/admin/articles/${id}/revisions/${revisionNumber}/review`, { command, ...(note ? { note } : {}) }, { headers });
     return extractPayload(response);
   },
 };
