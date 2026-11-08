@@ -1,12 +1,25 @@
 import assert from "node:assert/strict";
 import { createServer } from "vite";
 import { describe, it } from "node:test";
-import { getDestinationActions, finalLinkedInCopy, finalXCopy } from "../lib/article-delivery.ts";
-import { adminApi, adminApiClient, setAdminCsrfToken } from "../lib/admin-api.ts";
+import {
+  canonicalArticleUrl,
+  getDestinationActions,
+  finalLinkedInCopy,
+  finalXCopy,
+} from "../lib/article-delivery.ts";
+import {
+  adminApi,
+  adminApiClient,
+  setAdminCsrfToken,
+} from "../lib/admin-api.ts";
 
 describe("article delivery controls and API contract", () => {
   const ready = { channel: "linkedin", state: "ready", canPublish: true };
-  const emptyWebsite = { articleId: "article-1", published: false, publishedRevisionNumber: null };
+  const emptyWebsite = {
+    articleId: "article-1",
+    published: false,
+    publishedRevisionNumber: null,
+  };
 
   it("keeps destinations independent across every selected-channel combination", () => {
     for (const selected of [
@@ -24,12 +37,19 @@ describe("article delivery controls and API contract", () => {
           destination,
           selected: selected.includes(destination),
           approved: true,
-          readiness: destination === "linkedin" ? ready : { channel: "x", state: "ready", canPublish: true },
+          readiness:
+            destination === "linkedin"
+              ? ready
+              : { channel: "x", state: "ready", canPublish: true },
           delivery: null,
           website: emptyWebsite,
           revisionNumber: 2,
         });
-        assert.equal(result.canPublish, selected.includes(destination), `${selected.join(",")} -> ${destination}`);
+        assert.equal(
+          result.canPublish,
+          selected.includes(destination),
+          `${selected.join(",")} -> ${destination}`,
+        );
       }
     }
   });
@@ -65,9 +85,18 @@ describe("article delivery controls and API contract", () => {
       website: emptyWebsite,
       revisionNumber: 3,
     };
-    const failed = getDestinationActions({ ...base, delivery: { state: "failed" } });
-    const unknown = getDestinationActions({ ...base, delivery: { state: "unknown" } });
-    const succeeded = getDestinationActions({ ...base, delivery: { state: "succeeded" } });
+    const failed = getDestinationActions({
+      ...base,
+      delivery: { state: "failed" },
+    });
+    const unknown = getDestinationActions({
+      ...base,
+      delivery: { state: "unknown" },
+    });
+    const succeeded = getDestinationActions({
+      ...base,
+      delivery: { state: "succeeded" },
+    });
     assert.equal(failed.canRetry, true);
     assert.equal(failed.canReconcile, false);
     assert.equal(unknown.canRetry, false);
@@ -75,10 +104,31 @@ describe("article delivery controls and API contract", () => {
     assert.equal(succeeded.canRetry, false);
   });
 
+  it("defaults article canonical URLs to the public production origin", () => {
+    assert.equal(
+      canonicalArticleUrl("atomic-cas"),
+      "https://jorgedelacruzpadilla.dev/articles/atomic-cas",
+    );
+    assert.equal(
+      canonicalArticleUrl("atomic-cas", "  "),
+      "https://jorgedelacruzpadilla.dev/articles/atomic-cas",
+    );
+    assert.equal(
+      canonicalArticleUrl("atomic-cas", "https://example.com/custom"),
+      "https://example.com/custom",
+    );
+  });
+
   it("shows the exact final social copy including the canonical URL", () => {
     const url = "https://jorgedelacruz.dev/articles/example";
-    assert.equal(finalLinkedInCopy("Article summary", ["engineering"]), "Article summary\n\n#engineering");
-    assert.deepEqual(finalXCopy(["Thread opening", "Final post"], url), ["Thread opening", "Final post\n\n" + url]);
+    assert.equal(
+      finalLinkedInCopy("Article summary", ["engineering"]),
+      "Article summary\n\n#engineering",
+    );
+    assert.deepEqual(finalXCopy(["Thread opening", "Final post"], url), [
+      "Thread opening",
+      "Final post\n\n" + url,
+    ]);
   });
 
   it("sends exact revision, channel, hash and an idempotency key through the admin API", async () => {
@@ -87,7 +137,13 @@ describe("article delivery controls and API contract", () => {
     let captured;
     adminApiClient.defaults.adapter = async (config) => {
       captured = config;
-      return { status: 201, statusText: "Created", headers: {}, config, data: { delivery: { state: "queued" } } };
+      return {
+        status: 201,
+        statusText: "Created",
+        headers: {},
+        config,
+        data: { delivery: { state: "queued" } },
+      };
     };
     await adminApi.publishArticleChannel(
       "article-1",
@@ -100,10 +156,16 @@ describe("article delivery controls and API contract", () => {
       "client-key-00000001",
     );
     assert.equal(captured.url, "/admin/articles/article-1/deliveries");
-    const sentBody = typeof captured.data === "string" ? JSON.parse(captured.data) : captured.data;
+    const sentBody =
+      typeof captured.data === "string"
+        ? JSON.parse(captured.data)
+        : captured.data;
     assert.equal(sentBody.revisionId, "revision-2");
     assert.equal(sentBody.channel, "linkedin");
-    assert.equal(captured.headers.get("Idempotency-Key"), "client-key-00000001");
+    assert.equal(
+      captured.headers.get("Idempotency-Key"),
+      "client-key-00000001",
+    );
     assert.equal(captured.headers.get("x-csrf-token"), "csrf-test-token");
   });
 
@@ -111,31 +173,67 @@ describe("article delivery controls and API contract", () => {
     let captured;
     adminApiClient.defaults.adapter = async (config) => {
       captured = config;
-      return { status: 200, statusText: "OK", headers: {}, config, data: { published: true } };
+      return {
+        status: 200,
+        statusText: "OK",
+        headers: {},
+        config,
+        data: { published: true },
+      };
     };
-    await adminApi.publishWebsiteArticle("article-1", "revision-2", 2, "cd".repeat(32), "website-key-00000001");
-    const sentBody = typeof captured.data === "string" ? JSON.parse(captured.data) : captured.data;
+    await adminApi.publishWebsiteArticle(
+      "article-1",
+      "revision-2",
+      2,
+      "cd".repeat(32),
+      "website-key-00000001",
+    );
+    const sentBody =
+      typeof captured.data === "string"
+        ? JSON.parse(captured.data)
+        : captured.data;
     assert.equal(captured.url, "/admin/articles/article-1/publication");
     assert.equal(sentBody.destination, "portfolio");
     assert.equal(sentBody.revisionId, "revision-2");
     assert.equal(sentBody.revisionNumber, 2);
     assert.equal(sentBody.contentSha256, "cd".repeat(32));
-    assert.equal(captured.headers.get("Idempotency-Key"), "website-key-00000001");
+    assert.equal(
+      captured.headers.get("Idempotency-Key"),
+      "website-key-00000001",
+    );
   });
 
   it("binds website unpublish to the exact currently published revision", async () => {
     let captured;
     adminApiClient.defaults.adapter = async (config) => {
       captured = config;
-      return { status: 200, statusText: "OK", headers: {}, config, data: { published: false } };
+      return {
+        status: 200,
+        statusText: "OK",
+        headers: {},
+        config,
+        data: { published: false },
+      };
     };
-    await adminApi.unpublishWebsiteArticle("article-1", "revision-2", 2, "ef".repeat(32), "website-key-00000002");
-    const sentBody = typeof captured.data === "string" ? JSON.parse(captured.data) : captured.data;
+    await adminApi.unpublishWebsiteArticle(
+      "article-1",
+      "revision-2",
+      2,
+      "ef".repeat(32),
+      "website-key-00000002",
+    );
+    const sentBody =
+      typeof captured.data === "string"
+        ? JSON.parse(captured.data)
+        : captured.data;
     assert.equal(sentBody.command, "unpublish");
     assert.equal(sentBody.revisionId, "revision-2");
     assert.equal(sentBody.revisionNumber, 2);
     assert.equal(sentBody.contentSha256, "ef".repeat(32));
-    assert.equal(captured.headers.get("Idempotency-Key"), "website-key-00000002");
+    assert.equal(
+      captured.headers.get("Idempotency-Key"),
+      "website-key-00000002",
+    );
   });
 
   it("renders native keyboard-operable controls with an accessible delivery section", async () => {
@@ -145,7 +243,9 @@ describe("article delivery controls and API contract", () => {
       appType: "custom",
     });
     try {
-      const { ArticleDeliveryControls } = await vite.ssrLoadModule("/components/admin/ArticleDeliveryControls.tsx");
+      const { ArticleDeliveryControls } = await vite.ssrLoadModule(
+        "/components/admin/ArticleDeliveryControls.tsx",
+      );
       const { createElement } = await import("react");
       const { renderToStaticMarkup } = await import("react-dom/server");
       const article = {
@@ -164,7 +264,9 @@ describe("article delivery controls and API contract", () => {
           },
         },
       };
-      const markup = renderToStaticMarkup(createElement(ArticleDeliveryControls, { article, review: null }));
+      const markup = renderToStaticMarkup(
+        createElement(ArticleDeliveryControls, { article, review: null }),
+      );
       assert.match(markup, /aria-labelledby="article-delivery-heading"/);
       assert.match(markup, /<button type="button"/);
       assert.match(markup, /Review and publish/);

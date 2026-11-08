@@ -6,6 +6,7 @@ import { TProject } from "@/types/project";
 import { HomeSection } from "@/components/pages/home/HomeSection";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { projectCardDescription } from "@/lib/project-summary";
 import { formatDateRange, homeMotion } from "@/lib/utils";
 
 type HomeProjectsProps = {
@@ -13,11 +14,7 @@ type HomeProjectsProps = {
 };
 
 const ProjectShowcaseCard = ({ project }: { project: TProject }) => {
-  // Use longDescription if description is too short or identical to name
-  const displayDescription =
-    project.description && project.description.trim().toLowerCase() !== project.name.trim().toLowerCase()
-      ? project.description
-      : project.longDescription || project.description || "Production web application and system architecture.";
+  const displayDescription = projectCardDescription(project);
 
   return (
     <motion.article
@@ -75,8 +72,11 @@ const ProjectShowcaseCard = ({ project }: { project: TProject }) => {
           ) : null}
         </div>
 
-        {/* Project Description */}
-        <p className="text-xs sm:text-sm leading-relaxed text-muted-foreground">{displayDescription}</p>
+        {displayDescription ? (
+          <p className="text-xs leading-relaxed text-muted-foreground sm:text-sm">
+            {displayDescription}
+          </p>
+        ) : null}
 
         {/* Tech Badges */}
         {project.technologies?.length ? (
@@ -115,7 +115,10 @@ const ProjectShowcaseCard = ({ project }: { project: TProject }) => {
             size="sm"
             className="flex-1 font-mono text-xs hover:border-primary/40 hover:text-primary transition-all h-8"
           >
-            <Link to="/projects" className="inline-flex items-center justify-center gap-1.5">
+            <Link
+              to="/projects"
+              className="inline-flex items-center justify-center gap-1.5"
+            >
               <span>View in projects</span>
               <ArrowRight className="h-3 w-3" />
             </Link>
@@ -129,7 +132,12 @@ const ProjectShowcaseCard = ({ project }: { project: TProject }) => {
             className="font-mono text-xs px-2.5 text-muted-foreground hover:text-foreground hover:border-border transition-all gap-1.5 h-8"
             asChild
           >
-            <a href={project.links.github} target="_blank" rel="noopener noreferrer" title="View source code">
+            <a
+              href={project.links.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              title="View source code"
+            >
               <FolderGit2 className="h-3.5 w-3.5" />
               <span className="hidden sm:inline">Code</span>
             </a>
@@ -151,7 +159,10 @@ export const HomeProjects = ({ projects }: HomeProjectsProps) => {
     >
       <div className="grid gap-4 sm:gap-5 md:grid-cols-2 lg:grid-cols-3">
         {projects.map((project) => (
-          <ProjectShowcaseCard key={project.id || project.slug} project={project} />
+          <ProjectShowcaseCard
+            key={project.id || project.slug}
+            project={project}
+          />
         ))}
       </div>
     </HomeSection>

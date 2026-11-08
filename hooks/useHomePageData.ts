@@ -1,4 +1,9 @@
-import { queryOptions, useQuery, useQueryClient, type QueryClient } from "@tanstack/react-query";
+import {
+  queryOptions,
+  useQuery,
+  useQueryClient,
+  type QueryClient,
+} from "@tanstack/react-query";
 import { api, handleApiError } from "@/lib/api";
 import { orderPublicProjects } from "@/lib/project-order";
 import { projectKeys } from "./queries/useProjects";
@@ -29,19 +34,22 @@ export const portfolioQuery = (queryClient: QueryClient) =>
     },
   });
 
-/** Data for the home page: profile, skills and the first three experiences and projects. */
+/** Data for the home page: profile, skills, the full experience list, and the first three projects. */
 export const useHomePageData = () => {
   const queryClient = useQueryClient();
-  const { data, isLoading, error, refetch } = useQuery(portfolioQuery(queryClient));
+  const { data, isLoading, error, refetch, isFetching } = useQuery(
+    portfolioQuery(queryClient),
+  );
 
   return {
     profile: data?.profile,
     settings: data?.settings,
     skills: data?.skills ?? [],
-    experiences: data?.experiences.slice(0, 3) ?? [],
+    experiences: data?.experiences ?? [],
     projects: orderPublicProjects(data?.projects ?? []).slice(0, 3),
     isLoading,
     error,
+    isFetching,
     refetch,
   };
 };
