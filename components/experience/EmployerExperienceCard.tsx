@@ -1,8 +1,11 @@
-import { ExternalLink, MapPin } from "lucide-react";
+import { CheckCircle2, ExternalLink, MapPin, Sparkles } from "lucide-react";
 
 import { CompanyLogo } from "@/components/CompanyLogo";
 import { Button } from "@/components/ui/button";
-import type { ExperienceGroup } from "@/lib/experience-groups";
+import {
+  visibleHighlights,
+  type ExperienceGroup,
+} from "@/lib/experience-groups";
 import { cn, formatDateRange } from "@/lib/utils";
 import type { TExperience } from "@/types/experience";
 
@@ -14,6 +17,33 @@ type EmployerExperienceCardProps = {
   showLogo?: boolean;
   className?: string;
 };
+
+function HighlightList({ highlights }: { highlights: string[] }) {
+  if (!highlights.length) return null;
+
+  return (
+    <div className="space-y-2">
+      <p className="inline-flex items-center gap-1 font-mono text-[0.6875rem] font-semibold uppercase tracking-wider text-muted-foreground">
+        <Sparkles className="h-3 w-3 text-primary" aria-hidden="true" />
+        <span>Key Responsibilities & Highlights</span>
+      </p>
+      <ul className="grid gap-2 sm:grid-cols-2">
+        {highlights.map((highlight, index) => (
+          <li
+            key={`${index}-${highlight}`}
+            className="flex items-start gap-2 rounded-lg border border-border/50 bg-card/60 p-2.5 text-xs leading-relaxed text-foreground/80"
+          >
+            <CheckCircle2
+              className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary"
+              aria-hidden="true"
+            />
+            <span>{highlight}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
 
 function TechnologyList({
   experience,
@@ -96,6 +126,7 @@ function ClientEngagement({
               {client.jobDescription}
             </p>
           ) : null}
+          <HighlightList highlights={visibleHighlights([client])} />
           <TechnologyList experience={client} onSelectTech={onSelectTech} />
           {client.companyUrl ? (
             <Button
@@ -130,6 +161,12 @@ export function EmployerExperienceCard({
   const Title = heading;
   const clientHeading = heading === "h2" ? "h3" : "h4";
   const clientsLabelId = `${group.id}-clients`;
+  const clientIds = new Set(
+    group.clients.map((client) => client.id || client.slug),
+  );
+  const employerHighlights = visibleHighlights(
+    group.sources.filter((source) => !clientIds.has(source.id || source.slug)),
+  );
 
   return (
     <article className={cn("min-w-0 space-y-4", className)}>
@@ -171,6 +208,7 @@ export function EmployerExperienceCard({
           {group.companyDetail}
         </p>
       ) : null}
+      <HighlightList highlights={employerHighlights} />
 
       {group.clients.length > 0 ? (
         <div className="space-y-3">

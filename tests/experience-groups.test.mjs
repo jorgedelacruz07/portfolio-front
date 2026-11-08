@@ -3,6 +3,7 @@ import { test } from "node:test";
 import {
   experienceGroupMatches,
   groupExperiences,
+  visibleHighlights,
 } from "../lib/experience-groups.ts";
 
 function role(partial) {
@@ -18,7 +19,7 @@ function role(partial) {
     from: partial.from,
     to: partial.to ?? null,
     technologies: partial.technologies ?? [],
-    highlights: [],
+    highlights: partial.highlights ?? [],
     image: { src: "" },
     technologyIds: [],
     createdAt: "",
@@ -135,6 +136,42 @@ test("keeps a single Coforge record addressable after the employer entries are m
     groups[0].clients.map((client) => client.slug),
     ["opis-dow-jones", "godaddy"],
   );
+});
+
+test("keeps client and employer highlights available for the grouped card", () => {
+  const groups = groupExperiences([
+    role({
+      slug: "coforge",
+      company: "Coforge",
+      from: "2026-05-01",
+      highlights: ["Led the platform", " led the platform "],
+    }),
+    role({
+      slug: "godaddy",
+      company: "GoDaddy",
+      from: "2022-12-05",
+      to: "2026-04-30",
+      highlights: ["Shipped Conversations", "Shipped Conversations"],
+    }),
+    role({
+      slug: "opis-dow-jones",
+      company: "OPIS · Dow Jones",
+      from: "2026-05-01",
+      highlights: ["  Maintained pricing tools  "],
+    }),
+  ]);
+  const employer = groups[0];
+  const godaddy = employer.clients.find((client) => client.slug === "godaddy");
+  const opis = employer.clients.find(
+    (client) => client.slug === "opis-dow-jones",
+  );
+
+  assert.deepEqual(visibleHighlights([employer.experience]), [
+    "Led the platform",
+  ]);
+  assert.deepEqual(visibleHighlights([godaddy]), ["Shipped Conversations"]);
+  assert.deepEqual(visibleHighlights([opis]), ["Maintained pricing tools"]);
+  assert.equal(experienceGroupMatches(employer, "conversations"), true);
 });
 
 test("search matches a nested client without dropping the employer card", () => {

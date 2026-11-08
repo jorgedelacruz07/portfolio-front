@@ -176,6 +176,26 @@ export function groupExperiences(
   return groups;
 }
 
+/** Trimmed, de-duplicated highlights in source order. */
+export function visibleHighlights(
+  experiences: readonly TExperience[],
+): string[] {
+  const seen = new Set<string>();
+  const highlights: string[] = [];
+
+  for (const experience of experiences) {
+    for (const highlight of experience.highlights ?? []) {
+      const text = highlight.trim();
+      const key = text.toLowerCase();
+      if (!text || seen.has(key)) continue;
+      seen.add(key);
+      highlights.push(text);
+    }
+  }
+
+  return highlights;
+}
+
 export function previewExperienceGroups(
   experiences: readonly TExperience[],
   limit = 3,
