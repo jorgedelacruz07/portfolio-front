@@ -3,17 +3,28 @@ import { ExternalLink, MapPin } from "lucide-react";
 
 import { TExperience } from "@/types/experience";
 import { CompanyLogo } from "@/components/CompanyLogo";
+import { EmployerExperienceCard } from "@/components/experience/EmployerExperienceCard";
 import { HomeSection } from "@/components/pages/home/HomeSection";
 import { Button } from "@/components/ui/button";
+import { previewExperienceGroups } from "@/lib/experience-groups";
 import { formatDateRange, homeMotion } from "@/lib/utils";
 
 type HomeExperiencesProps = {
   experiences: TExperience[];
 };
 
-const ExperienceTimelineItem = ({ experience, isLast }: { experience: TExperience; isLast: boolean }) => {
+const ExperienceTimelineItem = ({
+  experience,
+  isLast,
+}: {
+  experience: TExperience;
+  isLast: boolean;
+}) => {
   return (
-    <motion.div variants={homeMotion.item} className="relative flex gap-3.5 sm:gap-5 pb-6 sm:pb-7 last:pb-0 group">
+    <motion.div
+      variants={homeMotion.item}
+      className="relative flex gap-3.5 sm:gap-5 pb-6 sm:pb-7 last:pb-0 group"
+    >
       {/* Continuous Vertical Timeline Track Spine */}
       {!isLast ? (
         <div
@@ -41,7 +52,9 @@ const ExperienceTimelineItem = ({ experience, isLast }: { experience: TExperienc
               </h3>
 
               <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm">
-                <span className="font-semibold text-foreground/90">{experience.company}</span>
+                <span className="font-semibold text-foreground/90">
+                  {experience.company}
+                </span>
                 {experience.companyFrom ? (
                   <>
                     <span className="text-border">•</span>
@@ -64,7 +77,9 @@ const ExperienceTimelineItem = ({ experience, isLast }: { experience: TExperienc
 
           {/* Job Description */}
           {experience.jobDescription ? (
-            <p className="text-xs sm:text-sm leading-relaxed text-muted-foreground">{experience.jobDescription}</p>
+            <p className="text-xs sm:text-sm leading-relaxed text-muted-foreground">
+              {experience.jobDescription}
+            </p>
           ) : null}
 
           {/* Technology Badges */}
@@ -87,7 +102,11 @@ const ExperienceTimelineItem = ({ experience, isLast }: { experience: TExperienc
                 size="sm"
                 className="h-7 font-mono text-xs text-muted-foreground hover:text-foreground hover:bg-secondary/60 -ml-2 px-2 gap-1.5"
               >
-                <a href={experience.companyUrl} target="_blank" rel="noopener noreferrer">
+                <a
+                  href={experience.companyUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <span>Company website</span>
                   <ExternalLink className="h-3 w-3" />
                 </a>
@@ -101,6 +120,8 @@ const ExperienceTimelineItem = ({ experience, isLast }: { experience: TExperienc
 };
 
 export const HomeExperiences = ({ experiences }: HomeExperiencesProps) => {
+  const groups = previewExperienceGroups(experiences, 3);
+
   return (
     <HomeSection
       eyebrow="Career Journey"
@@ -110,13 +131,41 @@ export const HomeExperiences = ({ experiences }: HomeExperiencesProps) => {
       actionLabel="Full career history"
     >
       <div className="relative pl-1 sm:pl-2 pt-2">
-        {experiences.map((experience, index) => (
-          <ExperienceTimelineItem
-            key={experience.id || experience.slug}
-            experience={experience}
-            isLast={index === experiences.length - 1}
-          />
-        ))}
+        {groups.map((group, index) =>
+          group.clients.length > 0 ? (
+            <motion.div
+              key={group.id}
+              variants={homeMotion.item}
+              className="relative flex gap-3.5 pb-6 last:pb-0 sm:gap-5 sm:pb-7"
+            >
+              {index === groups.length - 1 ? null : (
+                <div
+                  className="absolute bottom-0 left-[15px] top-7 w-px bg-gradient-to-b from-primary/30 via-border/70 to-border/20 sm:left-[19px]"
+                  aria-hidden="true"
+                />
+              )}
+              <div className="relative z-10 shrink-0">
+                <CompanyLogo
+                  experience={group.logoExperience}
+                  className="h-8 w-8 sm:h-10 sm:w-10"
+                />
+              </div>
+              <div className="craft-card min-w-0 flex-1 rounded-2xl p-4 sm:p-5">
+                <EmployerExperienceCard
+                  group={group}
+                  heading="h3"
+                  showLogo={false}
+                />
+              </div>
+            </motion.div>
+          ) : (
+            <ExperienceTimelineItem
+              key={group.id}
+              experience={group.experience}
+              isLast={index === groups.length - 1}
+            />
+          ),
+        )}
       </div>
     </HomeSection>
   );

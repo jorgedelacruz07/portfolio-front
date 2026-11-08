@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { api, handleApiError } from "../../lib/api";
+import { shouldRetryArticleQuery } from "../../lib/query-retry";
 import type { PublicArticle, PublicArticleSummary } from "../../types/article";
 
 export const articleKeys = {
@@ -19,6 +20,7 @@ export const useGetArticles = () => {
         throw handleApiError(error);
       }
     },
+    retry: shouldRetryArticleQuery,
   });
 };
 

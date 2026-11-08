@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import process from "node:process";
 import { afterEach, beforeEach, describe, it } from "node:test";
 import { api, apiClient } from "../lib/api.ts";
+import { shouldRetryArticleQuery } from "../lib/query-retry.ts";
 import { isSafeUrl, parseBlocks, parseInline } from "../lib/markdown.ts";
 
 describe("public articles API client contracts", () => {
@@ -88,12 +89,26 @@ describe("public articles API client contracts", () => {
             seo: {
               metaTitle: "Atomic CAS Patterns in Node.js",
               metaDescription: "Guide to atomic CAS concurrency.",
-              canonicalUrl: "https://jorgedelacruz.dev/articles/atomic-cas-patterns",
+              canonicalUrl:
+                "https://jorgedelacruz.dev/articles/atomic-cas-patterns",
               keywords: ["concurrency", "mongodb"],
             },
             socialVariants: { linkedin: null, x: null },
-            references: [{ id: "ref-1", title: "MongoDB Transactions", url: "https://www.mongodb.com/docs" }],
-            claims: [{ id: "c-1", kind: "fact", statement: "CAS prevents lost updates", referenceIds: ["ref-1"] }],
+            references: [
+              {
+                id: "ref-1",
+                title: "MongoDB Transactions",
+                url: "https://www.mongodb.com/docs",
+              },
+            ],
+            claims: [
+              {
+                id: "c-1",
+                kind: "fact",
+                statement: "CAS prevents lost updates",
+                referenceIds: ["ref-1"],
+              },
+            ],
             readingTime: { wordCount: 800, minutes: 4 },
           },
         },
@@ -111,6 +126,27 @@ describe("public articles API client contracts", () => {
     // Strict isolation: no private fields
     assert.equal("privateEvidence" in article, false);
     assert.equal("evidenceReviews" in article, false);
+  });
+
+  it("getArticles treats a missing catalog as an empty list without retrying inside the client", async () => {
+    let calls = 0;
+    apiClient.defaults.adapter = async (config) => {
+      calls += 1;
+      const error = new Error("Request failed with status code 404");
+      error.response = {
+        status: 404,
+        statusText: "Not Found",
+        headers: {},
+        config,
+        data: { message: "Cannot GET /client/articles" },
+      };
+      error.isAxiosError = true;
+      throw error;
+    };
+
+    const articles = await api.getArticles();
+    assert.deepEqual(articles, []);
+    assert.equal(calls, 1);
   });
 
   it("getArticleBySlug returns null for unpublished or 404 responses (fails closed)", async () => {
@@ -132,6 +168,16 @@ describe("public articles API client contracts", () => {
   });
 });
 
+describe("article catalog retries", () => {
+  it("does not retry a 404 and still retries other failures twice", () => {
+    assert.equal(shouldRetryArticleQuery(0, { status: 404 }), false);
+    assert.equal(shouldRetryArticleQuery(1, { status: 404 }), false);
+    assert.equal(shouldRetryArticleQuery(0, { status: 500 }), true);
+    assert.equal(shouldRetryArticleQuery(1, { status: 500 }), true);
+    assert.equal(shouldRetryArticleQuery(2, { status: 500 }), false);
+  });
+});
+
 describe("SafeMarkdown URL protocol screening and parser security", () => {
   it("isSafeUrl accepts valid https, http, relative, and anchor paths", () => {
     assert.equal(isSafeUrl("https://jorgedelacruz.dev"), true);
@@ -144,7 +190,10 @@ describe("SafeMarkdown URL protocol screening and parser security", () => {
   it("isSafeUrl rejects dangerous schemes: javascript, data, vbscript, file", () => {
     assert.equal(isSafeUrl("javascript:alert('xss')"), false);
     assert.equal(isSafeUrl("JAVASCRIPT:alert(1)"), false);
-    assert.equal(isSafeUrl("data:text/html;base64,PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg=="), false);
+    assert.equal(
+      isSafeUrl("data:text/html;base64,PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg=="),
+      false,
+    );
     assert.equal(isSafeUrl("vbscript:msgbox(1)"), false);
     assert.equal(isSafeUrl("file:///etc/passwd"), false);
     assert.equal(isSafeUrl(""), false);
@@ -156,7 +205,9 @@ describe("SafeMarkdown URL protocol screening and parser security", () => {
     const tokens = parseInline(raw);
 
     // No link token with javascript href is produced
-    const hasUnsafeLink = tokens.some((t) => t.type === "link" && t.href.includes("javascript"));
+    const hasUnsafeLink = tokens.some(
+      (t) => t.type === "link" && t.href.includes("javascript"),
+    );
     assert.equal(hasUnsafeLink, false);
 
     // Label text is preserved
@@ -191,14 +242,18 @@ describe("SafeMarkdown URL protocol screening and parser security", () => {
     const blocks = parseBlocks(markdown);
 
     assert.ok(blocks.some((b) => b.type === "heading" && b.level === 1));
-    assert.ok(blocks.some((b) => b.type === "codeblock" && b.lang === "typescript"));
+    assert.ok(
+      blocks.some((b) => b.type === "codeblock" && b.lang === "typescript"),
+    );
     assert.ok(blocks.some((b) => b.type === "blockquote"));
     assert.ok(blocks.some((b) => b.type === "unordered_list"));
     assert.ok(blocks.some((b) => b.type === "ordered_list"));
     assert.ok(blocks.some((b) => b.type === "hr"));
 
     // Raw HTML tags are converted to text blocks, never executed
-    const scriptBlock = blocks.find((b) => b.type === "paragraph" && JSON.stringify(b).includes("<script>"));
+    const scriptBlock = blocks.find(
+      (b) => b.type === "paragraph" && JSON.stringify(b).includes("<script>"),
+    );
     assert.ok(scriptBlock);
   });
 });
