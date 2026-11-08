@@ -3,6 +3,7 @@ import { profile } from "@/data/content";
 import { OptimizedImage } from "@/components/OptimizedImage";
 import { SocialNetworks } from "@/components/SocialNetworks";
 import { Button } from "@/components/ui/button";
+import { profileFallback } from "@/lib/profile-fallback";
 import type { TProfile } from "@/types/portfolio";
 
 const focusAreas = [
@@ -17,16 +18,16 @@ type HomeProfileProps = {
 };
 
 export const HomeProfile = ({ cmsProfile }: HomeProfileProps) => {
-  const currentProfile = cmsProfile ?? {
-    name: profile.name,
-    headline: "Building fast, maintainable full-stack products.",
-    shortBio:
-      "Senior Software Engineer focused on building fast, scalable user interfaces and resilient backend systems with React, TypeScript, Node.js, and cloud infrastructure.",
-    location: "Lima, Peru",
-    availability: "Available for work",
-    profileImage: { src: profile.image },
-    resumeUrl: "/documents/jorgedelacruz_cv.pdf",
-    contactEmail: "jdelacruzp7@gmail.com",
+  const currentProfile = {
+    name: cmsProfile?.name || profile.name,
+    shortBio: cmsProfile?.shortBio || profileFallback.shortBio,
+    location: cmsProfile?.location || profileFallback.location,
+    availability: cmsProfile?.availability || profileFallback.availability,
+    profileImage: cmsProfile?.profileImage?.src
+      ? cmsProfile.profileImage
+      : { src: profile.image },
+    resumeUrl: cmsProfile?.resumeUrl || profileFallback.resumeUrl,
+    contactEmail: cmsProfile?.contactEmail || profileFallback.contactEmail,
   };
 
   const handleDownloadClick = () => {
@@ -49,16 +50,18 @@ export const HomeProfile = ({ cmsProfile }: HomeProfileProps) => {
               <span className="h-2 w-2 rounded-full bg-emerald-500" />
               <span>{currentProfile.availability}</span>
             </div>
-            <span className="font-mono text-xs text-muted-foreground">{currentProfile.location}</span>
+            <span className="font-mono text-xs text-muted-foreground">
+              {currentProfile.location}
+            </span>
           </div>
 
           {/* Main Headline */}
           <div className="space-y-2.5">
             <h1 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
-              Jorge de la Cruz
+              {profileFallback.name}
             </h1>
             <p className="text-lg font-medium text-foreground/90 sm:text-xl md:text-2xl">
-              Senior Software Engineer crafting fast, resilient full-stack web applications.
+              {profileFallback.headline}
             </p>
             <p className="max-w-2xl text-sm sm:text-base leading-relaxed text-muted-foreground">
               {currentProfile.shortBio}
@@ -68,7 +71,10 @@ export const HomeProfile = ({ cmsProfile }: HomeProfileProps) => {
           {/* Engineering Focus Areas */}
           <div className="flex flex-wrap gap-1.5 pt-0.5">
             {focusAreas.map((area) => (
-              <span key={area} className="craft-pill text-[0.6875rem] sm:text-xs">
+              <span
+                key={area}
+                className="craft-pill text-[0.6875rem] sm:text-xs"
+              >
                 {area}
               </span>
             ))}
@@ -78,7 +84,9 @@ export const HomeProfile = ({ cmsProfile }: HomeProfileProps) => {
           <div className="flex flex-wrap items-center gap-3 pt-1">
             <Button size="default" onClick={handleDownloadClick} asChild>
               <a
-                href={currentProfile.resumeUrl || "/documents/jorgedelacruz_cv.pdf"}
+                href={
+                  currentProfile.resumeUrl || "/documents/jorgedelacruz_cv.pdf"
+                }
                 download
                 className="flex items-center gap-2 font-mono text-xs font-semibold"
               >
@@ -87,10 +95,19 @@ export const HomeProfile = ({ cmsProfile }: HomeProfileProps) => {
               </a>
             </Button>
             <Button asChild size="default" variant="outline">
-              <a href={`mailto:${currentProfile.contactEmail}`} className="font-mono text-xs font-semibold">
+              <a
+                href={`mailto:${currentProfile.contactEmail}`}
+                className="font-mono text-xs font-semibold"
+              >
                 Get in touch
               </a>
             </Button>
+            <a
+              href={`mailto:${currentProfile.contactEmail}`}
+              className="font-mono text-xs text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+            >
+              {currentProfile.contactEmail}
+            </a>
             <div className="border-l border-border/80 pl-3">
               <SocialNetworks />
             </div>

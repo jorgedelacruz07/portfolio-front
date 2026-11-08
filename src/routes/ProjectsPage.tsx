@@ -1,14 +1,22 @@
 import { forwardRef, useMemo, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { AnimatePresence, motion, type Variants } from "framer-motion";
-import { ExternalLink, FolderGit2, Layers, Search, Sparkles, X } from "lucide-react";
+import {
+  ExternalLink,
+  FolderGit2,
+  Layers,
+  Search,
+  Sparkles,
+  X,
+} from "lucide-react";
 
 import { PageSkeleton } from "@/components/PageSkeleton";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useGetProjects } from "@/hooks";
-import { formatDateRange } from "@/lib/utils";
 import { orderPublicProjects } from "@/lib/project-order";
+import { projectCardDescription } from "@/lib/project-summary";
+import { formatDateRange } from "@/lib/utils";
 import { TProject } from "@/types/project";
 
 const containerVariants = {
@@ -85,7 +93,12 @@ export default function ProjectsPage() {
       }
 
       // Tech filter
-      if (selectedTech && !project.technologies?.some((t) => t.name.toLowerCase() === selectedTech.toLowerCase())) {
+      if (
+        selectedTech &&
+        !project.technologies?.some(
+          (t) => t.name.toLowerCase() === selectedTech.toLowerCase(),
+        )
+      ) {
         return false;
       }
 
@@ -93,18 +106,33 @@ export default function ProjectsPage() {
       if (searchQuery.trim()) {
         const query = searchQuery.toLowerCase().trim();
         const matchesName = project.name.toLowerCase().includes(query);
-        const matchesDesc = (project.description || "").toLowerCase().includes(query);
-        const matchesLongDesc = (project.longDescription || "").toLowerCase().includes(query);
+        const matchesDesc = (project.description || "")
+          .toLowerCase()
+          .includes(query);
+        const matchesLongDesc = (project.longDescription || "")
+          .toLowerCase()
+          .includes(query);
         const matchesType = (project.type || "").toLowerCase().includes(query);
-        const matchesTech = project.technologies?.some((t) => t.name.toLowerCase().includes(query));
-        return matchesName || matchesDesc || matchesLongDesc || matchesType || matchesTech;
+        const matchesTech = project.technologies?.some((t) =>
+          t.name.toLowerCase().includes(query),
+        );
+        return (
+          matchesName ||
+          matchesDesc ||
+          matchesLongDesc ||
+          matchesType ||
+          matchesTech
+        );
       }
 
       return true;
     });
   }, [projects, selectedType, selectedTech, searchQuery]);
 
-  const hasActiveFilters = searchQuery.trim() !== "" || selectedType !== "all" || selectedTech !== null;
+  const hasActiveFilters =
+    searchQuery.trim() !== "" ||
+    selectedType !== "all" ||
+    selectedTech !== null;
 
   const resetFilters = () => {
     setSearchQuery("");
@@ -123,11 +151,20 @@ export default function ProjectsPage() {
           <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-destructive/10 text-destructive">
             <X className="h-6 w-6" />
           </div>
-          <h1 className="text-2xl font-bold tracking-tight text-foreground">Error loading projects</h1>
+          <h1 className="text-2xl font-bold tracking-tight text-foreground">
+            Error loading projects
+          </h1>
           <p className="text-sm leading-relaxed text-muted-foreground">
-            {error instanceof Error ? error.message : "Unable to retrieve the projects collection."}
+            {error instanceof Error
+              ? error.message
+              : "Unable to retrieve the projects collection."}
           </p>
-          <Button onClick={() => window.location.reload()} variant="outline" size="sm" className="mt-2">
+          <Button
+            onClick={() => window.location.reload()}
+            variant="outline"
+            size="sm"
+            className="mt-2"
+          >
             Try Again
           </Button>
         </div>
@@ -143,11 +180,17 @@ export default function ProjectsPage() {
           name="description"
           content="Selected products, personal tools, and client work built with TypeScript, React, Node.js, and other stacks."
         />
-        <meta property="og:title" content="Projects & Engineering Work | Jorge de la Cruz" />
-        <meta property="og:description" content="Selected products, personal tools, and client work." />
+        <meta
+          property="og:title"
+          content="Projects & Engineering Work | Jorge de la Cruz"
+        />
+        <meta
+          property="og:description"
+          content="Selected products, personal tools, and client work."
+        />
       </Helmet>
 
-      <main className="relative mx-auto max-w-5xl px-4 py-8 sm:px-6 md:py-16">
+      <div className="relative mx-auto max-w-5xl px-4 py-8 sm:px-6 md:py-16">
         <div className="space-y-8 sm:space-y-10">
           {/* Header Section */}
           <header className="space-y-3 sm:space-y-4 border-b border-border/70 pb-6 sm:pb-8">
@@ -161,8 +204,9 @@ export default function ProjectsPage() {
             </h1>
 
             <p className="max-w-2xl text-sm sm:text-base leading-relaxed text-muted-foreground">
-              Products, personal tools, and client work across finance, education, and other domains. Explore each
-              project's stack, design decisions, and availability.
+              Products, personal tools, and client work across finance,
+              education, and other domains. Explore each project's stack, design
+              decisions, and availability.
             </p>
           </header>
 
@@ -171,17 +215,16 @@ export default function ProjectsPage() {
             aria-label="Project search and filters"
             className="space-y-4 rounded-2xl border border-border/60 bg-card/40 p-4 sm:p-5"
           >
-            {/* Search bar & Type filter row */}
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              {/* Search input */}
-              <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <div className="space-y-3">
+              <div className="relative w-full">
+                <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search by title, description, or stack..."
-                  className="w-full rounded-xl border border-border/80 bg-background/80 py-2 pl-9 pr-8 text-sm text-foreground placeholder:text-muted-foreground/70 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all"
+                  aria-label="Search projects"
+                  className="h-11 w-full rounded-xl border border-border/80 bg-background/80 py-2 pl-9 pr-8 text-sm text-foreground placeholder:text-muted-foreground/70 transition-all focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
                 />
                 {searchQuery ? (
                   <button
@@ -195,7 +238,6 @@ export default function ProjectsPage() {
                 ) : null}
               </div>
 
-              {/* Type Category Pills */}
               <div className="flex flex-wrap items-center gap-1.5">
                 <button
                   type="button"
@@ -225,12 +267,16 @@ export default function ProjectsPage() {
                 ) : null}
 
                 {availableTypes.map((type) => {
-                  const count = projects.filter((p) => p.type?.toLowerCase() === type.toLowerCase()).length;
+                  const count = projects.filter(
+                    (p) => p.type?.toLowerCase() === type.toLowerCase(),
+                  ).length;
                   return (
                     <button
                       key={type}
                       type="button"
-                      onClick={() => setSelectedType(selectedType === type ? "all" : type)}
+                      onClick={() =>
+                        setSelectedType(selectedType === type ? "all" : type)
+                      }
                       className={`rounded-lg px-2.5 sm:px-3 py-1.5 font-mono text-xs transition-all ${
                         selectedType.toLowerCase() === type.toLowerCase()
                           ? "bg-primary text-primary-foreground font-semibold shadow-sm"
@@ -252,14 +298,17 @@ export default function ProjectsPage() {
                   <span>Stack:</span>
                 </span>
                 {allTechnologies.map((tech) => {
-                  const isSelected = selectedTech?.toLowerCase() === tech.toLowerCase();
+                  const isSelected =
+                    selectedTech?.toLowerCase() === tech.toLowerCase();
                   return (
                     <button
                       key={tech}
                       type="button"
                       onClick={() => setSelectedTech(isSelected ? null : tech)}
                       className={`craft-pill cursor-pointer transition-colors ${
-                        isSelected ? "border-primary bg-primary/15 text-primary font-semibold" : ""
+                        isSelected
+                          ? "border-primary bg-primary/15 text-primary font-semibold"
+                          : ""
                       }`}
                     >
                       {tech}
@@ -284,8 +333,11 @@ export default function ProjectsPage() {
           {/* Active Filter Summary Bar */}
           <div className="flex items-center justify-between text-xs text-muted-foreground">
             <span>
-              Showing <strong className="font-semibold text-foreground">{filteredProjects.length}</strong> of{" "}
-              {projects.length} projects
+              Showing{" "}
+              <strong className="font-semibold text-foreground">
+                {filteredProjects.length}
+              </strong>{" "}
+              of {projects.length} projects
             </span>
 
             {selectedTech ? (
@@ -309,12 +361,19 @@ export default function ProjectsPage() {
               <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-muted text-muted-foreground">
                 <Search className="h-6 w-6" />
               </div>
-              <h2 className="text-xl font-semibold text-foreground">No matching projects found</h2>
+              <h2 className="text-xl font-semibold text-foreground">
+                No matching projects found
+              </h2>
               <p className="mt-2 max-w-md text-sm text-muted-foreground">
-                No projects matched your active search or filter criteria. Try broadening your keywords or resetting
-                filters.
+                No projects matched your active search or filter criteria. Try
+                broadening your keywords or resetting filters.
               </p>
-              <Button onClick={resetFilters} variant="outline" size="sm" className="mt-6 font-mono text-xs">
+              <Button
+                onClick={resetFilters}
+                variant="outline"
+                size="sm"
+                className="mt-6 font-mono text-xs"
+              >
                 Clear all filters
               </Button>
             </div>
@@ -337,7 +396,7 @@ export default function ProjectsPage() {
             </motion.div>
           )}
         </div>
-      </main>
+      </div>
     </>
   );
 }
@@ -347,137 +406,156 @@ interface ProjectCardProps {
   onSelectTech: (tech: string) => void;
 }
 
-const ProjectCard = forwardRef<HTMLElement, ProjectCardProps>(function ProjectCard({ project, onSelectTech }, ref) {
-  const displayDescription =
-    project.description && project.description.trim().toLowerCase() !== project.name.trim().toLowerCase()
-      ? project.description
-      : project.longDescription || project.description || "Production web application and system architecture.";
+const ProjectCard = forwardRef<HTMLElement, ProjectCardProps>(
+  function ProjectCard({ project, onSelectTech }, ref) {
+    const displayDescription = projectCardDescription(project);
 
-  return (
-    <motion.article
-      ref={ref}
-      layout
-      variants={cardVariants}
-      className="craft-card craft-card-interactive group flex flex-col justify-between overflow-hidden rounded-2xl p-6 transition-all hover:border-primary/40"
-    >
-      <div className="space-y-4">
-        {/* Top Header: Badge, Type & Date */}
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <div className="flex items-center gap-2">
-            <Badge
-              variant="secondary"
-              className="bg-secondary/90 font-mono text-[0.6875rem] font-medium tracking-wide text-foreground/90 border border-border/70"
-            >
-              {project.type || "Web App"}
-            </Badge>
+    return (
+      <motion.article
+        ref={ref}
+        layout
+        variants={cardVariants}
+        className="craft-card craft-card-interactive group flex flex-col justify-between overflow-hidden rounded-2xl p-6 transition-all hover:border-primary/40"
+      >
+        <div className="space-y-4">
+          {/* Top Header: Badge, Type & Date */}
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <div className="flex items-center gap-2">
+              <Badge
+                variant="secondary"
+                className="bg-secondary/90 font-mono text-[0.6875rem] font-medium tracking-wide text-foreground/90 border border-border/70"
+              >
+                {project.type || "Web App"}
+              </Badge>
 
-            {project.featured ? (
-              <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 font-mono text-[0.6875rem] font-semibold text-primary border border-primary/20">
-                <Sparkles className="h-2.5 w-2.5" />
-                <span>Featured</span>
+              {project.featured ? (
+                <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 font-mono text-[0.6875rem] font-semibold text-primary border border-primary/20">
+                  <Sparkles className="h-2.5 w-2.5" />
+                  <span>Featured</span>
+                </span>
+              ) : null}
+            </div>
+
+            {project.from ? (
+              <span className="font-mono text-[0.6875rem] text-muted-foreground">
+                {formatDateRange(project.from, project.to)}
               </span>
             ) : null}
           </div>
 
-          {project.from ? (
-            <span className="font-mono text-[0.6875rem] text-muted-foreground">
-              {formatDateRange(project.from, project.to)}
-            </span>
-          ) : null}
-        </div>
-
-        {/* Project Title & Hostname */}
-        <div className="space-y-1">
-          <h2 className="text-xl font-bold tracking-tight text-foreground transition-colors group-hover:text-primary sm:text-2xl">
-            {project.url ? (
-              <a
-                href={project.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 hover:underline"
-              >
+          {/* Project Title & Hostname */}
+          <div className="space-y-1">
+            <h2 className="text-xl font-bold tracking-tight text-foreground transition-colors group-hover:text-primary sm:text-2xl">
+              {project.url ? (
+                <a
+                  href={project.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 hover:underline"
+                >
+                  <span>{project.name}</span>
+                  <ExternalLink className="h-4 w-4 opacity-70 group-hover:opacity-100 transition-opacity text-primary" />
+                </a>
+              ) : (
                 <span>{project.name}</span>
-                <ExternalLink className="h-4 w-4 opacity-70 group-hover:opacity-100 transition-opacity text-primary" />
-              </a>
-            ) : (
-              <span>{project.name}</span>
-            )}
-          </h2>
+              )}
+            </h2>
 
-          {project.url ? (
-            <span className="block font-mono text-xs text-muted-foreground/80">{formatHostname(project.url)}</span>
+            {project.url ? (
+              <span className="block font-mono text-xs text-muted-foreground/80">
+                {formatHostname(project.url)}
+              </span>
+            ) : null}
+          </div>
+
+          {displayDescription ? (
+            <p className="text-sm leading-relaxed text-muted-foreground">
+              {displayDescription}
+            </p>
+          ) : null}
+
+          {project.longDescription &&
+          displayDescription &&
+          project.longDescription.trim() !== displayDescription ? (
+            <details className="border-l-2 border-primary/30 pl-3 text-sm text-muted-foreground">
+              <summary className="cursor-pointer font-medium text-foreground">
+                Read case study
+              </summary>
+              <p className="mt-3 whitespace-pre-line leading-relaxed">
+                {project.longDescription}
+              </p>
+            </details>
+          ) : null}
+
+          {/* Technology Pills */}
+          {project.technologies?.length ? (
+            <div className="flex flex-wrap gap-1.5 pt-1">
+              {project.technologies.map((tech) => (
+                <button
+                  key={tech.id}
+                  type="button"
+                  onClick={() => onSelectTech(tech.name)}
+                  className="craft-pill cursor-pointer hover:border-primary/40 hover:text-primary transition-all text-[0.6875rem]"
+                  title={`Filter by ${tech.name}`}
+                >
+                  {tech.name}
+                </button>
+              ))}
+            </div>
           ) : null}
         </div>
 
-        {/* Project Description */}
-        <p className="text-sm leading-relaxed text-muted-foreground">{displayDescription}</p>
-
-        {project.longDescription && project.longDescription !== displayDescription ? (
-          <details className="border-l-2 border-primary/30 pl-3 text-sm text-muted-foreground">
-            <summary className="cursor-pointer font-medium text-foreground">Read case study</summary>
-            <p className="mt-3 whitespace-pre-line leading-relaxed">{project.longDescription}</p>
-          </details>
-        ) : null}
-
-        {/* Technology Pills */}
-        {project.technologies?.length ? (
-          <div className="flex flex-wrap gap-1.5 pt-1">
-            {project.technologies.map((tech) => (
-              <button
-                key={tech.id}
-                type="button"
-                onClick={() => onSelectTech(tech.name)}
-                className="craft-pill cursor-pointer hover:border-primary/40 hover:text-primary transition-all text-[0.6875rem]"
-                title={`Filter by ${tech.name}`}
+        {/* Card Actions Footer */}
+        {project.url || project.links?.github || project.links?.caseStudy ? (
+          <div className="mt-6 flex items-center gap-2.5 border-t border-border/50 pt-4">
+            {project.url ? (
+              <Button
+                size="sm"
+                className="flex-1 font-mono text-xs bg-primary text-primary-foreground hover:bg-primary/90 transition-all gap-1.5 shadow-sm"
+                asChild
               >
-                {tech.name}
-              </button>
-            ))}
+                <a href={project.url} target="_blank" rel="noopener noreferrer">
+                  <span>Live demo</span>
+                  <ExternalLink className="h-3.5 w-3.5" />
+                </a>
+              </Button>
+            ) : null}
+
+            {project.links?.github ? (
+              <Button
+                variant="outline"
+                size="sm"
+                className="font-mono text-xs px-3 text-muted-foreground hover:text-foreground hover:border-border transition-all gap-1.5"
+                asChild
+              >
+                <a
+                  href={project.links.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title="View source code"
+                >
+                  <FolderGit2 className="h-4 w-4" />
+                  <span className="hidden sm:inline">Code</span>
+                </a>
+              </Button>
+            ) : null}
+            {project.links?.caseStudy ? (
+              <Button variant="outline" size="sm" asChild>
+                <a
+                  href={project.links.caseStudy}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Case study
+                </a>
+              </Button>
+            ) : null}
           </div>
         ) : null}
-      </div>
-
-      {/* Card Actions Footer */}
-      {project.url || project.links?.github || project.links?.caseStudy ? (
-        <div className="mt-6 flex items-center gap-2.5 border-t border-border/50 pt-4">
-          {project.url ? (
-            <Button
-              size="sm"
-              className="flex-1 font-mono text-xs bg-primary text-primary-foreground hover:bg-primary/90 transition-all gap-1.5 shadow-sm"
-              asChild
-            >
-              <a href={project.url} target="_blank" rel="noopener noreferrer">
-                <span>Live demo</span>
-                <ExternalLink className="h-3.5 w-3.5" />
-              </a>
-            </Button>
-          ) : null}
-
-          {project.links?.github ? (
-            <Button
-              variant="outline"
-              size="sm"
-              className="font-mono text-xs px-3 text-muted-foreground hover:text-foreground hover:border-border transition-all gap-1.5"
-              asChild
-            >
-              <a href={project.links.github} target="_blank" rel="noopener noreferrer" title="View source code">
-                <FolderGit2 className="h-4 w-4" />
-                <span className="hidden sm:inline">Code</span>
-              </a>
-            </Button>
-          ) : null}
-          {project.links?.caseStudy ? (
-            <Button variant="outline" size="sm" asChild>
-              <a href={project.links.caseStudy} target="_blank" rel="noopener noreferrer">
-                Case study
-              </a>
-            </Button>
-          ) : null}
-        </div>
-      ) : null}
-    </motion.article>
-  );
-});
+      </motion.article>
+    );
+  },
+);
 ProjectCard.displayName = "ProjectCard";
 
 function formatHostname(url: string): string {

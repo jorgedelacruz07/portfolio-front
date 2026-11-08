@@ -3,6 +3,7 @@ import { Helmet } from "react-helmet-async";
 
 import { HomeAbout } from "@/components/pages/home/HomeAbout";
 import { HomeProfile } from "@/components/pages/home/HomeProfile";
+import { HomeSection } from "@/components/pages/home/HomeSection";
 import { Button } from "@/components/ui/button";
 import { useDeferredRender, useHomePageData } from "@/hooks";
 import { cn, homePageStyles } from "@/lib/utils";
@@ -43,7 +44,10 @@ function DeferredSectionPlaceholder() {
       </div>
       <div className="grid gap-4 md:grid-cols-3">
         {Array.from({ length: 3 }, (_, index) => (
-          <div key={index} className="space-y-4 rounded-xl border border-border/40 bg-background/30 p-4">
+          <div
+            key={index}
+            className="space-y-4 rounded-xl border border-border/40 bg-background/30 p-4"
+          >
             <div className="h-5 w-2/3 motion-safe:animate-pulse rounded-lg bg-muted/70" />
             <div className="space-y-2">
               <div className="h-3 w-full motion-safe:animate-pulse rounded-lg bg-muted/60" />
@@ -85,39 +89,50 @@ function DeferredGithub() {
   );
 }
 
-function HomeErrorState({ message }: { message: string }) {
+function SectionLoadError({
+  eyebrow,
+  title,
+  onRetry,
+  pending,
+}: {
+  eyebrow: string;
+  title: string;
+  onRetry: () => void;
+  pending: boolean;
+}) {
   return (
-    <div className="flex min-h-[60vh] items-center justify-center">
-      <div className="max-w-lg rounded-[2rem] border border-border/70 bg-card/85 p-8 text-center shadow-soft">
-        <p className="text-xs font-semibold uppercase tracking-[0.28em] text-primary/80">Content error</p>
-        <h1 className="mt-3 text-3xl font-semibold tracking-tight text-foreground">
-          The homepage content could not be loaded.
-        </h1>
-        <p className="mt-4 text-sm leading-7 text-muted-foreground">{message}</p>
-        <Button
-          onClick={() => window.location.reload()}
-          variant="outline"
-          className="mt-6 h-11 rounded-full px-5 text-sm font-semibold"
-        >
-          Reload page
-        </Button>
-      </div>
-    </div>
+    <HomeSection
+      eyebrow={eyebrow}
+      title={title}
+      description="This section could not be loaded. The rest of the page is still available."
+    >
+      <Button
+        type="button"
+        variant="outline"
+        onClick={onRetry}
+        disabled={pending}
+        className="h-11 rounded-full px-5 font-mono text-xs font-semibold"
+      >
+        {pending ? "Trying again..." : "Try again"}
+      </Button>
+    </HomeSection>
   );
 }
 
 export default function HomePage() {
-  const { profile, skills, experiences, projects, isLoading, error } = useHomePageData();
-
-  if (error) {
-    return (
-      <HomeErrorState
-        message={
-          error instanceof Error ? error.message : "An unexpected error occurred while fetching the latest data."
-        }
-      />
-    );
-  }
+  const {
+    profile,
+    skills,
+    experiences,
+    projects,
+    isLoading,
+    error,
+    isFetching,
+    refetch,
+  } = useHomePageData();
+  const retry = () => {
+    void refetch();
+  };
 
   return (
     <>
@@ -133,9 +148,16 @@ export default function HomePage() {
         <HomeProfile cmsProfile={profile} />
         <HomeAbout cmsSkills={skills} />
 
-        {isLoading ? <DeferredSectionPlaceholder /> : null}
-
-        {experiences.length > 0 ? (
+        {error ? (
+          <SectionLoadError
+            eyebrow="Career Journey"
+            title="Experience could not be loaded"
+            onRetry={retry}
+            pending={isFetching}
+          />
+        ) : isLoading ? (
+          <DeferredSectionPlaceholder />
+        ) : experiences.length > 0 ? (
           <DeferredSection>
             <Suspense fallback={<DeferredSectionPlaceholder />}>
               <HomeExperiences experiences={experiences} />
@@ -143,7 +165,14 @@ export default function HomePage() {
           </DeferredSection>
         ) : null}
 
-        {projects.length > 0 ? (
+        {error ? (
+          <SectionLoadError
+            eyebrow="Selected work"
+            title="Projects could not be loaded"
+            onRetry={retry}
+            pending={isFetching}
+          />
+        ) : projects.length > 0 ? (
           <DeferredSection>
             <Suspense fallback={<DeferredSectionPlaceholder />}>
               <HomeProjects projects={projects} />
@@ -151,7 +180,13 @@ export default function HomePage() {
           </DeferredSection>
         ) : null}
 
-        <DeferredGithub />
+        {error ? (
+          <Suspense fallback={<DeferredSectionPlaceholder />}>
+            <HomeGithub />
+          </Suspense>
+        ) : (
+          <DeferredGithub />
+        )}
       </div>
     </>
   );
