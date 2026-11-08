@@ -15,6 +15,10 @@ fs.mkdirSync(path.dirname(tempHtmlPath), { recursive: true });
 
 const jorgeImageBase64 = `data:image/jpeg;base64,${fs.readFileSync(jorgeImagePath).toString("base64")}`;
 
+// 1200x630 card. X paints its title caption over the bottom-left of the image,
+// so the identity block sits in the upper-center safe area and the bottom
+// ~100px stays empty background. The same inset keeps a LinkedIn thumbnail
+// crop from clipping the name, title, or photo.
 const htmlContent = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -28,81 +32,82 @@ const htmlContent = `<!DOCTYPE html>
       margin: 0;
       padding: 0;
     }
-    body {
+    html, body {
       width: 1200px;
       height: 630px;
       overflow: hidden;
+    }
+    body {
       background-color: #09090b;
       font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
       color: #f4f4f5;
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: center;
+      padding: 32px 0 0;
       position: relative;
+      -webkit-font-smoothing: antialiased;
     }
 
-    /* Background Grid Pattern */
     .grid-pattern {
       position: absolute;
       inset: 0;
-      background-image: 
+      background-image:
         linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
         linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
       background-size: 40px 40px;
-      mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, #000 70%, transparent 100%);
-      -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, #000 70%, transparent 100%);
+      mask-image: radial-gradient(ellipse 80% 70% at 50% 42%, #000 60%, transparent 100%);
+      -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 42%, #000 60%, transparent 100%);
     }
 
-    /* Ambient Spotlight Glows */
     .glow-cyan {
       position: absolute;
-      top: -120px;
-      left: -100px;
-      width: 550px;
-      height: 550px;
-      background: radial-gradient(circle, rgba(14, 165, 233, 0.15) 0%, rgba(14, 165, 233, 0) 70%);
+      top: -140px;
+      left: -80px;
+      width: 520px;
+      height: 520px;
+      background: radial-gradient(circle, rgba(14, 165, 233, 0.16) 0%, rgba(14, 165, 233, 0) 70%);
       pointer-events: none;
     }
     .glow-emerald {
       position: absolute;
-      bottom: -150px;
-      right: -100px;
-      width: 600px;
-      height: 600px;
+      bottom: -180px;
+      right: -80px;
+      width: 560px;
+      height: 560px;
       background: radial-gradient(circle, rgba(16, 185, 129, 0.12) 0%, rgba(16, 185, 129, 0) 70%);
       pointer-events: none;
     }
 
-    /* Presentation Card Container */
     .card-container {
       position: relative;
       z-index: 10;
-      width: 1120px;
-      height: 550px;
-      background: rgba(18, 18, 23, 0.85);
+      width: 960px;
+      height: 496px;
+      background: rgba(18, 18, 23, 0.88);
       border: 1px solid rgba(255, 255, 255, 0.12);
       border-radius: 28px;
-      padding: 48px 56px;
+      padding: 28px 36px 24px;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 28px;
       box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(16px);
     }
 
     .left-content {
       flex: 1;
-      max-width: 640px;
+      min-width: 0;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
-      height: 100%;
+      justify-content: center;
     }
 
     .top-meta {
       display: flex;
       align-items: center;
-      gap: 12px;
+      flex-wrap: wrap;
+      gap: 10px 14px;
     }
 
     .status-pill {
@@ -136,31 +141,51 @@ const htmlContent = `<!DOCTYPE html>
     }
 
     .main-heading {
-      margin-top: 18px;
+      margin-top: 16px;
     }
 
     .name {
-      font-size: 48px;
-      font-weight: 900;
-      letter-spacing: -0.03em;
+      font-size: 50px;
+      font-weight: 800;
+      letter-spacing: -0.035em;
       color: #ffffff;
-      line-height: 1.1;
+      line-height: 1.05;
     }
 
     .role-title {
-      font-size: 24px;
+      font-size: 25px;
       font-weight: 700;
-      margin-top: 8px;
+      margin-top: 6px;
       background: linear-gradient(135deg, #38bdf8 0%, #818cf8 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      letter-spacing: -0.01em;
+      letter-spacing: -0.015em;
+      line-height: 1.2;
+    }
+
+    .tagline {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+      font-size: 18px;
+      font-weight: 500;
+      color: #d5dee7;
+      letter-spacing: 0.01em;
+      line-height: 1.3;
+    }
+
+    .tagline-dot {
+      color: #5eead4;
+      font-weight: 700;
     }
 
     .bio-text {
-      margin-top: 14px;
-      font-size: 16px;
-      line-height: 1.55;
+      margin-top: 12px;
+      max-width: 520px;
+      font-size: 15px;
+      line-height: 1.45;
       color: #a1a1aa;
       font-weight: 400;
     }
@@ -169,7 +194,7 @@ const htmlContent = `<!DOCTYPE html>
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
-      margin-top: 20px;
+      margin-top: 16px;
     }
 
     .skill-badge {
@@ -180,18 +205,18 @@ const htmlContent = `<!DOCTYPE html>
       border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 9999px;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 12px;
+      font-size: 13px;
       font-weight: 500;
       color: #d4d4d8;
     }
 
     .footer-bar {
-      margin-top: 24px;
-      padding-top: 20px;
+      margin-top: 16px;
+      padding-top: 14px;
       border-top: 1px solid rgba(255, 255, 255, 0.08);
       display: flex;
       align-items: center;
-      gap: 20px;
+      gap: 18px;
     }
 
     .domain-badge {
@@ -217,22 +242,21 @@ const htmlContent = `<!DOCTYPE html>
       color: #71717a;
     }
 
-    /* Right Photo Craft Card */
     .right-content {
+      flex: none;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
     }
 
     .photo-card {
       position: relative;
-      width: 310px;
-      height: 390px;
+      width: 248px;
+      height: 316px;
       background: rgba(255, 255, 255, 0.03);
       border: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 24px;
-      padding: 10px;
+      border-radius: 22px;
+      padding: 8px;
       box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.6);
       display: flex;
       flex-direction: column;
@@ -251,29 +275,30 @@ const htmlContent = `<!DOCTYPE html>
       width: 100%;
       height: 100%;
       object-fit: cover;
-      object-position: center 20%;
+      object-position: center 18%;
       filter: grayscale(20%) contrast(1.05);
     }
 
     .photo-badge {
       position: absolute;
-      bottom: 12px;
-      left: 12px;
-      right: 12px;
+      bottom: 10px;
+      left: 10px;
+      right: 10px;
       padding: 8px 12px;
-      background: rgba(9, 9, 11, 0.85);
-      backdrop-filter: blur(10px);
+      background: rgba(9, 9, 11, 0.88);
       border: 1px solid rgba(255, 255, 255, 0.12);
       border-radius: 12px;
       display: flex;
-      align-items: center;
-      justify-content: space-between;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 2px;
     }
 
     .photo-badge-name {
-      font-size: 12px;
+      font-size: 13px;
       font-weight: 700;
       color: #ffffff;
+      line-height: 1.2;
     }
 
     .photo-badge-role {
@@ -281,7 +306,8 @@ const htmlContent = `<!DOCTYPE html>
       font-size: 10px;
       font-weight: 600;
       color: #38bdf8;
-      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      line-height: 1.3;
     }
   </style>
 </head>
@@ -292,31 +318,36 @@ const htmlContent = `<!DOCTYPE html>
 
   <div class="card-container">
     <div class="left-content">
-      <div>
-        <div class="top-meta">
-          <div class="status-pill">
-            <span class="status-dot"></span>
-            <span>Available for work</span>
-          </div>
-          <span class="location-text">Lima, Peru // Remote</span>
+      <div class="top-meta">
+        <div class="status-pill">
+          <span class="status-dot"></span>
+          <span>Available for work</span>
         </div>
+        <span class="location-text">Lima, Peru // Remote</span>
+      </div>
 
-        <div class="main-heading">
-          <h1 class="name">Jorge de la Cruz</h1>
-          <div class="role-title">Senior Software Engineer</div>
-          <p class="bio-text">
-            Crafting fast, resilient full-stack web applications, React architectures & cloud-native systems.
-          </p>
-        </div>
+      <div class="main-heading">
+        <h1 class="name">Jorge de la Cruz</h1>
+        <div class="role-title">Senior Software Engineer</div>
+        <p class="tagline">
+          <span>AI-assisted delivery</span>
+          <span class="tagline-dot" aria-hidden="true">·</span>
+          <span>Security</span>
+          <span class="tagline-dot" aria-hidden="true">·</span>
+          <span>Product thinking</span>
+        </p>
+        <p class="bio-text">
+          Crafting fast, resilient full-stack web applications, React architectures &amp; cloud-native systems.
+        </p>
+      </div>
 
-        <div class="skills-row">
-          <span class="skill-badge">React.js</span>
-          <span class="skill-badge">TypeScript</span>
-          <span class="skill-badge">Node.js</span>
-          <span class="skill-badge">MongoDB</span>
-          <span class="skill-badge">Cloud APIs</span>
-          <span class="skill-badge">Vite</span>
-        </div>
+      <div class="skills-row">
+        <span class="skill-badge">React.js</span>
+        <span class="skill-badge">TypeScript</span>
+        <span class="skill-badge">Node.js</span>
+        <span class="skill-badge">MongoDB</span>
+        <span class="skill-badge">Cloud APIs</span>
+        <span class="skill-badge">Vite</span>
       </div>
 
       <div class="footer-bar">
@@ -334,7 +365,7 @@ const htmlContent = `<!DOCTYPE html>
           <img src="${jorgeImageBase64}" alt="Jorge de la Cruz">
           <div class="photo-badge">
             <span class="photo-badge-name">Jorge de la Cruz</span>
-            <span class="photo-badge-role">Staff / Senior</span>
+            <span class="photo-badge-role">Senior Software Engineer</span>
           </div>
         </div>
       </div>
@@ -348,15 +379,34 @@ fs.writeFileSync(tempHtmlPath, htmlContent, "utf8");
 const outPngPath = path.join(publicImagesDir, "og-image.png");
 const outJpgPath = path.join(publicImagesDir, "og-image.jpg");
 
-const chromePaths = ["/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", "google-chrome", "chromium"];
+function findChrome() {
+  const candidates = [
+    process.env.CHROME_PATH,
+    "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+    "/usr/bin/google-chrome-stable",
+    "/usr/bin/google-chrome",
+    "/usr/local/bin/google-chrome",
+    "/usr/bin/chromium",
+    "/usr/bin/chromium-browser",
+  ].filter(Boolean);
 
-const chromePath = chromePaths.find((p) => {
-  try {
-    return fs.existsSync(p);
-  } catch {
-    return false;
+  for (const candidate of candidates) {
+    if (fs.existsSync(candidate)) return candidate;
   }
-});
+
+  for (const name of ["google-chrome", "google-chrome-stable", "chromium", "chromium-browser"]) {
+    try {
+      const found = execSync(`command -v ${name}`, { encoding: "utf8" }).trim();
+      if (found && fs.existsSync(found)) return found;
+    } catch {
+      // Try the next binary name.
+    }
+  }
+
+  return null;
+}
+
+const chromePath = findChrome();
 
 if (!chromePath) {
   console.error("Could not find Google Chrome binary to render OG image.");
@@ -365,18 +415,50 @@ if (!chromePath) {
 
 console.log("Rendering Open Graph Presentation Card image with Chrome...");
 
-execSync(
-  `"${chromePath}" --headless --disable-gpu --window-size=1200,630 --screenshot="${outPngPath}" "file://${tempHtmlPath}"`,
-  { stdio: "inherit" },
-);
+const chromeArgs = [
+  "--headless=new",
+  "--disable-gpu",
+  "--hide-scrollbars",
+  "--force-device-scale-factor=1",
+  "--window-size=1200,630",
+  "--default-background-color=00000000",
+  "--virtual-time-budget=12000",
+  "--no-first-run",
+  "--no-default-browser-check",
+  `--user-data-dir=${path.join(rootDir, "node_modules", ".cache", "og-chrome")}`,
+  `--screenshot=${outPngPath}`,
+];
 
-try {
-  execSync(`sips -s format jpeg "${outPngPath}" --out "${outJpgPath}"`, {
-    stdio: "inherit",
-  });
-} catch {
-  // sips might only exist on macOS
+if (process.platform !== "darwin") {
+  chromeArgs.push("--no-sandbox", "--disable-dev-shm-usage");
 }
+
+chromeArgs.push(`file://${tempHtmlPath}`);
+
+execSync(`"${chromePath}" ${chromeArgs.map((arg) => `"${arg}"`).join(" ")}`, {
+  stdio: "inherit",
+});
+
+function writeJpeg() {
+  try {
+    execSync(`sips -s format jpeg "${outPngPath}" --out "${outJpgPath}"`, {
+      stdio: "inherit",
+    });
+    return;
+  } catch {
+    // sips is macOS-only.
+  }
+
+  try {
+    execSync(`ffmpeg -y -i "${outPngPath}" -frames:v 1 -qscale:v 3 -update 1 "${outJpgPath}"`, {
+      stdio: "inherit",
+    });
+  } catch {
+    console.warn("JPEG fallback was not written (sips and ffmpeg unavailable).");
+  }
+}
+
+writeJpeg();
 
 console.log("Successfully generated:");
 console.log(`- ${outPngPath}`);

@@ -35,12 +35,17 @@ export const Layout = ({ children }: LayoutProps) => {
           content="Senior Software Engineer specializing in React.js, TypeScript, Node.js, and Native MongoDB Architecture. Building fast, scalable full-stack products."
         />
         <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="Jorge de la Cruz" />
         <meta property="og:url" content={currentUrl} />
-        <meta property="og:image" content="https://jorgedelacruzpadilla.dev/images/og-image.png" />
+        <meta property="og:image" content="https://jorgedelacruzpadilla.dev/images/og-image.png?v=2" />
+        <meta property="og:image:secure_url" content="https://jorgedelacruzpadilla.dev/images/og-image.png?v=2" />
         <meta property="og:image:type" content="image/png" />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
-        <meta property="og:image:alt" content="Jorge de la Cruz - Senior Software Engineer" />
+        <meta
+          property="og:image:alt"
+          content="Jorge de la Cruz, Senior Software Engineer. AI-assisted delivery, security, and product thinking."
+        />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:site" content="@jorgedelacruz07" />
         <meta name="twitter:creator" content="@jorgedelacruz07" />
@@ -49,8 +54,11 @@ export const Layout = ({ children }: LayoutProps) => {
           name="twitter:description"
           content="Senior Software Engineer specializing in React.js, TypeScript, Node.js, and Native MongoDB Architecture. Building fast, scalable full-stack products."
         />
-        <meta name="twitter:image" content="https://jorgedelacruzpadilla.dev/images/og-image.png" />
-        <meta name="twitter:image:alt" content="Jorge de la Cruz - Senior Software Engineer" />
+        <meta name="twitter:image" content="https://jorgedelacruzpadilla.dev/images/og-image.png?v=2" />
+        <meta
+          name="twitter:image:alt"
+          content="Jorge de la Cruz, Senior Software Engineer. AI-assisted delivery, security, and product thinking."
+        />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <link rel="canonical" href={currentUrl} />
       </Helmet>
