@@ -89,7 +89,8 @@ describe("public articles API client contracts", () => {
             seo: {
               metaTitle: "Atomic CAS Patterns in Node.js",
               metaDescription: "Guide to atomic CAS concurrency.",
-              canonicalUrl: "https://jorgedelacruz.dev/articles/atomic-cas-patterns",
+              canonicalUrl:
+                "https://jorgedelacruz.dev/articles/atomic-cas-patterns",
               keywords: ["concurrency", "mongodb"],
             },
             socialVariants: { linkedin: null, x: null },
@@ -184,12 +185,18 @@ describe("SafeMarkdown URL protocol screening and parser security", () => {
     assert.equal(isSafeUrl("/articles/atomic-cas"), true);
     assert.equal(isSafeUrl("./relative-doc"), true);
     assert.equal(isSafeUrl("#heading-anchor"), true);
+    assert.equal(isSafeUrl("//evil.example"), false);
+    assert.equal(isSafeUrl("/\\evil.example"), false);
+    assert.equal(isSafeUrl("\\\\evil.example"), false);
   });
 
   it("isSafeUrl rejects dangerous schemes: javascript, data, vbscript, file", () => {
     assert.equal(isSafeUrl("javascript:alert('xss')"), false);
     assert.equal(isSafeUrl("JAVASCRIPT:alert(1)"), false);
-    assert.equal(isSafeUrl("data:text/html;base64,PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg=="), false);
+    assert.equal(
+      isSafeUrl("data:text/html;base64,PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg=="),
+      false,
+    );
     assert.equal(isSafeUrl("vbscript:msgbox(1)"), false);
     assert.equal(isSafeUrl("file:///etc/passwd"), false);
     assert.equal(isSafeUrl(""), false);
@@ -201,12 +208,28 @@ describe("SafeMarkdown URL protocol screening and parser security", () => {
     const tokens = parseInline(raw);
 
     // No link token with javascript href is produced
-    const hasUnsafeLink = tokens.some((t) => t.type === "link" && t.href.includes("javascript"));
+    const hasUnsafeLink = tokens.some(
+      (t) => t.type === "link" && t.href.includes("javascript"),
+    );
     assert.equal(hasUnsafeLink, false);
 
     // Label text is preserved
     const textContent = JSON.stringify(tokens);
     assert.ok(textContent.includes("here"));
+  });
+
+  it("keeps a balanced parenthesis inside a markdown link", () => {
+    const tokens = parseInline(
+      "See [docs](https://example.com/path_(v1)) next.",
+    );
+    const link = tokens.find((token) => token.type === "link");
+    assert.equal(link?.href, "https://example.com/path_(v1)");
+    const plain = tokens
+      .filter((token) => token.type === "text")
+      .map((token) => token.text)
+      .join("");
+    assert.equal(plain.includes(")"), false);
+    assert.ok(plain.includes("next"));
   });
 
   it("parseBlocks parses standard markdown structures without executing raw HTML", () => {
@@ -236,14 +259,18 @@ describe("SafeMarkdown URL protocol screening and parser security", () => {
     const blocks = parseBlocks(markdown);
 
     assert.ok(blocks.some((b) => b.type === "heading" && b.level === 1));
-    assert.ok(blocks.some((b) => b.type === "codeblock" && b.lang === "typescript"));
+    assert.ok(
+      blocks.some((b) => b.type === "codeblock" && b.lang === "typescript"),
+    );
     assert.ok(blocks.some((b) => b.type === "blockquote"));
     assert.ok(blocks.some((b) => b.type === "unordered_list"));
     assert.ok(blocks.some((b) => b.type === "ordered_list"));
     assert.ok(blocks.some((b) => b.type === "hr"));
 
     // Raw HTML tags are converted to text blocks, never executed
-    const scriptBlock = blocks.find((b) => b.type === "paragraph" && JSON.stringify(b).includes("<script>"));
+    const scriptBlock = blocks.find(
+      (b) => b.type === "paragraph" && JSON.stringify(b).includes("<script>"),
+    );
     assert.ok(scriptBlock);
   });
 });

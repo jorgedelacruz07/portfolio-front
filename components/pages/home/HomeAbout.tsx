@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+
 import { HomeSection } from "@/components/pages/home/HomeSection";
 import { homeMotion } from "@/lib/utils";
 import type { TSkill } from "@/types/portfolio";
@@ -9,70 +10,59 @@ type HomeAboutProps = {
 
 const engineeringPillars = [
   {
-    title: "Frontend Architecture",
-    description:
-      "Building high-performance, accessible, and scalable client applications. Focused on Core Web Vitals, state management, and design system engineering.",
-    skills: ["React.js", "TypeScript", "Vite.js", "Tailwind CSS", "TanStack Query", "Framer Motion"],
+    title: "Frontend",
+    skills: ["React.js", "TypeScript", "Vite.js", "Tailwind CSS"],
   },
   {
-    title: "Backend & Systems",
-    description:
-      "Designing clean, maintainable APIs and data access layers. Experience with caching strategies, database optimization, and secure authentication.",
-    skills: ["Node.js", "Express.js", "MongoDB Native Driver", "MongoDB Atlas", "REST APIs", "CORS & Auth"],
+    title: "Backend",
+    skills: ["Node.js", "Express.js", "MongoDB", "REST APIs"],
   },
   {
-    title: "Cloud & Delivery",
-    description:
-      "Deploying scalable cloud workloads with automated CI/CD pipelines, containerization, and modern agentic engineering tooling.",
-    skills: ["AWS", "Docker", "GitHub Actions", "GCP Cloud Run", "Micro-services", "AI Workflows"],
+    title: "Cloud",
+    skills: ["AWS", "Docker", "GitHub Actions", "GCP Cloud Run"],
   },
 ];
 
 export const HomeAbout = ({ cmsSkills }: HomeAboutProps) => {
-  const dynamicSkills = cmsSkills?.length ? cmsSkills.filter((s) => s.visible !== false).map((s) => s.name) : [];
+  const dynamicSkills = cmsSkills?.length
+    ? cmsSkills
+        .filter((skill) => skill.visible !== false)
+        .map((skill) => skill.name)
+    : [];
+  const listed = new Set(
+    engineeringPillars.flatMap((pillar) =>
+      pillar.skills.map((skill) => skill.toLowerCase()),
+    ),
+  );
+  const extraSkills = dynamicSkills.filter(
+    (skill) => !listed.has(skill.toLowerCase()),
+  );
 
   return (
-    <HomeSection
-      id="about"
-      eyebrow="Capabilities"
-      title="Engineering pillars & core stack"
-      description="Architectural discipline across user experience, backend services, and cloud infrastructure."
-    >
-      <div className="grid gap-4 sm:gap-5 md:grid-cols-3">
+    <HomeSection id="about" eyebrow="Stack" title="Engineering pillars">
+      <div className="grid gap-4 sm:grid-cols-3">
         {engineeringPillars.map((pillar) => (
           <motion.div
             key={pillar.title}
             variants={homeMotion.item}
-            className="craft-card flex flex-col justify-between rounded-2xl p-5 sm:p-6"
+            className="space-y-2"
           >
-            <div className="space-y-2.5">
-              <h3 className="text-base sm:text-lg font-bold tracking-tight text-foreground">{pillar.title}</h3>
-              <p className="text-xs sm:text-sm leading-relaxed text-muted-foreground">{pillar.description}</p>
-            </div>
-
-            <div className="mt-4 flex flex-wrap gap-1.5 border-t border-border/60 pt-3">
-              {pillar.skills.map((skill) => (
-                <span key={skill} className="craft-pill text-[0.6875rem]">
-                  {skill}
-                </span>
-              ))}
-            </div>
+            <h3 className="text-sm font-medium text-foreground">
+              {pillar.title}
+            </h3>
+            <p className="text-sm leading-relaxed text-muted-foreground">
+              {pillar.skills.join(", ")}
+            </p>
           </motion.div>
         ))}
       </div>
-
-      {dynamicSkills.length > 0 ? (
-        <motion.div
+      {extraSkills.length > 0 ? (
+        <motion.p
           variants={homeMotion.item}
-          className="mt-4 flex flex-wrap items-center gap-1.5 rounded-xl border border-border/70 bg-card/40 p-3"
+          className="text-sm text-muted-foreground"
         >
-          <span className="font-mono text-xs font-semibold text-muted-foreground mr-1">All Technologies:</span>
-          {dynamicSkills.map((skill) => (
-            <span key={skill} className="craft-pill text-[0.6875rem]">
-              {skill}
-            </span>
-          ))}
-        </motion.div>
+          Also {extraSkills.join(", ")}
+        </motion.p>
       ) : null}
     </HomeSection>
   );

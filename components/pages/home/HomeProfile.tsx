@@ -4,14 +4,8 @@ import { OptimizedImage } from "@/components/OptimizedImage";
 import { SocialNetworks } from "@/components/SocialNetworks";
 import { Button } from "@/components/ui/button";
 import { profileFallback } from "@/lib/profile-fallback";
+import { mailtoHref, safeHref } from "@/lib/safe-href";
 import type { TProfile } from "@/types/portfolio";
-
-const focusAreas = [
-  "React & TypeScript Architecture",
-  "Node.js & Cloud APIs",
-  "Performance & Web Vitals",
-  "Design Systems & UX Engineering",
-];
 
 type HomeProfileProps = {
   cmsProfile?: TProfile;
@@ -23,7 +17,9 @@ export const HomeProfile = ({ cmsProfile }: HomeProfileProps) => {
     shortBio: cmsProfile?.shortBio || profileFallback.shortBio,
     location: cmsProfile?.location || profileFallback.location,
     availability: cmsProfile?.availability || profileFallback.availability,
-    profileImage: cmsProfile?.profileImage?.src ? cmsProfile.profileImage : { src: profile.image },
+    profileImage: cmsProfile?.profileImage?.src
+      ? cmsProfile.profileImage
+      : { src: profile.image },
     resumeUrl: cmsProfile?.resumeUrl || profileFallback.resumeUrl,
     contactEmail: cmsProfile?.contactEmail || profileFallback.contactEmail,
   };
@@ -37,87 +33,85 @@ export const HomeProfile = ({ cmsProfile }: HomeProfileProps) => {
     }
   };
 
+  const resumeHref = safeHref(
+    currentProfile.resumeUrl || "/documents/jorgedelacruz_cv.pdf",
+    { sameOriginPath: true },
+  );
+  const contactHref = mailtoHref(currentProfile.contactEmail);
+
   return (
-    <section className="relative pt-1 pb-0 md:pt-3">
-      <div className="grid items-center gap-8 lg:grid-cols-12 lg:gap-10">
-        {/* Left Column: Headline, Bio & Actions */}
-        <div className="space-y-4 lg:col-span-8">
-          {/* Status & Location Pill */}
-          <div className="flex flex-wrap items-center gap-2.5">
-            <div className="inline-flex items-center gap-2 rounded-full border border-border bg-secondary/60 px-3 py-1 font-mono text-xs text-foreground">
-              <span className="h-2 w-2 rounded-full bg-emerald-500" />
-              <span>{currentProfile.availability}</span>
-            </div>
-            <span className="font-mono text-xs text-muted-foreground">{currentProfile.location}</span>
-          </div>
+    <section className="grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_220px]">
+      <div className="space-y-6">
+        <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
+          <span className="inline-flex items-center gap-2 text-foreground">
+            <span
+              className="h-1.5 w-1.5 rounded-full bg-foreground"
+              aria-hidden="true"
+            />
+            {currentProfile.availability}
+          </span>
+          <span>{currentProfile.location}</span>
+        </p>
 
-          {/* Main Headline */}
-          <div className="space-y-2.5">
-            <h1 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
-              {profileFallback.name}
-            </h1>
-            <p className="text-lg font-medium text-foreground/90 sm:text-xl md:text-2xl">{profileFallback.headline}</p>
-            <p className="max-w-2xl text-sm sm:text-base leading-relaxed text-muted-foreground">
-              {currentProfile.shortBio}
-            </p>
-          </div>
+        <div className="space-y-3">
+          <h1 className="text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">
+            {profileFallback.name}
+          </h1>
+          <p className="max-w-xl text-lg text-foreground">
+            {profileFallback.headline}
+          </p>
+          <p className="max-w-xl text-sm leading-relaxed text-muted-foreground sm:text-base">
+            {currentProfile.shortBio}
+          </p>
+        </div>
 
-          {/* Engineering Focus Areas */}
-          <div className="flex flex-wrap gap-1.5 pt-0.5">
-            {focusAreas.map((area) => (
-              <span key={area} className="craft-pill text-[0.6875rem] sm:text-xs">
-                {area}
-              </span>
-            ))}
-          </div>
-
-          {/* Action Buttons & Socials */}
-          <div className="flex flex-wrap items-center gap-3 pt-1">
-            <Button size="default" onClick={handleDownloadClick} asChild>
-              <a
-                href={currentProfile.resumeUrl || "/documents/jorgedelacruz_cv.pdf"}
-                download
-                className="flex items-center gap-2 font-mono text-xs font-semibold"
-              >
-                <Download className="h-4 w-4" />
+        <div className="flex flex-wrap items-center gap-3">
+          <Button onClick={handleDownloadClick} asChild>
+            {resumeHref ? (
+              <a href={resumeHref} download>
+                <Download className="mr-2 h-4 w-4" aria-hidden="true" />
                 Download CV
               </a>
+            ) : (
+              <span>Download CV</span>
+            )}
+          </Button>
+          {contactHref ? (
+            <Button asChild variant="outline">
+              <a href={contactHref}>Get in touch</a>
             </Button>
-            <Button asChild size="default" variant="outline">
-              <a href={`mailto:${currentProfile.contactEmail}`} className="font-mono text-xs font-semibold">
-                Get in touch
-              </a>
-            </Button>
+          ) : (
+            <span className="text-sm text-muted-foreground">Get in touch</span>
+          )}
+          {contactHref ? (
             <a
-              href={`mailto:${currentProfile.contactEmail}`}
-              className="font-mono text-xs text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+              href={contactHref}
+              className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
             >
               {currentProfile.contactEmail}
             </a>
-            <div className="border-l border-border/80 pl-3">
-              <SocialNetworks />
-            </div>
-          </div>
+          ) : (
+            <span className="text-sm text-muted-foreground">
+              {currentProfile.contactEmail}
+            </span>
+          )}
         </div>
 
-        {/* Right Column: Editorial Profile Photo */}
-        <div className="flex justify-center lg:col-span-4 lg:justify-end">
-          <div className="relative w-full max-w-[240px] sm:max-w-[260px]">
-            <div className="craft-card overflow-hidden rounded-2xl p-1.5">
-              <OptimizedImage
-                src={currentProfile.profileImage?.src || profile.image}
-                avifSrc="/images/jorge.avif"
-                alt={currentProfile.name}
-                width={480}
-                height={600}
-                fetchPriority="high"
-                loading="eager"
-                decoding="async"
-                className="aspect-[4/5] w-full rounded-xl object-cover object-center grayscale contrast-[1.05] transition-all duration-300 hover:grayscale-0"
-              />
-            </div>
-          </div>
-        </div>
+        <SocialNetworks />
+      </div>
+
+      <div className="mx-auto w-full max-w-[220px] lg:mx-0 lg:justify-self-end">
+        <OptimizedImage
+          src={currentProfile.profileImage?.src || profile.image}
+          avifSrc="/images/jorge.avif"
+          alt={currentProfile.name}
+          width={480}
+          height={600}
+          fetchPriority="high"
+          loading="eager"
+          decoding="async"
+          className="aspect-[4/5] w-full rounded-lg border border-border object-cover object-center"
+        />
       </div>
     </section>
   );

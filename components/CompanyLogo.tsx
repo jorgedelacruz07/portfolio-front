@@ -12,9 +12,16 @@ type CompanyLogoProps = {
 /** Explicit CMS logo, verified local asset, legacy image, then an accessible monogram. */
 export function CompanyLogo({ experience, className }: CompanyLogoProps) {
   const [failed, setFailed] = useState<string[]>([]);
-  const candidates = [experience.companyLogo, companyLogos[experience.slug], experience.image?.src];
-  const source = candidates.find((candidate) => candidate && !failed.includes(candidate));
+  const candidates = [
+    experience.companyLogo,
+    companyLogos[experience.slug],
+    experience.image?.src,
+  ];
+  const source = candidates.find(
+    (candidate) => candidate && !failed.includes(candidate),
+  );
   const theme = getCompanyTheme(experience.slug, experience.company);
+  // Logos are authored on white. A dark card background would hide dark marks.
 
   return (
     <div

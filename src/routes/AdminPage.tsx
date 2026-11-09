@@ -553,7 +553,7 @@ function GoogleLoginForm({
             <ArrowLeft className="h-3.5 w-3.5" />
             <span>Volver al portafolio</span>
           </Link>
-          <span className="font-mono text-[10px] text-muted-foreground/60">Lima, PE</span>
+          <span className="font-mono text-[10px] text-muted-foreground">Lima, PE</span>
         </div>
       </div>
     </div>

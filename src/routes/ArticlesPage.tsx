@@ -1,14 +1,16 @@
 import { useMemo, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
-import { ArrowRight, BookOpen, Clock, Newspaper, Search, X } from "lucide-react";
+import { ArrowRight, Clock, Newspaper, X } from "lucide-react";
 
 import { PageSkeleton } from "@/components/PageSkeleton";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { EmptyState, PageContainer, PageHeader } from "@/components/ui/page";
+import { SearchField } from "@/components/ui/search-field";
 import { useGetArticles } from "@/hooks";
 import { PUBLIC_SITE_ORIGIN } from "@/lib/article-delivery";
+import { cn } from "@/lib/utils";
 import type { ArticleContentType, PublicArticleSummary } from "@/types/article";
 
 const CONTENT_TYPE_LABELS: Record<ArticleContentType, string> = {
@@ -39,17 +41,19 @@ export default function ArticlesPage() {
 
   const filteredArticles = useMemo(() => {
     return articles.filter((article: PublicArticleSummary) => {
-      // Content type filter
       if (selectedType !== "all" && article.contentType !== selectedType) {
         return false;
       }
 
-      // Search query
       if (searchQuery.trim()) {
         const query = searchQuery.toLowerCase().trim();
         const matchesTitle = article.title.toLowerCase().includes(query);
-        const matchesExcerpt = (article.excerpt || "").toLowerCase().includes(query);
-        const matchesType = (article.contentType || "").toLowerCase().includes(query);
+        const matchesExcerpt = (article.excerpt || "")
+          .toLowerCase()
+          .includes(query);
+        const matchesType = (article.contentType || "")
+          .toLowerCase()
+          .includes(query);
         return matchesTitle || matchesExcerpt || matchesType;
       }
 
@@ -63,22 +67,30 @@ export default function ArticlesPage() {
 
   if (error) {
     return (
-      <div className="mx-auto flex min-h-[60vh] max-w-xl flex-col items-center justify-center px-4 text-center">
-        <div className="craft-card w-full space-y-4 rounded-2xl p-8">
-          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-destructive/10 text-destructive">
-            <X className="h-6 w-6" />
-          </div>
-          <h1 className="text-2xl font-bold tracking-tight text-foreground">Error loading articles</h1>
-          <p className="text-sm leading-relaxed text-muted-foreground">
-            {error instanceof Error ? error.message : "Unable to retrieve the articles catalog."}
-          </p>
-          <Button onClick={() => window.location.reload()} variant="outline" size="sm" className="mt-2">
-            Try Again
+      <PageContainer>
+        <EmptyState
+          heading="h1"
+          icon={<X className="h-5 w-5" />}
+          title="Error loading articles"
+          description={
+            error instanceof Error
+              ? error.message
+              : "Unable to retrieve the articles catalog."
+          }
+        >
+          <Button
+            onClick={() => window.location.reload()}
+            variant="outline"
+            size="sm"
+          >
+            Try again
           </Button>
-        </div>
-      </div>
+        </EmptyState>
+      </PageContainer>
     );
   }
+
+  const filtering = Boolean(searchQuery) || selectedType !== "all";
 
   return (
     <>
@@ -89,7 +101,10 @@ export default function ArticlesPage() {
           content="Deep-dives into software architecture, systems engineering, distributed systems, and craft."
         />
         <link rel="canonical" href={`${PUBLIC_SITE_ORIGIN}/articles`} />
-        <meta property="og:title" content="Articles & Engineering Notes | Jorge de la Cruz" />
+        <meta
+          property="og:title"
+          content="Articles & Engineering Notes | Jorge de la Cruz"
+        />
         <meta
           property="og:description"
           content="Deep-dives into software architecture, systems engineering, distributed systems, and craft."
@@ -97,152 +112,136 @@ export default function ArticlesPage() {
         <meta property="og:type" content="website" />
         <meta property="og:url" content={`${PUBLIC_SITE_ORIGIN}/articles`} />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Articles & Engineering Notes | Jorge de la Cruz" />
+        <meta
+          name="twitter:title"
+          content="Articles & Engineering Notes | Jorge de la Cruz"
+        />
         <meta
           name="twitter:description"
           content="Deep-dives into software architecture, systems engineering, distributed systems, and craft."
         />
       </Helmet>
 
-      <section className="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
-        {/* Header */}
-        <div className="space-y-4">
-          <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 font-mono text-xs font-medium text-primary">
-            <BookOpen className="h-3.5 w-3.5" />
-            <span>Technical Publications</span>
-          </div>
-          <h1 className="font-serif text-3xl font-semibold tracking-tight text-foreground sm:text-5xl">
-            Articles & Engineering Notes
-          </h1>
-          <p className="max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">
-            Practical reflections, architectural case studies, and tutorials on building reliable software systems.
-          </p>
-        </div>
+      <PageContainer className="space-y-10">
+        <PageHeader
+          eyebrow="Writing"
+          title="Articles & Engineering Notes"
+          description="Practical reflections, architectural case studies, and tutorials on building reliable software systems."
+        />
 
-        {/* Filters and search. Hidden while the catalog itself is empty. */}
         {articles.length > 0 ? (
-          <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            {/* Type filter buttons */}
-            <div className="flex flex-wrap items-center gap-1.5" role="group" aria-label="Filter articles by type">
-              <Button
-                variant={selectedType === "all" ? "default" : "outline"}
-                size="sm"
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div
+              className="flex flex-wrap items-center gap-1"
+              role="group"
+              aria-label="Filter articles by type"
+            >
+              <button
+                type="button"
+                aria-pressed={selectedType === "all"}
                 onClick={() => setSelectedType("all")}
-                className="h-8 text-xs font-medium"
+                className={cn(
+                  "rounded-md px-2.5 py-1.5 text-sm",
+                  selectedType === "all"
+                    ? "bg-foreground text-background"
+                    : "text-muted-foreground hover:bg-muted hover:text-foreground",
+                )}
               >
-                All Types
-              </Button>
-              {(Object.keys(CONTENT_TYPE_LABELS) as ArticleContentType[]).map((type) => (
-                <Button
-                  key={type}
-                  variant={selectedType === type ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setSelectedType(type)}
-                  className="h-8 text-xs font-medium"
-                >
-                  {CONTENT_TYPE_LABELS[type]}
-                </Button>
-              ))}
+                All types
+              </button>
+              {(Object.keys(CONTENT_TYPE_LABELS) as ArticleContentType[]).map(
+                (type) => (
+                  <button
+                    key={type}
+                    type="button"
+                    aria-pressed={selectedType === type}
+                    onClick={() => setSelectedType(type)}
+                    className={cn(
+                      "rounded-md px-2.5 py-1.5 text-sm",
+                      selectedType === type
+                        ? "bg-foreground text-background"
+                        : "text-muted-foreground hover:bg-muted hover:text-foreground",
+                    )}
+                  >
+                    {CONTENT_TYPE_LABELS[type]}
+                  </button>
+                ),
+              )}
             </div>
-
-            {/* Search bar */}
-            <div className="relative w-full sm:w-64">
-              <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
-              <input
-                type="text"
-                placeholder="Search articles..."
+            <div className="w-full sm:max-w-xs">
+              <SearchField
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                aria-label="Search articles"
-                className="h-9 w-full rounded-lg border border-input bg-card/60 pl-8 pr-3 text-xs text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                onChange={setSearchQuery}
+                label="Search articles"
+                placeholder="Search articles..."
               />
-              {searchQuery ? (
-                <button
-                  onClick={() => setSearchQuery("")}
-                  aria-label="Clear search query"
-                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                >
-                  <X className="h-3 w-3" />
-                </button>
-              ) : null}
             </div>
           </div>
         ) : null}
 
-        {/* Article Grid */}
-        <div className="mt-8">
-          {filteredArticles.length === 0 ? (
-            <div className="rounded-2xl border border-dashed border-border/80 bg-card/40 p-12 text-center">
-              <Newspaper className="mx-auto h-10 w-10 text-muted-foreground/50" />
-              <h2 className="mt-4 text-base font-semibold text-foreground">
-                {searchQuery || selectedType !== "all" ? "No articles found" : "Check back soon"}
-              </h2>
-              <p className="mt-1 text-sm text-muted-foreground">
-                {searchQuery || selectedType !== "all"
-                  ? "Try adjusting your search criteria or filters."
-                  : "New technical writings and deep-dives will show up here."}
-              </p>
-              {(searchQuery || selectedType !== "all") && (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => {
-                    setSearchQuery("");
-                    setSelectedType("all");
-                  }}
-                  className="mt-4"
-                >
-                  Reset filters
-                </Button>
-              )}
-            </div>
-          ) : (
-            <div className="grid gap-6 sm:grid-cols-2">
-              {filteredArticles.map((article: PublicArticleSummary) => (
-                <motion.article
-                  key={article.id}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.2 }}
-                  className="craft-card group relative flex flex-col justify-between rounded-2xl border border-border/80 bg-card/90 p-6 shadow-soft transition-all duration-200 hover:border-primary/40 hover:shadow-md"
-                >
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between gap-2">
-                      <Badge
-                        variant="outline"
-                        className="text-[11px] font-medium uppercase tracking-wider text-primary"
-                      >
-                        {CONTENT_TYPE_LABELS[article.contentType] || article.contentType}
-                      </Badge>
-                      <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                        <Clock className="h-3 w-3" />
-                        <span>{article.readingTimeMinutes} min read</span>
-                      </div>
-                    </div>
-
-                    <h2 className="font-serif text-xl font-semibold tracking-tight text-foreground transition-colors group-hover:text-primary">
-                      <Link to={`/articles/${article.slug}`} className="focus:outline-none">
-                        <span className="absolute inset-0" aria-hidden="true" />
-                        {article.title}
-                      </Link>
-                    </h2>
-
-                    <p className="line-clamp-3 text-sm leading-relaxed text-muted-foreground">{article.excerpt}</p>
-                  </div>
-
-                  <div className="mt-6 flex items-center justify-between border-t border-border/40 pt-4 text-xs text-muted-foreground">
-                    <span>{formatPublishedDate(article.publishedAt)}</span>
-                    <span className="flex items-center gap-1 font-medium text-primary transition-transform group-hover:translate-x-0.5">
-                      Read article
-                      <ArrowRight className="h-3 w-3" />
+        {filteredArticles.length === 0 ? (
+          <EmptyState
+            icon={<Newspaper className="h-5 w-5" />}
+            title={filtering ? "No articles found" : "Check back soon"}
+            description={
+              filtering
+                ? "Try adjusting your search criteria or filters."
+                : "New technical writings and deep-dives will show up here."
+            }
+          >
+            {filtering ? (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  setSearchQuery("");
+                  setSelectedType("all");
+                }}
+              >
+                Reset filters
+              </Button>
+            ) : null}
+          </EmptyState>
+        ) : (
+          <div className="grid gap-4 sm:grid-cols-2">
+            {filteredArticles.map((article: PublicArticleSummary) => (
+              <article
+                key={article.id}
+                className="group relative flex flex-col justify-between rounded-lg border border-border bg-card p-5"
+              >
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between gap-2">
+                    <Badge>
+                      {CONTENT_TYPE_LABELS[article.contentType] ||
+                        article.contentType}
+                    </Badge>
+                    <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
+                      <Clock className="h-3 w-3" aria-hidden="true" />
+                      {article.readingTimeMinutes} min read
                     </span>
                   </div>
-                </motion.article>
-              ))}
-            </div>
-          )}
-        </div>
-      </section>
+                  <h2 className="text-lg font-semibold tracking-tight text-foreground">
+                    <Link to={`/articles/${article.slug}`}>
+                      <span className="absolute inset-0" aria-hidden="true" />
+                      {article.title}
+                    </Link>
+                  </h2>
+                  <p className="line-clamp-3 text-sm leading-relaxed text-muted-foreground">
+                    {article.excerpt}
+                  </p>
+                </div>
+                <div className="mt-6 flex items-center justify-between border-t border-border pt-4 text-xs text-muted-foreground">
+                  <span>{formatPublishedDate(article.publishedAt)}</span>
+                  <span className="inline-flex items-center gap-1 font-medium text-foreground">
+                    Read article
+                    <ArrowRight className="h-3 w-3" aria-hidden="true" />
+                  </span>
+                </div>
+              </article>
+            ))}
+          </div>
+        )}
+      </PageContainer>
     </>
   );
 }

@@ -4,52 +4,52 @@
 
 @layer base {
   :root {
-    --background: 38 35% 96%;
-    --foreground: 222 30% 13%;
-    --card: 40 30% 99%;
-    --card-foreground: 222 30% 13%;
-    --popover: 40 30% 99%;
-    --popover-foreground: 222 30% 13%;
-    --primary: 173 65% 30%;
-    --primary-foreground: 40 30% 99%;
-    --secondary: 36 25% 89%;
-    --secondary-foreground: 222 30% 18%;
-    --muted: 36 22% 91%;
-    --muted-foreground: 220 12% 40%;
-    --accent: 18 78% 56%;
-    --accent-foreground: 222 30% 13%;
-    --destructive: 2 65% 48%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 34 18% 82%;
-    --input: 34 18% 82%;
-    --ring: 173 65% 30%;
-    --surface: 38 28% 93%;
-    --surface-foreground: 222 30% 13%;
-    --radius: 0.9rem;
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 221 83% 40%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 240 5% 96%;
+    --secondary-foreground: 240 6% 10%;
+    --muted: 240 5% 96%;
+    --muted-foreground: 240 5% 34%;
+    --accent: 240 5% 96%;
+    --accent-foreground: 240 6% 10%;
+    --destructive: 0 72% 38%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 240 6% 90%;
+    --input: 240 6% 90%;
+    --ring: 221 83% 40%;
+    --surface: 240 5% 96%;
+    --surface-foreground: 240 10% 3.9%;
+    --radius: 0.5rem;
   }
 
   .dark {
-    --background: 222 30% 9%;
-    --foreground: 38 28% 94%;
-    --card: 222 26% 12%;
-    --card-foreground: 38 28% 94%;
-    --popover: 222 26% 12%;
-    --popover-foreground: 38 28% 94%;
-    --primary: 168 55% 52%;
-    --primary-foreground: 222 30% 9%;
-    --secondary: 221 20% 18%;
-    --secondary-foreground: 38 28% 94%;
-    --muted: 221 20% 18%;
-    --muted-foreground: 218 13% 67%;
-    --accent: 18 76% 62%;
-    --accent-foreground: 222 30% 9%;
-    --destructive: 2 55% 40%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 220 17% 23%;
-    --input: 220 17% 23%;
-    --ring: 168 55% 52%;
-    --surface: 222 25% 11%;
-    --surface-foreground: 38 28% 94%;
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 240 6% 7%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 6% 7%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 213 94% 78%;
+    --primary-foreground: 240 10% 3.9%;
+    --secondary: 240 4% 16%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 4% 16%;
+    --muted-foreground: 240 5% 65%;
+    --accent: 240 4% 16%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 72% 70%;
+    --destructive-foreground: 240 10% 3.9%;
+    --border: 240 4% 16%;
+    --input: 240 4% 16%;
+    --ring: 213 94% 78%;
+    --surface: 240 6% 7%;
+    --surface-foreground: 0 0% 98%;
   }
 }
 
@@ -58,13 +58,13 @@ body {
   padding: 0;
   margin: 0;
   font-family:
-    "IBM Plex Sans",
+    "Inter Variable",
+    Inter,
+    ui-sans-serif,
+    system-ui,
     -apple-system,
     BlinkMacSystemFont,
     "Segoe UI",
-    Roboto,
-    Oxygen,
-    Ubuntu,
     sans-serif;
   font-size-adjust: from-font;
   -webkit-font-smoothing: antialiased;
@@ -75,16 +75,6 @@ body {
   min-width: 100%;
   min-height: 100%;
   overflow-x: hidden;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: "IBM Plex Serif", Georgia, serif;
-  font-weight: 500;
 }
 
 #root {
@@ -106,16 +96,14 @@ img {
   max-width: 100%;
 }
 
-/* Accessible focus ring */
 *:focus-visible {
-  outline: 2px solid hsl(var(--primary) / 0.6);
+  outline: 2px solid hsl(var(--ring));
   outline-offset: 2px;
 }
 
-/* Minimalist scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
@@ -123,58 +111,147 @@ img {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: hsl(var(--muted-foreground) / 0.3);
+  background: hsl(var(--muted-foreground) / 0.35);
   border-radius: 9999px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--muted-foreground) / 0.5);
 }
 
 ::selection {
-  background: hsl(var(--primary) / 0.25);
+  background: hsl(var(--foreground) / 0.12);
   color: hsl(var(--foreground));
 }
 
-/* Editorial Craft Surfaces */
 .craft-card {
-  border: 1px solid hsl(var(--border) / 0.7);
-  background: hsl(var(--card) / 0.6);
-  transition:
-    border-color 0.2s ease,
-    background-color 0.2s ease,
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
+  border: 1px solid hsl(var(--border));
+  background: hsl(var(--card));
+  border-radius: var(--radius);
 }
 
-.craft-card:hover {
-  border-color: hsl(var(--border));
-  background: hsl(var(--card) / 0.85);
-}
-
-.craft-card-interactive:hover {
-  border-color: hsl(var(--primary) / 0.4);
-}
-
-.craft-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.375rem;
-  border-radius: 9999px;
-  border: 1px solid hsl(var(--border) / 0.8);
-  background: hsl(var(--secondary) / 0.5);
-  padding: 0.25rem 0.625rem;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: 0.6875rem;
-  font-weight: 500;
-  letter-spacing: 0.04em;
-  color: hsl(var(--muted-foreground));
-  transition: all 0.15s ease;
-}
-
-.craft-pill:hover {
-  border-color: hsl(var(--primary) / 0.4);
+.article-body {
+  max-width: 65ch;
   color: hsl(var(--foreground));
+  font-size: 1.0625rem;
+  line-height: 1.75;
+}
+
+.article-body :where(h1, h2, h3, h4) {
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  color: hsl(var(--foreground));
+}
+
+.article-body :where(h1) {
+  margin: 2rem 0 0.75rem;
+  font-size: 1.875rem;
+}
+
+.article-body :where(h2) {
+  margin: 2.25rem 0 0.75rem;
+  font-size: 1.5rem;
+}
+
+.article-body :where(h3) {
+  margin: 1.75rem 0 0.5rem;
+  font-size: 1.25rem;
+}
+
+.article-body :where(h4) {
+  margin: 1.5rem 0 0.5rem;
+  font-size: 1.125rem;
+}
+
+.article-body :where(p) {
+  margin: 1rem 0;
+}
+
+.article-body :where(a) {
+  color: hsl(var(--primary));
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.article-body :where(ul, ol) {
+  margin: 1rem 0;
+  padding-left: 1.25rem;
+}
+
+.article-body :where(ul) {
+  list-style: disc;
+}
+
+.article-body :where(ol) {
+  list-style: decimal;
+}
+
+.article-body :where(li + li) {
+  margin-top: 0.35rem;
+}
+
+.article-body :where(blockquote) {
+  margin: 1.5rem 0;
+  border-left: 2px solid hsl(var(--border));
+  padding-left: 1rem;
+  color: hsl(var(--muted-foreground));
+}
+
+.article-body :where(code) {
+  border-radius: 0.25rem;
+  background: hsl(var(--muted));
+  padding: 0.1rem 0.35rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.875em;
+}
+
+.article-body :where(pre) {
+  margin: 0;
+  overflow-x: auto;
+  padding: 1rem;
+  border: 0;
+  background: transparent;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.article-body :where(pre code) {
+  background: transparent;
+  padding: 0;
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+.article-body :where(hr) {
+  margin: 2rem 0;
+  border: 0;
+  border-top: 1px solid hsl(var(--border));
+}
+
+.article-body :where(img) {
+  margin: 1.5rem 0;
+  border-radius: var(--radius);
+  border: 1px solid hsl(var(--border));
+}
+
+/* Admin status colors were written for a dark surface. On a light page they
+   drop below WCAG AA, so the same utilities use a darker ink only in light mode. */
+html:not(.dark)
+  .admin-theme
+  :is(.text-amber-200, .text-amber-200\/90, .text-amber-300, .text-amber-400) {
+  color: hsl(32 95% 24%);
+}
+
+html:not(.dark) .admin-theme :is(.text-emerald-300, .text-emerald-400) {
+  color: hsl(163 80% 22%);
+}
+
+html:not(.dark) .admin-theme :is(.text-blue-300, .text-blue-400) {
+  color: hsl(221 83% 32%);
+}
+
+html:not(.dark) .admin-theme :is(.text-rose-300, .text-rose-400) {
+  color: hsl(343 80% 28%);
+}
+
+.admin-theme .font-serif {
+  font-family: inherit;
 }
 
 @media (prefers-reduced-motion: reduce) {

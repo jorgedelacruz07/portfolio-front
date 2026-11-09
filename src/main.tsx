@@ -1,11 +1,14 @@
+import "@fontsource-variable/inter/wght.css";
 import "../styles/globals.css";
 
 import { QueryClientProvider } from "@tanstack/react-query";
-import { StrictMode, useEffect } from "react";
+import { MotionConfig } from "framer-motion";
+import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { RouterProvider } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 
+import { ThemeProvider } from "@/components/theme/ThemeProvider";
 import { router } from "./Router";
 import { portfolioQuery } from "../hooks/useHomePageData";
 import { queryClient } from "../lib/query-client";
@@ -16,18 +19,14 @@ if (window.location.pathname === "/") {
 }
 
 function App() {
-  useEffect(() => {
-    document.documentElement.classList.add("dark");
-
-    return () => {
-      document.documentElement.classList.remove("dark");
-    };
-  }, []);
-
   return (
     <HelmetProvider>
       <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router} />
+        <ThemeProvider>
+          <MotionConfig reducedMotion="user">
+            <RouterProvider router={router} />
+          </MotionConfig>
+        </ThemeProvider>
       </QueryClientProvider>
     </HelmetProvider>
   );
