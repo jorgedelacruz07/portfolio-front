@@ -1,5 +1,6 @@
 {
   "hosting": {
+    "site": "portfolio-489421",
     "public": "dist",
     "predeploy": ["node scripts/verify-production-dist.mjs"],
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
