@@ -14,9 +14,10 @@ export function canonicalArticleUrl(
   configuredUrl?: string | null,
 ): string {
   const fallback = `${PUBLIC_SITE_ORIGIN}/articles/${encodeURIComponent(slug)}`;
-  const configured = configuredUrl?.trim();
-  if (!configured) return fallback;
   try {
+    if (typeof configuredUrl !== "string") return fallback;
+    const configured = configuredUrl.trim();
+    if (!configured) return fallback;
     const url = new URL(configured);
     if (url.protocol !== "https:" || url.origin !== PUBLIC_SITE_ORIGIN) {
       return fallback;

@@ -67,3 +67,20 @@ test("plain email addresses reject mailbox header injection", () => {
     null,
   );
 });
+
+test("plain email addresses reject an ampersand in the local-part", () => {
+  assert.equal(plainEmailAddress("a&b@example.com"), null);
+  assert.equal(mailtoHref("a&b@example.com"), null);
+  assert.equal(
+    plainEmailAddress("a.b_c+d-e@example.com"),
+    "a.b_c+d-e@example.com",
+  );
+});
+
+test("safeHref mailto handles malformed percent-encoding without throwing", () => {
+  assert.equal(safeHref("mailto:%ZZ@example.com", { mailto: true }), null);
+  assert.equal(
+    safeHref("mailto:person%40example.com", { mailto: true }),
+    "mailto:person@example.com",
+  );
+});
