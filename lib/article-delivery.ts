@@ -18,8 +18,11 @@ export function canonicalArticleUrl(
   if (!configured) return fallback;
   try {
     const url = new URL(configured);
-    if (url.protocol !== "http:" && url.protocol !== "https:") return fallback;
-    return configured;
+    if (url.protocol !== "https:" || url.origin !== PUBLIC_SITE_ORIGIN) {
+      return fallback;
+    }
+    if (url.username || url.password) return fallback;
+    return url.href;
   } catch {
     return fallback;
   }

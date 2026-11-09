@@ -115,7 +115,21 @@ describe("article delivery controls and API contract", () => {
     );
     assert.equal(
       canonicalArticleUrl("atomic-cas", "https://example.com/custom"),
-      "https://example.com/custom",
+      "https://jorgedelacruzpadilla.dev/articles/atomic-cas",
+    );
+    assert.equal(
+      canonicalArticleUrl(
+        "atomic-cas",
+        "https://jorgedelacruzpadilla.dev/articles/atomic-cas?utm=1",
+      ),
+      "https://jorgedelacruzpadilla.dev/articles/atomic-cas?utm=1",
+    );
+    assert.equal(
+      canonicalArticleUrl(
+        "atomic-cas",
+        "http://jorgedelacruzpadilla.dev/articles/atomic-cas",
+      ),
+      "https://jorgedelacruzpadilla.dev/articles/atomic-cas",
     );
     assert.equal(
       canonicalArticleUrl("atomic-cas", "javascript:alert(1)"),

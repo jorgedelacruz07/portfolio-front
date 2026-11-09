@@ -4,7 +4,7 @@ import { OptimizedImage } from "@/components/OptimizedImage";
 import { SocialNetworks } from "@/components/SocialNetworks";
 import { Button } from "@/components/ui/button";
 import { profileFallback } from "@/lib/profile-fallback";
-import { safeHref } from "@/lib/safe-href";
+import { mailtoHref, safeHref } from "@/lib/safe-href";
 import type { TProfile } from "@/types/portfolio";
 
 type HomeProfileProps = {
@@ -32,6 +32,12 @@ export const HomeProfile = ({ cmsProfile }: HomeProfileProps) => {
       });
     }
   };
+
+  const resumeHref = safeHref(
+    currentProfile.resumeUrl || "/documents/jorgedelacruz_cv.pdf",
+    { sameOriginPath: true },
+  );
+  const contactHref = mailtoHref(currentProfile.contactEmail);
 
   return (
     <section className="grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_220px]">
@@ -61,24 +67,8 @@ export const HomeProfile = ({ cmsProfile }: HomeProfileProps) => {
 
         <div className="flex flex-wrap items-center gap-3">
           <Button onClick={handleDownloadClick} asChild>
-            {safeHref(
-              currentProfile.resumeUrl || "/documents/jorgedelacruz_cv.pdf",
-              {
-                sameOriginPath: true,
-              },
-            ) ? (
-              <a
-                href={
-                  safeHref(
-                    currentProfile.resumeUrl ||
-                      "/documents/jorgedelacruz_cv.pdf",
-                    {
-                      sameOriginPath: true,
-                    },
-                  ) ?? undefined
-                }
-                download
-              >
+            {resumeHref ? (
+              <a href={resumeHref} download>
                 <Download className="mr-2 h-4 w-4" aria-hidden="true" />
                 Download CV
               </a>
@@ -86,20 +76,16 @@ export const HomeProfile = ({ cmsProfile }: HomeProfileProps) => {
               <span>Download CV</span>
             )}
           </Button>
-          {safeHref(`mailto:${currentProfile.contactEmail}`, {
-            mailto: true,
-          }) ? (
+          {contactHref ? (
             <Button asChild variant="outline">
-              <a href={`mailto:${currentProfile.contactEmail}`}>Get in touch</a>
+              <a href={contactHref}>Get in touch</a>
             </Button>
           ) : (
             <span className="text-sm text-muted-foreground">Get in touch</span>
           )}
-          {safeHref(`mailto:${currentProfile.contactEmail}`, {
-            mailto: true,
-          }) ? (
+          {contactHref ? (
             <a
-              href={`mailto:${currentProfile.contactEmail}`}
+              href={contactHref}
               className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
             >
               {currentProfile.contactEmail}

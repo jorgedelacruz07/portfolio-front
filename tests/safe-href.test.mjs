@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { safeHref } from "../lib/safe-href.ts";
+import { mailtoHref, plainEmailAddress, safeHref } from "../lib/safe-href.ts";
 
 test("safeHref allows http and https and rejects scriptable or protocol-relative URLs", () => {
   assert.equal(
@@ -31,5 +31,39 @@ test("safeHref allows mailto and same-origin paths only when asked", () => {
   assert.equal(
     safeHref("https://cdn.example/cv.pdf", { sameOriginPath: true }),
     "https://cdn.example/cv.pdf",
+  );
+});
+
+test("plain email addresses reject mailbox header injection", () => {
+  assert.equal(plainEmailAddress("person@example.com"), "person@example.com");
+  assert.equal(
+    plainEmailAddress("person+tag@example.com"),
+    "person+tag@example.com",
+  );
+  assert.equal(mailtoHref("person@example.com"), "mailto:person@example.com");
+  assert.equal(
+    plainEmailAddress("person@example.com?bcc=other@evil.example"),
+    null,
+  );
+  assert.equal(
+    plainEmailAddress("person@example.com%0ABcc:other@evil.example"),
+    null,
+  );
+  assert.equal(
+    plainEmailAddress("person@example.com\nBcc:other@evil.example"),
+    null,
+  );
+  assert.equal(
+    plainEmailAddress("person@example.com\r\nBcc:other@evil.example"),
+    null,
+  );
+  assert.equal(plainEmailAddress("person @example.com"), null);
+  assert.equal(plainEmailAddress(" person@example.com"), null);
+  assert.equal(mailtoHref("person@example.com?bcc=other@evil.example"), null);
+  assert.equal(
+    safeHref("mailto:person@example.com?bcc=other@evil.example", {
+      mailto: true,
+    }),
+    null,
   );
 });
