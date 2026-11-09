@@ -90,7 +90,7 @@ export const Layout = ({ children }: LayoutProps) => {
         tabIndex={-1}
         className="relative z-10 min-h-[calc(100vh-8rem)] w-full outline-none"
       >
-        <div className={isAdmin ? "px-4 sm:px-6" : undefined}>
+        <div className={isAdmin ? "admin-theme px-4 sm:px-6" : undefined}>
           <ErrorBoundary>{children}</ErrorBoundary>
         </div>
       </main>

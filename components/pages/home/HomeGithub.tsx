@@ -1,85 +1,23 @@
-import { useMemo } from "react";
-import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 
 import { HomeSection } from "@/components/pages/home/HomeSection";
 import { Button } from "@/components/ui/button";
 import { useGithubStats } from "@/hooks";
-import { cn, homeMotion } from "@/lib/utils";
-import type { TGithubCalendarWeek } from "@/types/github";
 
 const numberFormat = new Intl.NumberFormat("en");
-const levelClasses = [
-  "bg-muted",
-  "bg-primary/25",
-  "bg-primary/50",
-  "bg-primary/75",
-  "bg-primary",
-];
 
-/** Column-major cells (7 rows per week); weeks that do not start on Sunday are padded with empty cells. */
-function buildCells(weeks: TGithubCalendarWeek[]): Array<number | null> {
-  return weeks.flatMap((week) => {
-    const offset = new Date(`${week.date}T00:00:00Z`).getUTCDay();
-    const cells: Array<number | null> = [
-      ...Array<null>(offset).fill(null),
-      ...week.counts,
-    ];
-    while (cells.length < 7) {
-      cells.push(null);
-    }
-    return cells;
-  });
-}
-
-/** Maps a daily count to one of five levels using quartiles of the active days, so it adapts to any volume. */
-function buildLevelFn(cells: Array<number | null>) {
-  const active = cells
-    .filter((count): count is number => count !== null && count > 0)
-    .sort((a, b) => a - b);
-  const at = (ratio: number) =>
-    active[Math.min(active.length - 1, Math.floor(active.length * ratio))] ?? 1;
-  const [q1, q2, q3] = [at(0.25), at(0.5), at(0.75)];
-
-  return (count: number) => {
-    if (count <= 0) return 0;
-    if (count <= q1) return 1;
-    if (count <= q2) return 2;
-    if (count <= q3) return 3;
-    return 4;
-  };
-}
-
-const Stat = ({
-  label,
-  value,
-  note,
-}: {
-  label: string;
-  value: string;
-  note?: string;
-}) => (
-  <motion.div
-    variants={homeMotion.item}
-    className="rounded-lg border border-border bg-card p-5"
-  >
-    <p className="text-sm text-muted-foreground">{label}</p>
-    <p className="mt-1.5 text-2xl font-bold tracking-tight tabular-nums text-foreground sm:text-3xl">
+const Stat = ({ label, value }: { label: string; value: string }) => (
+  <div className="min-w-0">
+    <p className="text-xs text-muted-foreground">{label}</p>
+    <p className="mt-1 text-lg font-semibold tabular-nums tracking-tight text-foreground">
       {value}
     </p>
-    {note ? <p className="mt-1 text-xs text-muted-foreground">{note}</p> : null}
-  </motion.div>
+  </div>
 );
 
-/** Keep GitHub activity out of the page until a complete snapshot is available. */
+/** Compact summary. The full calendar and language breakdown stay on GitHub. */
 export const HomeGithub = () => {
   const { data, isError, isFetching, refetch } = useGithubStats();
-
-  const cells = useMemo(
-    () => (data?.calendar ? buildCells(data.calendar) : []),
-    [data?.calendar],
-  );
-  const levelOf = useMemo(() => buildLevelFn(cells), [cells]);
 
   if (isError) {
     return (
@@ -102,140 +40,36 @@ export const HomeGithub = () => {
     );
   }
 
-  if (!data?.contributions || !data.calendar) {
+  if (!data?.contributions) {
     return null;
   }
 
-  const { contributions, streaks, repositories, languages } = data;
-  const updated = new Intl.DateTimeFormat("en", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  }).format(new Date(data.updatedAt));
+  const { contributions, streaks, repositories } = data;
 
   return (
-    <HomeSection
-      id="github-activity"
-      eyebrow="GitHub"
-      title="Activity & statistics"
-      description="Live numbers from my GitHub account. Private repositories are counted in aggregate only; their names are never shown."
-    >
-      <div className="space-y-4">
-        <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+    <HomeSection id="github-activity" eyebrow="GitHub" title="Activity">
+      <div className="flex flex-col gap-4 border-y border-border py-4 sm:flex-row sm:items-end sm:justify-between">
+        <div className="grid flex-1 grid-cols-2 gap-4 sm:grid-cols-4">
           <Stat
             label="Contributions"
             value={numberFormat.format(contributions.lastYear)}
-            note={`Last 12 months · ${numberFormat.format(contributions.private)} in private repos`}
           />
-          <Stat
-            label="Current streak"
-            value={streaks ? `${streaks.current} days` : "–"}
-            note={streaks ? `Longest: ${streaks.longest} days` : undefined}
-          />
+          <Stat label="Streak" value={streaks ? `${streaks.current}d` : "–"} />
           <Stat
             label="Repositories"
             value={numberFormat.format(repositories.total)}
-            note={
-              repositories.activeLast30Days !== null
-                ? `${repositories.activeLast30Days} active in 30 days`
-                : undefined
-            }
           />
-          <Stat
-            label="Followers"
-            value={numberFormat.format(data.followers)}
-            note={`${data.following} following`}
-          />
+          <Stat label="Followers" value={numberFormat.format(data.followers)} />
         </div>
-
-        <motion.div
-          variants={homeMotion.item}
-          className="overflow-x-auto rounded-lg border border-border bg-card p-5"
+        <a
+          href={data.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1 text-sm text-foreground underline-offset-4 hover:underline"
         >
-          <div
-            role="img"
-            aria-label={`Contribution calendar for the last 12 months: ${numberFormat.format(contributions.lastYear)} contributions`}
-            className="grid min-w-[640px] max-w-[56rem] grid-flow-col grid-rows-7 gap-[3px]"
-            style={{ gridAutoColumns: "minmax(0, 1fr)" }}
-          >
-            {cells.map((count, index) => (
-              <span
-                key={index}
-                aria-hidden="true"
-                className={cn(
-                  "aspect-square rounded-[2px]",
-                  count === null ? "" : levelClasses[levelOf(count)],
-                )}
-              />
-            ))}
-          </div>
-          <div className="mt-3 flex items-center justify-end gap-1.5 text-xs text-muted-foreground">
-            <span>Less</span>
-            {levelClasses.map((level) => (
-              <span
-                key={level}
-                aria-hidden="true"
-                className={cn("h-[10px] w-[10px] rounded-[2px]", level)}
-              />
-            ))}
-            <span>More</span>
-          </div>
-        </motion.div>
-
-        {languages && languages.length > 0 ? (
-          <motion.div
-            variants={homeMotion.item}
-            className="space-y-3 rounded-lg border border-border bg-card p-5"
-          >
-            <p className="text-sm text-muted-foreground">
-              Languages across all repositories
-            </p>
-            <div
-              className="flex h-2 w-full overflow-hidden rounded-full bg-muted"
-              aria-hidden="true"
-            >
-              {languages.map((language) => (
-                <span
-                  key={language.name}
-                  style={{
-                    width: `${language.percent}%`,
-                    backgroundColor: language.color ?? "currentColor",
-                  }}
-                />
-              ))}
-            </div>
-            <ul className="flex flex-wrap gap-1.5">
-              {languages.map((language) => (
-                <li key={language.name} className="craft-pill">
-                  <span
-                    aria-hidden="true"
-                    className="h-2 w-2 rounded-full"
-                    style={{
-                      backgroundColor: language.color ?? "currentColor",
-                    }}
-                  />
-                  {language.name} {language.percent}%
-                </li>
-              ))}
-            </ul>
-          </motion.div>
-        ) : null}
-
-        <motion.p
-          variants={homeMotion.item}
-          className="flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground"
-        >
-          <span>Updated {updated}</span>
-          <a
-            href={data.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 hover:text-foreground"
-          >
-            View profile on GitHub
-            <ArrowUpRight className="h-3 w-3" />
-          </a>
-        </motion.p>
+          View on GitHub
+          <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
+        </a>
       </div>
     </HomeSection>
   );

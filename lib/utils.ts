@@ -52,7 +52,7 @@ export const homeMotion = {
 } as const;
 
 export const homePageStyles = {
-  page: "mx-auto flex w-full max-w-5xl flex-col gap-14 px-4 py-10 sm:gap-16 sm:px-6 sm:py-14",
+  page: "mx-auto flex w-full max-w-5xl flex-col gap-12 px-4 py-10 sm:px-6 sm:py-14",
   section: "space-y-6",
   sectionHeader: "max-w-2xl space-y-2",
   eyebrow: "text-sm text-muted-foreground",
