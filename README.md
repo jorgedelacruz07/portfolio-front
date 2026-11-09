@@ -42,12 +42,14 @@ npm run lint
 npm run lint:fix
 npm run format
 npm run format:check
+npm run typecheck
 npm test
 npm run quick
 ```
 
-`npm test` runs the Node test suite. `npm run quick` runs lint, formatting,
-tests and build; its formatting step may modify files.
+`npm test` runs the Node test suite. `npm run typecheck` runs `tsc --noEmit`.
+`npm run quick` runs lint, formatting, typecheck, tests and build; its
+formatting step may modify files.
 
 ## Development
 

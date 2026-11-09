@@ -98,6 +98,8 @@ export interface Article {
   slug: string;
   contentType: ArticleContentType;
   latestRevisionNumber: number;
+  /** Top-level title when a payload includes one. The revision title stays on publicContent. */
+  title?: string;
   createdAt: string;
   updatedAt: string;
   currentDraftRevision: ArticleRevision;
