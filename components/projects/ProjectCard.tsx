@@ -1,8 +1,10 @@
 import { ExternalLink, FolderGit2 } from "lucide-react";
 
-import { Badge } from "@/components/ui/badge";
+import { Badge, badgeVariants } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { projectCardDescription } from "@/lib/project-summary";
+import { safeHref } from "@/lib/safe-href";
 import { cn, formatDateRange } from "@/lib/utils";
 import type { TProject } from "@/types/project";
 
@@ -21,6 +23,9 @@ export function ProjectCard({
 }: ProjectCardProps) {
   const Title = heading;
   const displayDescription = projectCardDescription(project);
+  const liveUrl = safeHref(project.url);
+  const githubUrl = safeHref(project.links?.github);
+  const caseStudyUrl = safeHref(project.links?.caseStudy);
   const caseStudy =
     project.longDescription &&
     displayDescription &&
@@ -29,12 +34,7 @@ export function ProjectCard({
       : null;
 
   return (
-    <article
-      className={cn(
-        "flex h-full flex-col rounded-lg border border-border bg-card p-5",
-        className,
-      )}
-    >
+    <Card className={cn("flex h-full flex-col p-5", className)}>
       <div className="space-y-3">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="flex flex-wrap items-center gap-2">
@@ -50,9 +50,9 @@ export function ProjectCard({
 
         <div className="space-y-1">
           <Title className="text-lg font-semibold tracking-tight text-foreground">
-            {project.url ? (
+            {liveUrl ? (
               <a
-                href={project.url}
+                href={liveUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1.5 underline-offset-4 hover:underline"
@@ -67,9 +67,13 @@ export function ProjectCard({
               project.name
             )}
           </Title>
-          {project.url ? (
+          {liveUrl ? (
             <p className="font-mono text-xs text-muted-foreground">
-              {formatProjectHostname(project.url)}
+              {formatProjectHostname(liveUrl)}
+            </p>
+          ) : project.url ? (
+            <p className="break-all font-mono text-xs text-muted-foreground">
+              {project.url}
             </p>
           ) : null}
         </div>
@@ -99,26 +103,31 @@ export function ProjectCard({
                   key={tech.id}
                   type="button"
                   onClick={() => onSelectTech(tech.name)}
-                  className="craft-pill"
+                  className={badgeVariants({ variant: "secondary" })}
                   aria-label={`Filter by ${tech.name}`}
                 >
                   {tech.name}
                 </button>
               ) : (
-                <span key={tech.id} className="craft-pill">
+                <Badge key={tech.id} variant="secondary">
                   {tech.name}
-                </span>
+                </Badge>
               ),
             )}
           </div>
         ) : null}
       </div>
 
-      {project.url || project.links?.github || project.links?.caseStudy ? (
+      {liveUrl ||
+      githubUrl ||
+      caseStudyUrl ||
+      project.url ||
+      project.links?.github ||
+      project.links?.caseStudy ? (
         <div className="mt-5 flex flex-wrap items-center gap-2 border-t border-border pt-4">
-          {project.url ? (
+          {liveUrl ? (
             <Button size="sm" asChild>
-              <a href={project.url} target="_blank" rel="noopener noreferrer">
+              <a href={liveUrl} target="_blank" rel="noopener noreferrer">
                 Live demo
                 <ExternalLink
                   className="ml-1.5 h-3.5 w-3.5"
@@ -126,33 +135,37 @@ export function ProjectCard({
                 />
               </a>
             </Button>
+          ) : project.url ? (
+            <span className="break-all text-sm text-muted-foreground">
+              {project.url}
+            </span>
           ) : null}
-          {project.links?.github ? (
+          {githubUrl ? (
             <Button variant="outline" size="sm" asChild>
-              <a
-                href={project.links.github}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <a href={githubUrl} target="_blank" rel="noopener noreferrer">
                 <FolderGit2 className="mr-1.5 h-3.5 w-3.5" aria-hidden="true" />
                 Code
               </a>
             </Button>
+          ) : project.links?.github ? (
+            <span className="break-all text-sm text-muted-foreground">
+              {project.links.github}
+            </span>
           ) : null}
-          {project.links?.caseStudy ? (
+          {caseStudyUrl ? (
             <Button variant="outline" size="sm" asChild>
-              <a
-                href={project.links.caseStudy}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <a href={caseStudyUrl} target="_blank" rel="noopener noreferrer">
                 Case study
               </a>
             </Button>
+          ) : project.links?.caseStudy ? (
+            <span className="break-all text-sm text-muted-foreground">
+              {project.links.caseStudy}
+            </span>
           ) : null}
         </div>
       ) : null}
-    </article>
+    </Card>
   );
 }
 

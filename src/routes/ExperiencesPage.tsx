@@ -6,6 +6,7 @@ import { PageSkeleton } from "@/components/PageSkeleton";
 import { CompanyLogo } from "@/components/CompanyLogo";
 import { EmployerExperienceCard } from "@/components/experience/EmployerExperienceCard";
 import { Button } from "@/components/ui/button";
+import { badgeVariants } from "@/components/ui/badge";
 import { EmptyState, PageContainer, PageHeader } from "@/components/ui/page";
 import { SearchField } from "@/components/ui/search-field";
 import { useGetExperiences } from "@/hooks";
@@ -13,6 +14,8 @@ import {
   experienceGroupMatches,
   groupExperiences,
 } from "@/lib/experience-groups";
+import { listView } from "@/lib/list-state";
+import { safeHref } from "@/lib/safe-href";
 import { formatDateRange } from "@/lib/utils";
 import type { TExperience } from "@/types/experience";
 
@@ -129,7 +132,9 @@ export default function ExperiencesPage() {
                     type="button"
                     aria-pressed={isSelected}
                     onClick={() => setSelectedTech(isSelected ? null : tech)}
-                    className="craft-pill"
+                    className={badgeVariants({
+                      variant: isSelected ? "default" : "secondary",
+                    })}
                   >
                     {tech}
                   </button>
@@ -155,7 +160,13 @@ export default function ExperiencesPage() {
           </p>
         </section>
 
-        {filteredGroups.length === 0 ? (
+        {listView(groups.length, filteredGroups.length) === "empty" ? (
+          <EmptyState
+            icon={<Briefcase className="h-5 w-5" />}
+            title="No experiences yet"
+            description="Published roles will show up here."
+          />
+        ) : listView(groups.length, filteredGroups.length) === "no-results" ? (
           <EmptyState
             icon={<Briefcase className="h-5 w-5" />}
             title="No matching career experiences"
@@ -274,7 +285,7 @@ function ExperienceEntry({
                 key={tech.id}
                 type="button"
                 onClick={() => onSelectTech(tech.name)}
-                className="craft-pill"
+                className={badgeVariants({ variant: "secondary" })}
                 aria-label={`Filter by ${tech.name}`}
               >
                 {tech.name}
@@ -285,16 +296,25 @@ function ExperienceEntry({
           <span />
         )}
         {experience.companyUrl ? (
-          <Button variant="outline" size="sm" asChild>
-            <a
-              href={experience.companyUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Company website
-              <ExternalLink className="ml-1.5 h-3.5 w-3.5" aria-hidden="true" />
-            </a>
-          </Button>
+          safeHref(experience.companyUrl) ? (
+            <Button variant="outline" size="sm" asChild>
+              <a
+                href={safeHref(experience.companyUrl) ?? undefined}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Company website
+                <ExternalLink
+                  className="ml-1.5 h-3.5 w-3.5"
+                  aria-hidden="true"
+                />
+              </a>
+            </Button>
+          ) : (
+            <p className="break-all text-sm text-muted-foreground">
+              {experience.companyUrl}
+            </p>
+          )
         ) : null}
       </div>
     </article>

@@ -5,10 +5,12 @@ import { Search, X } from "lucide-react";
 import { PageSkeleton } from "@/components/PageSkeleton";
 import { ProjectCard } from "@/components/projects/ProjectCard";
 import { Button } from "@/components/ui/button";
+import { badgeVariants } from "@/components/ui/badge";
 import { EmptyState, PageContainer, PageHeader } from "@/components/ui/page";
 import { SearchField } from "@/components/ui/search-field";
 import { useGetProjects } from "@/hooks";
 import { orderPublicProjects } from "@/lib/project-order";
+import { listView } from "@/lib/list-state";
 import { cn } from "@/lib/utils";
 
 function FilterButton({
@@ -240,7 +242,9 @@ export default function ProjectsPage() {
                     type="button"
                     aria-pressed={isSelected}
                     onClick={() => setSelectedTech(isSelected ? null : tech)}
-                    className="craft-pill"
+                    className={badgeVariants({
+                      variant: isSelected ? "default" : "secondary",
+                    })}
                   >
                     {tech}
                   </button>
@@ -268,7 +272,14 @@ export default function ProjectsPage() {
           {selectedTech ? <span> · {selectedTech}</span> : null}
         </p>
 
-        {filteredProjects.length === 0 ? (
+        {listView(projects.length, filteredProjects.length) === "empty" ? (
+          <EmptyState
+            icon={<Search className="h-5 w-5" />}
+            title="No projects yet"
+            description="Published projects will show up here."
+          />
+        ) : listView(projects.length, filteredProjects.length) ===
+          "no-results" ? (
           <EmptyState
             icon={<Search className="h-5 w-5" />}
             title="No matching projects found"

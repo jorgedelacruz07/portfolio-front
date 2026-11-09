@@ -126,30 +126,6 @@ img {
   border-radius: var(--radius);
 }
 
-.craft-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.375rem;
-  border-radius: 9999px;
-  border: 1px solid hsl(var(--border));
-  background: hsl(var(--muted));
-  padding: 0.125rem 0.5rem;
-  font-size: 0.75rem;
-  font-weight: 500;
-  line-height: 1.25rem;
-  color: hsl(var(--foreground));
-}
-
-.craft-pill:hover {
-  border-color: hsl(var(--foreground) / 0.35);
-}
-
-.craft-pill[aria-pressed="true"] {
-  border-color: hsl(var(--foreground));
-  background: hsl(var(--foreground));
-  color: hsl(var(--background));
-}
-
 .article-body {
   max-width: 65ch;
   color: hsl(var(--foreground));
@@ -264,6 +240,14 @@ html:not(.dark)
 
 html:not(.dark) .admin-theme :is(.text-emerald-300, .text-emerald-400) {
   color: hsl(163 80% 22%);
+}
+
+html:not(.dark) .admin-theme :is(.text-blue-300, .text-blue-400) {
+  color: hsl(221 83% 32%);
+}
+
+html:not(.dark) .admin-theme :is(.text-rose-300, .text-rose-400) {
+  color: hsl(343 80% 28%);
 }
 
 .admin-theme .font-serif {

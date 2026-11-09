@@ -3,6 +3,7 @@ import { ArrowUpRight } from "lucide-react";
 import { HomeSection } from "@/components/pages/home/HomeSection";
 import { Button } from "@/components/ui/button";
 import { useGithubStats } from "@/hooks";
+import { safeHref } from "@/lib/safe-href";
 
 const numberFormat = new Intl.NumberFormat("en");
 
@@ -61,15 +62,21 @@ export const HomeGithub = () => {
           />
           <Stat label="Followers" value={numberFormat.format(data.followers)} />
         </div>
-        <a
-          href={data.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-1 text-sm text-foreground underline-offset-4 hover:underline"
-        >
-          View on GitHub
-          <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
-        </a>
+        {safeHref(data.url) ? (
+          <a
+            href={safeHref(data.url) ?? undefined}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 text-sm text-foreground underline-offset-4 hover:underline"
+          >
+            View on GitHub
+            <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
+          </a>
+        ) : (
+          <span className="break-all text-sm text-muted-foreground">
+            {data.url}
+          </span>
+        )}
       </div>
     </HomeSection>
   );

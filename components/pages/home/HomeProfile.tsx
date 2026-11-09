@@ -4,6 +4,7 @@ import { OptimizedImage } from "@/components/OptimizedImage";
 import { SocialNetworks } from "@/components/SocialNetworks";
 import { Button } from "@/components/ui/button";
 import { profileFallback } from "@/lib/profile-fallback";
+import { safeHref } from "@/lib/safe-href";
 import type { TProfile } from "@/types/portfolio";
 
 type HomeProfileProps = {
@@ -60,25 +61,54 @@ export const HomeProfile = ({ cmsProfile }: HomeProfileProps) => {
 
         <div className="flex flex-wrap items-center gap-3">
           <Button onClick={handleDownloadClick} asChild>
+            {safeHref(
+              currentProfile.resumeUrl || "/documents/jorgedelacruz_cv.pdf",
+              {
+                sameOriginPath: true,
+              },
+            ) ? (
+              <a
+                href={
+                  safeHref(
+                    currentProfile.resumeUrl ||
+                      "/documents/jorgedelacruz_cv.pdf",
+                    {
+                      sameOriginPath: true,
+                    },
+                  ) ?? undefined
+                }
+                download
+              >
+                <Download className="mr-2 h-4 w-4" aria-hidden="true" />
+                Download CV
+              </a>
+            ) : (
+              <span>Download CV</span>
+            )}
+          </Button>
+          {safeHref(`mailto:${currentProfile.contactEmail}`, {
+            mailto: true,
+          }) ? (
+            <Button asChild variant="outline">
+              <a href={`mailto:${currentProfile.contactEmail}`}>Get in touch</a>
+            </Button>
+          ) : (
+            <span className="text-sm text-muted-foreground">Get in touch</span>
+          )}
+          {safeHref(`mailto:${currentProfile.contactEmail}`, {
+            mailto: true,
+          }) ? (
             <a
-              href={
-                currentProfile.resumeUrl || "/documents/jorgedelacruz_cv.pdf"
-              }
-              download
+              href={`mailto:${currentProfile.contactEmail}`}
+              className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
             >
-              <Download className="mr-2 h-4 w-4" aria-hidden="true" />
-              Download CV
+              {currentProfile.contactEmail}
             </a>
-          </Button>
-          <Button asChild variant="outline">
-            <a href={`mailto:${currentProfile.contactEmail}`}>Get in touch</a>
-          </Button>
-          <a
-            href={`mailto:${currentProfile.contactEmail}`}
-            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
-          >
-            {currentProfile.contactEmail}
-          </a>
+          ) : (
+            <span className="text-sm text-muted-foreground">
+              {currentProfile.contactEmail}
+            </span>
+          )}
         </div>
 
         <SocialNetworks />

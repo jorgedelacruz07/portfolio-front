@@ -1,11 +1,33 @@
-export const SAFE_PROTOCOL_PATTERN = /^(https?:\/\/|\/|#|\.\/)/i;
+export const SAFE_PROTOCOL_PATTERN = /^(https?:\/\/|\/(?!\/)|#|\.\/|\.\.\/)/i;
 export const UNSAFE_PROTOCOL_PATTERN = /^(javascript|data|vbscript|file):/i;
 
 export function isSafeUrl(url: unknown): boolean {
   if (!url || typeof url !== "string") return false;
   const trimmed = url.trim();
-  if (UNSAFE_PROTOCOL_PATTERN.test(trimmed)) return false;
+  if (!trimmed || UNSAFE_PROTOCOL_PATTERN.test(trimmed)) return false;
+  // "\\evil" and "//evil" are protocol-relative after browsers normalize backslashes.
+  if (trimmed.replace(/\\/g, "/").startsWith("//")) return false;
   return SAFE_PROTOCOL_PATTERN.test(trimmed);
+}
+
+/** Destination inside markdown `(...)`, including balanced parentheses in the URL. */
+export function readBalancedDestination(
+  text: string,
+  start: number,
+): { value: string; end: number } | null {
+  let depth = 0;
+  for (let index = start; index < text.length; index += 1) {
+    const character = text[index];
+    if (character === "(") {
+      depth += 1;
+    } else if (character === ")") {
+      if (depth === 0) {
+        return { value: text.slice(start, index).trim(), end: index };
+      }
+      depth -= 1;
+    }
+  }
+  return null;
 }
 
 // Inline token types
@@ -46,15 +68,14 @@ export function parseInline(text: string): InlineToken[] {
     if (text.startsWith("![", index)) {
       const closingBracket = text.indexOf("]", index + 2);
       if (closingBracket !== -1 && text[closingBracket + 1] === "(") {
-        const closingParen = text.indexOf(")", closingBracket + 2);
-        if (closingParen !== -1) {
+        const destination = readBalancedDestination(text, closingBracket + 2);
+        if (destination) {
           const alt = text.slice(index + 2, closingBracket);
-          const rawUrl = text.slice(closingBracket + 2, closingParen).trim();
-          const src = isSafeUrl(rawUrl) ? rawUrl : "";
+          const src = isSafeUrl(destination.value) ? destination.value : "";
           if (src) {
             tokens.push({ type: "image", src, alt });
           }
-          index = closingParen + 1;
+          index = destination.end + 1;
           continue;
         }
       }
@@ -64,11 +85,10 @@ export function parseInline(text: string): InlineToken[] {
     if (text[index] === "[") {
       const closingBracket = text.indexOf("]", index + 1);
       if (closingBracket !== -1 && text[closingBracket + 1] === "(") {
-        const closingParen = text.indexOf(")", closingBracket + 2);
-        if (closingParen !== -1) {
+        const destination = readBalancedDestination(text, closingBracket + 2);
+        if (destination) {
           const label = text.slice(index + 1, closingBracket);
-          const rawUrl = text.slice(closingBracket + 2, closingParen).trim();
-          const href = isSafeUrl(rawUrl) ? rawUrl : "";
+          const href = isSafeUrl(destination.value) ? destination.value : "";
           const linkChildren = parseInline(label);
           if (href) {
             tokens.push({ type: "link", href, children: linkChildren });
@@ -76,7 +96,7 @@ export function parseInline(text: string): InlineToken[] {
             // Unsafe or rejected scheme: render label as text, never execute link
             tokens.push(...linkChildren);
           }
-          index = closingParen + 1;
+          index = destination.end + 1;
           continue;
         }
       }

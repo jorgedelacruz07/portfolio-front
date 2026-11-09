@@ -5,8 +5,9 @@ import { HomeAbout } from "@/components/pages/home/HomeAbout";
 import { HomeProfile } from "@/components/pages/home/HomeProfile";
 import { HomeSection } from "@/components/pages/home/HomeSection";
 import { Button } from "@/components/ui/button";
+import { PageContainer } from "@/components/ui/page";
 import { useDeferredRender, useHomePageData } from "@/hooks";
-import { cn, homePageStyles } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 
 const HomeProjects = lazy(() =>
   import("@/components/pages/home/HomeProjects").then((module) => ({
@@ -143,7 +144,7 @@ export default function HomePage() {
         />
       </Helmet>
 
-      <div className={homePageStyles.page}>
+      <PageContainer className="flex flex-col gap-12">
         <HomeProfile cmsProfile={profile} />
 
         {error ? (
@@ -187,7 +188,7 @@ export default function HomePage() {
         ) : (
           <DeferredGithub />
         )}
-      </div>
+      </PageContainer>
     </>
   );
 }

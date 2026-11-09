@@ -300,7 +300,7 @@ export default function ArticleDetailPage() {
                 href={shareOnTwitterUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="Share on X"
+                aria-label="Post on X"
               >
                 <span>Post on X</span>
               </a>
@@ -315,7 +315,7 @@ export default function ArticleDetailPage() {
                 href={shareOnLinkedInUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="Share on LinkedIn"
+                aria-label="LinkedIn"
               >
                 <LinkedinIcon width={14} height={14} />
                 <span>LinkedIn</span>
@@ -326,7 +326,7 @@ export default function ArticleDetailPage() {
               size="sm"
               onClick={handleCopyLink}
               className="h-8 gap-1.5 text-xs"
-              aria-label="Copy canonical link"
+              aria-label={copied ? "Copied" : "Copy link"}
             >
               {copied ? (
                 <Check className="h-3.5 w-3.5 text-primary" />

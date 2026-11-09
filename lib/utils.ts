@@ -59,5 +59,4 @@ export const homePageStyles = {
   title: "text-xl font-semibold tracking-tight text-foreground sm:text-2xl",
   description: "text-sm leading-relaxed text-muted-foreground sm:text-base",
   featuredGrid: "grid gap-4 md:grid-cols-2",
-  metaBadge: "craft-pill",
 };

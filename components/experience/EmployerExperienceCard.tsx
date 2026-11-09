@@ -2,10 +2,12 @@ import { CheckCircle2, ExternalLink, MapPin } from "lucide-react";
 
 import { CompanyLogo } from "@/components/CompanyLogo";
 import { Button } from "@/components/ui/button";
+import { badgeVariants } from "@/components/ui/badge";
 import {
   visibleHighlights,
   type ExperienceGroup,
 } from "@/lib/experience-groups";
+import { safeHref } from "@/lib/safe-href";
 import { cn, formatDateRange } from "@/lib/utils";
 import type { TExperience } from "@/types/experience";
 
@@ -63,12 +65,15 @@ function TechnologyList({
             key={tech.id}
             type="button"
             onClick={() => onSelectTech(tech.name)}
-            className="craft-pill"
+            className={badgeVariants({ variant: "secondary" })}
           >
             {tech.name}
           </button>
         ) : (
-          <span key={tech.id} className="craft-pill">
+          <span
+            key={tech.id}
+            className={badgeVariants({ variant: "secondary" })}
+          >
             {tech.name}
           </span>
         ),
@@ -91,6 +96,7 @@ function ClientEngagement({
   const showDetail =
     companyDetail &&
     companyDetail.toLowerCase() !== client.jobDescription?.trim().toLowerCase();
+  const companyHref = safeHref(client.companyUrl);
 
   return (
     <li className="rounded-xl border border-border/70 bg-background/40 p-3 sm:p-4">
@@ -129,22 +135,22 @@ function ClientEngagement({
           ) : null}
           <HighlightList highlights={visibleHighlights([client])} />
           <TechnologyList experience={client} onSelectTech={onSelectTech} />
-          {client.companyUrl ? (
+          {companyHref ? (
             <Button
               asChild
               variant="ghost"
               size="sm"
               className="-ml-2 h-8 px-2"
             >
-              <a
-                href={client.companyUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <a href={companyHref} target="_blank" rel="noopener noreferrer">
                 <span>Company website</span>
                 <ExternalLink className="h-3 w-3" aria-hidden="true" />
               </a>
             </Button>
+          ) : client.companyUrl ? (
+            <p className="break-all text-sm text-muted-foreground">
+              {client.companyUrl}
+            </p>
           ) : null}
         </div>
       </div>
@@ -166,6 +172,7 @@ export function EmployerExperienceCard({
   const clientIds = new Set(
     group.clients.map((client) => client.id || client.slug),
   );
+  const employerHref = safeHref(group.logoExperience.companyUrl);
   const employerHighlights = visibleHighlights(
     group.sources.filter((source) => !clientIds.has(source.id || source.slug)),
   );
@@ -253,19 +260,19 @@ export function EmployerExperienceCard({
         </div>
       ) : null}
 
-      {group.logoExperience.companyUrl ? (
+      {employerHref ? (
         <div className="border-t border-border/60 pt-3">
           <Button asChild variant="outline" size="sm">
-            <a
-              href={group.logoExperience.companyUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <a href={employerHref} target="_blank" rel="noopener noreferrer">
               <span>Company website</span>
               <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
             </a>
           </Button>
         </div>
+      ) : group.logoExperience.companyUrl ? (
+        <p className="break-all border-t border-border/60 pt-3 text-sm text-muted-foreground">
+          {group.logoExperience.companyUrl}
+        </p>
       ) : null}
     </article>
   );

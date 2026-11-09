@@ -1,9 +1,10 @@
-import { useEffect, useId, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { Button } from "@/components/ui/button";
 import { useGetArticles } from "@/hooks";
+import { trappedMenuIndex } from "@/lib/menu-focus";
 import { cn } from "@/lib/utils";
 
 const shell = "mx-auto flex w-full max-w-5xl items-center px-4 sm:px-6";
@@ -11,6 +12,8 @@ const shell = "mx-auto flex w-full max-w-5xl items-center px-4 sm:px-6";
 export const Navbar = () => {
   const location = useLocation();
   const menuId = useId();
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -19,13 +22,44 @@ export const Navbar = () => {
 
   useEffect(() => {
     if (!isMenuOpen) return undefined;
+    const menu = menuRef.current;
+    const button = menuButtonRef.current;
+    const items = () =>
+      menu
+        ? Array.from(
+            menu.querySelectorAll<HTMLElement>(
+              "a[href], button:not([disabled])",
+            ),
+          )
+        : [];
+
+    items()[0]?.focus();
 
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setIsMenuOpen(false);
+      if (event.key === "Escape") {
+        event.preventDefault();
+        setIsMenuOpen(false);
+        button?.focus();
+        return;
+      }
+      if (event.key !== "Tab") return;
+      const list = items();
+      if (list.length === 0) return;
+      const current = list.indexOf(document.activeElement as HTMLElement);
+      if (current === -1) {
+        event.preventDefault();
+        list[event.shiftKey ? list.length - 1 : 0]?.focus();
+        return;
+      }
+      const atStart = current === 0 && event.shiftKey;
+      const atEnd = current === list.length - 1 && !event.shiftKey;
+      if (!atStart && !atEnd) return;
+      event.preventDefault();
+      list[trappedMenuIndex(list.length, current, event.shiftKey)]?.focus();
     };
 
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
   }, [isMenuOpen]);
 
   const { data: articles } = useGetArticles();
@@ -80,6 +114,7 @@ export const Navbar = () => {
         <div className="flex items-center gap-1 md:hidden">
           <ThemeToggle />
           <Button
+            ref={menuButtonRef}
             variant="ghost"
             size="icon"
             onClick={() => setIsMenuOpen((open) => !open)}
@@ -119,6 +154,7 @@ export const Navbar = () => {
       {isMenuOpen ? (
         <div
           id={menuId}
+          ref={menuRef}
           className="border-t border-border bg-background md:hidden"
         >
           <nav
