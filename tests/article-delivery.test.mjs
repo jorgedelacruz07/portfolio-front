@@ -141,6 +141,19 @@ describe("article delivery controls and API contract", () => {
     );
   });
 
+  it("does not throw when the configured canonical URL is not a string", () => {
+    const fallback = "https://jorgedelacruzpadilla.dev/articles/atomic-cas";
+    assert.equal(canonicalArticleUrl("atomic-cas", 1), fallback);
+    assert.equal(
+      canonicalArticleUrl("atomic-cas", {
+        trim() {
+          throw new Error("boom");
+        },
+      }),
+      fallback,
+    );
+  });
+
   it("shows the exact final social copy including the canonical URL", () => {
     const url = "https://jorgedelacruz.dev/articles/example";
     assert.equal(

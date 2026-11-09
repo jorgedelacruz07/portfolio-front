@@ -42,7 +42,12 @@ export function safeHref(
   const protocol = url.protocol.toLowerCase();
   if (protocol === "http:" || protocol === "https:") return trimmed;
   if (options.mailto && protocol === "mailto:") {
-    const address = decodeURIComponent(url.pathname);
+    let address: string;
+    try {
+      address = decodeURIComponent(url.pathname);
+    } catch {
+      return null;
+    }
     if (url.search || !plainEmailAddress(address)) return null;
     return `mailto:${address}`;
   }
@@ -50,9 +55,9 @@ export function safeHref(
 }
 
 const PLAIN_EMAIL =
-  /^[a-zA-Z0-9.!#$&'*+/=^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
+  /^[A-Za-z0-9._+-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
 
-/** A mailbox with no header fields. Rejects ?, %, whitespace, and control characters. */
+/** A mailbox with no header fields. The local-part allows only [A-Za-z0-9._+-]. */
 export function plainEmailAddress(value: unknown): string | null {
   if (
     typeof value !== "string" ||
