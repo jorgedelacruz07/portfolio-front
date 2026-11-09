@@ -1,26 +1,36 @@
-import { FormEvent, ReactNode, useEffect, useMemo, useRef, useState } from "react";
+import { FormEvent, ReactNode, useEffect, useId, useMemo, useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link, useSearchParams } from "react-router-dom";
 import axios from "axios";
 import { adminApi } from "@/lib/admin-api";
 import { ProjectDraftImport } from "@/components/admin/ProjectDraftImport";
 import { ProjectEditor } from "@/components/admin/ProjectEditor";
+import { ExperienceEditor } from "@/components/admin/ExperienceEditor";
 import { ArticleEditor } from "@/components/admin/ArticleEditor";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import {
+  AlertCircle,
+  ArrowLeft,
   Briefcase,
   Check,
+  ChevronDown,
+  ChevronUp,
   Clock,
   ExternalLink,
   Eye,
   EyeOff,
   FileText,
   FolderGit2,
+  KeyRound,
   Loader2,
+  Lock,
   LogOut,
   Plus,
+  RefreshCw,
   Save,
+  Search,
+  ShieldAlert,
   ShieldCheck,
   Sparkles,
   Trash2,
@@ -50,6 +60,8 @@ function ModernField({
   helperText,
   placeholder,
   rows = 4,
+  recommendedLength,
+  id: customId,
 }: {
   label: string;
   value: string;
@@ -58,29 +70,56 @@ function ModernField({
   helperText?: string;
   placeholder?: string;
   rows?: number;
+  recommendedLength?: { min: number; max: number };
+  id?: string;
 }) {
+  const generatedId = useId();
+  const inputId = customId || generatedId;
+  const currentLength = value?.length || 0;
+
+  let lengthStatusColor = "text-muted-foreground";
+  if (recommendedLength) {
+    if (currentLength >= recommendedLength.min && currentLength <= recommendedLength.max) {
+      lengthStatusColor = "text-emerald-400";
+    } else if (currentLength > recommendedLength.max) {
+      lengthStatusColor = "text-amber-400";
+    }
+  }
+
   return (
     <div className="space-y-1.5">
-      <label className="block font-mono text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-        {label}
-      </label>
+      <div className="flex items-center justify-between">
+        <label
+          htmlFor={inputId}
+          className="block font-mono text-xs font-semibold uppercase tracking-wider text-muted-foreground"
+        >
+          {label}
+        </label>
+        {recommendedLength ? (
+          <span className={cn("font-mono text-[10px]", lengthStatusColor)}>
+            {currentLength}/{recommendedLength.max} caracteres
+          </span>
+        ) : null}
+      </div>
       {textarea ? (
         <textarea
+          id={inputId}
           rows={rows}
           className={`${inputClass} resize-y normal-case tracking-normal`}
-          value={value}
+          value={value || ""}
           placeholder={placeholder}
           onChange={(event) => onChange(event.target.value)}
         />
       ) : (
         <input
+          id={inputId}
           className={`${inputClass} normal-case tracking-normal`}
-          value={value}
+          value={value || ""}
           placeholder={placeholder}
           onChange={(event) => onChange(event.target.value)}
         />
       )}
-      {helperText ? <p className="text-[11px] text-muted-foreground">{helperText}</p> : null}
+      {helperText ? <p className="text-[11px] text-muted-foreground leading-relaxed">{helperText}</p> : null}
     </div>
   );
 }
@@ -100,7 +139,7 @@ function SectionCard({
     <section className="rounded-2xl border border-border/80 bg-card/40 p-5 sm:p-6 backdrop-blur-sm shadow-sm transition-all">
       <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between border-b border-border/60 pb-4">
         <div>
-          <h2 className="text-lg font-bold tracking-tight text-foreground">{title}</h2>
+          <h2 className="text-lg font-bold tracking-tight text-foreground font-sans">{title}</h2>
           {subtitle ? <p className="mt-0.5 text-xs text-muted-foreground">{subtitle}</p> : null}
         </div>
         {action ? <div className="flex items-center gap-2">{action}</div> : null}
@@ -125,12 +164,12 @@ function SaveButton({
       onClick={onClick}
       disabled={state === "saving"}
       className={cn(
-        "inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2 text-xs font-semibold font-mono transition-all duration-150 disabled:opacity-60",
+        "inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2 text-xs font-semibold font-mono transition-all duration-150 disabled:opacity-60 shadow-sm",
         state === "saved"
           ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/30"
           : state === "error"
             ? "bg-destructive/10 text-destructive border border-destructive/30"
-            : "bg-primary text-primary-foreground hover:opacity-90 shadow-sm",
+            : "bg-primary text-primary-foreground hover:opacity-90",
       )}
     >
       {state === "saving" ? (
@@ -155,6 +194,29 @@ function SaveButton({
   );
 }
 
+function SerpPreview({ title, description, url }: { title: string; description: string; url: string }) {
+  return (
+    <div className="rounded-2xl border border-border/80 bg-background/90 p-4 font-sans space-y-1.5 shadow-xs">
+      <div className="flex items-center gap-2">
+        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
+          J
+        </span>
+        <div className="flex flex-col leading-tight">
+          <span className="text-xs font-medium text-foreground">Jorge de la Cruz</span>
+          <span className="text-[10px] text-muted-foreground/80 truncate max-w-[280px]">{url}</span>
+        </div>
+      </div>
+      <h3 className="text-sm font-semibold text-primary hover:underline line-clamp-1 cursor-pointer pt-0.5">
+        {title || "Jorge de la Cruz | Senior Software Engineer"}
+      </h3>
+      <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
+        {description ||
+          "Senior Software Engineer specializing in React.js, TypeScript, Node.js, and Native MongoDB Architecture. Building scalable full-stack applications."}
+      </p>
+    </div>
+  );
+}
+
 function GoogleLoginForm({
   onSession,
   sessionExpired,
@@ -163,7 +225,10 @@ function GoogleLoginForm({
   sessionExpired?: boolean;
 }) {
   const [manualToken, setManualToken] = useState("");
+  const [showTokenText, setShowTokenText] = useState(false);
+  const [isManualExpanded, setIsManualExpanded] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isGsiLoaded, setIsGsiLoaded] = useState(false);
   const [statusMessage, setStatusMessage] = useState<{
     type: "error" | "denied" | "unconfigured" | "script_error";
     text: string;
@@ -191,12 +256,12 @@ function GoogleLoginForm({
       if (is401) {
         setStatusMessage({
           type: "denied",
-          text: "Access denied. Your Google account is not authorized to access this administration console.",
+          text: "Acceso denegado. Tu cuenta de Google no está en la lista de administradores autorizados de este portafolio.",
         });
       } else {
         setStatusMessage({
           type: "error",
-          text: "The sign-in attempt could not be completed. Please check your connection and try again.",
+          text: "No se pudo completar la verificación del inicio de sesión. Por favor, comprueba tu conexión y vuelve a intentarlo.",
         });
       }
     } finally {
@@ -208,7 +273,7 @@ function GoogleLoginForm({
     if (!clientId) {
       setStatusMessage({
         type: "unconfigured",
-        text: "Google Sign-In is not configured. VITE_GOOGLE_CLIENT_ID is required.",
+        text: "Google Sign-In no está configurado. La variable VITE_GOOGLE_CLIENT_ID es obligatoria.",
       });
       return;
     }
@@ -238,11 +303,14 @@ function GoogleLoginForm({
           logo_alignment: "left",
           width: 320,
         });
+        if (isMounted) {
+          setIsGsiLoaded(true);
+        }
       } catch {
         if (isMounted) {
           setStatusMessage({
             type: "script_error",
-            text: "Google Sign-In button could not be initialized.",
+            text: "No se pudo inicializar el botón de Google Sign-In en el navegador.",
           });
         }
       }
@@ -265,7 +333,7 @@ function GoogleLoginForm({
           if (isMounted) {
             setStatusMessage({
               type: "script_error",
-              text: "Google Sign-In service could not be loaded. Please check your network or content blocker.",
+              text: "No se pudo cargar el servicio de Google Sign-In. Comprueba tu conexión o si tienes un bloqueador de contenido activo.",
             });
           }
         };
@@ -281,99 +349,213 @@ function GoogleLoginForm({
   }, [clientId]);
 
   return (
-    <div className="craft-card mx-auto mt-12 max-w-md rounded-2xl p-6 sm:p-8 shadow-md">
-      <div className="flex items-center gap-2">
-        <ShieldCheck className="h-5 w-5 text-primary" />
-        <p className="font-mono text-xs font-semibold uppercase tracking-wider text-primary">Admin Access</p>
+    <div className="relative flex min-h-[calc(100vh-14rem)] w-full items-center justify-center px-4 py-8">
+      {/* Ambient Radial Glow */}
+      <div className="pointer-events-none absolute inset-0 -z-10 flex items-center justify-center overflow-hidden">
+        <div className="h-[440px] w-[440px] rounded-full bg-primary/10 blur-[110px]" />
       </div>
-      <h1 className="mt-2 text-2xl font-bold tracking-tight text-foreground">Manage Portfolio Content</h1>
-      <p className="mt-2 text-sm text-muted-foreground">
-        Sign in with an authorized Google account. Access is restricted server-side against the allowlist.
-      </p>
 
-      {sessionExpired && !statusMessage ? (
-        <div
-          role="alert"
-          aria-live="assertive"
-          className="mt-4 rounded-xl border border-amber-500/30 bg-amber-500/10 p-3 text-xs text-amber-200"
-        >
-          Your session has expired. Please sign in again with your Google account.
+      <div className="craft-card relative w-full max-w-md rounded-3xl border border-border/80 bg-card/90 p-6 sm:p-8 shadow-xl backdrop-blur-xl transition-all">
+        {/* Card Header & Badge */}
+        <div className="flex items-center justify-between border-b border-border/60 pb-4">
+          <div className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 font-mono text-[11px] font-medium text-primary">
+            <ShieldCheck className="h-3.5 w-3.5" />
+            <span>Portfolio Studio</span>
+          </div>
+          <span className="font-mono text-[11px] text-muted-foreground">Admin CMS</span>
         </div>
-      ) : null}
 
-      {statusMessage ? (
-        <div
-          role="alert"
-          aria-live="assertive"
-          className={`mt-4 rounded-xl border p-3 text-xs ${
-            statusMessage.type === "denied"
-              ? "border-red-500/30 bg-red-500/10 text-red-200"
-              : statusMessage.type === "unconfigured"
-                ? "border-yellow-500/30 bg-yellow-500/10 text-yellow-200"
-                : "border-red-500/30 bg-red-500/10 text-red-200"
-          }`}
-        >
-          <p>{statusMessage.text}</p>
-          {statusMessage.type !== "unconfigured" ? (
-            <button
-              type="button"
-              onClick={() => setStatusMessage(null)}
-              className="mt-2 font-mono text-[11px] underline hover:opacity-80"
+        <div className="pt-5">
+          <h1 className="font-serif text-2xl font-bold tracking-tight text-foreground sm:text-3xl">Iniciar Sesión</h1>
+          <p className="mt-2 text-xs sm:text-sm text-muted-foreground leading-relaxed">
+            Accede con tu cuenta autorizada de Google para gestionar proyectos, artículos técnicos, experiencia y
+            ajustes SEO.
+          </p>
+        </div>
+
+        {/* Security Informational Banner */}
+        <div className="mt-4 flex items-start gap-2.5 rounded-xl border border-border/70 bg-muted/40 p-3 text-xs text-muted-foreground">
+          <Lock className="h-4 w-4 shrink-0 text-primary mt-0.5" />
+          <span className="leading-snug">
+            Acceso protegido con Google OAuth 2.0. Solo las identidades verificadas en la lista blanca del servidor
+            tienen permisos de administración.
+          </span>
+        </div>
+
+        {/* Session Expired Alert */}
+        {sessionExpired && !statusMessage ? (
+          <div
+            role="alert"
+            aria-live="assertive"
+            className="mt-4 flex items-start gap-2.5 rounded-xl border border-amber-500/30 bg-amber-500/10 p-3.5 text-xs text-amber-200"
+          >
+            <Clock className="h-4 w-4 shrink-0 text-amber-400 mt-0.5" />
+            <div>
+              <p className="font-semibold text-amber-300">Tu sesión ha expirado</p>
+              <p className="mt-0.5 text-amber-200/90 leading-relaxed">
+                Por motivos de seguridad, por favor identifícate nuevamente con Google para continuar trabajando.
+              </p>
+            </div>
+          </div>
+        ) : null}
+
+        {/* Dynamic Status / Error Messages */}
+        {statusMessage ? (
+          <div
+            role="alert"
+            aria-live="assertive"
+            className={cn(
+              "mt-4 flex flex-col gap-2 rounded-xl border p-3.5 text-xs",
+              statusMessage.type === "denied"
+                ? "border-destructive/30 bg-destructive/10 text-destructive"
+                : statusMessage.type === "unconfigured"
+                  ? "border-amber-500/30 bg-amber-500/10 text-amber-300"
+                  : "border-destructive/30 bg-destructive/10 text-destructive",
+            )}
+          >
+            <div className="flex items-start gap-2.5">
+              {statusMessage.type === "denied" ? (
+                <ShieldAlert className="h-4 w-4 shrink-0 mt-0.5" />
+              ) : (
+                <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
+              )}
+              <div className="flex-1 leading-relaxed">
+                <p className="font-medium">{statusMessage.text}</p>
+              </div>
+            </div>
+            {statusMessage.type !== "unconfigured" ? (
+              <div className="flex justify-end pt-1">
+                <button
+                  type="button"
+                  onClick={() => setStatusMessage(null)}
+                  className="inline-flex items-center gap-1 font-mono text-[11px] font-medium underline hover:opacity-80 transition-opacity"
+                >
+                  <RefreshCw className="h-3 w-3" />
+                  <span>Reintentar</span>
+                </button>
+              </div>
+            ) : null}
+          </div>
+        ) : null}
+
+        {/* Main Google Button Container */}
+        <div className="mt-6 flex flex-col items-center justify-center">
+          {isSubmitting ? (
+            <div
+              role="status"
+              aria-live="polite"
+              className="flex min-h-[50px] w-full flex-col items-center justify-center gap-2.5 rounded-2xl border border-primary/20 bg-primary/5 py-4 text-xs font-mono text-primary"
             >
-              Dismiss and retry
-            </button>
+              <Loader2 className="h-5 w-5 animate-spin" />
+              <span>Verificando credenciales con el servidor...</span>
+            </div>
+          ) : (
+            <div className="relative flex min-h-[44px] w-full items-center justify-center overflow-hidden">
+              {!isGsiLoaded && !statusMessage ? (
+                <div className="flex h-[44px] w-[320px] items-center justify-center gap-2.5 rounded-lg border border-border bg-card/60 font-mono text-xs text-muted-foreground animate-pulse">
+                  <span className="h-4 w-4 rounded-full border-2 border-primary border-t-transparent animate-spin" />
+                  <span>Cargando Google Sign-In...</span>
+                </div>
+              ) : null}
+              <div
+                ref={buttonContainerRef}
+                role="region"
+                aria-label="Botón de inicio de sesión con Google"
+                className={cn(
+                  "flex min-h-[44px] w-full items-center justify-center transition-opacity duration-200",
+                  !isGsiLoaded ? "opacity-0 absolute" : "opacity-100",
+                )}
+              />
+            </div>
+          )}
+        </div>
+
+        {/* Alternative Access (Manual ID Token) */}
+        <div className="mt-6 border-t border-border/60 pt-4">
+          <button
+            type="button"
+            onClick={() => setIsManualExpanded(!isManualExpanded)}
+            className="flex w-full items-center justify-between font-mono text-xs text-muted-foreground hover:text-foreground transition-colors py-1"
+          >
+            <span className="flex items-center gap-1.5">
+              <KeyRound className="h-3.5 w-3.5 text-primary" />
+              <span>Acceso alternativo / Token de depuración</span>
+            </span>
+            {isManualExpanded ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
+          </button>
+
+          {isManualExpanded ? (
+            <form
+              onSubmit={(e: FormEvent) => {
+                e.preventDefault();
+                handleCredential(manualToken);
+              }}
+              className="mt-3 space-y-3 rounded-2xl border border-border/70 bg-card/40 p-4 animate-in fade-in-50 duration-200"
+            >
+              <div>
+                <label
+                  htmlFor="manual-token-input"
+                  className="block font-mono text-[11px] uppercase tracking-wider text-muted-foreground"
+                >
+                  Token de Identidad Google (ID Token)
+                </label>
+                <p className="mt-0.5 text-[11px] text-muted-foreground/80">
+                  Usa esta opción para pruebas locales o en navegadores con bloqueadores estrictos de Google.
+                </p>
+              </div>
+
+              <div className="relative">
+                <input
+                  id="manual-token-input"
+                  type={showTokenText ? "text" : "password"}
+                  className={`${inputClass} pr-10 font-mono text-xs`}
+                  value={manualToken}
+                  onChange={(e) => setManualToken(e.target.value)}
+                  placeholder="Pega aquí el Google ID token para autenticarte..."
+                  disabled={isSubmitting}
+                  autoComplete="off"
+                  spellCheck={false}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowTokenText(!showTokenText)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                  title={showTokenText ? "Ocultar token" : "Mostrar token"}
+                >
+                  {showTokenText ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
+
+              <button
+                type="submit"
+                disabled={isSubmitting || !manualToken.trim()}
+                className="w-full rounded-xl bg-foreground px-4 py-2.5 font-mono text-xs font-semibold text-background hover:opacity-90 disabled:opacity-50 transition-opacity shadow-sm flex items-center justify-center gap-2"
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                    <span>Autenticando token...</span>
+                  </>
+                ) : (
+                  <span>Validar token e ingresar</span>
+                )}
+              </button>
+            </form>
           ) : null}
         </div>
-      ) : null}
 
-      <div className="mt-6 flex flex-col items-center gap-3">
-        {isSubmitting ? (
-          <div role="status" aria-live="polite" className="flex items-center gap-2 py-4 text-xs text-muted-foreground">
-            <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-            Verifying credentials with server...
-          </div>
-        ) : (
-          <div
-            ref={buttonContainerRef}
-            role="region"
-            aria-label="Google Sign-In"
-            className="flex min-h-[44px] w-full items-center justify-center"
-          />
-        )}
-      </div>
-
-      <details className="mt-6 border-t border-border pt-4 text-xs text-muted-foreground">
-        <summary className="cursor-pointer font-mono hover:text-foreground">
-          Manual ID token input (testing / fallback)
-        </summary>
-        <form
-          onSubmit={(e: FormEvent) => {
-            e.preventDefault();
-            handleCredential(manualToken);
-          }}
-          className="mt-3 space-y-3"
-        >
-          <label htmlFor="manual-token-input" className="block font-mono text-[11px] uppercase text-muted-foreground">
-            Google ID Token
-          </label>
-          <input
-            id="manual-token-input"
-            type="password"
-            className={inputClass}
-            value={manualToken}
-            onChange={(e) => setManualToken(e.target.value)}
-            placeholder="Paste Google ID token for manual sign-in"
-            disabled={isSubmitting}
-          />
-          <button
-            type="submit"
-            disabled={isSubmitting || !manualToken.trim()}
-            className="w-full rounded-xl bg-foreground px-4 py-2.5 font-mono text-xs font-semibold text-background hover:opacity-90 disabled:opacity-50 transition-opacity"
+        {/* Back Link */}
+        <div className="mt-6 border-t border-border/60 pt-4 flex items-center justify-between text-xs">
+          <Link
+            to="/"
+            className="inline-flex items-center gap-1.5 font-mono text-xs text-muted-foreground hover:text-foreground transition-colors"
           >
-            {isSubmitting ? "Authenticating..." : "Sign in with token"}
-          </button>
-        </form>
-      </details>
+            <ArrowLeft className="h-3.5 w-3.5" />
+            <span>Volver al portafolio</span>
+          </Link>
+          <span className="font-mono text-[10px] text-muted-foreground/60">Lima, PE</span>
+        </div>
+      </div>
     </div>
   );
 }
@@ -388,6 +570,8 @@ export default function AdminPage() {
   const [saveFeedback, setSaveFeedback] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedSkillCategory, setSelectedSkillCategory] = useState<string>("all");
+  const [newSkillName, setNewSkillName] = useState("");
+  const [newSkillCategory, setNewSkillCategory] = useState("Engineering");
 
   const [searchParams, setSearchParams] = useSearchParams();
   const rawTab = searchParams.get("tab");
@@ -464,25 +648,54 @@ export default function AdminPage() {
 
   function addSkill() {
     if (!content) return;
+    const name = newSkillName.trim() || "Nueva Habilidad";
+    const category =
+      newSkillCategory.trim() || (selectedSkillCategory !== "all" ? selectedSkillCategory : "Engineering");
+
     setContent({
       ...content,
       skills: [
         ...skills,
         {
-          name: "Nueva Habilidad",
-          category: selectedSkillCategory !== "all" ? selectedSkillCategory : "Engineering",
+          name,
+          category,
           priority: skills.length,
           displayOrder: skills.length + 1,
           visible: true,
         },
       ],
     });
+    setNewSkillName("");
   }
 
   function removeSkill(index: number) {
     if (!content) return;
     const nextSkills = skills.filter((_, idx) => idx !== index);
     setContent({ ...content, skills: nextSkills });
+  }
+
+  function addExperience() {
+    const newExp: TExperience = {
+      id: `exp-${Date.now()}`,
+      slug: `posicion-${experiences.length + 1}`,
+      company: "Nueva Empresa",
+      jobTitle: "Senior Software Engineer",
+      companyFrom: "2024",
+      companyDescription: "",
+      companyLogo: "",
+      companyUrl: "",
+      jobDescription: "",
+      from: "2024-01",
+      to: "Presente",
+      displayOrder: experiences.length + 1,
+      visible: true,
+      technologyIds: [],
+      technologies: [],
+      image: { src: "", alt: "" },
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+    setExperiences((current) => [newExp, ...current]);
   }
 
   async function persist(action: () => Promise<unknown>, successMessage = "Cambios guardados correctamente") {
@@ -559,7 +772,7 @@ export default function AdminPage() {
 
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 pb-20 pt-2">
         {/* Top Studio Header */}
-        <header className="rounded-2xl border border-border/80 bg-card/60 p-5 sm:p-6 backdrop-blur-md shadow-sm">
+        <header className="rounded-3xl border border-border/80 bg-card/75 p-5 sm:p-6 backdrop-blur-md shadow-sm">
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div className="flex items-center gap-3.5">
               <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 border border-primary/20 text-primary shadow-inner">
@@ -567,7 +780,7 @@ export default function AdminPage() {
               </div>
               <div>
                 <div className="flex items-center gap-2.5">
-                  <h1 className="text-xl font-bold tracking-tight text-foreground sm:text-2xl font-sans">
+                  <h1 className="text-xl font-bold tracking-tight text-foreground sm:text-2xl font-serif">
                     Portfolio Studio
                   </h1>
                   <Badge variant="default" className="font-mono text-[10px] tracking-wider uppercase">
@@ -594,7 +807,7 @@ export default function AdminPage() {
                 to="/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 rounded-xl border border-border/80 bg-background/50 px-3.5 py-2 font-mono text-xs text-muted-foreground hover:bg-muted hover:text-foreground transition-all duration-150 shadow-sm"
+                className="inline-flex items-center gap-1.5 rounded-xl border border-border/80 bg-background/60 px-3.5 py-2 font-mono text-xs text-muted-foreground hover:bg-muted hover:text-foreground transition-all duration-150 shadow-xs"
               >
                 <ExternalLink className="h-3.5 w-3.5" />
                 <span>Web pública</span>
@@ -602,7 +815,7 @@ export default function AdminPage() {
               <button
                 onClick={logout}
                 type="button"
-                className="inline-flex items-center gap-1.5 rounded-xl border border-border/80 bg-background/50 px-3.5 py-2 font-mono text-xs text-muted-foreground hover:border-destructive/40 hover:bg-destructive/10 hover:text-destructive transition-all duration-150 shadow-sm"
+                className="inline-flex items-center gap-1.5 rounded-xl border border-border/80 bg-background/60 px-3.5 py-2 font-mono text-xs text-muted-foreground hover:border-destructive/40 hover:bg-destructive/10 hover:text-destructive transition-all duration-150 shadow-xs"
               >
                 <LogOut className="h-3.5 w-3.5" />
                 <span>Cerrar sesión</span>
@@ -655,7 +868,7 @@ export default function AdminPage() {
           <div
             role="status"
             className={cn(
-              "rounded-xl border p-3.5 text-xs font-mono flex items-center gap-2 animate-in fade-in-50 duration-200",
+              "rounded-xl border p-3.5 text-xs font-mono flex items-center gap-2 animate-in fade-in-50 duration-200 shadow-sm",
               saveState === "saved"
                 ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-300"
                 : "border-destructive/30 bg-destructive/10 text-destructive",
@@ -707,114 +920,27 @@ export default function AdminPage() {
           <div className="space-y-6">
             <SectionCard
               title="Historial de Experiencia Profesional"
-              subtitle={`Total: ${experiences.length} puesto(s). Configura empresas, cargos, orden de visualización y visibilidad.`}
+              subtitle={`Total: ${experiences.length} puesto(s). Configura empresas, roles, fechas y visibilidad pública.`}
+              action={
+                <button
+                  type="button"
+                  onClick={addExperience}
+                  className="inline-flex items-center gap-1.5 rounded-xl border border-border/80 bg-background/60 px-3.5 py-2 font-mono text-xs text-foreground hover:bg-muted transition-colors shadow-xs"
+                >
+                  <Plus className="h-3.5 w-3.5 text-primary" />
+                  <span>Añadir nuevo puesto</span>
+                </button>
+              }
             >
               <div className="grid gap-4">
-                {experiences.map((experience, index) => (
-                  <div
+                {experiences.map((experience) => (
+                  <ExperienceEditor
                     key={experience.id}
-                    className="rounded-2xl border border-border/80 bg-card/60 p-5 space-y-4 shadow-sm"
-                  >
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-border/50 pb-3">
-                      <div className="flex items-center gap-2">
-                        <Briefcase className="h-4 w-4 text-primary" />
-                        <h3 className="font-semibold text-foreground text-sm">
-                          {experience.company || "Empresa no especificada"} —{" "}
-                          <span className="text-muted-foreground font-normal">{experience.jobTitle}</span>
-                        </h3>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Badge variant="outline" className="font-mono text-[10px]">
-                          Orden: #{experience.displayOrder ?? index}
-                        </Badge>
-                        <Badge
-                          variant={(experience.visible ?? true) ? "default" : "secondary"}
-                          className="font-mono text-[10px]"
-                        >
-                          {(experience.visible ?? true) ? "Visible" : "Oculto"}
-                        </Badge>
-                      </div>
-                    </div>
-
-                    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                      <ModernField
-                        label="Empresa"
-                        value={experience.company}
-                        placeholder="Ej: GoDaddy, Indra, Encora..."
-                        onChange={(val) => {
-                          const next = [...experiences];
-                          next[index] = { ...experience, company: val };
-                          setExperiences(next);
-                        }}
-                      />
-                      <ModernField
-                        label="Cargo / Rol"
-                        value={experience.jobTitle}
-                        placeholder="Ej: Senior Fullstack Engineer"
-                        onChange={(val) => {
-                          const next = [...experiences];
-                          next[index] = { ...experience, jobTitle: val };
-                          setExperiences(next);
-                        }}
-                      />
-                      <div className="space-y-1.5">
-                        <label className="block font-mono text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                          Orden & Visibilidad
-                        </label>
-                        <div className="flex items-center gap-3">
-                          <input
-                            type="number"
-                            className="w-24 rounded-xl border border-border bg-card/60 px-3 py-2 text-sm text-foreground focus:border-primary focus:outline-none"
-                            value={experience.displayOrder ?? 0}
-                            onChange={(event) => {
-                              const next = [...experiences];
-                              next[index] = { ...experience, displayOrder: Number(event.target.value) };
-                              setExperiences(next);
-                            }}
-                          />
-                          <label className="flex items-center gap-2 text-xs font-mono text-muted-foreground cursor-pointer">
-                            <input
-                              type="checkbox"
-                              className="h-4 w-4 rounded border-border text-primary focus:ring-primary"
-                              checked={experience.visible ?? true}
-                              onChange={(event) => {
-                                const next = [...experiences];
-                                next[index] = { ...experience, visible: event.target.checked };
-                                setExperiences(next);
-                              }}
-                            />
-                            <span>Visible</span>
-                          </label>
-                        </div>
-                      </div>
-                    </div>
-
-                    <ModernField
-                      label="Descripción del Rol y Logros"
-                      textarea
-                      rows={4}
-                      value={experience.jobDescription || ""}
-                      placeholder="Responsabilidades, impacto, arquitectura y tecnologías utilizadas..."
-                      onChange={(val) => {
-                        const next = [...experiences];
-                        next[index] = { ...experience, jobDescription: val };
-                        setExperiences(next);
-                      }}
-                    />
-
-                    <div className="flex justify-end pt-2">
-                      <SaveButton
-                        state={saveState}
-                        label="Guardar este puesto"
-                        onClick={() =>
-                          persist(
-                            () => adminApi.saveExperience(experience),
-                            `Puesto en ${experience.company} guardado con éxito`,
-                          )
-                        }
-                      />
-                    </div>
-                  </div>
+                    experience={experience}
+                    onChange={(updated) => {
+                      setExperiences((current) => current.map((item) => (item.id === updated.id ? updated : item)));
+                    }}
+                  />
                 ))}
               </div>
             </SectionCard>
@@ -828,32 +954,60 @@ export default function AdminPage() {
               title="Habilidades y Competencias"
               subtitle={`Total: ${skills.length} habilidad(es). Gestiona las tecnologías mostradas en tu perfil.`}
               action={
-                <div className="flex items-center gap-2">
+                <SaveButton
+                  state={saveState}
+                  label="Guardar todas las habilidades"
+                  onClick={() => persist(() => adminApi.saveSkills(skills), "Habilidades actualizadas con éxito")}
+                />
+              }
+            >
+              {/* Add Skill Quick Bar */}
+              <div className="rounded-2xl border border-border/70 bg-card/60 p-4 space-y-3">
+                <span className="block font-mono text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                  Añadir Nueva Habilidad
+                </span>
+                <div className="flex flex-col sm:flex-row items-center gap-3">
+                  <input
+                    type="text"
+                    className={`${inputClass} sm:flex-1`}
+                    placeholder="Nombre (ej: React, TypeScript, Kubernetes, Go...)"
+                    value={newSkillName}
+                    onChange={(e) => setNewSkillName(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        addSkill();
+                      }
+                    }}
+                  />
+                  <input
+                    type="text"
+                    className="w-full sm:w-48 rounded-xl border border-border bg-card/60 px-3.5 py-2.5 text-sm text-foreground focus:border-primary focus:outline-none"
+                    placeholder="Categoría (ej: Frontend)"
+                    value={newSkillCategory}
+                    onChange={(e) => setNewSkillCategory(e.target.value)}
+                  />
                   <button
                     type="button"
                     onClick={addSkill}
-                    className="inline-flex items-center gap-1.5 rounded-xl border border-border/80 bg-background/50 px-3 py-1.5 font-mono text-xs text-foreground hover:bg-muted transition-colors"
+                    disabled={!newSkillName.trim()}
+                    className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 rounded-xl bg-foreground px-4 py-2.5 font-mono text-xs font-semibold text-background hover:opacity-90 disabled:opacity-40 transition-opacity shrink-0"
                   >
-                    <Plus className="h-3.5 w-3.5 text-primary" />
-                    <span>Añadir habilidad</span>
+                    <Plus className="h-3.5 w-3.5" />
+                    <span>Añadir</span>
                   </button>
-                  <SaveButton
-                    state={saveState}
-                    label="Guardar lista de habilidades"
-                    onClick={() => persist(() => adminApi.saveSkills(skills), "Habilidades actualizadas con éxito")}
-                  />
                 </div>
-              }
-            >
+              </div>
+
               {/* Category Filter Chips */}
-              <div className="flex flex-wrap items-center gap-1.5 pb-2">
+              <div className="flex flex-wrap items-center gap-1.5 pt-2 pb-1">
                 <button
                   type="button"
                   onClick={() => setSelectedSkillCategory("all")}
                   className={cn(
-                    "rounded-lg px-2.5 py-1 font-mono text-[11px] transition-colors",
+                    "rounded-xl px-3 py-1.5 font-mono text-[11px] transition-colors",
                     selectedSkillCategory === "all"
-                      ? "bg-primary text-primary-foreground font-semibold"
+                      ? "bg-primary text-primary-foreground font-semibold shadow-xs"
                       : "bg-muted/60 text-muted-foreground hover:text-foreground",
                   )}
                 >
@@ -865,9 +1019,9 @@ export default function AdminPage() {
                     type="button"
                     onClick={() => setSelectedSkillCategory(cat)}
                     className={cn(
-                      "rounded-lg px-2.5 py-1 font-mono text-[11px] transition-colors",
+                      "rounded-xl px-3 py-1.5 font-mono text-[11px] transition-colors",
                       selectedSkillCategory === cat
-                        ? "bg-primary text-primary-foreground font-semibold"
+                        ? "bg-primary text-primary-foreground font-semibold shadow-xs"
                         : "bg-muted/60 text-muted-foreground hover:text-foreground",
                     )}
                   >
@@ -885,7 +1039,7 @@ export default function AdminPage() {
                   return (
                     <div
                       key={skill.id || index}
-                      className="rounded-xl border border-border/70 bg-card/60 p-3.5 space-y-3 shadow-xs hover:border-border transition-colors"
+                      className="rounded-2xl border border-border/70 bg-card/60 p-4 space-y-3 shadow-xs hover:border-border transition-colors"
                     >
                       <div className="flex items-center justify-between gap-2">
                         <input
@@ -910,7 +1064,7 @@ export default function AdminPage() {
                             Categoría
                           </label>
                           <input
-                            className="w-full rounded-lg border border-border bg-card px-2 py-1 text-xs text-foreground focus:border-primary focus:outline-none"
+                            className="w-full rounded-lg border border-border bg-card px-2.5 py-1 text-xs text-foreground focus:border-primary focus:outline-none"
                             value={skill.category}
                             placeholder="Categoría"
                             onChange={(e) => updateSkill(index, { category: e.target.value })}
@@ -922,7 +1076,7 @@ export default function AdminPage() {
                           </label>
                           <input
                             type="number"
-                            className="w-full rounded-lg border border-border bg-card px-2 py-1 text-xs text-foreground focus:border-primary focus:outline-none"
+                            className="w-full rounded-lg border border-border bg-card px-2.5 py-1 text-xs text-foreground focus:border-primary focus:outline-none"
                             value={skill.displayOrder}
                             onChange={(e) => updateSkill(index, { displayOrder: Number(e.target.value) })}
                           />
@@ -934,7 +1088,7 @@ export default function AdminPage() {
                           <input
                             type="checkbox"
                             checked={skill.visible}
-                            className="rounded border-border text-primary focus:ring-primary"
+                            className="rounded border-border text-primary focus:ring-primary h-4 w-4"
                             onChange={(e) => updateSkill(index, { visible: e.target.checked })}
                           />
                           <span className="font-mono text-[11px]">{skill.visible ? "Visible" : "Oculto"}</span>
@@ -964,7 +1118,11 @@ export default function AdminPage() {
         {/* TAB 5: Perfil & SEO */}
         {activeTab === "profile" ? (
           <div className="grid gap-6 lg:grid-cols-2">
-            {!profile ? null : (
+            {!profile ? (
+              <div className="flex items-center justify-center p-12 text-muted-foreground text-xs font-mono">
+                Cargando datos de perfil...
+              </div>
+            ) : (
               <SectionCard
                 title="Perfil del Desarrollador"
                 subtitle="Información principal visible en la portada y cabeceras del portafolio."
@@ -1018,7 +1176,11 @@ export default function AdminPage() {
               </SectionCard>
             )}
 
-            {!settings ? null : (
+            {!settings ? (
+              <div className="flex items-center justify-center p-12 text-muted-foreground text-xs font-mono">
+                Cargando ajustes SEO...
+              </div>
+            ) : (
               <SectionCard
                 title="Configuración Global & SEO"
                 subtitle="Metadatos indexables por buscadores y vista previa en redes sociales."
@@ -1030,16 +1192,31 @@ export default function AdminPage() {
                   />
                 }
               >
+                {/* Live Google Search Preview */}
+                <div className="space-y-1.5 pb-2">
+                  <span className="block font-mono text-xs font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
+                    <Search className="h-3.5 w-3.5 text-primary" />
+                    <span>Vista Previa en Google SERP</span>
+                  </span>
+                  <SerpPreview
+                    title={settings.seoTitle}
+                    description={settings.seoDescription}
+                    url="https://jorgedelacruzpadilla.dev"
+                  />
+                </div>
+
                 <ModernField
                   label="Título SEO (<title>)"
                   value={settings.seoTitle}
-                  helperText="Recomendado: 50-60 caracteres para óptimo render en Google SERP."
+                  helperText="Recomendado: 50 a 60 caracteres para óptima visualización en resultados de Google."
+                  recommendedLength={{ min: 50, max: 60 }}
                   onChange={(seoTitle) => updateSettings({ seoTitle })}
                 />
                 <ModernField
                   label="Descripción SEO (<meta description>)"
                   value={settings.seoDescription}
-                  helperText="Recomendado: 120-160 caracteres resumiendo tu especialidad técnica."
+                  helperText="Recomendado: 120 a 160 caracteres resumiendo tu especialidad y experiencia."
+                  recommendedLength={{ min: 120, max: 160 }}
                   textarea
                   rows={3}
                   onChange={(seoDescription) => updateSettings({ seoDescription })}
@@ -1047,8 +1224,8 @@ export default function AdminPage() {
                 <ModernField
                   label="Imagen Open Graph (og:image)"
                   value={settings.openGraphImage || ""}
-                  placeholder="https://jorgedelacruz.dev/images/og-image.png"
-                  helperText="URL absoluta de la imagen para previsualización al compartir enlaces."
+                  placeholder="https://jorgedelacruzpadilla.dev/images/og-image.png"
+                  helperText="URL absoluta de la imagen mostrada al compartir enlaces en LinkedIn, X y Slack."
                   onChange={(openGraphImage) => updateSettings({ openGraphImage })}
                 />
                 <ModernField
