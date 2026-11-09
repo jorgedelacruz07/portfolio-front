@@ -2,10 +2,7 @@ import { CheckCircle2, ExternalLink, MapPin, Sparkles } from "lucide-react";
 
 import { CompanyLogo } from "@/components/CompanyLogo";
 import { Button } from "@/components/ui/button";
-import {
-  visibleHighlights,
-  type ExperienceGroup,
-} from "@/lib/experience-groups";
+import { visibleHighlights, type ExperienceGroup } from "@/lib/experience-groups";
 import { cn, formatDateRange } from "@/lib/utils";
 import type { TExperience } from "@/types/experience";
 
@@ -33,10 +30,7 @@ function HighlightList({ highlights }: { highlights: string[] }) {
             key={`${index}-${highlight}`}
             className="flex items-start gap-2 rounded-lg border border-border/50 bg-card/60 p-2.5 text-xs leading-relaxed text-foreground/80"
           >
-            <CheckCircle2
-              className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary"
-              aria-hidden="true"
-            />
+            <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" aria-hidden="true" />
             <span>{highlight}</span>
           </li>
         ))}
@@ -87,9 +81,7 @@ function ClientEngagement({
 }) {
   const Heading = heading;
   const companyDetail = client.companyDescription?.trim();
-  const showDetail =
-    companyDetail &&
-    companyDetail.toLowerCase() !== client.jobDescription?.trim().toLowerCase();
+  const showDetail = companyDetail && companyDetail.toLowerCase() !== client.jobDescription?.trim().toLowerCase();
 
   return (
     <li className="rounded-xl border border-border/70 bg-background/40 p-3 sm:p-4">
@@ -107,39 +99,22 @@ function ClientEngagement({
               {formatDateRange(client.from, client.to)}
             </span>
           </div>
-          <p className="text-sm font-medium text-foreground/90">
-            {client.jobTitle}
-          </p>
+          <p className="text-sm font-medium text-foreground/90">{client.jobTitle}</p>
           {client.companyFrom ? (
             <p className="inline-flex items-center gap-1 text-xs text-muted-foreground">
               <MapPin className="h-3 w-3" aria-hidden="true" />
               <span>{client.companyFrom}</span>
             </p>
           ) : null}
-          {showDetail ? (
-            <p className="text-xs leading-relaxed text-muted-foreground">
-              {companyDetail}
-            </p>
-          ) : null}
+          {showDetail ? <p className="text-xs leading-relaxed text-muted-foreground">{companyDetail}</p> : null}
           {client.jobDescription ? (
-            <p className="text-sm leading-relaxed text-muted-foreground">
-              {client.jobDescription}
-            </p>
+            <p className="text-sm leading-relaxed text-muted-foreground">{client.jobDescription}</p>
           ) : null}
           <HighlightList highlights={visibleHighlights([client])} />
           <TechnologyList experience={client} onSelectTech={onSelectTech} />
           {client.companyUrl ? (
-            <Button
-              asChild
-              variant="ghost"
-              size="sm"
-              className="-ml-2 h-7 gap-1.5 px-2 font-mono text-xs"
-            >
-              <a
-                href={client.companyUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+            <Button asChild variant="ghost" size="sm" className="-ml-2 h-7 gap-1.5 px-2 font-mono text-xs">
+              <a href={client.companyUrl} target="_blank" rel="noopener noreferrer">
                 <span>Company website</span>
                 <ExternalLink className="h-3 w-3" aria-hidden="true" />
               </a>
@@ -161,9 +136,7 @@ export function EmployerExperienceCard({
   const Title = heading;
   const clientHeading = heading === "h2" ? "h3" : "h4";
   const clientsLabelId = `${group.id}-clients`;
-  const clientIds = new Set(
-    group.clients.map((client) => client.id || client.slug),
-  );
+  const clientIds = new Set(group.clients.map((client) => client.id || client.slug));
   const employerHighlights = visibleHighlights(
     group.sources.filter((source) => !clientIds.has(source.id || source.slug)),
   );
@@ -172,19 +145,10 @@ export function EmployerExperienceCard({
     <article className={cn("min-w-0 space-y-4", className)}>
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex min-w-0 items-start gap-3">
-          {showLogo ? (
-            <CompanyLogo
-              experience={group.logoExperience}
-              className="h-11 w-11"
-            />
-          ) : null}
+          {showLogo ? <CompanyLogo experience={group.logoExperience} className="h-11 w-11" /> : null}
           <div className="min-w-0 space-y-1">
-            <Title className="text-xl font-bold tracking-tight text-foreground sm:text-2xl">
-              {group.companyLabel}
-            </Title>
-            <p className="text-sm font-medium text-foreground/90">
-              {group.jobTitle}
-            </p>
+            <Title className="text-xl font-bold tracking-tight text-foreground sm:text-2xl">{group.companyLabel}</Title>
+            <p className="text-sm font-medium text-foreground/90">{group.jobTitle}</p>
             {group.logoExperience.companyFrom ? (
               <p className="inline-flex items-center gap-1 text-xs text-muted-foreground">
                 <MapPin className="h-3.5 w-3.5" aria-hidden="true" />
@@ -198,11 +162,7 @@ export function EmployerExperienceCard({
         </span>
       </div>
 
-      {group.summary ? (
-        <p className="text-sm leading-relaxed text-foreground/90">
-          {group.summary}
-        </p>
-      ) : null}
+      {group.summary ? <p className="text-sm leading-relaxed text-foreground/90">{group.summary}</p> : null}
       {group.companyDetail ? (
         <p className="border-l-2 border-primary/40 pl-3 font-mono text-xs text-muted-foreground">
           {group.companyDetail}
@@ -233,17 +193,8 @@ export function EmployerExperienceCard({
 
       {group.logoExperience.companyUrl ? (
         <div className="border-t border-border/60 pt-3">
-          <Button
-            asChild
-            variant="outline"
-            size="sm"
-            className="gap-1.5 font-mono text-xs"
-          >
-            <a
-              href={group.logoExperience.companyUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+          <Button asChild variant="outline" size="sm" className="gap-1.5 font-mono text-xs">
+            <a href={group.logoExperience.companyUrl} target="_blank" rel="noopener noreferrer">
               <span>Company website</span>
               <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
             </a>

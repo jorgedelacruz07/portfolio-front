@@ -1,10 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import {
-  experienceGroupMatches,
-  groupExperiences,
-  visibleHighlights,
-} from "../lib/experience-groups.ts";
+import { experienceGroupMatches, groupExperiences, visibleHighlights } from "../lib/experience-groups.ts";
 
 function role(partial) {
   return {
@@ -81,22 +77,13 @@ test("groups Encora and Coforge as one employer and nests GoDaddy and OPIS as cl
     groups.map((group) => group.companyLabel),
     ["Coforge (formerly Encora)", "Seeri"],
   );
-  assert.deepEqual(originalOrder, [
-    "coforge",
-    "opis-dow-jones",
-    "godaddy",
-    "encora",
-    "seeri",
-  ]);
+  assert.deepEqual(originalOrder, ["coforge", "opis-dow-jones", "godaddy", "encora", "seeri"]);
 
   const employer = groups[0];
   assert.equal(employer.jobTitle, "Senior Software Engineer");
   assert.equal(employer.from, "2022-12-01");
   assert.equal(employer.to, null);
-  assert.equal(
-    employer.summary,
-    "Employer since Dec 2022. Encora became Coforge in May 2026.",
-  );
+  assert.equal(employer.summary, "Employer since Dec 2022. Encora became Coforge in May 2026.");
   assert.deepEqual(
     employer.clients.map((client) => client.company),
     ["OPIS · Dow Jones", "GoDaddy"],
@@ -162,13 +149,9 @@ test("keeps client and employer highlights available for the grouped card", () =
   ]);
   const employer = groups[0];
   const godaddy = employer.clients.find((client) => client.slug === "godaddy");
-  const opis = employer.clients.find(
-    (client) => client.slug === "opis-dow-jones",
-  );
+  const opis = employer.clients.find((client) => client.slug === "opis-dow-jones");
 
-  assert.deepEqual(visibleHighlights([employer.experience]), [
-    "Led the platform",
-  ]);
+  assert.deepEqual(visibleHighlights([employer.experience]), ["Led the platform"]);
   assert.deepEqual(visibleHighlights([godaddy]), ["Shipped Conversations"]);
   assert.deepEqual(visibleHighlights([opis]), ["Maintained pricing tools"]);
   assert.equal(experienceGroupMatches(employer, "conversations"), true);

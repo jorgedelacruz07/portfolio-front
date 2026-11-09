@@ -21,11 +21,7 @@ export function projectCardDescription(project: ProjectCopy): string | null {
     return description;
   }
 
-  if (
-    longDescription &&
-    normalize(longDescription) !== name &&
-    normalize(longDescription) !== normalize(description)
-  ) {
+  if (longDescription && normalize(longDescription) !== name && normalize(longDescription) !== normalize(description)) {
     return longDescription;
   }
 

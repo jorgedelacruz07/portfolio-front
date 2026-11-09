@@ -23,9 +23,7 @@ export const HomeProfile = ({ cmsProfile }: HomeProfileProps) => {
     shortBio: cmsProfile?.shortBio || profileFallback.shortBio,
     location: cmsProfile?.location || profileFallback.location,
     availability: cmsProfile?.availability || profileFallback.availability,
-    profileImage: cmsProfile?.profileImage?.src
-      ? cmsProfile.profileImage
-      : { src: profile.image },
+    profileImage: cmsProfile?.profileImage?.src ? cmsProfile.profileImage : { src: profile.image },
     resumeUrl: cmsProfile?.resumeUrl || profileFallback.resumeUrl,
     contactEmail: cmsProfile?.contactEmail || profileFallback.contactEmail,
   };
@@ -50,9 +48,7 @@ export const HomeProfile = ({ cmsProfile }: HomeProfileProps) => {
               <span className="h-2 w-2 rounded-full bg-emerald-500" />
               <span>{currentProfile.availability}</span>
             </div>
-            <span className="font-mono text-xs text-muted-foreground">
-              {currentProfile.location}
-            </span>
+            <span className="font-mono text-xs text-muted-foreground">{currentProfile.location}</span>
           </div>
 
           {/* Main Headline */}
@@ -60,9 +56,7 @@ export const HomeProfile = ({ cmsProfile }: HomeProfileProps) => {
             <h1 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
               {profileFallback.name}
             </h1>
-            <p className="text-lg font-medium text-foreground/90 sm:text-xl md:text-2xl">
-              {profileFallback.headline}
-            </p>
+            <p className="text-lg font-medium text-foreground/90 sm:text-xl md:text-2xl">{profileFallback.headline}</p>
             <p className="max-w-2xl text-sm sm:text-base leading-relaxed text-muted-foreground">
               {currentProfile.shortBio}
             </p>
@@ -71,10 +65,7 @@ export const HomeProfile = ({ cmsProfile }: HomeProfileProps) => {
           {/* Engineering Focus Areas */}
           <div className="flex flex-wrap gap-1.5 pt-0.5">
             {focusAreas.map((area) => (
-              <span
-                key={area}
-                className="craft-pill text-[0.6875rem] sm:text-xs"
-              >
+              <span key={area} className="craft-pill text-[0.6875rem] sm:text-xs">
                 {area}
               </span>
             ))}
@@ -84,9 +75,7 @@ export const HomeProfile = ({ cmsProfile }: HomeProfileProps) => {
           <div className="flex flex-wrap items-center gap-3 pt-1">
             <Button size="default" onClick={handleDownloadClick} asChild>
               <a
-                href={
-                  currentProfile.resumeUrl || "/documents/jorgedelacruz_cv.pdf"
-                }
+                href={currentProfile.resumeUrl || "/documents/jorgedelacruz_cv.pdf"}
                 download
                 className="flex items-center gap-2 font-mono text-xs font-semibold"
               >
@@ -95,10 +84,7 @@ export const HomeProfile = ({ cmsProfile }: HomeProfileProps) => {
               </a>
             </Button>
             <Button asChild size="default" variant="outline">
-              <a
-                href={`mailto:${currentProfile.contactEmail}`}
-                className="font-mono text-xs font-semibold"
-              >
+              <a href={`mailto:${currentProfile.contactEmail}`} className="font-mono text-xs font-semibold">
                 Get in touch
               </a>
             </Button>

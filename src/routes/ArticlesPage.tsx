@@ -2,14 +2,7 @@ import { useMemo, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import {
-  ArrowRight,
-  BookOpen,
-  Clock,
-  Newspaper,
-  Search,
-  X,
-} from "lucide-react";
+import { ArrowRight, BookOpen, Clock, Newspaper, Search, X } from "lucide-react";
 
 import { PageSkeleton } from "@/components/PageSkeleton";
 import { Badge } from "@/components/ui/badge";
@@ -55,12 +48,8 @@ export default function ArticlesPage() {
       if (searchQuery.trim()) {
         const query = searchQuery.toLowerCase().trim();
         const matchesTitle = article.title.toLowerCase().includes(query);
-        const matchesExcerpt = (article.excerpt || "")
-          .toLowerCase()
-          .includes(query);
-        const matchesType = (article.contentType || "")
-          .toLowerCase()
-          .includes(query);
+        const matchesExcerpt = (article.excerpt || "").toLowerCase().includes(query);
+        const matchesType = (article.contentType || "").toLowerCase().includes(query);
         return matchesTitle || matchesExcerpt || matchesType;
       }
 
@@ -79,20 +68,11 @@ export default function ArticlesPage() {
           <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-destructive/10 text-destructive">
             <X className="h-6 w-6" />
           </div>
-          <h1 className="text-2xl font-bold tracking-tight text-foreground">
-            Error loading articles
-          </h1>
+          <h1 className="text-2xl font-bold tracking-tight text-foreground">Error loading articles</h1>
           <p className="text-sm leading-relaxed text-muted-foreground">
-            {error instanceof Error
-              ? error.message
-              : "Unable to retrieve the articles catalog."}
+            {error instanceof Error ? error.message : "Unable to retrieve the articles catalog."}
           </p>
-          <Button
-            onClick={() => window.location.reload()}
-            variant="outline"
-            size="sm"
-            className="mt-2"
-          >
+          <Button onClick={() => window.location.reload()} variant="outline" size="sm" className="mt-2">
             Try Again
           </Button>
         </div>
@@ -109,10 +89,7 @@ export default function ArticlesPage() {
           content="Deep-dives into software architecture, systems engineering, distributed systems, and craft."
         />
         <link rel="canonical" href={`${PUBLIC_SITE_ORIGIN}/articles`} />
-        <meta
-          property="og:title"
-          content="Articles & Engineering Notes | Jorge de la Cruz"
-        />
+        <meta property="og:title" content="Articles & Engineering Notes | Jorge de la Cruz" />
         <meta
           property="og:description"
           content="Deep-dives into software architecture, systems engineering, distributed systems, and craft."
@@ -120,10 +97,7 @@ export default function ArticlesPage() {
         <meta property="og:type" content="website" />
         <meta property="og:url" content={`${PUBLIC_SITE_ORIGIN}/articles`} />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta
-          name="twitter:title"
-          content="Articles & Engineering Notes | Jorge de la Cruz"
-        />
+        <meta name="twitter:title" content="Articles & Engineering Notes | Jorge de la Cruz" />
         <meta
           name="twitter:description"
           content="Deep-dives into software architecture, systems engineering, distributed systems, and craft."
@@ -141,8 +115,7 @@ export default function ArticlesPage() {
             Articles & Engineering Notes
           </h1>
           <p className="max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">
-            Practical reflections, architectural case studies, and tutorials on
-            building reliable software systems.
+            Practical reflections, architectural case studies, and tutorials on building reliable software systems.
           </p>
         </div>
 
@@ -150,11 +123,7 @@ export default function ArticlesPage() {
         {articles.length > 0 ? (
           <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             {/* Type filter buttons */}
-            <div
-              className="flex flex-wrap items-center gap-1.5"
-              role="group"
-              aria-label="Filter articles by type"
-            >
+            <div className="flex flex-wrap items-center gap-1.5" role="group" aria-label="Filter articles by type">
               <Button
                 variant={selectedType === "all" ? "default" : "outline"}
                 size="sm"
@@ -163,19 +132,17 @@ export default function ArticlesPage() {
               >
                 All Types
               </Button>
-              {(Object.keys(CONTENT_TYPE_LABELS) as ArticleContentType[]).map(
-                (type) => (
-                  <Button
-                    key={type}
-                    variant={selectedType === type ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setSelectedType(type)}
-                    className="h-8 text-xs font-medium"
-                  >
-                    {CONTENT_TYPE_LABELS[type]}
-                  </Button>
-                ),
-              )}
+              {(Object.keys(CONTENT_TYPE_LABELS) as ArticleContentType[]).map((type) => (
+                <Button
+                  key={type}
+                  variant={selectedType === type ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setSelectedType(type)}
+                  className="h-8 text-xs font-medium"
+                >
+                  {CONTENT_TYPE_LABELS[type]}
+                </Button>
+              ))}
             </div>
 
             {/* Search bar */}
@@ -208,9 +175,7 @@ export default function ArticlesPage() {
             <div className="rounded-2xl border border-dashed border-border/80 bg-card/40 p-12 text-center">
               <Newspaper className="mx-auto h-10 w-10 text-muted-foreground/50" />
               <h2 className="mt-4 text-base font-semibold text-foreground">
-                {searchQuery || selectedType !== "all"
-                  ? "No articles found"
-                  : "Check back soon"}
+                {searchQuery || selectedType !== "all" ? "No articles found" : "Check back soon"}
               </h2>
               <p className="mt-1 text-sm text-muted-foreground">
                 {searchQuery || selectedType !== "all"
@@ -247,8 +212,7 @@ export default function ArticlesPage() {
                         variant="outline"
                         className="text-[11px] font-medium uppercase tracking-wider text-primary"
                       >
-                        {CONTENT_TYPE_LABELS[article.contentType] ||
-                          article.contentType}
+                        {CONTENT_TYPE_LABELS[article.contentType] || article.contentType}
                       </Badge>
                       <div className="flex items-center gap-1 text-xs text-muted-foreground">
                         <Clock className="h-3 w-3" />
@@ -257,18 +221,13 @@ export default function ArticlesPage() {
                     </div>
 
                     <h2 className="font-serif text-xl font-semibold tracking-tight text-foreground transition-colors group-hover:text-primary">
-                      <Link
-                        to={`/articles/${article.slug}`}
-                        className="focus:outline-none"
-                      >
+                      <Link to={`/articles/${article.slug}`} className="focus:outline-none">
                         <span className="absolute inset-0" aria-hidden="true" />
                         {article.title}
                       </Link>
                     </h2>
 
-                    <p className="line-clamp-3 text-sm leading-relaxed text-muted-foreground">
-                      {article.excerpt}
-                    </p>
+                    <p className="line-clamp-3 text-sm leading-relaxed text-muted-foreground">{article.excerpt}</p>
                   </div>
 
                   <div className="mt-6 flex items-center justify-between border-t border-border/40 pt-4 text-xs text-muted-foreground">

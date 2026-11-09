@@ -44,10 +44,7 @@ function DeferredSectionPlaceholder() {
       </div>
       <div className="grid gap-4 md:grid-cols-3">
         {Array.from({ length: 3 }, (_, index) => (
-          <div
-            key={index}
-            className="space-y-4 rounded-xl border border-border/40 bg-background/30 p-4"
-          >
+          <div key={index} className="space-y-4 rounded-xl border border-border/40 bg-background/30 p-4">
             <div className="h-5 w-2/3 motion-safe:animate-pulse rounded-lg bg-muted/70" />
             <div className="space-y-2">
               <div className="h-3 w-full motion-safe:animate-pulse rounded-lg bg-muted/60" />
@@ -120,16 +117,7 @@ function SectionLoadError({
 }
 
 export default function HomePage() {
-  const {
-    profile,
-    skills,
-    experiences,
-    projects,
-    isLoading,
-    error,
-    isFetching,
-    refetch,
-  } = useHomePageData();
+  const { profile, skills, experiences, projects, isLoading, error, isFetching, refetch } = useHomePageData();
   const retry = () => {
     void refetch();
   };

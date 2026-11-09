@@ -13,18 +13,9 @@ type HomeExperiencesProps = {
   experiences: TExperience[];
 };
 
-const ExperienceTimelineItem = ({
-  experience,
-  isLast,
-}: {
-  experience: TExperience;
-  isLast: boolean;
-}) => {
+const ExperienceTimelineItem = ({ experience, isLast }: { experience: TExperience; isLast: boolean }) => {
   return (
-    <motion.div
-      variants={homeMotion.item}
-      className="relative flex gap-3.5 sm:gap-5 pb-6 sm:pb-7 last:pb-0 group"
-    >
+    <motion.div variants={homeMotion.item} className="relative flex gap-3.5 sm:gap-5 pb-6 sm:pb-7 last:pb-0 group">
       {/* Continuous Vertical Timeline Track Spine */}
       {!isLast ? (
         <div
@@ -52,9 +43,7 @@ const ExperienceTimelineItem = ({
               </h3>
 
               <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm">
-                <span className="font-semibold text-foreground/90">
-                  {experience.company}
-                </span>
+                <span className="font-semibold text-foreground/90">{experience.company}</span>
                 {experience.companyFrom ? (
                   <>
                     <span className="text-border">•</span>
@@ -77,9 +66,7 @@ const ExperienceTimelineItem = ({
 
           {/* Job Description */}
           {experience.jobDescription ? (
-            <p className="text-xs sm:text-sm leading-relaxed text-muted-foreground">
-              {experience.jobDescription}
-            </p>
+            <p className="text-xs sm:text-sm leading-relaxed text-muted-foreground">{experience.jobDescription}</p>
           ) : null}
 
           {/* Technology Badges */}
@@ -102,11 +89,7 @@ const ExperienceTimelineItem = ({
                 size="sm"
                 className="h-7 font-mono text-xs text-muted-foreground hover:text-foreground hover:bg-secondary/60 -ml-2 px-2 gap-1.5"
               >
-                <a
-                  href={experience.companyUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+                <a href={experience.companyUrl} target="_blank" rel="noopener noreferrer">
                   <span>Company website</span>
                   <ExternalLink className="h-3 w-3" />
                 </a>
@@ -145,25 +128,14 @@ export const HomeExperiences = ({ experiences }: HomeExperiencesProps) => {
                 />
               )}
               <div className="relative z-10 shrink-0">
-                <CompanyLogo
-                  experience={group.logoExperience}
-                  className="h-8 w-8 sm:h-10 sm:w-10"
-                />
+                <CompanyLogo experience={group.logoExperience} className="h-8 w-8 sm:h-10 sm:w-10" />
               </div>
               <div className="craft-card min-w-0 flex-1 rounded-2xl p-4 sm:p-5">
-                <EmployerExperienceCard
-                  group={group}
-                  heading="h3"
-                  showLogo={false}
-                />
+                <EmployerExperienceCard group={group} heading="h3" showLogo={false} />
               </div>
             </motion.div>
           ) : (
-            <ExperienceTimelineItem
-              key={group.id}
-              experience={group.experience}
-              isLast={index === groups.length - 1}
-            />
+            <ExperienceTimelineItem key={group.id} experience={group.experience} isLast={index === groups.length - 1} />
           ),
         )}
       </div>

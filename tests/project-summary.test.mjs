@@ -11,10 +11,7 @@ test("omits a description that only repeats the project title", () => {
     }),
     null,
   );
-  assert.equal(
-    projectCardDescription({ name: "Legal Docs", description: " legal docs " }),
-    null,
-  );
+  assert.equal(projectCardDescription({ name: "Legal Docs", description: " legal docs " }), null);
 });
 
 test("keeps a distinct description and prefers it over a repeated title", () => {
