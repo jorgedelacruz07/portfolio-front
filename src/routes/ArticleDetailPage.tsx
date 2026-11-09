@@ -1,7 +1,15 @@
 import { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link, useParams } from "react-router-dom";
-import { ArrowLeft, Check, Clock, Copy, ExternalLink, Newspaper, Share2 } from "lucide-react";
+import {
+  ArrowLeft,
+  Check,
+  Clock,
+  Copy,
+  ExternalLink,
+  Newspaper,
+  Share2,
+} from "lucide-react";
 
 import { PageSkeleton } from "@/components/PageSkeleton";
 import { Badge } from "@/components/ui/badge";
@@ -9,7 +17,10 @@ import { Button } from "@/components/ui/button";
 import { LinkedinIcon } from "@/components/svgs/Linkedin";
 import { SafeMarkdown, isSafeUrl } from "@/components/articles/SafeMarkdown";
 import { useGetArticleBySlug } from "@/hooks";
-import { PUBLIC_SITE_ORIGIN, canonicalArticleUrl } from "@/lib/article-delivery";
+import {
+  PUBLIC_SITE_ORIGIN,
+  canonicalArticleUrl,
+} from "@/lib/article-delivery";
 import type { ArticleContentType } from "@/types/article";
 
 const CONTENT_TYPE_LABELS: Record<ArticleContentType, string> = {
@@ -48,20 +59,26 @@ export default function ArticleDetailPage() {
       <>
         <Helmet>
           <title>Article Not Found | Jorge de la Cruz</title>
-          <meta name="description" content="The requested article does not exist or has not been published." />
+          <meta
+            name="description"
+            content="The requested article does not exist or has not been published."
+          />
           <meta name="robots" content="noindex, nofollow" />
         </Helmet>
 
-        <div className="mx-auto flex min-h-[60vh] max-w-lg flex-col items-center justify-center px-4 text-center">
-          <div className="craft-card w-full space-y-4 rounded-2xl border border-border/80 bg-card/85 p-8 shadow-soft">
-            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-muted text-muted-foreground">
-              <Newspaper className="h-6 w-6" />
+        <div className="mx-auto flex min-h-[50vh] max-w-lg flex-col items-center justify-center px-4 py-16 text-center">
+          <div className="w-full space-y-4 rounded-lg border border-border bg-card p-8">
+            <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-md bg-muted text-muted-foreground">
+              <Newspaper className="h-5 w-5" />
             </div>
-            <p className="text-xs font-semibold uppercase tracking-[0.25em] text-primary/80">404</p>
-            <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">Article Not Found</h1>
+            <p className="text-sm text-muted-foreground">404</p>
+            <h1 className="text-2xl font-semibold tracking-tight text-foreground">
+              Article not found
+            </h1>
             <p className="text-sm leading-relaxed text-muted-foreground">
-              This article does not exist, may have been unpublished, or is currently an unapproved draft. Only
-              explicitly published technical revisions are available.
+              This article does not exist, may have been unpublished, or is
+              currently an unapproved draft. Only explicitly published technical
+              revisions are available.
             </p>
             <div className="pt-2">
               <Button asChild variant="outline" size="sm">
@@ -78,9 +95,13 @@ export default function ArticleDetailPage() {
   }
 
   const { publicContent } = article;
-  const canonicalUrl = canonicalArticleUrl(article.slug, publicContent.seo?.canonicalUrl);
+  const canonicalUrl = canonicalArticleUrl(
+    article.slug,
+    publicContent.seo?.canonicalUrl,
+  );
   const metaTitle = publicContent.seo?.metaTitle || publicContent.title;
-  const metaDescription = publicContent.seo?.metaDescription || publicContent.excerpt;
+  const metaDescription =
+    publicContent.seo?.metaDescription || publicContent.excerpt;
 
   const handleCopyLink = () => {
     if (navigator.clipboard) {
@@ -138,15 +159,17 @@ export default function ArticleDetailPage() {
         <meta name="twitter:description" content={metaDescription} />
 
         {/* Structured Data */}
-        <script type="application/ld+json">{JSON.stringify(structuredData)}</script>
+        <script type="application/ld+json">
+          {JSON.stringify(structuredData)}
+        </script>
       </Helmet>
 
-      <article className="mx-auto max-w-4xl px-4 py-8 sm:px-6 sm:py-12">
+      <article className="mx-auto w-full max-w-3xl px-4 py-10 sm:px-6 sm:py-14">
         {/* Navigation Breadcrumb */}
         <div className="mb-8">
           <Link
             to="/articles"
-            className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
+            className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
           >
             <ArrowLeft className="h-3.5 w-3.5" />
             <span>All Articles</span>
@@ -154,46 +177,54 @@ export default function ArticleDetailPage() {
         </div>
 
         {/* Article Header */}
-        <header className="space-y-4 border-b border-border/60 pb-8">
-          <div className="flex flex-wrap items-center gap-2.5">
-            <Badge variant="outline" className="text-xs font-medium uppercase tracking-wider text-primary">
+        <header className="space-y-4 border-b border-border pb-8">
+          <div className="flex flex-wrap items-center gap-2.5 text-sm text-muted-foreground">
+            <Badge>
               {CONTENT_TYPE_LABELS[article.contentType] || article.contentType}
             </Badge>
-            <div className="flex items-center gap-1 text-xs text-muted-foreground">
-              <Clock className="h-3.5 w-3.5" />
-              <span>{publicContent.readingTime?.minutes || 1} min read</span>
-            </div>
-            <span className="text-xs text-muted-foreground">•</span>
-            <span className="text-xs text-muted-foreground">{formatFullDate(article.publishedAt)}</span>
+            <span className="inline-flex items-center gap-1">
+              <Clock className="h-3.5 w-3.5" aria-hidden="true" />
+              {publicContent.readingTime?.minutes || 1} min read
+            </span>
+            <span aria-hidden="true">·</span>
+            <span>{formatFullDate(article.publishedAt)}</span>
           </div>
 
-          <h1 className="font-serif text-3xl font-semibold tracking-tight text-foreground sm:text-5xl">
+          <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
             {publicContent.title}
           </h1>
 
           {publicContent.subtitle ? (
-            <p className="text-lg text-muted-foreground sm:text-xl">{publicContent.subtitle}</p>
+            <p className="text-lg leading-relaxed text-muted-foreground">
+              {publicContent.subtitle}
+            </p>
           ) : null}
 
           {publicContent.excerpt ? (
-            <div className="mt-4 rounded-xl border-l-4 border-primary/70 bg-muted/20 p-4 text-sm leading-relaxed text-foreground/90 sm:text-base">
+            <p className="text-base leading-relaxed text-muted-foreground">
               {publicContent.excerpt}
-            </div>
+            </p>
           ) : null}
         </header>
 
         {/* Main Content Body */}
         <section className="py-8">
-          <SafeMarkdown content={publicContent.contentMarkdown} />
+          <SafeMarkdown
+            content={publicContent.contentMarkdown}
+            className="article-body"
+          />
         </section>
 
         {/* References and Sources Section */}
         {publicContent.references && publicContent.references.length > 0 ? (
           <section
-            className="mt-12 rounded-2xl border border-border/80 bg-card/60 p-6 shadow-soft"
+            className="mt-12 rounded-lg border border-border bg-card p-6"
             aria-labelledby="references-heading"
           >
-            <h2 id="references-heading" className="font-serif text-xl font-semibold tracking-tight text-foreground">
+            <h2
+              id="references-heading"
+              className="text-lg font-semibold tracking-tight text-foreground"
+            >
               References & Sources
             </h2>
             <ul className="mt-4 divide-y divide-border/40 text-sm">
@@ -212,7 +243,9 @@ export default function ArticleDetailPage() {
                         <ExternalLink className="h-3.5 w-3.5 text-muted-foreground group-hover:text-primary" />
                       </a>
                     ) : (
-                      <span className="font-medium text-foreground">{ref.title}</span>
+                      <span className="font-medium text-foreground">
+                        {ref.title}
+                      </span>
                     )}
                   </li>
                 );
@@ -224,10 +257,13 @@ export default function ArticleDetailPage() {
         {/* Claims Section */}
         {publicContent.claims && publicContent.claims.length > 0 ? (
           <section
-            className="mt-8 rounded-2xl border border-border/80 bg-card/60 p-6 shadow-soft"
+            className="mt-8 rounded-lg border border-border bg-card p-6"
             aria-labelledby="claims-heading"
           >
-            <h2 id="claims-heading" className="font-serif text-xl font-semibold tracking-tight text-foreground">
+            <h2
+              id="claims-heading"
+              className="text-lg font-semibold tracking-tight text-foreground"
+            >
               Verified Statements
             </h2>
             <div className="mt-4 space-y-3">
@@ -236,7 +272,7 @@ export default function ArticleDetailPage() {
                   key={claim.id}
                   className="flex items-start gap-3 rounded-xl border border-border/40 bg-muted/20 p-3 text-sm"
                 >
-                  <Badge variant="outline" className="mt-0.5 shrink-0 text-[10px] uppercase tracking-wider">
+                  <Badge variant="outline" className="mt-0.5 shrink-0">
                     {claim.kind}
                   </Badge>
                   <p className="text-foreground/90">{claim.statement}</p>
@@ -254,13 +290,33 @@ export default function ArticleDetailPage() {
           </div>
 
           <div className="flex items-center gap-2">
-            <Button asChild variant="outline" size="sm" className="h-8 gap-1.5 text-xs">
-              <a href={shareOnTwitterUrl} target="_blank" rel="noopener noreferrer" aria-label="Share on X">
+            <Button
+              asChild
+              variant="outline"
+              size="sm"
+              className="h-8 gap-1.5 text-xs"
+            >
+              <a
+                href={shareOnTwitterUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Share on X"
+              >
                 <span>Post on X</span>
               </a>
             </Button>
-            <Button asChild variant="outline" size="sm" className="h-8 gap-1.5 text-xs">
-              <a href={shareOnLinkedInUrl} target="_blank" rel="noopener noreferrer" aria-label="Share on LinkedIn">
+            <Button
+              asChild
+              variant="outline"
+              size="sm"
+              className="h-8 gap-1.5 text-xs"
+            >
+              <a
+                href={shareOnLinkedInUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Share on LinkedIn"
+              >
                 <LinkedinIcon width={14} height={14} />
                 <span>LinkedIn</span>
               </a>
@@ -272,7 +328,11 @@ export default function ArticleDetailPage() {
               className="h-8 gap-1.5 text-xs"
               aria-label="Copy canonical link"
             >
-              {copied ? <Check className="h-3.5 w-3.5 text-primary" /> : <Copy className="h-3.5 w-3.5" />}
+              {copied ? (
+                <Check className="h-3.5 w-3.5 text-primary" />
+              ) : (
+                <Copy className="h-3.5 w-3.5" />
+              )}
               <span>{copied ? "Copied" : "Copy link"}</span>
             </Button>
           </div>

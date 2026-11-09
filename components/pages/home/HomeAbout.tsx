@@ -12,24 +12,47 @@ const engineeringPillars = [
     title: "Frontend Architecture",
     description:
       "Building high-performance, accessible, and scalable client applications. Focused on Core Web Vitals, state management, and design system engineering.",
-    skills: ["React.js", "TypeScript", "Vite.js", "Tailwind CSS", "TanStack Query", "Framer Motion"],
+    skills: [
+      "React.js",
+      "TypeScript",
+      "Vite.js",
+      "Tailwind CSS",
+      "TanStack Query",
+      "Framer Motion",
+    ],
   },
   {
     title: "Backend & Systems",
     description:
       "Designing clean, maintainable APIs and data access layers. Experience with caching strategies, database optimization, and secure authentication.",
-    skills: ["Node.js", "Express.js", "MongoDB Native Driver", "MongoDB Atlas", "REST APIs", "CORS & Auth"],
+    skills: [
+      "Node.js",
+      "Express.js",
+      "MongoDB Native Driver",
+      "MongoDB Atlas",
+      "REST APIs",
+      "CORS & Auth",
+    ],
   },
   {
     title: "Cloud & Delivery",
     description:
       "Deploying scalable cloud workloads with automated CI/CD pipelines, containerization, and modern agentic engineering tooling.",
-    skills: ["AWS", "Docker", "GitHub Actions", "GCP Cloud Run", "Micro-services", "AI Workflows"],
+    skills: [
+      "AWS",
+      "Docker",
+      "GitHub Actions",
+      "GCP Cloud Run",
+      "Micro-services",
+      "AI Workflows",
+    ],
   },
 ];
 
 export const HomeAbout = ({ cmsSkills }: HomeAboutProps) => {
-  const dynamicSkills = cmsSkills?.length ? cmsSkills.filter((s) => s.visible !== false).map((s) => s.name) : [];
+  const dynamicSkills = cmsSkills?.length
+    ? cmsSkills.filter((s) => s.visible !== false).map((s) => s.name)
+    : [];
 
   return (
     <HomeSection
@@ -43,16 +66,20 @@ export const HomeAbout = ({ cmsSkills }: HomeAboutProps) => {
           <motion.div
             key={pillar.title}
             variants={homeMotion.item}
-            className="craft-card flex flex-col justify-between rounded-2xl p-5 sm:p-6"
+            className="flex flex-col justify-between rounded-lg border border-border bg-card p-5"
           >
             <div className="space-y-2.5">
-              <h3 className="text-base sm:text-lg font-bold tracking-tight text-foreground">{pillar.title}</h3>
-              <p className="text-xs sm:text-sm leading-relaxed text-muted-foreground">{pillar.description}</p>
+              <h3 className="text-base font-semibold tracking-tight text-foreground">
+                {pillar.title}
+              </h3>
+              <p className="text-sm leading-relaxed text-muted-foreground">
+                {pillar.description}
+              </p>
             </div>
 
             <div className="mt-4 flex flex-wrap gap-1.5 border-t border-border/60 pt-3">
               {pillar.skills.map((skill) => (
-                <span key={skill} className="craft-pill text-[0.6875rem]">
+                <span key={skill} className="craft-pill">
                   {skill}
                 </span>
               ))}
@@ -64,11 +91,13 @@ export const HomeAbout = ({ cmsSkills }: HomeAboutProps) => {
       {dynamicSkills.length > 0 ? (
         <motion.div
           variants={homeMotion.item}
-          className="mt-4 flex flex-wrap items-center gap-1.5 rounded-xl border border-border/70 bg-card/40 p-3"
+          className="flex flex-wrap items-center gap-1.5 rounded-lg border border-border p-4"
         >
-          <span className="font-mono text-xs font-semibold text-muted-foreground mr-1">All Technologies:</span>
+          <span className="mr-1 text-sm text-muted-foreground">
+            Technologies
+          </span>
           {dynamicSkills.map((skill) => (
-            <span key={skill} className="craft-pill text-[0.6875rem]">
+            <span key={skill} className="craft-pill">
               {skill}
             </span>
           ))}

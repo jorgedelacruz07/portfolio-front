@@ -9,13 +9,22 @@ import { cn, homeMotion } from "@/lib/utils";
 import type { TGithubCalendarWeek } from "@/types/github";
 
 const numberFormat = new Intl.NumberFormat("en");
-const levelClasses = ["bg-muted", "bg-primary/25", "bg-primary/50", "bg-primary/75", "bg-primary"];
+const levelClasses = [
+  "bg-muted",
+  "bg-primary/25",
+  "bg-primary/50",
+  "bg-primary/75",
+  "bg-primary",
+];
 
 /** Column-major cells (7 rows per week); weeks that do not start on Sunday are padded with empty cells. */
 function buildCells(weeks: TGithubCalendarWeek[]): Array<number | null> {
   return weeks.flatMap((week) => {
     const offset = new Date(`${week.date}T00:00:00Z`).getUTCDay();
-    const cells: Array<number | null> = [...Array<null>(offset).fill(null), ...week.counts];
+    const cells: Array<number | null> = [
+      ...Array<null>(offset).fill(null),
+      ...week.counts,
+    ];
     while (cells.length < 7) {
       cells.push(null);
     }
@@ -25,8 +34,11 @@ function buildCells(weeks: TGithubCalendarWeek[]): Array<number | null> {
 
 /** Maps a daily count to one of five levels using quartiles of the active days, so it adapts to any volume. */
 function buildLevelFn(cells: Array<number | null>) {
-  const active = cells.filter((count): count is number => count !== null && count > 0).sort((a, b) => a - b);
-  const at = (ratio: number) => active[Math.min(active.length - 1, Math.floor(active.length * ratio))] ?? 1;
+  const active = cells
+    .filter((count): count is number => count !== null && count > 0)
+    .sort((a, b) => a - b);
+  const at = (ratio: number) =>
+    active[Math.min(active.length - 1, Math.floor(active.length * ratio))] ?? 1;
   const [q1, q2, q3] = [at(0.25), at(0.5), at(0.75)];
 
   return (count: number) => {
@@ -38,10 +50,23 @@ function buildLevelFn(cells: Array<number | null>) {
   };
 }
 
-const Stat = ({ label, value, note }: { label: string; value: string; note?: string }) => (
-  <motion.div variants={homeMotion.item} className="craft-card rounded-2xl p-4 sm:p-5">
-    <p className="font-mono text-[0.6875rem] font-medium uppercase tracking-wider text-muted-foreground">{label}</p>
-    <p className="mt-1.5 text-2xl font-bold tracking-tight tabular-nums text-foreground sm:text-3xl">{value}</p>
+const Stat = ({
+  label,
+  value,
+  note,
+}: {
+  label: string;
+  value: string;
+  note?: string;
+}) => (
+  <motion.div
+    variants={homeMotion.item}
+    className="rounded-lg border border-border bg-card p-5"
+  >
+    <p className="text-sm text-muted-foreground">{label}</p>
+    <p className="mt-1.5 text-2xl font-bold tracking-tight tabular-nums text-foreground sm:text-3xl">
+      {value}
+    </p>
     {note ? <p className="mt-1 text-xs text-muted-foreground">{note}</p> : null}
   </motion.div>
 );
@@ -50,7 +75,10 @@ const Stat = ({ label, value, note }: { label: string; value: string; note?: str
 export const HomeGithub = () => {
   const { data, isError, isFetching, refetch } = useGithubStats();
 
-  const cells = useMemo(() => (data?.calendar ? buildCells(data.calendar) : []), [data?.calendar]);
+  const cells = useMemo(
+    () => (data?.calendar ? buildCells(data.calendar) : []),
+    [data?.calendar],
+  );
   const levelOf = useMemo(() => buildLevelFn(cells), [cells]);
 
   if (isError) {
@@ -67,7 +95,6 @@ export const HomeGithub = () => {
             void refetch();
           }}
           disabled={isFetching}
-          className="h-11 rounded-full px-5 font-mono text-xs font-semibold"
         >
           {isFetching ? "Trying again..." : "Try again"}
         </Button>
@@ -109,13 +136,22 @@ export const HomeGithub = () => {
             label="Repositories"
             value={numberFormat.format(repositories.total)}
             note={
-              repositories.activeLast30Days !== null ? `${repositories.activeLast30Days} active in 30 days` : undefined
+              repositories.activeLast30Days !== null
+                ? `${repositories.activeLast30Days} active in 30 days`
+                : undefined
             }
           />
-          <Stat label="Followers" value={numberFormat.format(data.followers)} note={`${data.following} following`} />
+          <Stat
+            label="Followers"
+            value={numberFormat.format(data.followers)}
+            note={`${data.following} following`}
+          />
         </div>
 
-        <motion.div variants={homeMotion.item} className="craft-card overflow-x-auto rounded-2xl p-4 sm:p-5">
+        <motion.div
+          variants={homeMotion.item}
+          className="overflow-x-auto rounded-lg border border-border bg-card p-5"
+        >
           <div
             role="img"
             aria-label={`Contribution calendar for the last 12 months: ${numberFormat.format(contributions.lastYear)} contributions`}
@@ -126,25 +162,38 @@ export const HomeGithub = () => {
               <span
                 key={index}
                 aria-hidden="true"
-                className={cn("aspect-square rounded-[2px]", count === null ? "" : levelClasses[levelOf(count)])}
+                className={cn(
+                  "aspect-square rounded-[2px]",
+                  count === null ? "" : levelClasses[levelOf(count)],
+                )}
               />
             ))}
           </div>
-          <div className="mt-3 flex items-center justify-end gap-1.5 font-mono text-[0.6875rem] text-muted-foreground">
+          <div className="mt-3 flex items-center justify-end gap-1.5 text-xs text-muted-foreground">
             <span>Less</span>
             {levelClasses.map((level) => (
-              <span key={level} aria-hidden="true" className={cn("h-[10px] w-[10px] rounded-[2px]", level)} />
+              <span
+                key={level}
+                aria-hidden="true"
+                className={cn("h-[10px] w-[10px] rounded-[2px]", level)}
+              />
             ))}
             <span>More</span>
           </div>
         </motion.div>
 
         {languages && languages.length > 0 ? (
-          <motion.div variants={homeMotion.item} className="craft-card space-y-3 rounded-2xl p-4 sm:p-5">
-            <p className="font-mono text-[0.6875rem] font-medium uppercase tracking-wider text-muted-foreground">
+          <motion.div
+            variants={homeMotion.item}
+            className="space-y-3 rounded-lg border border-border bg-card p-5"
+          >
+            <p className="text-sm text-muted-foreground">
               Languages across all repositories
             </p>
-            <div className="flex h-2 w-full overflow-hidden rounded-full bg-muted" aria-hidden="true">
+            <div
+              className="flex h-2 w-full overflow-hidden rounded-full bg-muted"
+              aria-hidden="true"
+            >
               {languages.map((language) => (
                 <span
                   key={language.name}
@@ -157,7 +206,7 @@ export const HomeGithub = () => {
             </div>
             <ul className="flex flex-wrap gap-1.5">
               {languages.map((language) => (
-                <li key={language.name} className="craft-pill text-[0.6875rem]">
+                <li key={language.name} className="craft-pill">
                   <span
                     aria-hidden="true"
                     className="h-2 w-2 rounded-full"
@@ -174,7 +223,7 @@ export const HomeGithub = () => {
 
         <motion.p
           variants={homeMotion.item}
-          className="flex flex-wrap items-center justify-between gap-2 font-mono text-xs text-muted-foreground"
+          className="flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground"
         >
           <span>Updated {updated}</span>
           <a

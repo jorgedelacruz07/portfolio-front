@@ -52,12 +52,12 @@ export const homeMotion = {
 } as const;
 
 export const homePageStyles = {
-  page: "relative mx-auto flex w-full max-w-5xl flex-col gap-10 sm:gap-12 md:gap-14 pb-8",
-  section: "relative space-y-5 sm:space-y-6",
-  sectionHeader: "space-y-1.5 sm:space-y-2",
-  eyebrow: "font-mono text-xs font-medium uppercase tracking-widest text-primary",
-  title: "text-2xl font-bold tracking-tight text-foreground sm:text-3xl lg:text-4xl",
-  description: "max-w-2xl text-sm sm:text-base leading-relaxed text-muted-foreground",
-  featuredGrid: "grid gap-5 md:grid-cols-2",
+  page: "mx-auto flex w-full max-w-5xl flex-col gap-14 px-4 py-10 sm:gap-16 sm:px-6 sm:py-14",
+  section: "space-y-6",
+  sectionHeader: "max-w-2xl space-y-2",
+  eyebrow: "text-sm text-muted-foreground",
+  title: "text-xl font-semibold tracking-tight text-foreground sm:text-2xl",
+  description: "text-sm leading-relaxed text-muted-foreground sm:text-base",
+  featuredGrid: "grid gap-4 md:grid-cols-2",
   metaBadge: "craft-pill",
 };

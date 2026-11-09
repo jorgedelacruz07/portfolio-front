@@ -13,90 +13,79 @@ type HomeExperiencesProps = {
   experiences: TExperience[];
 };
 
-const ExperienceTimelineItem = ({ experience, isLast }: { experience: TExperience; isLast: boolean }) => {
+const ExperienceTimelineItem = ({
+  experience,
+  isLast,
+}: {
+  experience: TExperience;
+  isLast: boolean;
+}) => {
   return (
-    <motion.div variants={homeMotion.item} className="relative flex gap-3.5 sm:gap-5 pb-6 sm:pb-7 last:pb-0 group">
-      {/* Continuous Vertical Timeline Track Spine */}
+    <motion.div
+      variants={homeMotion.item}
+      className="relative flex gap-4 pb-8 last:pb-0"
+    >
       {!isLast ? (
         <div
-          className="absolute left-[15px] sm:left-[19px] top-7 -bottom-2 w-px bg-gradient-to-b from-primary/30 via-border/70 to-border/20 group-hover:from-primary/50 transition-colors"
+          className="absolute bottom-0 left-5 top-10 w-px bg-border"
           aria-hidden="true"
         />
       ) : null}
 
-      {/* Timeline Node / Anchor */}
       <div className="relative z-10 shrink-0">
-        <CompanyLogo
-          experience={experience}
-          className="h-8 w-8 sm:h-10 sm:w-10 transition-all duration-300 group-hover:scale-105 group-hover:ring-2 group-hover:ring-primary/20"
-        />
+        <CompanyLogo experience={experience} className="h-10 w-10" />
       </div>
 
-      {/* Timeline Content Card */}
-      <div className="craft-card craft-card-interactive flex-1 overflow-hidden rounded-2xl p-4 sm:p-5 transition-all hover:border-primary/40">
-        <div className="space-y-2.5">
-          {/* Header Row: Role, Company, Location & Period */}
-          <div className="flex flex-col gap-1.5 sm:flex-row sm:items-start sm:justify-between">
-            <div className="space-y-0.5">
-              <h3 className="text-base sm:text-lg font-bold tracking-tight text-foreground transition-colors group-hover:text-primary">
-                {experience.jobTitle}
-              </h3>
-
-              <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm">
-                <span className="font-semibold text-foreground/90">{experience.company}</span>
-                {experience.companyFrom ? (
-                  <>
-                    <span className="text-border">•</span>
-                    <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
-                      <MapPin className="h-3 w-3 text-muted-foreground/70" />
-                      <span>{experience.companyFrom}</span>
-                    </span>
-                  </>
-                ) : null}
-              </div>
-            </div>
-
-            {/* Date Period Badge */}
-            <div className="shrink-0">
-              <span className="inline-flex items-center rounded-lg border border-border/70 bg-secondary/80 px-2 py-0.5 font-mono text-[0.6875rem] font-medium text-foreground/90">
-                {formatDateRange(experience.from, experience.to)}
-              </span>
-            </div>
-          </div>
-
-          {/* Job Description */}
-          {experience.jobDescription ? (
-            <p className="text-xs sm:text-sm leading-relaxed text-muted-foreground">{experience.jobDescription}</p>
-          ) : null}
-
-          {/* Technology Badges */}
-          {experience.technologies?.length ? (
-            <div className="flex flex-wrap gap-1.5 pt-0.5">
-              {experience.technologies.map((tech) => (
-                <span key={tech.id} className="craft-pill text-[0.6875rem]">
-                  {tech.name}
+      <div className="min-w-0 flex-1 space-y-2">
+        <div className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between">
+          <div>
+            <h3 className="text-base font-semibold tracking-tight text-foreground">
+              {experience.jobTitle}
+            </h3>
+            <p className="text-sm text-muted-foreground">
+              <span className="text-foreground">{experience.company}</span>
+              {experience.companyFrom ? (
+                <span className="inline-flex items-center gap-1">
+                  <span aria-hidden="true"> · </span>
+                  <MapPin className="h-3 w-3" aria-hidden="true" />
+                  {experience.companyFrom}
                 </span>
-              ))}
-            </div>
-          ) : null}
-
-          {/* Action Link */}
-          {experience.companyUrl ? (
-            <div className="pt-0.5">
-              <Button
-                asChild
-                variant="ghost"
-                size="sm"
-                className="h-7 font-mono text-xs text-muted-foreground hover:text-foreground hover:bg-secondary/60 -ml-2 px-2 gap-1.5"
-              >
-                <a href={experience.companyUrl} target="_blank" rel="noopener noreferrer">
-                  <span>Company website</span>
-                  <ExternalLink className="h-3 w-3" />
-                </a>
-              </Button>
-            </div>
-          ) : null}
+              ) : null}
+            </p>
+          </div>
+          <span className="text-xs tabular-nums text-muted-foreground">
+            {formatDateRange(experience.from, experience.to)}
+          </span>
         </div>
+
+        {experience.jobDescription ? (
+          <p className="text-sm leading-relaxed text-muted-foreground">
+            {experience.jobDescription}
+          </p>
+        ) : null}
+
+        {experience.technologies?.length ? (
+          <div className="flex flex-wrap gap-1.5">
+            {experience.technologies.map((tech) => (
+              <span key={tech.id} className="craft-pill">
+                {tech.name}
+              </span>
+            ))}
+          </div>
+        ) : null}
+
+        {experience.companyUrl ? (
+          <Button asChild variant="ghost" size="sm" className="-ml-2 h-8 px-2">
+            <a
+              href={experience.companyUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Company website
+              <ExternalLink className="ml-1.5 h-3 w-3" aria-hidden="true" />
+            </a>
+          </Button>
+        ) : null}
       </div>
     </motion.div>
   );
@@ -107,35 +96,47 @@ export const HomeExperiences = ({ experiences }: HomeExperiencesProps) => {
 
   return (
     <HomeSection
-      eyebrow="Career Journey"
-      title="Professional work & trajectory"
+      eyebrow="Experience"
+      title="Recent roles"
       description="Track record across product engineering, team collaboration, and full-stack software delivery."
       actionHref="/experiences"
       actionLabel="Full career history"
     >
-      <div className="relative pl-1 sm:pl-2 pt-2">
+      <div className="relative">
         {groups.map((group, index) =>
           group.clients.length > 0 ? (
             <motion.div
               key={group.id}
               variants={homeMotion.item}
-              className="relative flex gap-3.5 pb-6 last:pb-0 sm:gap-5 sm:pb-7"
+              className="relative flex gap-4 pb-8 last:pb-0"
             >
               {index === groups.length - 1 ? null : (
                 <div
-                  className="absolute bottom-0 left-[15px] top-7 w-px bg-gradient-to-b from-primary/30 via-border/70 to-border/20 sm:left-[19px]"
+                  className="absolute bottom-0 left-5 top-10 w-px bg-border"
                   aria-hidden="true"
                 />
               )}
               <div className="relative z-10 shrink-0">
-                <CompanyLogo experience={group.logoExperience} className="h-8 w-8 sm:h-10 sm:w-10" />
+                <CompanyLogo
+                  experience={group.logoExperience}
+                  className="h-10 w-10"
+                />
               </div>
-              <div className="craft-card min-w-0 flex-1 rounded-2xl p-4 sm:p-5">
-                <EmployerExperienceCard group={group} heading="h3" showLogo={false} />
+              <div className="min-w-0 flex-1">
+                <EmployerExperienceCard
+                  group={group}
+                  heading="h3"
+                  showLogo={false}
+                  compact
+                />
               </div>
             </motion.div>
           ) : (
-            <ExperienceTimelineItem key={group.id} experience={group.experience} isLast={index === groups.length - 1} />
+            <ExperienceTimelineItem
+              key={group.id}
+              experience={group.experience}
+              isLast={index === groups.length - 1}
+            />
           ),
         )}
       </div>

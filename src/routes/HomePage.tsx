@@ -34,7 +34,7 @@ type DeferredSectionProps = {
 function DeferredSectionPlaceholder() {
   return (
     <section
-      className="space-y-5 rounded-2xl border border-border/50 bg-card/20 p-4 sm:space-y-6 sm:p-6"
+      className="space-y-5 rounded-lg border border-border p-5"
       aria-hidden="true"
     >
       <div className="space-y-3 border-b border-border/40 pb-5">
@@ -44,7 +44,10 @@ function DeferredSectionPlaceholder() {
       </div>
       <div className="grid gap-4 md:grid-cols-3">
         {Array.from({ length: 3 }, (_, index) => (
-          <div key={index} className="space-y-4 rounded-xl border border-border/40 bg-background/30 p-4">
+          <div
+            key={index}
+            className="space-y-4 rounded-lg border border-border p-4"
+          >
             <div className="h-5 w-2/3 motion-safe:animate-pulse rounded-lg bg-muted/70" />
             <div className="space-y-2">
               <div className="h-3 w-full motion-safe:animate-pulse rounded-lg bg-muted/60" />
@@ -108,7 +111,6 @@ function SectionLoadError({
         variant="outline"
         onClick={onRetry}
         disabled={pending}
-        className="h-11 rounded-full px-5 font-mono text-xs font-semibold"
       >
         {pending ? "Trying again..." : "Try again"}
       </Button>
@@ -117,7 +119,16 @@ function SectionLoadError({
 }
 
 export default function HomePage() {
-  const { profile, skills, experiences, projects, isLoading, error, isFetching, refetch } = useHomePageData();
+  const {
+    profile,
+    skills,
+    experiences,
+    projects,
+    isLoading,
+    error,
+    isFetching,
+    refetch,
+  } = useHomePageData();
   const retry = () => {
     void refetch();
   };
@@ -134,24 +145,6 @@ export default function HomePage() {
 
       <div className={homePageStyles.page}>
         <HomeProfile cmsProfile={profile} />
-        <HomeAbout cmsSkills={skills} />
-
-        {error ? (
-          <SectionLoadError
-            eyebrow="Career Journey"
-            title="Experience could not be loaded"
-            onRetry={retry}
-            pending={isFetching}
-          />
-        ) : isLoading ? (
-          <DeferredSectionPlaceholder />
-        ) : experiences.length > 0 ? (
-          <DeferredSection>
-            <Suspense fallback={<DeferredSectionPlaceholder />}>
-              <HomeExperiences experiences={experiences} />
-            </Suspense>
-          </DeferredSection>
-        ) : null}
 
         {error ? (
           <SectionLoadError
@@ -167,6 +160,25 @@ export default function HomePage() {
             </Suspense>
           </DeferredSection>
         ) : null}
+
+        {error ? (
+          <SectionLoadError
+            eyebrow="Experience"
+            title="Experience could not be loaded"
+            onRetry={retry}
+            pending={isFetching}
+          />
+        ) : isLoading ? (
+          <DeferredSectionPlaceholder />
+        ) : experiences.length > 0 ? (
+          <DeferredSection>
+            <Suspense fallback={<DeferredSectionPlaceholder />}>
+              <HomeExperiences experiences={experiences} />
+            </Suspense>
+          </DeferredSection>
+        ) : null}
+
+        <HomeAbout cmsSkills={skills} />
 
         {error ? (
           <Suspense fallback={<DeferredSectionPlaceholder />}>

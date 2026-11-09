@@ -21,7 +21,7 @@ export const socialNetworks = [
 
 export const SocialNetworks: FC = () => {
   return (
-    <div className="flex flex-wrap justify-start gap-3">
+    <div className="flex flex-wrap justify-start gap-2">
       {socialNetworks.map((social) => {
         const Icon = social.icon;
         return (
@@ -29,11 +29,11 @@ export const SocialNetworks: FC = () => {
             key={social.id}
             href={social.url}
             target="_blank"
-            rel="noreferrer"
-            className="group inline-flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.04] text-foreground/80 transition-all duration-300 hover:border-primary/35 hover:bg-white/[0.08] hover:text-primary"
+            rel="noopener noreferrer"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-border bg-background text-muted-foreground hover:bg-muted hover:text-foreground"
             aria-label={`Visit my ${social.name} profile`}
           >
-            <Icon width={22} height={22} />
+            <Icon width={16} height={16} />
           </a>
         );
       })}
