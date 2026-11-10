@@ -70,9 +70,9 @@ export default {
         sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
+        display: ["Lato", "ui-sans-serif", "system-ui", "sans-serif"],
         sans: [
-          "Inter Variable",
-          "Inter",
+          "Lato",
           "ui-sans-serif",
           "system-ui",
           "-apple-system",
@@ -91,8 +91,10 @@ export default {
       },
       boxShadow: {
         subtle: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
-        card: "0 4px 20px -2px rgba(0, 0, 0, 0.25)",
-        "card-hover": "0 12px 32px -4px rgba(0, 0, 0, 0.4)",
+        card: "0 1px 2px hsl(224 28% 14% / 0.04), 0 14px 34px -26px hsl(224 28% 14% / 0.2)",
+        "card-hover":
+          "0 2px 4px hsl(224 28% 14% / 0.05), 0 22px 46px -28px hsl(224 28% 14% / 0.28)",
+        lift: "0 18px 40px -24px hsl(224 35% 10% / 0.35)",
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",

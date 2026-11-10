@@ -2,7 +2,10 @@ import type { ImgHTMLAttributes } from "react";
 import { clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
-type OptimizedImageProps = Omit<ImgHTMLAttributes<HTMLImageElement>, "fetchPriority"> & {
+type OptimizedImageProps = Omit<
+  ImgHTMLAttributes<HTMLImageElement>,
+  "fetchPriority"
+> & {
   src: string;
   alt: string;
   avifSrc?: string;

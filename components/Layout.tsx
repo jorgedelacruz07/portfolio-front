@@ -16,10 +16,10 @@ export const Layout = ({ children }: LayoutProps) => {
   const isAdmin = location.pathname.startsWith("/admin");
 
   return (
-    <div className="relative min-h-screen overflow-x-hidden bg-background text-foreground selection:bg-primary/20 selection:text-foreground">
+    <div className="relative min-h-screen overflow-x-clip bg-background text-foreground selection:bg-primary/20 selection:text-foreground">
       <PerformanceMonitor />
       <Helmet>
-        <title>Jorge de la Cruz - Senior Software Engineer</title>
+        <title>Jorge de la Cruz Padilla - Senior Software Engineer</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta
           name="description"
@@ -27,19 +27,19 @@ export const Layout = ({ children }: LayoutProps) => {
         />
         <meta
           name="keywords"
-          content="Jorge de la Cruz, Software Engineer, React, TypeScript, Node.js, Full Stack Developer, Web Development, AI Tools, Vite, Portfolio"
+          content="Jorge de la Cruz Padilla, Software Engineer, React, TypeScript, Node.js, Full Stack Developer, Web Development, AI Tools, Vite, Portfolio"
         />
         <meta name="author" content="Jorge de la Cruz Padilla" />
         <meta
           property="og:title"
-          content="Jorge de la Cruz | Senior Software Engineer"
+          content="Jorge de la Cruz Padilla | Senior Software Engineer"
         />
         <meta
           property="og:description"
           content="Senior Software Engineer specializing in React.js, TypeScript, Node.js, and Native MongoDB Architecture. Building fast, scalable full-stack products."
         />
         <meta property="og:type" content="website" />
-        <meta property="og:site_name" content="Jorge de la Cruz" />
+        <meta property="og:site_name" content="Jorge de la Cruz Padilla" />
         <meta property="og:url" content={currentUrl} />
         <meta
           property="og:image"
@@ -54,14 +54,14 @@ export const Layout = ({ children }: LayoutProps) => {
         <meta property="og:image:height" content="630" />
         <meta
           property="og:image:alt"
-          content="Jorge de la Cruz, Senior Software Engineer. AI-assisted delivery, security, and product thinking."
+          content="Jorge de la Cruz Padilla, Senior Software Engineer. AI-assisted delivery, security, and product thinking."
         />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:site" content="@jorgedelacruz07" />
         <meta name="twitter:creator" content="@jorgedelacruz07" />
         <meta
           name="twitter:title"
-          content="Jorge de la Cruz | Senior Software Engineer"
+          content="Jorge de la Cruz Padilla | Senior Software Engineer"
         />
         <meta
           name="twitter:description"
@@ -73,7 +73,7 @@ export const Layout = ({ children }: LayoutProps) => {
         />
         <meta
           name="twitter:image:alt"
-          content="Jorge de la Cruz, Senior Software Engineer. AI-assisted delivery, security, and product thinking."
+          content="Jorge de la Cruz Padilla, Senior Software Engineer. AI-assisted delivery, security, and product thinking."
         />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <link rel="canonical" href={currentUrl} />

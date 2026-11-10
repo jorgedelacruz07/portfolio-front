@@ -50,7 +50,12 @@ export function isEncoraCoforgeEmployer(experience: TExperience): boolean {
 export function isEncoraCoforgeClient(experience: TExperience): boolean {
   const slug = normalize(experience.slug);
   const company = normalize(experience.company);
-  return slug.includes("godaddy") || company.includes("godaddy") || slug.includes("opis") || company.includes("opis");
+  return (
+    slug.includes("godaddy") ||
+    company.includes("godaddy") ||
+    slug.includes("opis") ||
+    company.includes("opis")
+  );
 }
 
 function monthYear(value: string): string {
@@ -69,7 +74,9 @@ function earliestFrom(items: readonly TExperience[]): string {
 
 function latestTo(items: readonly TExperience[]): string | null {
   if (items.some((item) => !item.to)) return null;
-  const dates = items.map((item) => item.to).filter((value): value is string => Boolean(value));
+  const dates = items
+    .map((item) => item.to)
+    .filter((value): value is string => Boolean(value));
   dates.sort();
   return dates[dates.length - 1] ?? null;
 }
@@ -78,19 +85,28 @@ function byStartDescending(a: TExperience, b: TExperience): number {
   return a.from < b.from ? 1 : a.from > b.from ? -1 : 0;
 }
 
-function employerSummary(encora: TExperience | undefined, coforge: TExperience | undefined): string | null {
+function employerSummary(
+  encora: TExperience | undefined,
+  coforge: TExperience | undefined,
+): string | null {
   if (encora && coforge) {
     return `Employer since ${monthYear(encora.from)}. Encora became Coforge in ${monthYear(coforge.from)}.`;
   }
   return null;
 }
 
-function buildEmployerGroup(employers: TExperience[], clients: TExperience[]): ExperienceGroup {
+function buildEmployerGroup(
+  employers: TExperience[],
+  clients: TExperience[],
+): ExperienceGroup {
   const encora = employers.find(isEncora);
   const coforge = employers.find(isCoforge);
-  const current = coforge ?? employers.find((item) => !item.to) ?? employers[0] ?? clients[0];
+  const current =
+    coforge ?? employers.find((item) => !item.to) ?? employers[0] ?? clients[0];
   if (!current) {
-    throw new Error("Employer group requires an Encora, Coforge, or client record");
+    throw new Error(
+      "Employer group requires an Encora, Coforge, or client record",
+    );
   }
   const dated = employers.length > 0 ? employers : clients;
   const detailSource = coforge ?? encora;
@@ -126,12 +142,19 @@ function buildRoleGroup(experience: TExperience): ExperienceGroup {
   };
 }
 
-export function groupExperiences(experiences: readonly TExperience[]): ExperienceGroup[] {
+export function groupExperiences(
+  experiences: readonly TExperience[],
+): ExperienceGroup[] {
   const employers = experiences.filter(isEncoraCoforgeEmployer);
   const clients = experiences.filter(
-    (experience) => !isEncoraCoforgeEmployer(experience) && isEncoraCoforgeClient(experience),
+    (experience) =>
+      !isEncoraCoforgeEmployer(experience) && isEncoraCoforgeClient(experience),
   );
-  const consumed = new Set([...employers, ...clients].map((experience) => experience.id || experience.slug));
+  const consumed = new Set(
+    [...employers, ...clients].map(
+      (experience) => experience.id || experience.slug,
+    ),
+  );
   const groups: ExperienceGroup[] = [];
   let placedEmployer = false;
 
@@ -154,7 +177,9 @@ export function groupExperiences(experiences: readonly TExperience[]): Experienc
 }
 
 /** Trimmed, de-duplicated highlights in source order. */
-export function visibleHighlights(experiences: readonly TExperience[]): string[] {
+export function visibleHighlights(
+  experiences: readonly TExperience[],
+): string[] {
   const seen = new Set<string>();
   const highlights: string[] = [];
 
@@ -171,11 +196,65 @@ export function visibleHighlights(experiences: readonly TExperience[]): string[]
   return highlights;
 }
 
-export function previewExperienceGroups(experiences: readonly TExperience[], limit = 3): ExperienceGroup[] {
+export function previewExperienceGroups(
+  experiences: readonly TExperience[],
+  limit = 3,
+): ExperienceGroup[] {
   return groupExperiences(experiences).slice(0, limit);
 }
 
-export function experienceMatchesQuery(experience: TExperience, query: string): boolean {
+export type CareerSnapshot = {
+  years: number;
+  roles: number;
+  companies: number;
+  current: {
+    title: string;
+    company: string;
+  } | null;
+};
+
+/** Headline numbers for the hero. Derived from the same groups the timeline uses. */
+export function careerSnapshot(
+  experiences: readonly TExperience[],
+): CareerSnapshot | null {
+  const groups = groupExperiences(experiences);
+  if (groups.length === 0) return null;
+
+  const start = groups
+    .map((group) => group.from)
+    .filter(Boolean)
+    .sort()[0];
+  const startDate = start ? new Date(start) : null;
+  const years =
+    startDate && !Number.isNaN(startDate.getTime())
+      ? Math.max(
+          0,
+          Math.floor(
+            (Date.now() - startDate.getTime()) / (365.25 * 24 * 60 * 60 * 1000),
+          ),
+        )
+      : 0;
+
+  const companies = new Set(groups.map((group) => group.companyLabel));
+  const current = groups.find((group) => group.to === null) ?? groups[0];
+
+  return {
+    years,
+    roles: groups.length,
+    companies: companies.size,
+    current: current
+      ? {
+          title: current.jobTitle,
+          company: current.companyLabel,
+        }
+      : null,
+  };
+}
+
+export function experienceMatchesQuery(
+  experience: TExperience,
+  query: string,
+): boolean {
   const needle = query.trim().toLowerCase();
   if (!needle) return true;
   const haystack = [
@@ -193,11 +272,17 @@ export function experienceMatchesQuery(experience: TExperience, query: string): 
   return haystack.includes(needle);
 }
 
-export function experienceGroupMatches(group: ExperienceGroup, query: string, selectedTech?: string | null): boolean {
+export function experienceGroupMatches(
+  group: ExperienceGroup,
+  query: string,
+  selectedTech?: string | null,
+): boolean {
   if (selectedTech) {
     const tech = selectedTech.toLowerCase();
     const hasTech = group.sources.some((experience) =>
-      experience.technologies?.some((technology) => technology.name.toLowerCase() === tech),
+      experience.technologies?.some(
+        (technology) => technology.name.toLowerCase() === tech,
+      ),
     );
     if (!hasTech) return false;
   }
@@ -208,5 +293,7 @@ export function experienceGroupMatches(group: ExperienceGroup, query: string, se
   if (group.summary?.toLowerCase().includes(needle)) return true;
   if (group.jobTitle.toLowerCase().includes(needle)) return true;
   if (group.companyDetail?.toLowerCase().includes(needle)) return true;
-  return group.sources.some((experience) => experienceMatchesQuery(experience, needle));
+  return group.sources.some((experience) =>
+    experienceMatchesQuery(experience, needle),
+  );
 }

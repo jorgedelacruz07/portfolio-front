@@ -66,7 +66,9 @@ export const PerformanceMonitor = () => {
           metrics.ttfb = metric.value;
         });
 
-        (window as unknown as { __PERFORMANCE_METRICS__?: PerformanceMetrics }).__PERFORMANCE_METRICS__ = metrics;
+        (
+          window as unknown as { __PERFORMANCE_METRICS__?: PerformanceMetrics }
+        ).__PERFORMANCE_METRICS__ = metrics;
       })
       .catch((error) => {
         console.warn("Failed to load web-vitals:", error);

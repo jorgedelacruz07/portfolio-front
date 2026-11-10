@@ -7,6 +7,7 @@ import { HomeSection } from "@/components/pages/home/HomeSection";
 import { Button } from "@/components/ui/button";
 import { PageContainer } from "@/components/ui/page";
 import { useDeferredRender, useHomePageData } from "@/hooks";
+import { careerSnapshot } from "@/lib/experience-groups";
 import { cn } from "@/lib/utils";
 
 const HomeProjects = lazy(() =>
@@ -34,29 +35,28 @@ type DeferredSectionProps = {
 
 function DeferredSectionPlaceholder() {
   return (
-    <section
-      className="space-y-5 rounded-lg border border-border p-5"
-      aria-hidden="true"
-    >
-      <div className="space-y-3 border-b border-border/40 pb-5">
-        <div className="h-3 w-28 motion-safe:animate-pulse rounded-full bg-muted/70" />
-        <div className="h-7 w-3/4 max-w-md motion-safe:animate-pulse rounded-lg bg-muted/70" />
+    <section className="space-y-6" aria-hidden="true">
+      <div className="space-y-3 border-b border-border/80 pb-6">
+        <div className="h-3 w-32 motion-safe:animate-pulse rounded-full bg-muted/70" />
+        <div className="h-8 w-3/4 max-w-md motion-safe:animate-pulse rounded-lg bg-muted/70" />
         <div className="h-4 w-full max-w-xl motion-safe:animate-pulse rounded-lg bg-muted/60" />
       </div>
-      <div className="grid gap-4 md:grid-cols-3">
-        {Array.from({ length: 3 }, (_, index) => (
+      <div className="grid gap-5 md:grid-cols-2">
+        {Array.from({ length: 2 }, (_, index) => (
           <div
             key={index}
-            className="space-y-4 rounded-lg border border-border p-4"
+            className="space-y-4 rounded-2xl border border-border/80 bg-card p-2"
           >
-            <div className="h-5 w-2/3 motion-safe:animate-pulse rounded-lg bg-muted/70" />
-            <div className="space-y-2">
-              <div className="h-3 w-full motion-safe:animate-pulse rounded-lg bg-muted/60" />
-              <div className="h-3 w-5/6 motion-safe:animate-pulse rounded-lg bg-muted/60" />
-            </div>
-            <div className="flex gap-2">
-              <div className="h-5 w-14 motion-safe:animate-pulse rounded-full bg-muted/60" />
-              <div className="h-5 w-16 motion-safe:animate-pulse rounded-full bg-muted/60" />
+            <div className="space-y-3 p-4">
+              <div className="h-5 w-2/3 motion-safe:animate-pulse rounded-lg bg-muted/70" />
+              <div className="space-y-2">
+                <div className="h-3 w-full motion-safe:animate-pulse rounded-lg bg-muted/60" />
+                <div className="h-3 w-5/6 motion-safe:animate-pulse rounded-lg bg-muted/60" />
+              </div>
+              <div className="flex gap-2">
+                <div className="h-5 w-14 motion-safe:animate-pulse rounded-full bg-muted/60" />
+                <div className="h-5 w-16 motion-safe:animate-pulse rounded-full bg-muted/60" />
+              </div>
             </div>
           </div>
         ))}
@@ -93,16 +93,19 @@ function DeferredGithub() {
 function SectionLoadError({
   eyebrow,
   title,
+  index,
   onRetry,
   pending,
 }: {
   eyebrow: string;
   title: string;
+  index: string;
   onRetry: () => void;
   pending: boolean;
 }) {
   return (
     <HomeSection
+      index={index}
       eyebrow={eyebrow}
       title={title}
       description="This section could not be loaded. The rest of the page is still available."
@@ -130,6 +133,7 @@ export default function HomePage() {
     isFetching,
     refetch,
   } = useHomePageData();
+  const snapshot = careerSnapshot(experiences);
   const retry = () => {
     void refetch();
   };
@@ -137,20 +141,21 @@ export default function HomePage() {
   return (
     <>
       <Helmet>
-        <title>Jorge de la Cruz | Senior Software Engineer</title>
+        <title>Jorge de la Cruz Padilla | Senior Software Engineer</title>
         <meta
           name="description"
           content="Senior Software Engineer building full-stack products with React.js, Vite.js, Express.js, MongoDB, AWS, Docker, and AI-native workflows."
         />
       </Helmet>
 
-      <PageContainer className="flex flex-col gap-12">
-        <HomeProfile cmsProfile={profile} />
+      <PageContainer className="flex flex-col gap-10 sm:gap-16">
+        <HomeProfile cmsProfile={profile} snapshot={snapshot} />
 
         {error ? (
           <SectionLoadError
             eyebrow="Selected work"
             title="Projects could not be loaded"
+            index="01"
             onRetry={retry}
             pending={isFetching}
           />
@@ -166,6 +171,7 @@ export default function HomePage() {
           <SectionLoadError
             eyebrow="Experience"
             title="Experience could not be loaded"
+            index="02"
             onRetry={retry}
             pending={isFetching}
           />

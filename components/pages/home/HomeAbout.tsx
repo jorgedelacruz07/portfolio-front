@@ -1,25 +1,26 @@
-import { motion } from "framer-motion";
-
 import { HomeSection } from "@/components/pages/home/HomeSection";
-import { homeMotion } from "@/lib/utils";
 import type { TSkill } from "@/types/portfolio";
 
 type HomeAboutProps = {
   cmsSkills?: TSkill[];
 };
 
-const engineeringPillars = [
+const toolkit = [
   {
-    title: "Frontend",
-    skills: ["React.js", "TypeScript", "Vite.js", "Tailwind CSS"],
+    title: "Product & frontend",
+    items: ["React.js", "TypeScript", "Vite.js", "Next.js", "Tailwind CSS"],
   },
   {
-    title: "Backend",
-    skills: ["Node.js", "Express.js", "MongoDB", "REST APIs"],
+    title: "Backend & data",
+    items: ["Node.js", "Express.js", "MongoDB", "REST APIs", "SQL"],
   },
   {
-    title: "Cloud",
-    skills: ["AWS", "Docker", "GitHub Actions", "GCP Cloud Run"],
+    title: "Cloud & delivery",
+    items: ["AWS", "Docker", "GCP Cloud Run", "GitHub Actions", "CI/CD"],
+  },
+  {
+    title: "AI-assisted workflow",
+    items: ["Claude Code", "Codex", "Gemini", "Cursor"],
   },
 ];
 
@@ -30,39 +31,46 @@ export const HomeAbout = ({ cmsSkills }: HomeAboutProps) => {
         .map((skill) => skill.name)
     : [];
   const listed = new Set(
-    engineeringPillars.flatMap((pillar) =>
-      pillar.skills.map((skill) => skill.toLowerCase()),
-    ),
+    toolkit.flatMap((group) => group.items.map((skill) => skill.toLowerCase())),
   );
   const extraSkills = dynamicSkills.filter(
     (skill) => !listed.has(skill.toLowerCase()),
   );
 
   return (
-    <HomeSection id="about" eyebrow="Stack" title="Engineering pillars">
-      <div className="grid gap-4 sm:grid-cols-3">
-        {engineeringPillars.map((pillar) => (
-          <motion.div
-            key={pillar.title}
-            variants={homeMotion.item}
-            className="space-y-2"
+    <HomeSection
+      eyebrow="Capabilities"
+      title="The toolkit behind the work"
+      description="A pragmatic stack: strong typing, simple infrastructure, and AI where it removes real work instead of adding noise."
+    >
+      <dl className="divide-y divide-border/70 border-b border-border/70">
+        {toolkit.map((group) => (
+          <div
+            key={group.title}
+            className="grid gap-1.5 py-4 sm:grid-cols-[14rem_1fr] sm:gap-8 sm:py-6"
           >
-            <h3 className="text-sm font-medium text-foreground">
-              {pillar.title}
-            </h3>
-            <p className="text-sm leading-relaxed text-muted-foreground">
-              {pillar.skills.join(", ")}
-            </p>
-          </motion.div>
+            <dt className="font-display text-lg font-semibold tracking-tight text-foreground">
+              {group.title}
+            </dt>
+            <dd className="flex flex-wrap gap-x-5 gap-y-1.5 text-[0.9375rem] text-muted-foreground">
+              {group.items.map((item) => (
+                <span
+                  key={item}
+                  className="transition-colors hover:text-primary"
+                >
+                  {item}
+                </span>
+              ))}
+            </dd>
+          </div>
         ))}
-      </div>
+      </dl>
+
       {extraSkills.length > 0 ? (
-        <motion.p
-          variants={homeMotion.item}
-          className="text-sm text-muted-foreground"
-        >
-          Also {extraSkills.join(", ")}
-        </motion.p>
+        <p className="pt-5 text-sm text-muted-foreground">
+          Also working with{" "}
+          <span className="text-foreground">{extraSkills.join(", ")}</span>.
+        </p>
       ) : null}
     </HomeSection>
   );

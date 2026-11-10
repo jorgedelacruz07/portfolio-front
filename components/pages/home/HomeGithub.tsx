@@ -1,82 +1,265 @@
-import { ArrowUpRight } from "lucide-react";
+import { useMemo } from "react";
+import { ArrowUpRight, GitBranch } from "lucide-react";
 
 import { HomeSection } from "@/components/pages/home/HomeSection";
 import { Button } from "@/components/ui/button";
 import { useGithubStats } from "@/hooks";
+import { cn } from "@/lib/utils";
 import { safeHref } from "@/lib/safe-href";
+import type { TGithubCalendarWeek } from "@/types/github";
 
 const numberFormat = new Intl.NumberFormat("en");
+const contributionLevels = [
+  "bg-muted",
+  "bg-emerald-500/20 dark:bg-emerald-400/20",
+  "bg-emerald-500/40 dark:bg-emerald-400/40",
+  "bg-emerald-500/65 dark:bg-emerald-400/65",
+  "bg-emerald-500/90 dark:bg-emerald-400/90",
+];
 
-const Stat = ({ label, value }: { label: string; value: string }) => (
-  <div className="min-w-0">
-    <p className="text-xs text-muted-foreground">{label}</p>
-    <p className="mt-1 text-lg font-semibold tabular-nums tracking-tight text-foreground">
-      {value}
-    </p>
-  </div>
-);
+/** Pad partial calendar weeks so every column contains seven days. */
+function buildCells(weeks: TGithubCalendarWeek[]): Array<number | null> {
+  return weeks.flatMap((week) => {
+    const offset = new Date(`${week.date}T00:00:00Z`).getUTCDay();
+    const cells: Array<number | null> = [
+      ...Array<null>(offset).fill(null),
+      ...week.counts,
+    ];
+    while (cells.length < 7) cells.push(null);
+    return cells;
+  });
+}
 
-/** Compact summary. The full calendar and language breakdown stay on GitHub. */
+/** Adapt contribution colors to the activity range in this snapshot. */
+function levelForCells(cells: Array<number | null>) {
+  const active = cells
+    .filter((count): count is number => count !== null && count > 0)
+    .sort((a, b) => a - b);
+  const threshold = (ratio: number) =>
+    active[Math.min(active.length - 1, Math.floor(active.length * ratio))] ?? 1;
+  const [q1, q2, q3] = [threshold(0.25), threshold(0.5), threshold(0.75)];
+
+  return (count: number) => {
+    if (count <= 0) return 0;
+    if (count <= q1) return 1;
+    if (count <= q2) return 2;
+    if (count <= q3) return 3;
+    return 4;
+  };
+}
+
+function Stat({
+  label,
+  value,
+  note,
+}: {
+  label: string;
+  value: string;
+  note: string;
+}) {
+  return (
+    <div className="px-4 py-5 sm:px-5">
+      <p className="mono-label text-muted-foreground">{label}</p>
+      <p className="mt-2 text-2xl font-bold tracking-tight tabular-nums text-foreground sm:text-3xl">
+        {value}
+      </p>
+      <p className="mt-1 text-xs text-muted-foreground">{note}</p>
+    </div>
+  );
+}
+
 export const HomeGithub = () => {
   const { data, isError, isFetching, refetch } = useGithubStats();
+  const cells = useMemo(
+    () => (data?.calendar ? buildCells(data.calendar) : []),
+    [data?.calendar],
+  );
+  const levelOf = useMemo(() => levelForCells(cells), [cells]);
 
   if (isError) {
     return (
       <HomeSection
-        eyebrow="GitHub"
-        title="GitHub activity could not be loaded"
-        description="This section could not be loaded. The rest of the page is still available."
+        index="04"
+        eyebrow="Build in public"
+        title="GitHub activity"
+        description="The latest contribution snapshot is temporarily unavailable."
       >
         <Button
           type="button"
           variant="outline"
-          onClick={() => {
-            void refetch();
-          }}
+          onClick={() => void refetch()}
           disabled={isFetching}
         >
-          {isFetching ? "Trying again..." : "Try again"}
+          {isFetching ? "Refreshing…" : "Try again"}
         </Button>
       </HomeSection>
     );
   }
 
-  if (!data?.contributions) {
-    return null;
-  }
+  if (!data?.contributions) return null;
 
-  const { contributions, streaks, repositories } = data;
+  const { contributions, streaks, repositories, languages } = data;
+  const profileUrl = safeHref(data.url);
+  const updated = new Intl.DateTimeFormat("en", {
+    month: "short",
+    day: "numeric",
+  }).format(new Date(data.updatedAt));
 
   return (
-    <HomeSection id="github-activity" eyebrow="GitHub" title="Activity">
-      <div className="flex flex-col gap-4 border-y border-border py-4 sm:flex-row sm:items-end sm:justify-between">
-        <div className="grid flex-1 grid-cols-2 gap-4 sm:grid-cols-4">
-          <Stat
-            label="Contributions"
-            value={numberFormat.format(contributions.lastYear)}
-          />
-          <Stat label="Streak" value={streaks ? `${streaks.current}d` : "–"} />
-          <Stat
-            label="Repositories"
-            value={numberFormat.format(repositories.total)}
-          />
-          <Stat label="Followers" value={numberFormat.format(data.followers)} />
-        </div>
-        {safeHref(data.url) ? (
-          <a
-            href={safeHref(data.url) ?? undefined}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-sm text-foreground underline-offset-4 hover:underline"
-          >
-            View on GitHub
-            <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
-          </a>
-        ) : (
-          <span className="break-all text-sm text-muted-foreground">
-            {data.url}
+    <HomeSection
+      id="github-activity"
+      index="04"
+      eyebrow="Build in public"
+      title="GitHub activity"
+      description="A snapshot of what I’ve been building and contributing to."
+    >
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <p className="text-sm text-muted-foreground">
+          Updated {updated}{" "}
+          <span className="mx-1.5 text-border" aria-hidden="true">
+            ·
           </span>
-        )}
+          Private repositories are included in totals only.
+        </p>
+        {profileUrl ? (
+          <Button asChild variant="outline" size="sm">
+            <a href={profileUrl} target="_blank" rel="noopener noreferrer">
+              <GitBranch className="mr-2 h-4 w-4" aria-hidden="true" />
+              View GitHub profile
+              <ArrowUpRight className="ml-1.5 h-3.5 w-3.5" aria-hidden="true" />
+            </a>
+          </Button>
+        ) : null}
+      </div>
+
+      <div className="mt-4 grid grid-cols-2 divide-x divide-y divide-border/70 overflow-hidden rounded-2xl border border-border/80 bg-card/60 sm:grid-cols-4 sm:divide-y-0">
+        <Stat
+          label="Contributions"
+          value={numberFormat.format(contributions.lastYear)}
+          note={`Last year · ${numberFormat.format(contributions.private)} private`}
+        />
+        <Stat
+          label="Current streak"
+          value={streaks ? `${streaks.current} days` : "–"}
+          note={
+            streaks ? `Personal best: ${streaks.longest} days` : "GitHub streak"
+          }
+        />
+        <Stat
+          label="Repositories"
+          value={numberFormat.format(repositories.total)}
+          note={
+            repositories.activeLast30Days === null
+              ? "Across my account"
+              : `${repositories.activeLast30Days} active this month`
+          }
+        />
+        <Stat
+          label="Followers"
+          value={numberFormat.format(data.followers)}
+          note={`${data.following} following`}
+        />
+      </div>
+
+      <div className="mt-7 grid gap-7 lg:grid-cols-[minmax(0,1.6fr)_minmax(15rem,0.8fr)]">
+        <div className="min-w-0">
+          <div className="flex flex-wrap items-baseline justify-between gap-2">
+            <h3 className="font-medium text-foreground">
+              Contribution activity
+            </h3>
+            <span className="text-xs text-muted-foreground">
+              Last 12 months
+            </span>
+          </div>
+          {cells.length ? (
+            <>
+              <div
+                className="mt-4 overflow-x-auto pb-2"
+                role="img"
+                aria-label={`Contribution calendar for the last 12 months: ${numberFormat.format(contributions.lastYear)} contributions`}
+              >
+                <div
+                  className="grid min-w-[590px] max-w-[56rem] grid-flow-col grid-rows-7 gap-[3px]"
+                  style={{ gridAutoColumns: "minmax(0, 1fr)" }}
+                >
+                  {cells.map((count, index) => (
+                    <span
+                      key={index}
+                      aria-hidden="true"
+                      className={cn(
+                        "aspect-square rounded-[3px]",
+                        count === null
+                          ? "bg-transparent"
+                          : contributionLevels[levelOf(count)],
+                      )}
+                    />
+                  ))}
+                </div>
+              </div>
+              <div className="flex items-center justify-end gap-1.5 text-[0.6875rem] text-muted-foreground">
+                <span className="mr-1">Less</span>
+                {contributionLevels.map((level) => (
+                  <span
+                    key={level}
+                    aria-hidden="true"
+                    className={cn("h-2.5 w-2.5 rounded-[3px]", level)}
+                  />
+                ))}
+                <span className="ml-1">More</span>
+              </div>
+            </>
+          ) : (
+            <p className="mt-4 text-sm text-muted-foreground">
+              The calendar is being refreshed. Summary statistics are available
+              above.
+            </p>
+          )}
+        </div>
+
+        <div className="border-t border-border/70 pt-5 lg:border-l lg:border-t-0 lg:pl-6 lg:pt-0">
+          <h3 className="font-medium text-foreground">Languages</h3>
+          <p className="mt-1 text-xs text-muted-foreground">
+            Across public repositories
+          </p>
+          {languages?.length ? (
+            <>
+              <div
+                className="mt-4 flex h-1.5 w-full overflow-hidden rounded-full bg-muted"
+                aria-hidden="true"
+              >
+                {languages.map((language) => (
+                  <span
+                    key={language.name}
+                    style={{
+                      width: `${language.percent}%`,
+                      backgroundColor: language.color ?? "#64748b",
+                    }}
+                  />
+                ))}
+              </div>
+              <ul className="mt-4 flex flex-wrap gap-x-4 gap-y-2">
+                {languages.map((language) => (
+                  <li
+                    key={language.name}
+                    className="inline-flex items-center gap-1.5 text-xs text-muted-foreground"
+                  >
+                    <span
+                      className="h-2 w-2 rounded-full"
+                      style={{ backgroundColor: language.color ?? "#64748b" }}
+                      aria-hidden="true"
+                    />
+                    <span className="text-foreground">{language.name}</span>
+                    <span>{language.percent}%</span>
+                  </li>
+                ))}
+              </ul>
+            </>
+          ) : (
+            <p className="mt-3 text-sm text-muted-foreground">
+              Language data will appear with the next complete snapshot.
+            </p>
+          )}
+        </div>
       </div>
     </HomeSection>
   );

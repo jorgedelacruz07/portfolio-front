@@ -7,7 +7,10 @@ export default function SocialOAuthCallbackPage() {
   const [status, setStatus] = useState("Completing account connection…");
   const [accountId, setAccountId] = useState("");
   const startedRef = useRef(false);
-  const provider = routeProvider === "linkedin" || routeProvider === "x" ? routeProvider : null;
+  const provider =
+    routeProvider === "linkedin" || routeProvider === "x"
+      ? routeProvider
+      : null;
 
   useEffect(() => {
     if (startedRef.current) return;
@@ -28,15 +31,24 @@ export default function SocialOAuthCallbackPage() {
     let active = true;
     adminApi
       .getSession()
-      .then(() => adminApi.completeSocialOAuth(provider, { code, state, error }))
+      .then(() =>
+        adminApi.completeSocialOAuth(provider, { code, state, error }),
+      )
       .then((result) => {
         if (active) {
-          setStatus(`${provider === "x" ? "X" : "LinkedIn"} account connected.`);
+          setStatus(
+            `${provider === "x" ? "X" : "LinkedIn"} account connected.`,
+          );
           setAccountId(result.accountId);
         }
       })
       .catch((reason: unknown) => {
-        if (active) setStatus(reason instanceof Error ? reason.message : "Could not complete account connection.");
+        if (active)
+          setStatus(
+            reason instanceof Error
+              ? reason.message
+              : "Could not complete account connection.",
+          );
       });
 
     return () => {
@@ -46,8 +58,14 @@ export default function SocialOAuthCallbackPage() {
 
   return (
     <main className="mx-auto flex min-h-[60vh] max-w-xl flex-col items-center justify-center gap-4 px-4 text-center">
-      <h1 className="text-xl font-bold text-foreground">Social account connection</h1>
-      <p role="status" aria-live="polite" className="text-sm text-muted-foreground">
+      <h1 className="text-xl font-bold text-foreground">
+        Social account connection
+      </h1>
+      <p
+        role="status"
+        aria-live="polite"
+        className="text-sm text-muted-foreground"
+      >
         {status}
       </p>
       {accountId ? (
@@ -55,7 +73,10 @@ export default function SocialOAuthCallbackPage() {
           Account ID to pin in the server environment: {accountId}
         </p>
       ) : null}
-      <Link to="/admin" className="rounded-md border border-border px-4 py-2 text-sm text-foreground hover:bg-muted">
+      <Link
+        to="/admin"
+        className="rounded-md border border-border px-4 py-2 text-sm text-foreground hover:bg-muted"
+      >
         Return to admin
       </Link>
     </main>

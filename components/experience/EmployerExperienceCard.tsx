@@ -1,4 +1,4 @@
-import { CheckCircle2, ExternalLink, MapPin } from "lucide-react";
+import { ExternalLink, MapPin } from "lucide-react";
 
 import { CompanyLogo } from "@/components/CompanyLogo";
 import { Button } from "@/components/ui/button";
@@ -22,22 +22,40 @@ type EmployerExperienceCardProps = {
   className?: string;
 };
 
+function LocationLabel({
+  location,
+  className,
+}: {
+  location: string;
+  className?: string;
+}) {
+  return (
+    <p
+      className={cn(
+        "inline-flex items-center gap-1.5 text-xs text-muted-foreground",
+        className,
+      )}
+    >
+      <MapPin className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+      <span>{location}</span>
+    </p>
+  );
+}
+
 function HighlightList({ highlights }: { highlights: string[] }) {
   if (!highlights.length) return null;
 
   return (
-    <div className="space-y-2">
-      <p className="text-sm font-medium text-foreground">
-        Key responsibilities
-      </p>
+    <div className="space-y-3">
+      <p className="mono-label text-muted-foreground">Key responsibilities</p>
       <ul className="grid gap-2 sm:grid-cols-2">
         {highlights.map((highlight, index) => (
           <li
             key={`${index}-${highlight}`}
-            className="flex items-start gap-2 text-sm leading-relaxed text-foreground"
+            className="flex items-start gap-2.5 text-sm leading-relaxed text-foreground/85"
           >
-            <CheckCircle2
-              className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary"
+            <span
+              className="mt-2 h-1 w-1 shrink-0 rounded-full bg-primary"
               aria-hidden="true"
             />
             <span>{highlight}</span>
@@ -65,6 +83,7 @@ function TechnologyList({
             key={tech.id}
             type="button"
             onClick={() => onSelectTech(tech.name)}
+            aria-label={`Filter by ${tech.name}`}
             className={badgeVariants({ variant: "secondary" })}
           >
             {tech.name}
@@ -99,30 +118,34 @@ function ClientEngagement({
   const companyHref = safeHref(client.companyUrl);
 
   return (
-    <li className="rounded-xl border border-border/70 bg-background/40 p-3 sm:p-4">
-      <div className="flex items-start gap-3">
-        <CompanyLogo experience={client} className="h-9 w-9" />
+    <li className="relative rounded-xl border border-border/70 bg-background/50 p-4 transition-colors hover:border-primary/25 sm:p-5">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start">
+        <CompanyLogo experience={client} className="h-9 w-9 shrink-0" />
+
         <div className="min-w-0 flex-1 space-y-2">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="rounded-md border border-border bg-muted px-1.5 py-0.5 text-xs text-muted-foreground">
-              Client
-            </span>
-            <Heading className="text-sm font-semibold tracking-tight text-foreground sm:text-base">
-              {client.company}
-            </Heading>
-            <span className="text-xs tabular-nums text-muted-foreground">
+          <div className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4">
+            <div className="flex min-w-0 flex-wrap items-center gap-2">
+              <span className="rounded border border-border/80 bg-muted px-1.5 py-0.5 text-[0.625rem] font-medium uppercase tracking-[0.12em] text-muted-foreground">
+                Client
+              </span>
+              <Heading className="text-base font-semibold tracking-[-0.02em] text-foreground">
+                {client.company}
+              </Heading>
+            </div>
+            <span className="mono-label shrink-0 text-muted-foreground">
               {formatDateRange(client.from, client.to)}
             </span>
           </div>
-          <p className="text-sm font-medium text-foreground/90">
-            {client.jobTitle}
-          </p>
-          {client.companyFrom ? (
-            <p className="inline-flex items-center gap-1 text-xs text-muted-foreground">
-              <MapPin className="h-3 w-3" aria-hidden="true" />
-              <span>{client.companyFrom}</span>
+
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+            <p className="text-sm font-medium text-foreground/90">
+              {client.jobTitle}
             </p>
-          ) : null}
+            {client.companyFrom ? (
+              <LocationLabel location={client.companyFrom} />
+            ) : null}
+          </div>
+
           {showDetail ? (
             <p className="text-xs leading-relaxed text-muted-foreground">
               {companyDetail}
@@ -136,17 +159,15 @@ function ClientEngagement({
           <HighlightList highlights={visibleHighlights([client])} />
           <TechnologyList experience={client} onSelectTech={onSelectTech} />
           {companyHref ? (
-            <Button
-              asChild
-              variant="ghost"
-              size="sm"
-              className="-ml-2 h-8 px-2"
+            <a
+              href={companyHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-xs font-medium text-primary hover-underline"
             >
-              <a href={companyHref} target="_blank" rel="noopener noreferrer">
-                <span>Company website</span>
-                <ExternalLink className="h-3 w-3" aria-hidden="true" />
-              </a>
-            </Button>
+              <span>Company website</span>
+              <ExternalLink className="h-3 w-3" aria-hidden="true" />
+            </a>
           ) : client.companyUrl ? (
             <p className="break-all text-sm text-muted-foreground">
               {client.companyUrl}
@@ -176,39 +197,47 @@ export function EmployerExperienceCard({
   const employerHighlights = visibleHighlights(
     group.sources.filter((source) => !clientIds.has(source.id || source.slug)),
   );
+  const isCurrent = group.to === null;
+  const location = group.logoExperience.companyFrom;
 
   return (
-    <article className={cn("min-w-0 space-y-4", className)}>
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-        <div className="flex min-w-0 items-start gap-3">
+    <article className={cn("min-w-0 space-y-5", className)}>
+      <header className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-6">
+        <div className="flex min-w-0 items-start gap-4">
           {showLogo ? (
             <CompanyLogo
               experience={group.logoExperience}
-              className="h-11 w-11"
+              className="h-11 w-11 shrink-0"
             />
           ) : null}
-          <div className="min-w-0 space-y-1">
-            <Title className="text-lg font-semibold tracking-tight text-foreground">
-              {group.companyLabel}
-            </Title>
+          <div className="min-w-0 space-y-1.5">
+            <div className="flex flex-wrap items-center gap-2">
+              <Title className="text-xl font-bold leading-tight tracking-[-0.03em] text-foreground sm:text-2xl">
+                {group.companyLabel}
+              </Title>
+              {isCurrent ? (
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-600/20 bg-emerald-500/[0.07] px-2 py-0.5 text-[0.625rem] font-medium text-emerald-800 dark:border-emerald-400/20 dark:text-emerald-300">
+                  <span
+                    className="h-1 w-1 rounded-full bg-emerald-500"
+                    aria-hidden="true"
+                  />
+                  Current
+                </span>
+              ) : null}
+            </div>
             <p className="text-sm font-medium text-foreground/90">
               {group.jobTitle}
             </p>
-            {group.logoExperience.companyFrom ? (
-              <p className="inline-flex items-center gap-1 text-xs text-muted-foreground">
-                <MapPin className="h-3.5 w-3.5" aria-hidden="true" />
-                <span>{group.logoExperience.companyFrom}</span>
-              </p>
-            ) : null}
+            {location ? <LocationLabel location={location} /> : null}
           </div>
         </div>
-        <span className="w-fit text-xs tabular-nums text-muted-foreground">
+        <span className="mono-label shrink-0 text-muted-foreground sm:pt-1.5 sm:text-right">
           {formatDateRange(group.from, group.to)}
         </span>
-      </div>
+      </header>
 
       {group.summary ? (
-        <p className="text-sm leading-relaxed text-foreground/90">
+        <p className="text-sm leading-relaxed text-muted-foreground">
           {group.summary}
         </p>
       ) : null}
@@ -220,26 +249,28 @@ export function EmployerExperienceCard({
       {compact ? null : <HighlightList highlights={employerHighlights} />}
 
       {group.clients.length > 0 ? (
-        <div className="space-y-3">
-          <p
-            id={clientsLabelId}
-            className="text-sm font-medium text-foreground"
-          >
-            Client engagements
-          </p>
+        <div className="space-y-4 border-t border-border/70 pt-5">
+          <div className="flex items-baseline justify-between gap-3">
+            <p id={clientsLabelId} className="mono-label text-muted-foreground">
+              Client engagements
+            </p>
+            <span className="mono-label text-muted-foreground/70">
+              {String(group.clients.length).padStart(2, "0")}
+            </span>
+          </div>
           {compact ? (
             <ul className="space-y-2" aria-labelledby={clientsLabelId}>
               {group.clients.map((client) => (
                 <li
                   key={client.id || client.slug}
-                  className="text-sm text-muted-foreground"
+                  className="flex flex-wrap items-baseline gap-x-2 text-sm text-muted-foreground"
                 >
                   <span className="font-medium text-foreground">
                     {client.company}
                   </span>
-                  <span>
-                    {" "}
-                    · {client.jobTitle} ·{" "}
+                  <span className="text-muted-foreground/70">·</span>
+                  <span>{client.jobTitle}</span>
+                  <span className="mono-label ml-auto text-muted-foreground/80">
                     {formatDateRange(client.from, client.to)}
                   </span>
                 </li>
@@ -261,16 +292,16 @@ export function EmployerExperienceCard({
       ) : null}
 
       {employerHref ? (
-        <div className="border-t border-border/60 pt-3">
+        <div className="border-t border-border/70 pt-4">
           <Button asChild variant="outline" size="sm">
             <a href={employerHref} target="_blank" rel="noopener noreferrer">
-              <span>Company website</span>
+              <span>Visit {group.companyLabel}</span>
               <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
             </a>
           </Button>
         </div>
       ) : group.logoExperience.companyUrl ? (
-        <p className="break-all border-t border-border/60 pt-3 text-sm text-muted-foreground">
+        <p className="break-all border-t border-border/70 pt-4 text-sm text-muted-foreground">
           {group.logoExperience.companyUrl}
         </p>
       ) : null}

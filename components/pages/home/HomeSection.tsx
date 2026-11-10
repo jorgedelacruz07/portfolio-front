@@ -1,8 +1,9 @@
 import { ReactNode } from "react";
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
+import { ArrowRight } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
-import { cn, homeMotion, homePageStyles } from "@/lib/utils";
+import { cn, homePageStyles } from "@/lib/utils";
 
 type HomeSectionProps = {
   eyebrow: string;
@@ -14,6 +15,7 @@ type HomeSectionProps = {
   className?: string;
   contentClassName?: string;
   id?: string;
+  index?: string;
 };
 
 export const HomeSection = ({
@@ -28,44 +30,34 @@ export const HomeSection = ({
   id,
 }: HomeSectionProps) => {
   return (
-    <motion.section
-      id={id}
-      className={cn(homePageStyles.section, className)}
-      variants={homeMotion.section}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, amount: 0.15 }}
-    >
-      <div className="flex flex-col gap-3 border-b border-border/70 pb-3 sm:pb-4 sm:flex-row sm:items-end sm:justify-between">
-        <motion.div
-          className={homePageStyles.sectionHeader}
-          variants={homeMotion.item}
-        >
-          <span className={homePageStyles.eyebrow}>{eyebrow}</span>
+    <section id={id} className={cn(homePageStyles.section, className)}>
+      <div className="flex flex-col gap-3 sm:flex-row sm:gap-5 sm:items-end sm:justify-between">
+        <div className={homePageStyles.sectionHeader}>
+          <p className={homePageStyles.eyebrow}>
+            <span>{eyebrow}</span>
+          </p>
           <h2 className={homePageStyles.title}>{title}</h2>
           {description ? (
             <p className={homePageStyles.description}>{description}</p>
           ) : null}
-        </motion.div>
+        </div>
 
         {actionHref ? (
-          <motion.div variants={homeMotion.item} className="shrink-0">
+          <div className="shrink-0">
             <Button asChild variant="outline" size="sm">
-              <Link to={actionHref} className="flex items-center gap-1.5">
+              <Link to={actionHref} className="group flex items-center gap-2">
                 <span>{actionLabel}</span>
-                <span aria-hidden="true">→</span>
+                <ArrowRight
+                  className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5"
+                  aria-hidden="true"
+                />
               </Link>
             </Button>
-          </motion.div>
+          </div>
         ) : null}
       </div>
 
-      <motion.div
-        className={cn("pt-1", contentClassName)}
-        variants={homeMotion.item}
-      >
-        {children}
-      </motion.div>
-    </motion.section>
+      <div className={cn("pt-1 sm:pt-3", contentClassName)}>{children}</div>
+    </section>
   );
 };

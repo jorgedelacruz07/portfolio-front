@@ -17,10 +17,14 @@ import type {
 
 const inputClass =
   "w-full rounded-lg border border-border bg-muted/40 px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/70 focus:border-primary/50 focus:outline-none focus:ring-1 focus:ring-primary/50";
-const labelClass = "space-y-1.5 font-mono text-xs font-semibold uppercase tracking-wider text-muted-foreground";
+const labelClass =
+  "space-y-1.5 font-mono text-xs font-semibold uppercase tracking-wider text-muted-foreground";
 
 function randomId(): string {
-  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+  if (
+    typeof crypto !== "undefined" &&
+    typeof crypto.randomUUID === "function"
+  ) {
     return crypto.randomUUID();
   }
   return `key-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
@@ -102,17 +106,25 @@ function stateBadge(state: ReviewState) {
 
 export function ArticleEditor() {
   const [articles, setArticles] = useState<ArticleSummary[]>([]);
-  const [selectedArticleId, setSelectedArticleId] = useState<string | null>(null);
+  const [selectedArticleId, setSelectedArticleId] = useState<string | null>(
+    null,
+  );
   const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
   const [reviewState, setReviewState] = useState<ArticleReview | null>(null);
   const [formData, setFormData] = useState<DraftFormData>(emptyFormData);
   const [isCreatingNew, setIsCreatingNew] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
-  const [reviewActionStatus, setReviewActionStatus] = useState<"idle" | "submitting" | "done" | "error">("idle");
+  const [saveStatus, setSaveStatus] = useState<
+    "idle" | "saving" | "saved" | "error"
+  >("idle");
+  const [reviewActionStatus, setReviewActionStatus] = useState<
+    "idle" | "submitting" | "done" | "error"
+  >("idle");
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
   const [reviewNote, setReviewNote] = useState("");
-  const [previewTab, setPreviewTab] = useState<"markdown" | "linkedin" | "x">("markdown");
+  const [previewTab, setPreviewTab] = useState<"markdown" | "linkedin" | "x">(
+    "markdown",
+  );
 
   const wordCount = useMemo(() => {
     return formData.contentMarkdown.trim().split(/\s+/).filter(Boolean).length;
@@ -163,14 +175,21 @@ export function ArticleEditor() {
         canonicalUrl: pub.seo.canonicalUrl || "",
         keywords: pub.seo.keywords.join(", "),
         linkedinText: pub.socialVariants.linkedin?.text || "",
-        linkedinHashtags: (pub.socialVariants.linkedin?.hashtags || []).join(", "),
-        xPosts: pub.socialVariants.x?.posts?.length ? [...pub.socialVariants.x.posts] : [""],
+        linkedinHashtags: (pub.socialVariants.linkedin?.hashtags || []).join(
+          ", ",
+        ),
+        xPosts: pub.socialVariants.x?.posts?.length
+          ? [...pub.socialVariants.x.posts]
+          : [""],
         references: [...pub.references],
         claims: [...pub.claims],
       });
 
       try {
-        const revState = await adminApi.getArticleReview(article.id, rev.revisionNumber);
+        const revState = await adminApi.getArticleReview(
+          article.id,
+          rev.revisionNumber,
+        );
         setReviewState(revState);
       } catch {
         setReviewState(null);
@@ -221,11 +240,18 @@ export function ArticleEditor() {
   function addReference() {
     setFormData({
       ...formData,
-      references: [...formData.references, { id: `ref-${formData.references.length + 1}`, title: "", url: "" }],
+      references: [
+        ...formData.references,
+        { id: `ref-${formData.references.length + 1}`, title: "", url: "" },
+      ],
     });
   }
 
-  function updateReference(index: number, key: keyof ArticleReference, val: string) {
+  function updateReference(
+    index: number,
+    key: keyof ArticleReference,
+    val: string,
+  ) {
     const next = [...formData.references];
     next[index] = { ...next[index], [key]: val };
     setFormData({ ...formData, references: next });
@@ -292,11 +318,14 @@ export function ArticleEditor() {
           keywords: keywords.length ? keywords : undefined,
         },
         socialVariants: {
-          ...(formData.targetChannels.includes("linkedin") && formData.linkedinText.trim()
+          ...(formData.targetChannels.includes("linkedin") &&
+          formData.linkedinText.trim()
             ? {
                 linkedin: {
                   text: formData.linkedinText.trim(),
-                  hashtags: linkedinHashtags.length ? linkedinHashtags : undefined,
+                  hashtags: linkedinHashtags.length
+                    ? linkedinHashtags
+                    : undefined,
                 },
               }
             : {}),
@@ -311,7 +340,9 @@ export function ArticleEditor() {
         references: formData.references.length
           ? formData.references.filter((r) => r.id && r.title && r.url)
           : undefined,
-        claims: formData.claims.length ? formData.claims.filter((c) => c.id && c.statement) : undefined,
+        claims: formData.claims.length
+          ? formData.claims.filter((c) => c.id && c.statement)
+          : undefined,
       },
       evidence: {
         privacyClassification: formData.privacyClassification,
@@ -358,12 +389,16 @@ export function ArticleEditor() {
       if (axios.isAxiosError(err) && err.response?.data?.error?.message) {
         setStatusMessage(`Save failed: ${err.response.data.error.message}`);
       } else {
-        setStatusMessage("Save failed. Check input formatting and ensure your session is active.");
+        setStatusMessage(
+          "Save failed. Check input formatting and ensure your session is active.",
+        );
       }
     }
   }
 
-  async function handleReviewCommand(command: "submit" | "approve" | "request_changes" | "revoke") {
+  async function handleReviewCommand(
+    command: "submit" | "approve" | "request_changes" | "revoke",
+  ) {
     if (!selectedArticle) return;
     setReviewActionStatus("submitting");
     setStatusMessage(null);
@@ -381,16 +416,25 @@ export function ArticleEditor() {
       );
       setReviewActionStatus("done");
       setReviewNote("");
-      setStatusMessage(`Decision recorded: ${command.toUpperCase()}. Note: Editorial approval does not publish.`);
-      const updatedReview = await adminApi.getArticleReview(selectedArticle.id, currentRevNumber);
+      setStatusMessage(
+        `Decision recorded: ${command.toUpperCase()}. Note: Editorial approval does not publish.`,
+      );
+      const updatedReview = await adminApi.getArticleReview(
+        selectedArticle.id,
+        currentRevNumber,
+      );
       setReviewState(updatedReview);
       setTimeout(() => setReviewActionStatus("idle"), 2000);
     } catch (err: unknown) {
       setReviewActionStatus("error");
       if (axios.isAxiosError(err) && err.response?.data?.error?.message) {
-        setStatusMessage(`Review action failed: ${err.response.data.error.message}`);
+        setStatusMessage(
+          `Review action failed: ${err.response.data.error.message}`,
+        );
       } else {
-        setStatusMessage("Review action failed. Please check blockers and try again.");
+        setStatusMessage(
+          "Review action failed. Please check blockers and try again.",
+        );
       }
     }
   }
@@ -399,10 +443,12 @@ export function ArticleEditor() {
     <div className="space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h2 className="text-xl font-bold tracking-tight text-foreground">Technical Articles Workspace</h2>
+          <h2 className="text-xl font-bold tracking-tight text-foreground">
+            Technical Articles Workspace
+          </h2>
           <p className="text-xs text-muted-foreground">
-            Create, version, and review technical articles for Portfolio, LinkedIn and X. Revisions are immutable
-            snapshots.
+            Create, version, and review technical articles for Portfolio,
+            LinkedIn and X. Revisions are immutable snapshots.
           </p>
         </div>
         <button
@@ -430,7 +476,8 @@ export function ArticleEditor() {
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {articles.length === 0 && !isLoading ? (
           <div className="col-span-full rounded-xl border border-dashed border-border p-6 text-center text-xs text-muted-foreground">
-            No technical articles created yet. Click "+ New Article Draft" above to begin.
+            No technical articles created yet. Click "+ New Article Draft" above
+            to begin.
           </div>
         ) : null}
 
@@ -449,13 +496,22 @@ export function ArticleEditor() {
               <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
                 {art.contentType}
               </span>
-              <span className="font-mono text-[10px] font-semibold text-primary">Rev #{art.latestRevisionNumber}</span>
+              <span className="font-mono text-[10px] font-semibold text-primary">
+                Rev #{art.latestRevisionNumber}
+              </span>
             </div>
-            <h3 className="mt-1 line-clamp-1 text-sm font-semibold text-foreground">{art.title}</h3>
-            <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">{art.excerpt}</p>
+            <h3 className="mt-1 line-clamp-1 text-sm font-semibold text-foreground">
+              {art.title}
+            </h3>
+            <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">
+              {art.excerpt}
+            </p>
             <div className="mt-3 flex flex-wrap gap-1">
               {art.targetChannels.map((ch) => (
-                <span key={ch} className="rounded bg-muted px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground">
+                <span
+                  key={ch}
+                  className="rounded bg-muted px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground"
+                >
                   {ch}
                 </span>
               ))}
@@ -466,12 +522,17 @@ export function ArticleEditor() {
 
       {/* Editor View */}
       {selectedArticle || isCreatingNew ? (
-        <form onSubmit={handleSave} className="craft-card space-y-6 rounded-xl p-6">
+        <form
+          onSubmit={handleSave}
+          className="craft-card space-y-6 rounded-xl p-6"
+        >
           <div className="border-b border-border pb-4">
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <span className="font-mono text-xs uppercase tracking-wider text-primary">
-                  {isCreatingNew ? "Create New Article" : `Editing: ${selectedArticle?.title}`}
+                  {isCreatingNew
+                    ? "Create New Article"
+                    : `Editing: ${selectedArticle?.title}`}
                 </span>
                 <h3 className="text-lg font-bold text-foreground">
                   {isCreatingNew
@@ -497,11 +558,14 @@ export function ArticleEditor() {
 
             {/* Editorial Review & Lifecycle explainer */}
             <div className="mt-4 rounded-lg border border-blue-500/20 bg-blue-500/5 p-3 text-xs text-muted-foreground">
-              <p className="font-semibold text-blue-300">Editorial Lifecycle: Draft → In Review → Approved</p>
+              <p className="font-semibold text-blue-300">
+                Editorial Lifecycle: Draft → In Review → Approved
+              </p>
               <p className="mt-1">
-                Saving changes creates a new immutable revision snapshot using Compare-And-Set concurrency. Editorial
-                approval validates quality criteria and evidence rules; it does <strong>not</strong> publish to
-                channels.
+                Saving changes creates a new immutable revision snapshot using
+                Compare-And-Set concurrency. Editorial approval validates
+                quality criteria and evidence rules; it does{" "}
+                <strong>not</strong> publish to channels.
               </p>
             </div>
           </div>
@@ -509,15 +573,21 @@ export function ArticleEditor() {
           {/* Review Decision Controls (For existing revisions) */}
           {reviewState && selectedArticle ? (
             <div className="rounded-xl border border-border bg-card/40 p-4">
-              <h4 className="font-mono text-xs font-semibold uppercase text-primary">Editorial Review Status</h4>
+              <h4 className="font-mono text-xs font-semibold uppercase text-primary">
+                Editorial Review Status
+              </h4>
               <div className="mt-2 flex flex-wrap items-center gap-3">
-                <span className="text-xs text-foreground">State: {stateBadge(reviewState.state)}</span>
+                <span className="text-xs text-foreground">
+                  State: {stateBadge(reviewState.state)}
+                </span>
                 {reviewState.blockers.length ? (
                   <span className="rounded bg-rose-500/10 px-2 py-0.5 font-mono text-xs text-rose-300 border border-rose-500/20">
                     Blockers: {reviewState.blockers.join(", ")}
                   </span>
                 ) : (
-                  <span className="text-xs text-emerald-400">No active blockers.</span>
+                  <span className="text-xs text-emerald-400">
+                    No active blockers.
+                  </span>
                 )}
               </div>
 
@@ -546,7 +616,10 @@ export function ArticleEditor() {
                     <>
                       <button
                         type="button"
-                        disabled={reviewActionStatus === "submitting" || reviewState.blockers.length > 0}
+                        disabled={
+                          reviewActionStatus === "submitting" ||
+                          reviewState.blockers.length > 0
+                        }
                         onClick={() => handleReviewCommand("approve")}
                         className="rounded-lg bg-emerald-600 px-3 py-1.5 font-mono text-xs font-semibold text-white hover:bg-emerald-500 disabled:opacity-50"
                         title={
@@ -568,7 +641,8 @@ export function ArticleEditor() {
                     </>
                   ) : null}
 
-                  {reviewState.state === "approved" || reviewState.state === "in_review" ? (
+                  {reviewState.state === "approved" ||
+                  reviewState.state === "in_review" ? (
                     <button
                       type="button"
                       disabled={reviewActionStatus === "submitting"}
@@ -584,12 +658,16 @@ export function ArticleEditor() {
               {/* Decision History */}
               {reviewState.decisions.length ? (
                 <div className="mt-4 border-t border-border/60 pt-3">
-                  <p className="font-mono text-[11px] text-muted-foreground">Decision History:</p>
+                  <p className="font-mono text-[11px] text-muted-foreground">
+                    Decision History:
+                  </p>
                   <ul className="mt-1 space-y-1 text-xs text-muted-foreground">
                     {reviewState.decisions.map((dec) => (
                       <li key={dec.sequence}>
-                        #{dec.sequence} <strong>{dec.command.toUpperCase()}</strong> ({dec.fromState} → {dec.toState})
-                        by {dec.actor.email} on {new Date(dec.createdAt).toLocaleDateString()}{" "}
+                        #{dec.sequence}{" "}
+                        <strong>{dec.command.toUpperCase()}</strong> (
+                        {dec.fromState} → {dec.toState}) by {dec.actor.email} on{" "}
+                        {new Date(dec.createdAt).toLocaleDateString()}{" "}
                         {dec.note ? `• "${dec.note}"` : ""}
                       </li>
                     ))}
@@ -600,7 +678,10 @@ export function ArticleEditor() {
           ) : null}
 
           {selectedArticle && !isCreatingNew ? (
-            <ArticleDeliveryControls article={selectedArticle} review={reviewState} />
+            <ArticleDeliveryControls
+              article={selectedArticle}
+              review={reviewState}
+            />
           ) : null}
 
           {/* Primary Form Fields */}
@@ -626,7 +707,9 @@ export function ArticleEditor() {
                 value={formData.slug}
                 disabled={!isCreatingNew}
                 placeholder="e.g. distributed-lock-redis"
-                onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, slug: e.target.value })
+                }
                 required
               />
             </label>
@@ -637,7 +720,9 @@ export function ArticleEditor() {
                 className={inputClass}
                 value={formData.title}
                 placeholder="Clear technical headline"
-                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, title: e.target.value })
+                }
                 required
               />
             </label>
@@ -648,7 +733,9 @@ export function ArticleEditor() {
                 className={inputClass}
                 value={formData.subtitle}
                 placeholder="Technical context or summary phrase"
-                onChange={(e) => setFormData({ ...formData, subtitle: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, subtitle: e.target.value })
+                }
               />
             </label>
 
@@ -658,7 +745,9 @@ export function ArticleEditor() {
                 className={`${inputClass} min-h-20`}
                 value={formData.excerpt}
                 placeholder="Concise 1-3 sentence summary for previews and social feeds"
-                onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, excerpt: e.target.value })
+                }
                 required
               />
             </label>
@@ -667,23 +756,25 @@ export function ArticleEditor() {
             <div className={`${labelClass} sm:col-span-2`}>
               <span>Target Distribution Channels (Required)</span>
               <div className="mt-2 flex flex-wrap gap-4">
-                {(["portfolio", "linkedin", "x"] as ArticleChannel[]).map((ch) => (
-                  <label
-                    key={ch}
-                    className="flex items-center gap-2 font-mono text-xs normal-case text-foreground cursor-pointer"
-                  >
-                    <input
-                      type="checkbox"
-                      checked={formData.targetChannels.includes(ch)}
-                      onChange={() => toggleChannel(ch)}
-                    />
-                    {ch === "portfolio"
-                      ? "Portfolio Website"
-                      : ch === "linkedin"
-                        ? "LinkedIn Post"
-                        : "X (Twitter) Thread"}
-                  </label>
-                ))}
+                {(["portfolio", "linkedin", "x"] as ArticleChannel[]).map(
+                  (ch) => (
+                    <label
+                      key={ch}
+                      className="flex items-center gap-2 font-mono text-xs normal-case text-foreground cursor-pointer"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={formData.targetChannels.includes(ch)}
+                        onChange={() => toggleChannel(ch)}
+                      />
+                      {ch === "portfolio"
+                        ? "Portfolio Website"
+                        : ch === "linkedin"
+                          ? "LinkedIn Post"
+                          : "X (Twitter) Thread"}
+                    </label>
+                  ),
+                )}
               </div>
             </div>
 
@@ -699,7 +790,9 @@ export function ArticleEditor() {
                 className={`${inputClass} min-h-64 font-mono text-xs leading-relaxed`}
                 value={formData.contentMarkdown}
                 placeholder="Write article body in CommonMark / GFM..."
-                onChange={(e) => setFormData({ ...formData, contentMarkdown: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, contentMarkdown: e.target.value })
+                }
                 required
               />
             </label>
@@ -707,7 +800,9 @@ export function ArticleEditor() {
 
           {/* Social Copy & Preview Tabs */}
           <div className="rounded-xl border border-border p-4">
-            <h4 className="font-mono text-xs font-semibold uppercase text-primary">Channel Variants & Previews</h4>
+            <h4 className="font-mono text-xs font-semibold uppercase text-primary">
+              Channel Variants & Previews
+            </h4>
             <div className="mt-3 flex border-b border-border">
               <button
                 type="button"
@@ -751,12 +846,21 @@ export function ArticleEditor() {
             <div className="mt-4">
               {previewTab === "markdown" ? (
                 <div className="space-y-2">
-                  <p className="text-xs text-muted-foreground">Estimated rendering on Portfolio website:</p>
+                  <p className="text-xs text-muted-foreground">
+                    Estimated rendering on Portfolio website:
+                  </p>
                   <div className="rounded-lg border border-border/80 bg-muted/20 p-4">
-                    <h1 className="text-xl font-bold text-foreground">{formData.title || "Untitled Article"}</h1>
-                    {formData.subtitle ? <p className="text-sm text-muted-foreground">{formData.subtitle}</p> : null}
+                    <h1 className="text-xl font-bold text-foreground">
+                      {formData.title || "Untitled Article"}
+                    </h1>
+                    {formData.subtitle ? (
+                      <p className="text-sm text-muted-foreground">
+                        {formData.subtitle}
+                      </p>
+                    ) : null}
                     <div className="mt-4 whitespace-pre-wrap font-mono text-xs text-foreground/80">
-                      {formData.contentMarkdown.slice(0, 500) || "No content written yet."}
+                      {formData.contentMarkdown.slice(0, 500) ||
+                        "No content written yet."}
                       {formData.contentMarkdown.length > 500 ? "..." : ""}
                     </div>
                   </div>
@@ -785,7 +889,9 @@ export function ArticleEditor() {
                     />
                   </label>
                   <div className="rounded-lg border border-border/80 bg-muted/20 p-4">
-                    <p className="font-mono text-[10px] uppercase text-muted-foreground">LinkedIn Live Preview:</p>
+                    <p className="font-mono text-[10px] uppercase text-muted-foreground">
+                      LinkedIn Live Preview:
+                    </p>
                     <p className="mt-2 whitespace-pre-wrap text-sm text-foreground">
                       {formData.linkedinText || "No LinkedIn copy entered."}
                     </p>
@@ -803,12 +909,18 @@ export function ArticleEditor() {
 
               {previewTab === "x" ? (
                 <div className="space-y-4">
-                  <p className="text-xs text-muted-foreground">X Thread Posts (Max 10 posts, 280 code-points each):</p>
+                  <p className="text-xs text-muted-foreground">
+                    X Thread Posts (Max 10 posts, 280 code-points each):
+                  </p>
                   {formData.xPosts.map((post, idx) => (
                     <div key={idx} className="space-y-1.5">
                       <div className="flex items-center justify-between font-mono text-[11px] text-muted-foreground">
                         <span>Post #{idx + 1}</span>
-                        <span className={post.length > 280 ? "text-rose-400 font-bold" : ""}>
+                        <span
+                          className={
+                            post.length > 280 ? "text-rose-400 font-bold" : ""
+                          }
+                        >
                           {post.length}/280 chars
                         </span>
                       </div>
@@ -863,7 +975,10 @@ export function ArticleEditor() {
                 </button>
               </div>
               {formData.references.map((ref, i) => (
-                <div key={i} className="space-y-1.5 rounded border border-border/60 p-2">
+                <div
+                  key={i}
+                  className="space-y-1.5 rounded border border-border/60 p-2"
+                >
                   <div className="flex justify-between">
                     <input
                       className={`${inputClass} text-xs py-1`}
@@ -871,7 +986,11 @@ export function ArticleEditor() {
                       placeholder="ref id (e.g. ref-rfc-7231)"
                       onChange={(e) => updateReference(i, "id", e.target.value)}
                     />
-                    <button type="button" onClick={() => removeReference(i)} className="ml-2 text-rose-400 text-xs">
+                    <button
+                      type="button"
+                      onClick={() => removeReference(i)}
+                      className="ml-2 text-rose-400 text-xs"
+                    >
                       ✕
                     </button>
                   </div>
@@ -879,7 +998,9 @@ export function ArticleEditor() {
                     className={`${inputClass} text-xs py-1`}
                     value={ref.title}
                     placeholder="Reference Title"
-                    onChange={(e) => updateReference(i, "title", e.target.value)}
+                    onChange={(e) =>
+                      updateReference(i, "title", e.target.value)
+                    }
                   />
                   <input
                     className={`${inputClass} text-xs py-1`}
@@ -906,7 +1027,10 @@ export function ArticleEditor() {
                 </button>
               </div>
               {formData.claims.map((claim, i) => (
-                <div key={i} className="space-y-1.5 rounded border border-border/60 p-2">
+                <div
+                  key={i}
+                  className="space-y-1.5 rounded border border-border/60 p-2"
+                >
                   <div className="flex justify-between gap-2">
                     <input
                       className={`${inputClass} text-xs py-1`}
@@ -922,7 +1046,11 @@ export function ArticleEditor() {
                       <option value="opinion">Opinion</option>
                       <option value="fact">Fact</option>
                     </select>
-                    <button type="button" onClick={() => removeClaim(i)} className="ml-1 text-rose-400 text-xs">
+                    <button
+                      type="button"
+                      onClick={() => removeClaim(i)}
+                      className="ml-1 text-rose-400 text-xs"
+                    >
                       ✕
                     </button>
                   </div>
@@ -930,7 +1058,9 @@ export function ArticleEditor() {
                     className={`${inputClass} text-xs py-1 min-h-12`}
                     value={claim.statement}
                     placeholder="Statement text"
-                    onChange={(e) => updateClaim(i, "statement", e.target.value)}
+                    onChange={(e) =>
+                      updateClaim(i, "statement", e.target.value)
+                    }
                   />
                 </div>
               ))}
@@ -943,8 +1073,9 @@ export function ArticleEditor() {
               Private Evidence Boundary & Provenance
             </h4>
             <p className="mt-1 text-xs text-muted-foreground">
-              Internal source commit hashes, study manifests and private claims remain stored server-side and are never
-              projected into public responses, SEO headers or social payloads.
+              Internal source commit hashes, study manifests and private claims
+              remain stored server-side and are never projected into public
+              responses, SEO headers or social payloads.
             </p>
             <div className="mt-3 grid gap-3 sm:grid-cols-3">
               <label className={labelClass}>
@@ -955,7 +1086,8 @@ export function ArticleEditor() {
                   onChange={(e) =>
                     setFormData({
                       ...formData,
-                      privacyClassification: e.target.value as ArticlePrivacyClassification,
+                      privacyClassification: e.target
+                        .value as ArticlePrivacyClassification,
                     })
                   }
                 >
@@ -970,7 +1102,9 @@ export function ArticleEditor() {
                   className={inputClass}
                   value={formData.sourceProject}
                   placeholder="e.g. portfolio"
-                  onChange={(e) => setFormData({ ...formData, sourceProject: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, sourceProject: e.target.value })
+                  }
                 />
               </label>
 
@@ -999,7 +1133,11 @@ export function ArticleEditor() {
               disabled={saveStatus === "saving"}
               className="rounded-lg bg-primary px-5 py-2 font-mono text-xs font-semibold text-primary-foreground hover:opacity-90 disabled:opacity-50"
             >
-              {saveStatus === "saving" ? "Saving..." : isCreatingNew ? "Create Article Draft" : "Save as New Revision"}
+              {saveStatus === "saving"
+                ? "Saving..."
+                : isCreatingNew
+                  ? "Create Article Draft"
+                  : "Save as New Revision"}
             </button>
           </div>
         </form>

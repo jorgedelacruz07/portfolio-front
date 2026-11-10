@@ -19,7 +19,11 @@ interface SocialAccounts {
 
 function errorMessage(error: unknown): string {
   if (axios.isAxiosError(error)) {
-    return error.response?.data?.error?.message || error.response?.data?.message || "The request failed.";
+    return (
+      error.response?.data?.error?.message ||
+      error.response?.data?.message ||
+      "The request failed."
+    );
   }
   return error instanceof Error ? error.message : "The request failed.";
 }
@@ -35,7 +39,11 @@ export function SocialAccountConnections() {
   }, []);
 
   useEffect(() => {
-    refresh().catch((error: unknown) => setMessage(`Could not load social account status: ${errorMessage(error)}`));
+    refresh().catch((error: unknown) =>
+      setMessage(
+        `Could not load social account status: ${errorMessage(error)}`,
+      ),
+    );
   }, [refresh]);
 
   async function connect(provider: Provider) {
@@ -45,7 +53,9 @@ export function SocialAccountConnections() {
       const url = await adminApi.getSocialAuthorizationUrl(provider);
       window.location.assign(url);
     } catch (error: unknown) {
-      setMessage(`Could not connect ${provider === "x" ? "X" : "LinkedIn"}: ${errorMessage(error)}`);
+      setMessage(
+        `Could not connect ${provider === "x" ? "X" : "LinkedIn"}: ${errorMessage(error)}`,
+      );
       setBusy(null);
     }
   }
@@ -66,7 +76,11 @@ export function SocialAccountConnections() {
     }
   }
 
-  function accountCard(provider: Provider, account: AccountState, costApproved = true) {
+  function accountCard(
+    provider: Provider,
+    account: AccountState,
+    costApproved = true,
+  ) {
     const name = provider === "x" ? "X" : "LinkedIn";
     const canConnect = account.configured && costApproved;
     const label = !account.configured
@@ -122,11 +136,15 @@ export function SocialAccountConnections() {
       className="space-y-3 rounded-xl border border-border bg-card/60 p-4"
     >
       <div>
-        <h3 id="social-account-connections-heading" className="text-sm font-semibold text-foreground">
+        <h3
+          id="social-account-connections-heading"
+          className="text-sm font-semibold text-foreground"
+        >
           Social accounts
         </h3>
         <p className="mt-1 text-xs text-muted-foreground">
-          Connect the owner accounts used for article delivery. Access tokens stay server-side.
+          Connect the owner accounts used for article delivery. Access tokens
+          stay server-side.
         </p>
       </div>
       {accounts ? (
@@ -135,7 +153,9 @@ export function SocialAccountConnections() {
           {accountCard("x", accounts.x, accounts.x.costApproved)}
         </div>
       ) : (
-        <p className="text-xs text-muted-foreground">Loading connection status…</p>
+        <p className="text-xs text-muted-foreground">
+          Loading connection status…
+        </p>
       )}
       {message ? (
         <p role="status" aria-live="polite" className="text-xs text-amber-400">

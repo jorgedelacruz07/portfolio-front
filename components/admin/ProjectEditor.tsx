@@ -6,8 +6,16 @@ import { cn } from "@/lib/utils";
 import { Check, ExternalLink, Globe, Loader2, Save } from "lucide-react";
 import type { TProject } from "@/types/project";
 
-export function ProjectEditor({ project, onChange }: { project: TProject; onChange: (project: TProject) => void }) {
-  const [state, setState] = useState<"idle" | "saving" | "saved" | "error">("idle");
+export function ProjectEditor({
+  project,
+  onChange,
+}: {
+  project: TProject;
+  onChange: (project: TProject) => void;
+}) {
+  const [state, setState] = useState<"idle" | "saving" | "saved" | "error">(
+    "idle",
+  );
   const fieldClass =
     "w-full rounded-xl border border-border bg-card/60 px-3.5 py-2 text-sm text-foreground placeholder:text-muted-foreground/60 transition-colors focus:border-primary focus:bg-card focus:outline-none focus:ring-1 focus:ring-primary font-sans";
 
@@ -35,7 +43,9 @@ export function ProjectEditor({ project, onChange }: { project: TProject; onChan
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-border/50 pb-3">
         <div className="flex items-center gap-2.5">
           <Globe className="h-4 w-4 text-primary" />
-          <legend className="px-0 text-base font-bold text-foreground font-sans">{project.name || "Sin título"}</legend>
+          <legend className="px-0 text-base font-bold text-foreground font-sans">
+            {project.name || "Sin título"}
+          </legend>
           {project.type ? (
             <Badge variant="outline" className="font-mono text-[10px]">
               {project.type}
@@ -46,7 +56,10 @@ export function ProjectEditor({ project, onChange }: { project: TProject; onChan
           <Badge variant="outline" className="font-mono text-[10px]">
             Orden: #{project.displayOrder || 0}
           </Badge>
-          <Badge variant={project.status ? "default" : "secondary"} className="font-mono text-[10px]">
+          <Badge
+            variant={project.status ? "default" : "secondary"}
+            className="font-mono text-[10px]"
+          >
             {project.status ? "Visible en web" : "Oculto"}
           </Badge>
         </div>
@@ -153,7 +166,9 @@ export function ProjectEditor({ project, onChange }: { project: TProject; onChan
               <Check className="h-3.5 w-3.5" /> Proyecto guardado correctamente.
             </span>
           ) : state === "error" ? (
-            <span className="text-destructive">Error al guardar. Tus cambios se mantienen en el formulario.</span>
+            <span className="text-destructive">
+              Error al guardar. Tus cambios se mantienen en el formulario.
+            </span>
           ) : null}
         </div>
 

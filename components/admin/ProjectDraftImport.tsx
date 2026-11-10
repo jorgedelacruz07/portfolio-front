@@ -4,14 +4,19 @@ import { adminApi } from "@/lib/admin-api";
 import { readProjectDraft, type ProjectDraftFile } from "@/lib/project-draft";
 import type { TProject } from "@/types/project";
 
-export function ProjectDraftImport({ onImported }: { onImported: (project: TProject) => void }) {
+export function ProjectDraftImport({
+  onImported,
+}: {
+  onImported: (project: TProject) => void;
+}) {
   const [draft, setDraft] = useState<ProjectDraftFile | null>(null);
   const [reviewed, setReviewed] = useState(false);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
   const [technologyInput, setTechnologyInput] = useState("");
   const selection = useRef(0);
-  const field = "w-full rounded-lg border border-border bg-muted/40 px-3 py-2 text-sm";
+  const field =
+    "w-full rounded-lg border border-border bg-muted/40 px-3 py-2 text-sm";
 
   function update(patch: Partial<ProjectDraftFile["project"]>) {
     if (!draft) return;
@@ -29,11 +34,14 @@ export function ProjectDraftImport({ onImported }: { onImported: (project: TProj
       onImported(imported);
       setDraft(null);
       setReviewed(false);
-      setMessage("Draft imported. Review the project below before making it visible.");
+      setMessage(
+        "Draft imported. Review the project below before making it visible.",
+      );
     } catch (error) {
       setMessage(
         axios.isAxiosError(error)
-          ? error.response?.data?.error?.message || "Could not import. Your draft is still here."
+          ? error.response?.data?.error?.message ||
+              "Could not import. Your draft is still here."
           : "Could not import. Your draft is still here.",
       );
     } finally {
@@ -45,8 +53,8 @@ export function ProjectDraftImport({ onImported }: { onImported: (project: TProj
     <div className="space-y-4 rounded-xl border border-border p-4">
       <h3 className="font-semibold">Import a project draft</h3>
       <p className="text-sm text-muted-foreground">
-        Choose a prepared draft, review its public text, then import it as hidden. Existing projects are never
-        overwritten.
+        Choose a prepared draft, review its public text, then import it as
+        hidden. Existing projects are never overwritten.
       </p>
       <label className="block space-y-2 text-sm">
         <span>Draft JSON</span>
@@ -64,15 +72,22 @@ export function ProjectDraftImport({ onImported }: { onImported: (project: TProj
             event.target.value = "";
             if (!file) return;
             try {
-              if (file.size > 40000) throw new Error("Choose a draft smaller than 40 KB.");
+              if (file.size > 40000)
+                throw new Error("Choose a draft smaller than 40 KB.");
               const parsed = readProjectDraft(await file.text());
               if (current === selection.current) {
                 setDraft(parsed);
-                setTechnologyInput((parsed.project.technologyNames || []).join(", "));
+                setTechnologyInput(
+                  (parsed.project.technologyNames || []).join(", "),
+                );
               }
             } catch (error) {
               if (current === selection.current)
-                setMessage(error instanceof Error ? error.message : "Invalid draft file.");
+                setMessage(
+                  error instanceof Error
+                    ? error.message
+                    : "Invalid draft file.",
+                );
             }
           }}
         />
@@ -81,11 +96,19 @@ export function ProjectDraftImport({ onImported }: { onImported: (project: TProj
         <fieldset disabled={busy} className="space-y-3">
           <label className="block space-y-1 text-sm">
             Name
-            <input className={field} value={draft.project.name} onChange={(e) => update({ name: e.target.value })} />
+            <input
+              className={field}
+              value={draft.project.name}
+              onChange={(e) => update({ name: e.target.value })}
+            />
           </label>
           <label className="block space-y-1 text-sm">
             Slug
-            <input className={field} value={draft.project.slug} onChange={(e) => update({ slug: e.target.value })} />
+            <input
+              className={field}
+              value={draft.project.slug}
+              onChange={(e) => update({ slug: e.target.value })}
+            />
           </label>
           <label className="block space-y-1 text-sm">
             Type
@@ -143,8 +166,13 @@ export function ProjectDraftImport({ onImported }: { onImported: (project: TProj
             </label>
           ))}
           <label className="flex items-start gap-2 text-sm">
-            <input type="checkbox" checked={reviewed} onChange={(e) => setReviewed(e.target.checked)} />I reviewed the
-            text and links for public use, including personal information and claims.
+            <input
+              type="checkbox"
+              checked={reviewed}
+              onChange={(e) => setReviewed(e.target.checked)}
+            />
+            I reviewed the text and links for public use, including personal
+            information and claims.
           </label>
           <button
             type="button"
@@ -156,7 +184,11 @@ export function ProjectDraftImport({ onImported }: { onImported: (project: TProj
           </button>
         </fieldset>
       ) : null}
-      <p role="status" aria-live="polite" className="text-sm text-muted-foreground">
+      <p
+        role="status"
+        aria-live="polite"
+        className="text-sm text-muted-foreground"
+      >
         {message}
       </p>
     </div>

@@ -1,4 +1,5 @@
-import "@fontsource-variable/inter/wght.css";
+import "@fontsource/lato/400.css";
+import "@fontsource/lato/700.css";
 import "../styles/globals.css";
 
 import { QueryClientProvider } from "@tanstack/react-query";
