@@ -1,6 +1,7 @@
 import { FC } from "react";
 import { LinkedinIcon } from "./svgs/Linkedin";
 import { GithubIcon } from "./svgs/Github";
+import { XIcon } from "./svgs/X";
 
 export const socialNetworks = [
   {
@@ -16,6 +17,13 @@ export const socialNetworks = [
     name: "GitHub",
     icon: GithubIcon,
     url: "https://github.com/jorgedelacruz07",
+  },
+  {
+    id: 3,
+    slug: "x",
+    name: "X",
+    icon: XIcon,
+    url: "https://x.com/jorgedlcpdev",
   },
 ];
 
