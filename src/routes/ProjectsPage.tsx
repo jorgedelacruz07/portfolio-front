@@ -13,15 +13,7 @@ import { orderPublicProjects } from "@/lib/project-order";
 import { listView } from "@/lib/list-state";
 import { cn } from "@/lib/utils";
 
-function FilterButton({
-  active,
-  onClick,
-  children,
-}: {
-  active: boolean;
-  onClick: () => void;
-  children: ReactNode;
-}) {
+function FilterButton({ active, onClick, children }: { active: boolean; onClick: () => void; children: ReactNode }) {
   return (
     <button
       type="button"
@@ -29,9 +21,7 @@ function FilterButton({
       aria-pressed={active}
       className={cn(
         "rounded-md px-2.5 py-1.5 text-sm",
-        active
-          ? "bg-foreground text-background"
-          : "text-muted-foreground hover:bg-muted hover:text-foreground",
+        active ? "bg-foreground text-background" : "text-muted-foreground hover:bg-muted hover:text-foreground",
       )}
     >
       {children}
@@ -59,10 +49,7 @@ export default function ProjectsPage() {
     const techCounts = new Map<string, number>();
     for (const project of projects) {
       for (const technology of project.technologies || []) {
-        techCounts.set(
-          technology.name,
-          (techCounts.get(technology.name) || 0) + 1,
-        );
+        techCounts.set(technology.name, (techCounts.get(technology.name) || 0) + 1);
       }
     }
     return Array.from(techCounts.entries())
@@ -86,9 +73,7 @@ export default function ProjectsPage() {
 
       if (
         selectedTech &&
-        !project.technologies?.some(
-          (tech) => tech.name.toLowerCase() === selectedTech.toLowerCase(),
-        )
+        !project.technologies?.some((tech) => tech.name.toLowerCase() === selectedTech.toLowerCase())
       ) {
         return false;
       }
@@ -96,40 +81,21 @@ export default function ProjectsPage() {
       if (searchQuery.trim()) {
         const query = searchQuery.toLowerCase().trim();
         const matchesName = project.name.toLowerCase().includes(query);
-        const matchesDesc = (project.description || "")
-          .toLowerCase()
-          .includes(query);
-        const matchesLongDesc = (project.longDescription || "")
-          .toLowerCase()
-          .includes(query);
+        const matchesDesc = (project.description || "").toLowerCase().includes(query);
+        const matchesLongDesc = (project.longDescription || "").toLowerCase().includes(query);
         const matchesType = (project.type || "").toLowerCase().includes(query);
-        const matchesTech = project.technologies?.some((tech) =>
-          tech.name.toLowerCase().includes(query),
-        );
-        return (
-          matchesName ||
-          matchesDesc ||
-          matchesLongDesc ||
-          matchesType ||
-          matchesTech
-        );
+        const matchesTech = project.technologies?.some((tech) => tech.name.toLowerCase().includes(query));
+        return matchesName || matchesDesc || matchesLongDesc || matchesType || matchesTech;
       }
 
       return true;
     });
   }, [projects, selectedType, selectedTech, searchQuery]);
 
-  const hasActiveFilters =
-    searchQuery.trim() !== "" ||
-    selectedType !== "all" ||
-    selectedTech !== null;
+  const hasActiveFilters = searchQuery.trim() !== "" || selectedType !== "all" || selectedTech !== null;
   const showGroups = !hasActiveFilters;
-  const featuredProjects = showGroups
-    ? filteredProjects.filter((project) => project.featured)
-    : [];
-  const earlierProjects = showGroups
-    ? filteredProjects.filter((project) => !project.featured)
-    : filteredProjects;
+  const featuredProjects = showGroups ? filteredProjects.filter((project) => project.featured) : [];
+  const earlierProjects = showGroups ? filteredProjects.filter((project) => !project.featured) : filteredProjects;
 
   const resetFilters = () => {
     setSearchQuery("");
@@ -148,17 +114,9 @@ export default function ProjectsPage() {
           heading="h1"
           icon={<X className="h-5 w-5" />}
           title="Error loading projects"
-          description={
-            error instanceof Error
-              ? error.message
-              : "Unable to retrieve the projects collection."
-          }
+          description={error instanceof Error ? error.message : "Unable to retrieve the projects collection."}
         >
-          <Button
-            onClick={() => window.location.reload()}
-            variant="outline"
-            size="sm"
-          >
+          <Button onClick={() => window.location.reload()} variant="outline" size="sm">
             Try again
           </Button>
         </EmptyState>
@@ -169,19 +127,13 @@ export default function ProjectsPage() {
   return (
     <>
       <Helmet>
-        <title>Projects & Engineering Work | Jorge de la Cruz</title>
+        <title>Projects & Engineering Work | Jorge de la Cruz Padilla</title>
         <meta
           name="description"
           content="Selected products, personal tools, and client work built with TypeScript, React, Node.js, and other stacks."
         />
-        <meta
-          property="og:title"
-          content="Projects & Engineering Work | Jorge de la Cruz"
-        />
-        <meta
-          property="og:description"
-          content="Selected products, personal tools, and client work."
-        />
+        <meta property="og:title" content="Projects & Engineering Work | Jorge de la Cruz Padilla" />
+        <meta property="og:description" content="Selected products, personal tools, and client work." />
       </Helmet>
 
       <PageContainer className="space-y-10">
@@ -199,31 +151,21 @@ export default function ProjectsPage() {
             placeholder="Search by title, description, or stack..."
           />
           <div className="flex flex-wrap items-center gap-1">
-            <FilterButton
-              active={selectedType === "all"}
-              onClick={() => setSelectedType("all")}
-            >
+            <FilterButton active={selectedType === "all"} onClick={() => setSelectedType("all")}>
               All ({projects.length})
             </FilterButton>
             {projects.some((project) => project.featured) ? (
-              <FilterButton
-                active={selectedType === "featured"}
-                onClick={() => setSelectedType("featured")}
-              >
+              <FilterButton active={selectedType === "featured"} onClick={() => setSelectedType("featured")}>
                 Featured
               </FilterButton>
             ) : null}
             {availableTypes.map((type) => {
-              const count = projects.filter(
-                (project) => project.type?.toLowerCase() === type.toLowerCase(),
-              ).length;
+              const count = projects.filter((project) => project.type?.toLowerCase() === type.toLowerCase()).length;
               return (
                 <FilterButton
                   key={type}
                   active={selectedType.toLowerCase() === type.toLowerCase()}
-                  onClick={() =>
-                    setSelectedType(selectedType === type ? "all" : type)
-                  }
+                  onClick={() => setSelectedType(selectedType === type ? "all" : type)}
                 >
                   {type} ({count})
                 </FilterButton>
@@ -234,8 +176,7 @@ export default function ProjectsPage() {
             <div className="flex flex-wrap items-center gap-1.5">
               <span className="text-sm text-muted-foreground">Stack</span>
               {allTechnologies.map((tech) => {
-                const isSelected =
-                  selectedTech?.toLowerCase() === tech.toLowerCase();
+                const isSelected = selectedTech?.toLowerCase() === tech.toLowerCase();
                 return (
                   <button
                     key={tech}
@@ -251,11 +192,7 @@ export default function ProjectsPage() {
                 );
               })}
               {hasActiveFilters ? (
-                <button
-                  type="button"
-                  onClick={resetFilters}
-                  className="ml-auto text-sm text-primary hover:underline"
-                >
+                <button type="button" onClick={resetFilters} className="ml-auto text-sm text-primary hover:underline">
                   Reset filters
                 </button>
               ) : null}
@@ -264,11 +201,8 @@ export default function ProjectsPage() {
         </section>
 
         <p className="text-sm text-muted-foreground">
-          Showing{" "}
-          <span className="font-medium text-foreground">
-            {filteredProjects.length}
-          </span>{" "}
-          of {projects.length} projects
+          Showing <span className="font-medium text-foreground">{filteredProjects.length}</span> of {projects.length}{" "}
+          projects
           {selectedTech ? <span> · {selectedTech}</span> : null}
         </p>
 
@@ -278,8 +212,7 @@ export default function ProjectsPage() {
             title="No projects yet"
             description="Published projects will show up here."
           />
-        ) : listView(projects.length, filteredProjects.length) ===
-          "no-results" ? (
+        ) : listView(projects.length, filteredProjects.length) === "no-results" ? (
           <EmptyState
             icon={<Search className="h-5 w-5" />}
             title="No matching projects found"
@@ -292,14 +225,8 @@ export default function ProjectsPage() {
         ) : showGroups ? (
           <div className="space-y-12">
             {featuredProjects.length > 0 ? (
-              <section
-                className="space-y-4"
-                aria-labelledby="featured-projects"
-              >
-                <h2
-                  id="featured-projects"
-                  className="text-lg font-semibold tracking-tight text-foreground"
-                >
+              <section className="space-y-4" aria-labelledby="featured-projects">
+                <h2 id="featured-projects" className="text-lg font-semibold tracking-tight text-foreground">
                   Featured
                 </h2>
                 <div className="grid gap-4 md:grid-cols-2">
@@ -316,10 +243,7 @@ export default function ProjectsPage() {
             ) : null}
             {earlierProjects.length > 0 ? (
               <section className="space-y-4" aria-labelledby="earlier-projects">
-                <h2
-                  id="earlier-projects"
-                  className="text-lg font-semibold tracking-tight text-foreground"
-                >
+                <h2 id="earlier-projects" className="text-lg font-semibold tracking-tight text-foreground">
                   Earlier work
                 </h2>
                 <div className="grid gap-4 md:grid-cols-2">
@@ -338,11 +262,7 @@ export default function ProjectsPage() {
         ) : (
           <div className="grid gap-4 md:grid-cols-2">
             {filteredProjects.map((project) => (
-              <ProjectCard
-                key={project.id || project.slug}
-                project={project}
-                onSelectTech={setSelectedTech}
-              />
+              <ProjectCard key={project.id || project.slug} project={project} onSelectTech={setSelectedTech} />
             ))}
           </div>
         )}

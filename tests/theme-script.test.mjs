@@ -5,13 +5,8 @@ import { test } from "node:test";
 import { fileURLToPath } from "node:url";
 import vm from "node:vm";
 
-const html = readFileSync(
-  join(dirname(fileURLToPath(import.meta.url)), "../index.html"),
-  "utf8",
-);
-const script = html.match(
-  /<script>\s*(\(function \(\) \{[\s\S]*?\}\)\(\);)\s*<\/script>/,
-)?.[1];
+const html = readFileSync(join(dirname(fileURLToPath(import.meta.url)), "../index.html"), "utf8");
+const script = html.match(/<script>\s*(\(function \(\) \{[\s\S]*?\}\)\(\);)\s*<\/script>/)?.[1];
 
 function boot(storage) {
   const classes = new Set();

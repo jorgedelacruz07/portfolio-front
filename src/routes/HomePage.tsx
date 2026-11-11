@@ -43,10 +43,7 @@ function DeferredSectionPlaceholder() {
       </div>
       <div className="grid gap-5 md:grid-cols-2">
         {Array.from({ length: 2 }, (_, index) => (
-          <div
-            key={index}
-            className="space-y-4 rounded-2xl border border-border/80 bg-card p-2"
-          >
+          <div key={index} className="space-y-4 rounded-2xl border border-border/80 bg-card p-2">
             <div className="space-y-3 p-4">
               <div className="h-5 w-2/3 motion-safe:animate-pulse rounded-lg bg-muted/70" />
               <div className="space-y-2">
@@ -110,12 +107,7 @@ function SectionLoadError({
       title={title}
       description="This section could not be loaded. The rest of the page is still available."
     >
-      <Button
-        type="button"
-        variant="outline"
-        onClick={onRetry}
-        disabled={pending}
-      >
+      <Button type="button" variant="outline" onClick={onRetry} disabled={pending}>
         {pending ? "Trying again..." : "Try again"}
       </Button>
     </HomeSection>
@@ -123,16 +115,7 @@ function SectionLoadError({
 }
 
 export default function HomePage() {
-  const {
-    profile,
-    skills,
-    experiences,
-    projects,
-    isLoading,
-    error,
-    isFetching,
-    refetch,
-  } = useHomePageData();
+  const { profile, skills, experiences, projects, isLoading, error, isFetching, refetch } = useHomePageData();
   const snapshot = careerSnapshot(experiences);
   const retry = () => {
     void refetch();

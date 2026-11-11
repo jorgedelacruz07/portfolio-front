@@ -17,10 +17,7 @@ const NEUTRAL_THEME: CompanyTheme = {
 };
 
 /** Logos share one neutral surface. Per-company color themes were decorative and fought the palette. */
-export function getCompanyTheme(
-  _slug?: string,
-  _companyName?: string,
-): CompanyTheme {
+export function getCompanyTheme(_slug?: string, _companyName?: string): CompanyTheme {
   return NEUTRAL_THEME;
 }
 

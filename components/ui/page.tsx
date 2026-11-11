@@ -2,23 +2,8 @@ import type { ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
 
-export function PageContainer({
-  children,
-  className,
-}: {
-  children: ReactNode;
-  className?: string;
-}) {
-  return (
-    <div
-      className={cn(
-        "mx-auto w-full max-w-6xl px-4 py-6 sm:px-6 sm:py-14",
-        className,
-      )}
-    >
-      {children}
-    </div>
-  );
+export function PageContainer({ children, className }: { children: ReactNode; className?: string }) {
+  return <div className={cn("mx-auto w-full max-w-6xl px-4 py-6 sm:px-6 sm:py-14", className)}>{children}</div>;
 }
 
 export function PageHeader({
@@ -38,13 +23,9 @@ export function PageHeader({
           {eyebrow}
         </p>
       ) : null}
-      <h1 className="text-3xl font-semibold leading-[1.05] text-foreground sm:text-6xl">
-        {title}
-      </h1>
+      <h1 className="text-3xl font-semibold leading-[1.05] text-foreground sm:text-6xl">{title}</h1>
       {description ? (
-        <p className="max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">
-          {description}
-        </p>
+        <p className="max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">{description}</p>
       ) : null}
     </header>
   );
@@ -72,19 +53,11 @@ export function EmptyState({
           {icon}
         </div>
       ) : null}
-      <Title className="text-lg font-semibold tracking-tight text-foreground">
-        {title}
-      </Title>
+      <Title className="text-lg font-semibold tracking-tight text-foreground">{title}</Title>
       {description ? (
-        <p className="mt-2 max-w-md text-sm leading-relaxed text-muted-foreground">
-          {description}
-        </p>
+        <p className="mt-2 max-w-md text-sm leading-relaxed text-muted-foreground">{description}</p>
       ) : null}
-      {children ? (
-        <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-          {children}
-        </div>
-      ) : null}
+      {children ? <div className="mt-6 flex flex-wrap items-center justify-center gap-3">{children}</div> : null}
     </div>
   );
 }

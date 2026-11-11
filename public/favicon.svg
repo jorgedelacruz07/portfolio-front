@@ -1,28 +1,33 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
   <defs>
     <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#09090b"/>
-      <stop offset="100%" stop-color="#141418"/>
+      <stop offset="0%" stop-color="#1c1917"/>
+      <stop offset="100%" stop-color="#12100e"/>
     </linearGradient>
-    <linearGradient id="tealGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#2dd4bf"/>
-      <stop offset="100%" stop-color="#0d9488"/>
+    <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f59e4b"/>
+      <stop offset="100%" stop-color="#b44622"/>
     </linearGradient>
     <linearGradient id="borderGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#2dd4bf" stop-opacity="0.35"/>
-      <stop offset="100%" stop-color="#27272a" stop-opacity="0.6"/>
+      <stop offset="0%" stop-color="#f59e4b" stop-opacity="0.45"/>
+      <stop offset="100%" stop-color="#332e2a" stop-opacity="0.65"/>
     </linearGradient>
   </defs>
 
   <!-- Background squircle -->
-  <rect x="16" y="16" width="480" height="480" rx="116" fill="url(#bgGrad)"/>
-  <rect x="16" y="16" width="480" height="480" rx="116" fill="none" stroke="url(#borderGrad)" stroke-width="14"/>
+  <rect x="16" y="16" width="480" height="480" rx="108" fill="url(#bgGrad)"/>
+  <rect x="16" y="16" width="480" height="480" rx="108" fill="none" stroke="url(#borderGrad)" stroke-width="14"/>
 
-  <!-- Signature Brand Teal Dot -->
-  <circle cx="395" cy="115" r="18" fill="url(#tealGrad)"/>
+  <!-- Monogram: jdlcp — honoring Jorge · de la Cruz · Padilla -->
+  <text x="256" y="255" font-family="'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif" font-weight="700" font-size="146" text-anchor="middle" fill="#faf7f2" letter-spacing="-4">
+    j<tspan fill="url(#accentGrad)" font-style="italic" font-weight="600">dl</tspan>cp
+  </text>
 
-  <!-- Monogram JdC: bold craft typography -->
-  <text x="245" y="325" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-weight="800" font-size="220" text-anchor="middle" fill="#fafafa" letter-spacing="-6">
-    J<tspan font-size="140" font-weight="700" fill="url(#tealGrad)" dx="2" dy="-35">d</tspan><tspan font-size="200" font-weight="800" fill="#fafafa" dx="2" dy="35">C</tspan>
+  <!-- Subtle editorial divider -->
+  <line x1="156" y1="304" x2="356" y2="304" stroke="#332e2a" stroke-width="6" stroke-linecap="round"/>
+
+  <!-- .dev badge -->
+  <text x="256" y="384" font-family="ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace" font-weight="700" font-size="78" text-anchor="middle" fill="url(#accentGrad)" letter-spacing="4">
+    .dev
   </text>
 </svg>

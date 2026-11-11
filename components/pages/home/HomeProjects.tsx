@@ -19,18 +19,11 @@ export const HomeProjects = ({ projects }: HomeProjectsProps) => {
       actionLabel="All projects"
     >
       <div className="space-y-2 sm:space-y-5">
-        {featured ? (
-          <ProjectCard project={featured} heading="h3" spotlight index={1} />
-        ) : null}
+        {featured ? <ProjectCard project={featured} heading="h3" spotlight index={1} /> : null}
         {rest.length > 0 ? (
           <div className="grid gap-x-10 gap-y-2 md:grid-cols-2">
             {rest.map((project, index) => (
-              <ProjectCard
-                key={project.id || project.slug}
-                project={project}
-                heading="h3"
-                index={index + 2}
-              />
+              <ProjectCard key={project.id || project.slug} project={project} heading="h3" index={index + 2} />
             ))}
           </div>
         ) : null}

@@ -56,9 +56,7 @@
 h1,
 h2,
 h3 {
-  font-family:
-    "Iowan Old Style", "Palatino Linotype", Palatino, "Source Serif Pro",
-    Georgia, serif;
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, "Source Serif Pro", Georgia, serif;
   font-weight: 600;
   letter-spacing: -0.02em;
   text-wrap: balance;
@@ -110,16 +108,8 @@ body {
   min-height: 100%;
   overflow-x: hidden;
   background-image:
-    radial-gradient(
-      ellipse 80% 36rem at 50% -16rem,
-      hsl(var(--primary) / 0.07),
-      transparent
-    ),
-    radial-gradient(
-      ellipse 40% 24rem at 92% 8rem,
-      hsl(var(--primary) / 0.04),
-      transparent
-    );
+    radial-gradient(ellipse 80% 36rem at 50% -16rem, hsl(var(--primary) / 0.07), transparent),
+    radial-gradient(ellipse 40% 24rem at 92% 8rem, hsl(var(--primary) / 0.04), transparent);
   background-attachment: fixed;
 }
 
@@ -200,16 +190,8 @@ img {
     linear-gradient(to right, hsl(var(--border) / 0.55) 1px, transparent 1px),
     linear-gradient(to bottom, hsl(var(--border) / 0.55) 1px, transparent 1px);
   background-size: 68px 68px;
-  -webkit-mask-image: radial-gradient(
-    ellipse 75% 80% at 50% 0%,
-    black,
-    transparent 78%
-  );
-  mask-image: radial-gradient(
-    ellipse 75% 80% at 50% 0%,
-    black,
-    transparent 78%
-  );
+  -webkit-mask-image: radial-gradient(ellipse 75% 80% at 50% 0%, black, transparent 78%);
+  mask-image: radial-gradient(ellipse 75% 80% at 50% 0%, black, transparent 78%);
 }
 
 .mono-label {
@@ -226,13 +208,7 @@ img {
 
 .inset-panel {
   border: 1px solid hsl(var(--border) / 0.75);
-  background:
-    linear-gradient(
-      180deg,
-      hsl(var(--surface) / 0.72),
-      hsl(var(--surface) / 0.42)
-    ),
-    hsl(var(--card));
+  background: linear-gradient(180deg, hsl(var(--surface) / 0.72), hsl(var(--surface) / 0.42)), hsl(var(--card));
 }
 
 .hover-underline {
@@ -372,9 +348,7 @@ dialog input[type="radio"] {
 
 /* Admin status colors were written for a dark surface. On a light page they
    drop below WCAG AA, so the same utilities use a darker ink only in light mode. */
-html:not(.dark)
-  .admin-theme
-  :is(.text-amber-200, .text-amber-200\/90, .text-amber-300, .text-amber-400) {
+html:not(.dark) .admin-theme :is(.text-amber-200, .text-amber-200\/90, .text-amber-300, .text-amber-400) {
   color: hsl(32 95% 24%);
 }
 

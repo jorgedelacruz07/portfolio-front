@@ -29,8 +29,7 @@ const Footer = () => {
               Let&apos;s build something reliable.
             </h2>
             <p className="max-w-xl text-sm leading-relaxed text-muted-foreground sm:text-base">
-              I partner with teams that care about product quality, performance,
-              and shipping software that holds up.
+              I partner with teams that care about product quality, performance, and shipping software that holds up.
             </p>
           </div>
 
@@ -54,19 +53,13 @@ const Footer = () => {
 
         <div className="grid gap-6 py-6 sm:py-10 md:grid-cols-[1.3fr_1fr_auto]">
           <div className="space-y-2">
-            <p className="text-sm font-semibold tracking-tight text-foreground">
-              Jorge de la Cruz Padilla
-            </p>
+            <p className="text-sm font-semibold tracking-tight text-foreground">Jorge de la Cruz Padilla</p>
             <p className="max-w-xs text-sm leading-relaxed text-muted-foreground">
-              Senior Software Engineer. Lima, Peru. Building full-stack products
-              with React, Node, and cloud delivery.
+              Senior Software Engineer. Lima, Peru. Building full-stack products with React, Node, and cloud delivery.
             </p>
           </div>
 
-          <nav
-            className="flex flex-wrap content-start gap-x-5 gap-y-2"
-            aria-label="Footer"
-          >
+          <nav className="flex flex-wrap content-start gap-x-5 gap-y-2" aria-label="Footer">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
@@ -100,10 +93,7 @@ const Footer = () => {
         <div className="flex flex-col gap-2 border-t border-border/80 py-6 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
           <p>© {currentYear} Jorge de la Cruz Padilla. All rights reserved.</p>
           <p className="inline-flex items-center gap-1.5">
-            <span
-              className="h-1.5 w-1.5 rounded-full bg-emerald-500"
-              aria-hidden="true"
-            />
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" aria-hidden="true" />
             Available for select engineering opportunities
           </p>
         </div>

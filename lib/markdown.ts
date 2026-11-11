@@ -11,10 +11,7 @@ export function isSafeUrl(url: unknown): boolean {
 }
 
 /** Destination inside markdown `(...)`, including balanced parentheses in the URL. */
-export function readBalancedDestination(
-  text: string,
-  start: number,
-): { value: string; end: number } | null {
+export function readBalancedDestination(text: string, start: number): { value: string; end: number } | null {
   let depth = 0;
   for (let index = start; index < text.length; index += 1) {
     const character = text[index];

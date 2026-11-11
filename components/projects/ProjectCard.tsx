@@ -17,22 +17,14 @@ type ProjectCardProps = {
   index?: number;
 };
 
-export function ProjectCard({
-  project,
-  onSelectTech,
-  heading = "h2",
-  className,
-  spotlight = false,
-}: ProjectCardProps) {
+export function ProjectCard({ project, onSelectTech, heading = "h2", className, spotlight = false }: ProjectCardProps) {
   const Title = heading;
   const displayDescription = projectCardDescription(project);
   const liveUrl = safeHref(project.url);
   const githubUrl = safeHref(project.links?.github);
   const caseStudyUrl = safeHref(project.links?.caseStudy);
   const caseStudy =
-    project.longDescription &&
-    displayDescription &&
-    project.longDescription.trim() !== displayDescription
+    project.longDescription && displayDescription && project.longDescription.trim() !== displayDescription
       ? project.longDescription
       : null;
 
@@ -43,9 +35,7 @@ export function ProjectCard({
         {project.featured ? <Badge>Featured</Badge> : null}
       </div>
       {project.from ? (
-        <span className="mono-label text-muted-foreground">
-          {formatDateRange(project.from, project.to)}
-        </span>
+        <span className="mono-label text-muted-foreground">{formatDateRange(project.from, project.to)}</span>
       ) : null}
     </div>
   );
@@ -79,9 +69,7 @@ export function ProjectCard({
         <p
           className={cn(
             "leading-relaxed text-muted-foreground",
-            spotlight
-              ? "max-w-2xl pt-1 text-base sm:text-lg"
-              : "text-sm sm:text-[0.9375rem]",
+            spotlight ? "max-w-2xl pt-1 text-base sm:text-lg" : "text-sm sm:text-[0.9375rem]",
           )}
         >
           {displayDescription}
@@ -91,14 +79,9 @@ export function ProjectCard({
         <details className="group/case pt-1 text-sm">
           <summary className="flex cursor-pointer list-none items-center gap-1.5 py-1 font-medium text-primary marker:hidden hover:underline [&::-webkit-details-marker]:hidden">
             Learn more
-            <ChevronDown
-              className="h-3.5 w-3.5 transition-transform group-open/case:rotate-180"
-              aria-hidden="true"
-            />
+            <ChevronDown className="h-3.5 w-3.5 transition-transform group-open/case:rotate-180" aria-hidden="true" />
           </summary>
-          <p className="mt-2 whitespace-pre-line leading-relaxed text-muted-foreground">
-            {caseStudy}
-          </p>
+          <p className="mt-2 whitespace-pre-line leading-relaxed text-muted-foreground">{caseStudy}</p>
         </details>
       ) : null}
     </div>
@@ -130,12 +113,7 @@ export function ProjectCard({
   ) : null;
 
   const actions =
-    liveUrl ||
-    githubUrl ||
-    caseStudyUrl ||
-    project.url ||
-    project.links?.github ||
-    project.links?.caseStudy ? (
+    liveUrl || githubUrl || caseStudyUrl || project.url || project.links?.github || project.links?.caseStudy ? (
       <div className="flex flex-wrap items-center gap-2 border-t border-border/70 pt-4">
         {liveUrl ? (
           <Button size="sm" asChild>
@@ -145,9 +123,7 @@ export function ProjectCard({
             </a>
           </Button>
         ) : project.url ? (
-          <span className="break-all text-sm text-muted-foreground">
-            {project.url}
-          </span>
+          <span className="break-all text-sm text-muted-foreground">{project.url}</span>
         ) : null}
         {githubUrl ? (
           <Button variant="outline" size="sm" asChild>
@@ -157,9 +133,7 @@ export function ProjectCard({
             </a>
           </Button>
         ) : project.links?.github ? (
-          <span className="break-all text-sm text-muted-foreground">
-            {project.links.github}
-          </span>
+          <span className="break-all text-sm text-muted-foreground">{project.links.github}</span>
         ) : null}
         {caseStudyUrl ? (
           <Button variant="outline" size="sm" asChild>
@@ -168,9 +142,7 @@ export function ProjectCard({
             </a>
           </Button>
         ) : project.links?.caseStudy ? (
-          <span className="break-all text-sm text-muted-foreground">
-            {project.links.caseStudy}
-          </span>
+          <span className="break-all text-sm text-muted-foreground">{project.links.caseStudy}</span>
         ) : null}
       </div>
     ) : null;
@@ -183,12 +155,7 @@ export function ProjectCard({
         className,
       )}
     >
-      <div
-        className={cn(
-          "relative flex flex-1 flex-col gap-4 px-0 py-5 sm:py-6",
-          spotlight && "sm:py-7",
-        )}
-      >
+      <div className={cn("relative flex flex-1 flex-col gap-4 px-0 py-5 sm:py-6", spotlight && "sm:py-7")}>
         {metadata}
         {projectDetails}
         {technologies ? (

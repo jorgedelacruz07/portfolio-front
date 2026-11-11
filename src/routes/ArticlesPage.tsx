@@ -48,12 +48,8 @@ export default function ArticlesPage() {
       if (searchQuery.trim()) {
         const query = searchQuery.toLowerCase().trim();
         const matchesTitle = article.title.toLowerCase().includes(query);
-        const matchesExcerpt = (article.excerpt || "")
-          .toLowerCase()
-          .includes(query);
-        const matchesType = (article.contentType || "")
-          .toLowerCase()
-          .includes(query);
+        const matchesExcerpt = (article.excerpt || "").toLowerCase().includes(query);
+        const matchesType = (article.contentType || "").toLowerCase().includes(query);
         return matchesTitle || matchesExcerpt || matchesType;
       }
 
@@ -72,17 +68,9 @@ export default function ArticlesPage() {
           heading="h1"
           icon={<X className="h-5 w-5" />}
           title="Error loading articles"
-          description={
-            error instanceof Error
-              ? error.message
-              : "Unable to retrieve the articles catalog."
-          }
+          description={error instanceof Error ? error.message : "Unable to retrieve the articles catalog."}
         >
-          <Button
-            onClick={() => window.location.reload()}
-            variant="outline"
-            size="sm"
-          >
+          <Button onClick={() => window.location.reload()} variant="outline" size="sm">
             Try again
           </Button>
         </EmptyState>
@@ -95,16 +83,13 @@ export default function ArticlesPage() {
   return (
     <>
       <Helmet>
-        <title>Articles & Engineering Notes | Jorge de la Cruz</title>
+        <title>Articles & Engineering Notes | Jorge de la Cruz Padilla</title>
         <meta
           name="description"
           content="Deep-dives into software architecture, systems engineering, distributed systems, and craft."
         />
         <link rel="canonical" href={`${PUBLIC_SITE_ORIGIN}/articles`} />
-        <meta
-          property="og:title"
-          content="Articles & Engineering Notes | Jorge de la Cruz"
-        />
+        <meta property="og:title" content="Articles & Engineering Notes | Jorge de la Cruz Padilla" />
         <meta
           property="og:description"
           content="Deep-dives into software architecture, systems engineering, distributed systems, and craft."
@@ -112,10 +97,7 @@ export default function ArticlesPage() {
         <meta property="og:type" content="website" />
         <meta property="og:url" content={`${PUBLIC_SITE_ORIGIN}/articles`} />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta
-          name="twitter:title"
-          content="Articles & Engineering Notes | Jorge de la Cruz"
-        />
+        <meta name="twitter:title" content="Articles & Engineering Notes | Jorge de la Cruz Padilla" />
         <meta
           name="twitter:description"
           content="Deep-dives into software architecture, systems engineering, distributed systems, and craft."
@@ -131,11 +113,7 @@ export default function ArticlesPage() {
 
         {articles.length > 0 ? (
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div
-              className="flex flex-wrap items-center gap-1"
-              role="group"
-              aria-label="Filter articles by type"
-            >
+            <div className="flex flex-wrap items-center gap-1" role="group" aria-label="Filter articles by type">
               <button
                 type="button"
                 aria-pressed={selectedType === "all"}
@@ -149,24 +127,22 @@ export default function ArticlesPage() {
               >
                 All types
               </button>
-              {(Object.keys(CONTENT_TYPE_LABELS) as ArticleContentType[]).map(
-                (type) => (
-                  <button
-                    key={type}
-                    type="button"
-                    aria-pressed={selectedType === type}
-                    onClick={() => setSelectedType(type)}
-                    className={cn(
-                      "rounded-md px-2.5 py-1.5 text-sm",
-                      selectedType === type
-                        ? "bg-foreground text-background"
-                        : "text-muted-foreground hover:bg-muted hover:text-foreground",
-                    )}
-                  >
-                    {CONTENT_TYPE_LABELS[type]}
-                  </button>
-                ),
-              )}
+              {(Object.keys(CONTENT_TYPE_LABELS) as ArticleContentType[]).map((type) => (
+                <button
+                  key={type}
+                  type="button"
+                  aria-pressed={selectedType === type}
+                  onClick={() => setSelectedType(type)}
+                  className={cn(
+                    "rounded-md px-2.5 py-1.5 text-sm",
+                    selectedType === type
+                      ? "bg-foreground text-background"
+                      : "text-muted-foreground hover:bg-muted hover:text-foreground",
+                  )}
+                >
+                  {CONTENT_TYPE_LABELS[type]}
+                </button>
+              ))}
             </div>
             <div className="w-full sm:max-w-xs">
               <SearchField
@@ -211,10 +187,7 @@ export default function ArticlesPage() {
               >
                 <div className="space-y-3">
                   <div className="flex items-center justify-between gap-2">
-                    <Badge>
-                      {CONTENT_TYPE_LABELS[article.contentType] ||
-                        article.contentType}
-                    </Badge>
+                    <Badge>{CONTENT_TYPE_LABELS[article.contentType] || article.contentType}</Badge>
                     <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
                       <Clock className="h-3 w-3" aria-hidden="true" />
                       {article.readingTimeMinutes} min read
@@ -226,9 +199,7 @@ export default function ArticlesPage() {
                       {article.title}
                     </Link>
                   </h2>
-                  <p className="line-clamp-3 text-sm leading-relaxed text-muted-foreground">
-                    {article.excerpt}
-                  </p>
+                  <p className="line-clamp-3 text-sm leading-relaxed text-muted-foreground">{article.excerpt}</p>
                 </div>
                 <div className="mt-6 flex items-center justify-between border-t border-border pt-4 text-xs text-muted-foreground">
                   <span>{formatPublishedDate(article.publishedAt)}</span>

@@ -12,9 +12,7 @@ const shell = "mx-auto flex w-full max-w-6xl items-center px-4 sm:px-6";
 const navLinkClass = (isActive: boolean) =>
   cn(
     "relative rounded-lg px-3 py-2 text-sm transition-colors",
-    isActive
-      ? "text-foreground"
-      : "text-muted-foreground hover:text-foreground",
+    isActive ? "text-foreground" : "text-muted-foreground hover:text-foreground",
   );
 
 function Brand() {
@@ -24,14 +22,10 @@ function Brand() {
         <span>j</span>
         <span className="italic text-primary">dl</span>
         <span>cp</span>
-        <span className="ml-0.5 font-mono text-[0.6875rem] font-semibold tracking-tight text-primary">
-          .dev
-        </span>
+        <span className="ml-0.5 font-mono text-[0.6875rem] font-semibold tracking-tight text-primary">.dev</span>
       </span>
       <span className="flex flex-col leading-none">
-        <span className="text-sm font-semibold tracking-tight text-foreground">
-          Jorge de la Cruz Padilla
-        </span>
+        <span className="text-sm font-semibold tracking-tight text-foreground">Jorge de la Cruz Padilla</span>
         <span className="mt-1 hidden text-[0.625rem] font-medium uppercase tracking-[0.16em] text-muted-foreground sm:block">
           Software Engineer
         </span>
@@ -55,14 +49,7 @@ export const Navbar = () => {
     if (!isMenuOpen) return undefined;
     const menu = menuRef.current;
     const button = menuButtonRef.current;
-    const items = () =>
-      menu
-        ? Array.from(
-            menu.querySelectorAll<HTMLElement>(
-              "a[href], button:not([disabled])",
-            ),
-          )
-        : [];
+    const items = () => (menu ? Array.from(menu.querySelectorAll<HTMLElement>("a[href], button:not([disabled])")) : []);
 
     items()[0]?.focus();
 
@@ -127,11 +114,7 @@ export const Navbar = () => {
           <span className="mx-2 h-5 w-px bg-border/80" aria-hidden="true" />
           <ThemeToggle />
           <Button size="sm" className="ml-2" asChild>
-            <a
-              href="/documents/jorgedelacruz_cv.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <a href="/documents/jorgedelacruz_cv.pdf" target="_blank" rel="noopener noreferrer">
               Resume
             </a>
           </Button>
@@ -144,33 +127,15 @@ export const Navbar = () => {
             variant="ghost"
             size="icon"
             onClick={() => setIsMenuOpen((open) => !open)}
-            aria-label={
-              isMenuOpen ? "Close navigation menu" : "Open navigation menu"
-            }
+            aria-label={isMenuOpen ? "Close navigation menu" : "Open navigation menu"}
             aria-expanded={isMenuOpen}
             aria-controls={menuId}
           >
-            <svg
-              className="h-5 w-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              aria-hidden="true"
-            >
+            <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               {isMenuOpen ? (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={1.5}
-                  d="M6 18L18 6M6 6l12 12"
-                />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 18L18 6M6 6l12 12" />
               ) : (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={1.5}
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 6h16M4 12h16M4 18h16" />
               )}
             </svg>
           </Button>
@@ -178,15 +143,8 @@ export const Navbar = () => {
       </div>
 
       {isMenuOpen ? (
-        <div
-          id={menuId}
-          ref={menuRef}
-          className="surface-popover mx-3 mb-3 mt-2 border md:hidden"
-        >
-          <nav
-            className={cn(shell, "flex-col items-stretch gap-1 py-3")}
-            aria-label="Primary mobile"
-          >
+        <div id={menuId} ref={menuRef} className="surface-popover mx-3 mb-3 mt-2 border md:hidden">
+          <nav className={cn(shell, "flex-col items-stretch gap-1 py-3")} aria-label="Primary mobile">
             {navbarItems.map((item) => (
               <NavLink
                 key={item.href}
@@ -205,11 +163,7 @@ export const Navbar = () => {
               </NavLink>
             ))}
             <Button size="sm" className="mt-2" asChild>
-              <a
-                href="/documents/jorgedelacruz_cv.pdf"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <a href="/documents/jorgedelacruz_cv.pdf" target="_blank" rel="noopener noreferrer">
                 Resume
               </a>
             </Button>

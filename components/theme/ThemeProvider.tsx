@@ -1,11 +1,4 @@
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-  type ReactNode,
-} from "react";
+import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 
 import {
   THEME_STORAGE_KEY,
@@ -47,9 +40,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       return "system";
     }
   });
-  const [systemDark, setSystemDark] = useState(() =>
-    typeof window === "undefined" ? false : systemPrefersDark(),
-  );
+  const [systemDark, setSystemDark] = useState(() => (typeof window === "undefined" ? false : systemPrefersDark()));
 
   const resolved = resolveTheme(preference, systemDark);
 
@@ -89,9 +80,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     [preference, resolved],
   );
 
-  return (
-    <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
-  );
+  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 }
 
 export function useTheme() {

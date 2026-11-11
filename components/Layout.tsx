@@ -30,10 +30,7 @@ export const Layout = ({ children }: LayoutProps) => {
           content="Jorge de la Cruz Padilla, Software Engineer, React, TypeScript, Node.js, Full Stack Developer, Web Development, AI Tools, Vite, Portfolio"
         />
         <meta name="author" content="Jorge de la Cruz Padilla" />
-        <meta
-          property="og:title"
-          content="Jorge de la Cruz Padilla | Senior Software Engineer"
-        />
+        <meta property="og:title" content="Jorge de la Cruz Padilla | Senior Software Engineer" />
         <meta
           property="og:description"
           content="Senior Software Engineer specializing in React.js, TypeScript, Node.js, and Native MongoDB Architecture. Building fast, scalable full-stack products."
@@ -41,14 +38,8 @@ export const Layout = ({ children }: LayoutProps) => {
         <meta property="og:type" content="website" />
         <meta property="og:site_name" content="Jorge de la Cruz Padilla" />
         <meta property="og:url" content={currentUrl} />
-        <meta
-          property="og:image"
-          content="https://jorgedelacruzpadilla.dev/images/og-image.png?v=2"
-        />
-        <meta
-          property="og:image:secure_url"
-          content="https://jorgedelacruzpadilla.dev/images/og-image.png?v=2"
-        />
+        <meta property="og:image" content="https://jorgedelacruzpadilla.dev/images/og-image.png?v=2" />
+        <meta property="og:image:secure_url" content="https://jorgedelacruzpadilla.dev/images/og-image.png?v=2" />
         <meta property="og:image:type" content="image/png" />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
@@ -59,18 +50,12 @@ export const Layout = ({ children }: LayoutProps) => {
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:site" content="@jorgedelacruz07" />
         <meta name="twitter:creator" content="@jorgedelacruz07" />
-        <meta
-          name="twitter:title"
-          content="Jorge de la Cruz Padilla | Senior Software Engineer"
-        />
+        <meta name="twitter:title" content="Jorge de la Cruz Padilla | Senior Software Engineer" />
         <meta
           name="twitter:description"
           content="Senior Software Engineer specializing in React.js, TypeScript, Node.js, and Native MongoDB Architecture. Building fast, scalable full-stack products."
         />
-        <meta
-          name="twitter:image"
-          content="https://jorgedelacruzpadilla.dev/images/og-image.png?v=2"
-        />
+        <meta name="twitter:image" content="https://jorgedelacruzpadilla.dev/images/og-image.png?v=2" />
         <meta
           name="twitter:image:alt"
           content="Jorge de la Cruz Padilla, Senior Software Engineer. AI-assisted delivery, security, and product thinking."
@@ -85,11 +70,7 @@ export const Layout = ({ children }: LayoutProps) => {
         Skip to content
       </a>
       <Navbar />
-      <main
-        id="content"
-        tabIndex={-1}
-        className="relative z-10 min-h-[calc(100vh-8rem)] w-full outline-none"
-      >
+      <main id="content" tabIndex={-1} className="relative z-10 min-h-[calc(100vh-8rem)] w-full outline-none">
         <div className={isAdmin ? "admin-theme px-4 sm:px-6" : undefined}>
           <ErrorBoundary>{children}</ErrorBoundary>
         </div>

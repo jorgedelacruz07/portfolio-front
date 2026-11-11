@@ -43,17 +43,12 @@ class ErrorBoundaryComponent extends Component<Props, State> {
       return (
         <div className="flex min-h-[50vh] items-center justify-center px-4 py-16">
           <div className="w-full max-w-md space-y-4 rounded-lg border border-border bg-card p-6">
-            <h3 className="text-base font-semibold text-foreground">
-              Something went wrong
-            </h3>
+            <h3 className="text-base font-semibold text-foreground">Something went wrong</h3>
             <p className="text-sm leading-relaxed text-muted-foreground">
-              We&apos;re sorry, but something unexpected happened. Please try
-              refreshing the page.
+              We&apos;re sorry, but something unexpected happened. Please try refreshing the page.
             </p>
             {import.meta.env.DEV && this.state.error ? (
-              <p className="font-mono text-xs text-destructive">
-                {this.state.error.message}
-              </p>
+              <p className="font-mono text-xs text-destructive">{this.state.error.message}</p>
             ) : null}
             <Button type="button" onClick={() => window.location.reload()}>
               Refresh page

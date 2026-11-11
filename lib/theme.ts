@@ -4,9 +4,7 @@ export const THEME_STORAGE_KEY = "theme";
 export type ThemePreference = "light" | "dark" | "system";
 export type ResolvedTheme = "light" | "dark";
 
-export function isThemePreference(
-  value: string | null,
-): value is ThemePreference {
+export function isThemePreference(value: string | null): value is ThemePreference {
   return value === "light" || value === "dark" || value === "system";
 }
 
@@ -15,10 +13,7 @@ export function readStoredTheme(value: string | null): ThemePreference {
   return isThemePreference(value) ? value : "system";
 }
 
-export function resolveTheme(
-  preference: ThemePreference,
-  systemPrefersDark: boolean,
-): ResolvedTheme {
+export function resolveTheme(preference: ThemePreference, systemPrefersDark: boolean): ResolvedTheme {
   if (preference === "light" || preference === "dark") {
     return preference;
   }

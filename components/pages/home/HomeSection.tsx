@@ -37,9 +37,7 @@ export const HomeSection = ({
             <span>{eyebrow}</span>
           </p>
           <h2 className={homePageStyles.title}>{title}</h2>
-          {description ? (
-            <p className={homePageStyles.description}>{description}</p>
-          ) : null}
+          {description ? <p className={homePageStyles.description}>{description}</p> : null}
         </div>
 
         {actionHref ? (

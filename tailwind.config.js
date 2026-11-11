@@ -71,29 +71,13 @@ export default {
       },
       fontFamily: {
         display: ["Lato", "ui-sans-serif", "system-ui", "sans-serif"],
-        sans: [
-          "Lato",
-          "ui-sans-serif",
-          "system-ui",
-          "-apple-system",
-          "BlinkMacSystemFont",
-          "Segoe UI",
-          "sans-serif",
-        ],
-        mono: [
-          "ui-monospace",
-          "SFMono-Regular",
-          "Menlo",
-          "Monaco",
-          "Consolas",
-          "monospace",
-        ],
+        sans: ["Lato", "ui-sans-serif", "system-ui", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "sans-serif"],
+        mono: ["ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "monospace"],
       },
       boxShadow: {
         subtle: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
         card: "0 1px 2px hsl(224 28% 14% / 0.04), 0 14px 34px -26px hsl(224 28% 14% / 0.2)",
-        "card-hover":
-          "0 2px 4px hsl(224 28% 14% / 0.05), 0 22px 46px -28px hsl(224 28% 14% / 0.28)",
+        "card-hover": "0 2px 4px hsl(224 28% 14% / 0.05), 0 22px 46px -28px hsl(224 28% 14% / 0.28)",
         lift: "0 18px 40px -24px hsl(224 35% 10% / 0.35)",
       },
       animation: {

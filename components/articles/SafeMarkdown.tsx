@@ -1,12 +1,6 @@
 import React, { useMemo } from "react";
 import { cn } from "@/lib/utils";
-import {
-  type BlockToken,
-  type InlineToken,
-  isSafeUrl,
-  parseBlocks,
-  parseInline,
-} from "@/lib/markdown";
+import { type BlockToken, type InlineToken, isSafeUrl, parseBlocks, parseInline } from "@/lib/markdown";
 
 export { isSafeUrl, parseBlocks, parseInline };
 
@@ -15,10 +9,7 @@ interface SafeMarkdownProps {
   className?: string;
 }
 
-function renderInline(
-  tokens: InlineToken[],
-  keyPrefix = "inline",
-): React.ReactNode[] {
+function renderInline(tokens: InlineToken[], keyPrefix = "inline"): React.ReactNode[] {
   return tokens.map((token, index) => {
     const key = `${keyPrefix}-${index}`;
     switch (token.type) {
@@ -44,8 +35,7 @@ function renderInline(
           </em>
         );
       case "link": {
-        const isExternal =
-          token.href.startsWith("http://") || token.href.startsWith("https://");
+        const isExternal = token.href.startsWith("http://") || token.href.startsWith("https://");
         return (
           <a
             key={key}
@@ -95,10 +85,7 @@ function renderBlock(block: BlockToken, index: number): React.ReactNode {
       return <p key={key}>{renderInline(block.children, key)}</p>;
     case "codeblock":
       return (
-        <div
-          key={key}
-          className="my-6 overflow-hidden rounded-lg border border-border bg-muted"
-        >
+        <div key={key} className="my-6 overflow-hidden rounded-lg border border-border bg-muted">
           {block.lang ? (
             <div className="border-b border-border bg-muted px-4 py-1.5 font-mono text-xs text-muted-foreground">
               <span>{block.lang}</span>
@@ -111,10 +98,7 @@ function renderBlock(block: BlockToken, index: number): React.ReactNode {
       );
     case "blockquote":
       return (
-        <blockquote
-          key={key}
-          className="my-6 border-l-2 border-border pl-4 text-muted-foreground"
-        >
+        <blockquote key={key} className="my-6 border-l-2 border-border pl-4 text-muted-foreground">
           {block.children.map((child, idx) => renderBlock(child, idx))}
         </blockquote>
       );
@@ -144,9 +128,5 @@ function renderBlock(block: BlockToken, index: number): React.ReactNode {
 export function SafeMarkdown({ content, className }: SafeMarkdownProps) {
   const blocks = useMemo(() => parseBlocks(content || ""), [content]);
 
-  return (
-    <div className={cn("article-body", className)}>
-      {blocks.map((block, idx) => renderBlock(block, idx))}
-    </div>
-  );
+  return <div className={cn("article-body", className)}>{blocks.map((block, idx) => renderBlock(block, idx))}</div>;
 }

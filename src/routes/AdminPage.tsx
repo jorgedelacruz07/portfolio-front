@@ -207,7 +207,7 @@ function SerpPreview({ title, description, url }: { title: string; description: 
         </div>
       </div>
       <h3 className="text-sm font-semibold text-primary hover:underline line-clamp-1 cursor-pointer pt-0.5">
-        {title || "Jorge de la Cruz | Senior Software Engineer"}
+        {title || "Jorge de la Cruz Padilla | Senior Software Engineer"}
       </h3>
       <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
         {description ||

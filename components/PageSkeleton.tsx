@@ -8,18 +8,13 @@ interface PageSkeletonProps {
 }
 
 const SkeletonBlock = ({ className }: { className: string }) => (
-  <div
-    className={`motion-safe:animate-pulse rounded-lg bg-muted/70 ${className}`}
-    aria-hidden="true"
-  />
+  <div className={`motion-safe:animate-pulse rounded-lg bg-muted/70 ${className}`} aria-hidden="true" />
 );
 
 function CardSkeleton({ article = false }: { article?: boolean }) {
   return (
     <div className="overflow-hidden rounded-2xl border border-border/60 bg-card/50">
-      {article ? (
-        <SkeletonBlock className="h-40 w-full rounded-none sm:h-48" />
-      ) : null}
+      {article ? <SkeletonBlock className="h-40 w-full rounded-none sm:h-48" /> : null}
       <div className="space-y-4 p-5 sm:p-6">
         <div className="flex items-center gap-2">
           <SkeletonBlock className="h-5 w-20 rounded-full" />
@@ -98,16 +93,8 @@ function ArticleSkeleton() {
   );
 }
 
-export const PageSkeleton: FC<PageSkeletonProps> = ({
-  variant = "page",
-  className,
-}) => (
-  <section
-    className={className}
-    aria-busy="true"
-    aria-label="Loading page content"
-    role="status"
-  >
+export const PageSkeleton: FC<PageSkeletonProps> = ({ variant = "page", className }) => (
+  <section className={className} aria-busy="true" aria-label="Loading page content" role="status">
     <span className="sr-only">Loading page content</span>
     {variant === "listing" ? <ListingSkeleton /> : null}
     {variant === "articles" ? <ListingSkeleton article /> : null}

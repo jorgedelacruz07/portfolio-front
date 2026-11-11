@@ -21,10 +21,7 @@ const contributionLevels = [
 function buildCells(weeks: TGithubCalendarWeek[]): Array<number | null> {
   return weeks.flatMap((week) => {
     const offset = new Date(`${week.date}T00:00:00Z`).getUTCDay();
-    const cells: Array<number | null> = [
-      ...Array<null>(offset).fill(null),
-      ...week.counts,
-    ];
+    const cells: Array<number | null> = [...Array<null>(offset).fill(null), ...week.counts];
     while (cells.length < 7) cells.push(null);
     return cells;
   });
@@ -32,11 +29,8 @@ function buildCells(weeks: TGithubCalendarWeek[]): Array<number | null> {
 
 /** Adapt contribution colors to the activity range in this snapshot. */
 function levelForCells(cells: Array<number | null>) {
-  const active = cells
-    .filter((count): count is number => count !== null && count > 0)
-    .sort((a, b) => a - b);
-  const threshold = (ratio: number) =>
-    active[Math.min(active.length - 1, Math.floor(active.length * ratio))] ?? 1;
+  const active = cells.filter((count): count is number => count !== null && count > 0).sort((a, b) => a - b);
+  const threshold = (ratio: number) => active[Math.min(active.length - 1, Math.floor(active.length * ratio))] ?? 1;
   const [q1, q2, q3] = [threshold(0.25), threshold(0.5), threshold(0.75)];
 
   return (count: number) => {
@@ -48,21 +42,11 @@ function levelForCells(cells: Array<number | null>) {
   };
 }
 
-function Stat({
-  label,
-  value,
-  note,
-}: {
-  label: string;
-  value: string;
-  note: string;
-}) {
+function Stat({ label, value, note }: { label: string; value: string; note: string }) {
   return (
     <div className="px-4 py-5 sm:px-5">
       <p className="mono-label text-muted-foreground">{label}</p>
-      <p className="mt-2 text-2xl font-bold tracking-tight tabular-nums text-foreground sm:text-3xl">
-        {value}
-      </p>
+      <p className="mt-2 text-2xl font-bold tracking-tight tabular-nums text-foreground sm:text-3xl">{value}</p>
       <p className="mt-1 text-xs text-muted-foreground">{note}</p>
     </div>
   );
@@ -70,10 +54,7 @@ function Stat({
 
 export const HomeGithub = () => {
   const { data, isError, isFetching, refetch } = useGithubStats();
-  const cells = useMemo(
-    () => (data?.calendar ? buildCells(data.calendar) : []),
-    [data?.calendar],
-  );
+  const cells = useMemo(() => (data?.calendar ? buildCells(data.calendar) : []), [data?.calendar]);
   const levelOf = useMemo(() => levelForCells(cells), [cells]);
 
   if (isError) {
@@ -84,12 +65,7 @@ export const HomeGithub = () => {
         title="GitHub activity"
         description="The latest contribution snapshot is temporarily unavailable."
       >
-        <Button
-          type="button"
-          variant="outline"
-          onClick={() => void refetch()}
-          disabled={isFetching}
-        >
+        <Button type="button" variant="outline" onClick={() => void refetch()} disabled={isFetching}>
           {isFetching ? "Refreshing…" : "Try again"}
         </Button>
       </HomeSection>
@@ -141,9 +117,7 @@ export const HomeGithub = () => {
         <Stat
           label="Current streak"
           value={streaks ? `${streaks.current} days` : "–"}
-          note={
-            streaks ? `Personal best: ${streaks.longest} days` : "GitHub streak"
-          }
+          note={streaks ? `Personal best: ${streaks.longest} days` : "GitHub streak"}
         />
         <Stat
           label="Repositories"
@@ -154,22 +128,14 @@ export const HomeGithub = () => {
               : `${repositories.activeLast30Days} active this month`
           }
         />
-        <Stat
-          label="Followers"
-          value={numberFormat.format(data.followers)}
-          note={`${data.following} following`}
-        />
+        <Stat label="Followers" value={numberFormat.format(data.followers)} note={`${data.following} following`} />
       </div>
 
       <div className="mt-7 grid gap-7 lg:grid-cols-[minmax(0,1.6fr)_minmax(15rem,0.8fr)]">
         <div className="min-w-0">
           <div className="flex flex-wrap items-baseline justify-between gap-2">
-            <h3 className="font-medium text-foreground">
-              Contribution activity
-            </h3>
-            <span className="text-xs text-muted-foreground">
-              Last 12 months
-            </span>
+            <h3 className="font-medium text-foreground">Contribution activity</h3>
+            <span className="text-xs text-muted-foreground">Last 12 months</span>
           </div>
           {cells.length ? (
             <>
@@ -188,9 +154,7 @@ export const HomeGithub = () => {
                       aria-hidden="true"
                       className={cn(
                         "aspect-square rounded-[3px]",
-                        count === null
-                          ? "bg-transparent"
-                          : contributionLevels[levelOf(count)],
+                        count === null ? "bg-transparent" : contributionLevels[levelOf(count)],
                       )}
                     />
                   ))}
@@ -199,34 +163,24 @@ export const HomeGithub = () => {
               <div className="flex items-center justify-end gap-1.5 text-[0.6875rem] text-muted-foreground">
                 <span className="mr-1">Less</span>
                 {contributionLevels.map((level) => (
-                  <span
-                    key={level}
-                    aria-hidden="true"
-                    className={cn("h-2.5 w-2.5 rounded-[3px]", level)}
-                  />
+                  <span key={level} aria-hidden="true" className={cn("h-2.5 w-2.5 rounded-[3px]", level)} />
                 ))}
                 <span className="ml-1">More</span>
               </div>
             </>
           ) : (
             <p className="mt-4 text-sm text-muted-foreground">
-              The calendar is being refreshed. Summary statistics are available
-              above.
+              The calendar is being refreshed. Summary statistics are available above.
             </p>
           )}
         </div>
 
         <div className="border-t border-border/70 pt-5 lg:border-l lg:border-t-0 lg:pl-6 lg:pt-0">
           <h3 className="font-medium text-foreground">Languages</h3>
-          <p className="mt-1 text-xs text-muted-foreground">
-            Across public repositories
-          </p>
+          <p className="mt-1 text-xs text-muted-foreground">Across public repositories</p>
           {languages?.length ? (
             <>
-              <div
-                className="mt-4 flex h-1.5 w-full overflow-hidden rounded-full bg-muted"
-                aria-hidden="true"
-              >
+              <div className="mt-4 flex h-1.5 w-full overflow-hidden rounded-full bg-muted" aria-hidden="true">
                 {languages.map((language) => (
                   <span
                     key={language.name}
@@ -239,10 +193,7 @@ export const HomeGithub = () => {
               </div>
               <ul className="mt-4 flex flex-wrap gap-x-4 gap-y-2">
                 {languages.map((language) => (
-                  <li
-                    key={language.name}
-                    className="inline-flex items-center gap-1.5 text-xs text-muted-foreground"
-                  >
+                  <li key={language.name} className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
                     <span
                       className="h-2 w-2 rounded-full"
                       style={{ backgroundColor: language.color ?? "#64748b" }}

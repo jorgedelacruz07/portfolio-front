@@ -10,10 +10,7 @@ import { badgeVariants } from "@/components/ui/badge";
 import { EmptyState, PageContainer, PageHeader } from "@/components/ui/page";
 import { SearchField } from "@/components/ui/search-field";
 import { useGetExperiences } from "@/hooks";
-import {
-  experienceGroupMatches,
-  groupExperiences,
-} from "@/lib/experience-groups";
+import { experienceGroupMatches, groupExperiences } from "@/lib/experience-groups";
 import { listView } from "@/lib/list-state";
 import { safeHref } from "@/lib/safe-href";
 import { formatDateRange } from "@/lib/utils";
@@ -28,10 +25,7 @@ export default function ExperiencesPage() {
     const techCounts = new Map<string, number>();
     for (const experience of experiences) {
       for (const technology of experience.technologies || []) {
-        techCounts.set(
-          technology.name,
-          (techCounts.get(technology.name) || 0) + 1,
-        );
+        techCounts.set(technology.name, (techCounts.get(technology.name) || 0) + 1);
       }
     }
     return Array.from(techCounts.entries())
@@ -42,9 +36,7 @@ export default function ExperiencesPage() {
 
   const groups = useMemo(() => groupExperiences(experiences), [experiences]);
   const filteredGroups = useMemo(() => {
-    return groups.filter((group) =>
-      experienceGroupMatches(group, searchQuery, selectedTech),
-    );
+    return groups.filter((group) => experienceGroupMatches(group, searchQuery, selectedTech));
   }, [groups, selectedTech, searchQuery]);
 
   const hasActiveFilters = searchQuery.trim() !== "" || selectedTech !== null;
@@ -65,17 +57,9 @@ export default function ExperiencesPage() {
           heading="h1"
           icon={<X className="h-5 w-5" />}
           title="Error loading experiences"
-          description={
-            error instanceof Error
-              ? error.message
-              : "Unable to retrieve professional experience history."
-          }
+          description={error instanceof Error ? error.message : "Unable to retrieve professional experience history."}
         >
-          <Button
-            onClick={() => window.location.reload()}
-            variant="outline"
-            size="sm"
-          >
+          <Button onClick={() => window.location.reload()} variant="outline" size="sm">
             Try again
           </Button>
         </EmptyState>
@@ -86,17 +70,12 @@ export default function ExperiencesPage() {
   return (
     <>
       <Helmet>
-        <title>
-          Professional Experience & Career History | Jorge de la Cruz
-        </title>
+        <title>Professional Experience & Career History | Jorge de la Cruz Padilla</title>
         <meta
           name="description"
           content="Track record across software engineering roles, team collaboration, system architecture, and product delivery."
         />
-        <meta
-          property="og:title"
-          content="Professional Experience | Jorge de la Cruz"
-        />
+        <meta property="og:title" content="Professional Experience | Jorge de la Cruz Padilla" />
         <meta
           property="og:description"
           content="Track record of software engineering roles, team leadership, and product delivery."
@@ -110,10 +89,7 @@ export default function ExperiencesPage() {
           description="A comprehensive history of engineering positions, distributed collaborations, architectural milestones, and scalable web delivery."
         />
 
-        <section
-          aria-label="Experience search and filters"
-          className="space-y-4"
-        >
+        <section aria-label="Experience search and filters" className="space-y-4">
           <SearchField
             value={searchQuery}
             onChange={setSearchQuery}
@@ -124,8 +100,7 @@ export default function ExperiencesPage() {
             <div className="flex flex-wrap items-center gap-1.5">
               <span className="text-sm text-muted-foreground">Stack</span>
               {allTechnologies.map((tech) => {
-                const isSelected =
-                  selectedTech?.toLowerCase() === tech.toLowerCase();
+                const isSelected = selectedTech?.toLowerCase() === tech.toLowerCase();
                 return (
                   <button
                     key={tech}
@@ -141,22 +116,15 @@ export default function ExperiencesPage() {
                 );
               })}
               {hasActiveFilters ? (
-                <button
-                  type="button"
-                  onClick={resetFilters}
-                  className="ml-auto text-sm text-primary hover:underline"
-                >
+                <button type="button" onClick={resetFilters} className="ml-auto text-sm text-primary hover:underline">
                   Reset filters
                 </button>
               ) : null}
             </div>
           ) : null}
           <p className="text-sm text-muted-foreground">
-            Showing{" "}
-            <span className="font-medium text-foreground">
-              {filteredGroups.length}
-            </span>{" "}
-            of {groups.length} positions
+            Showing <span className="font-medium text-foreground">{filteredGroups.length}</span> of {groups.length}{" "}
+            positions
           </p>
         </section>
 
@@ -179,20 +147,14 @@ export default function ExperiencesPage() {
         ) : (
           <ol className="space-y-10">
             {filteredGroups.map((group, index) => (
-              <li
-                key={group.id}
-                className="relative grid grid-cols-[2.5rem_minmax(0,1fr)] gap-4"
-              >
+              <li key={group.id} className="relative grid grid-cols-[2.5rem_minmax(0,1fr)] gap-4">
                 {index < filteredGroups.length - 1 ? (
                   <span
                     className="absolute bottom-[-2.5rem] left-5 top-12 w-px -translate-x-1/2 bg-border"
                     aria-hidden="true"
                   />
                 ) : null}
-                <CompanyLogo
-                  experience={group.logoExperience}
-                  className="relative z-10 h-10 w-10"
-                />
+                <CompanyLogo experience={group.logoExperience} className="relative z-10 h-10 w-10" />
                 <div className="min-w-0 rounded-lg border border-border bg-card p-5">
                   {group.clients.length > 0 ? (
                     <EmployerExperienceCard
@@ -202,10 +164,7 @@ export default function ExperiencesPage() {
                       onSelectTech={setSelectedTech}
                     />
                   ) : (
-                    <ExperienceEntry
-                      experience={group.experience}
-                      onSelectTech={setSelectedTech}
-                    />
+                    <ExperienceEntry experience={group.experience} onSelectTech={setSelectedTech} />
                   )}
                 </div>
               </li>
@@ -228,19 +187,13 @@ function ExperienceEntry({
     <article className="space-y-4">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
         <div className="space-y-1">
-          <h2 className="text-lg font-semibold tracking-tight text-foreground">
-            {experience.jobTitle}
-          </h2>
+          <h2 className="text-lg font-semibold tracking-tight text-foreground">{experience.jobTitle}</h2>
           <p className="text-sm text-foreground">
             {experience.company}
             {experience.companyFrom ? (
               <span className="text-muted-foreground">
                 {" "}
-                · <MapPin
-                  className="inline h-3.5 w-3.5"
-                  aria-hidden="true"
-                />{" "}
-                {experience.companyFrom}
+                · <MapPin className="inline h-3.5 w-3.5" aria-hidden="true" /> {experience.companyFrom}
               </span>
             ) : null}
           </p>
@@ -251,9 +204,7 @@ function ExperienceEntry({
       </div>
 
       {experience.companyDescription ? (
-        <p className="text-sm leading-relaxed text-muted-foreground">
-          {experience.companyDescription}
-        </p>
+        <p className="text-sm leading-relaxed text-muted-foreground">{experience.companyDescription}</p>
       ) : null}
       <p className="text-sm leading-relaxed text-muted-foreground">
         {experience.jobDescription || "No role description provided."}
@@ -261,15 +212,10 @@ function ExperienceEntry({
 
       {experience.highlights?.length ? (
         <div className="space-y-2">
-          <h3 className="text-sm font-medium text-foreground">
-            Key responsibilities
-          </h3>
+          <h3 className="text-sm font-medium text-foreground">Key responsibilities</h3>
           <ul className="space-y-2">
             {experience.highlights.map((highlight) => (
-              <li
-                key={highlight}
-                className="text-sm leading-relaxed text-muted-foreground"
-              >
+              <li key={highlight} className="text-sm leading-relaxed text-muted-foreground">
                 {highlight}
               </li>
             ))}
@@ -298,22 +244,13 @@ function ExperienceEntry({
         {experience.companyUrl ? (
           safeHref(experience.companyUrl) ? (
             <Button variant="outline" size="sm" asChild>
-              <a
-                href={safeHref(experience.companyUrl) ?? undefined}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <a href={safeHref(experience.companyUrl) ?? undefined} target="_blank" rel="noopener noreferrer">
                 Company website
-                <ExternalLink
-                  className="ml-1.5 h-3.5 w-3.5"
-                  aria-hidden="true"
-                />
+                <ExternalLink className="ml-1.5 h-3.5 w-3.5" aria-hidden="true" />
               </a>
             </Button>
           ) : (
-            <p className="break-all text-sm text-muted-foreground">
-              {experience.companyUrl}
-            </p>
+            <p className="break-all text-sm text-muted-foreground">{experience.companyUrl}</p>
           )
         ) : null}
       </div>

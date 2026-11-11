@@ -25,7 +25,7 @@ test("homepage social tags use an absolute summary_large_image card", () => {
 
   assert.equal(metaContent(html, "og:type"), "website");
   assert.equal(metaContent(html, "og:url"), "https://jorgedelacruzpadilla.dev");
-  assert.equal(metaContent(html, "og:title"), "Jorge de la Cruz | Senior Software Engineer");
+  assert.equal(metaContent(html, "og:title"), "Jorge de la Cruz Padilla | Senior Software Engineer");
   assert.equal(metaContent(html, "og:image"), SHARE_IMAGE);
   assert.equal(metaContent(html, "og:image:secure_url"), SHARE_IMAGE);
   assert.equal(metaContent(html, "og:image:type"), "image/png");

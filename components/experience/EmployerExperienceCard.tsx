@@ -3,10 +3,7 @@ import { ExternalLink, MapPin } from "lucide-react";
 import { CompanyLogo } from "@/components/CompanyLogo";
 import { Button } from "@/components/ui/button";
 import { badgeVariants } from "@/components/ui/badge";
-import {
-  visibleHighlights,
-  type ExperienceGroup,
-} from "@/lib/experience-groups";
+import { visibleHighlights, type ExperienceGroup } from "@/lib/experience-groups";
 import { safeHref } from "@/lib/safe-href";
 import { cn, formatDateRange } from "@/lib/utils";
 import type { TExperience } from "@/types/experience";
@@ -22,20 +19,9 @@ type EmployerExperienceCardProps = {
   className?: string;
 };
 
-function LocationLabel({
-  location,
-  className,
-}: {
-  location: string;
-  className?: string;
-}) {
+function LocationLabel({ location, className }: { location: string; className?: string }) {
   return (
-    <p
-      className={cn(
-        "inline-flex items-center gap-1.5 text-xs text-muted-foreground",
-        className,
-      )}
-    >
+    <p className={cn("inline-flex items-center gap-1.5 text-xs text-muted-foreground", className)}>
       <MapPin className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
       <span>{location}</span>
     </p>
@@ -54,10 +40,7 @@ function HighlightList({ highlights }: { highlights: string[] }) {
             key={`${index}-${highlight}`}
             className="flex items-start gap-2.5 text-sm leading-relaxed text-foreground/85"
           >
-            <span
-              className="mt-2 h-1 w-1 shrink-0 rounded-full bg-primary"
-              aria-hidden="true"
-            />
+            <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-primary" aria-hidden="true" />
             <span>{highlight}</span>
           </li>
         ))}
@@ -89,10 +72,7 @@ function TechnologyList({
             {tech.name}
           </button>
         ) : (
-          <span
-            key={tech.id}
-            className={badgeVariants({ variant: "secondary" })}
-          >
+          <span key={tech.id} className={badgeVariants({ variant: "secondary" })}>
             {tech.name}
           </span>
         ),
@@ -112,9 +92,7 @@ function ClientEngagement({
 }) {
   const Heading = heading;
   const companyDetail = client.companyDescription?.trim();
-  const showDetail =
-    companyDetail &&
-    companyDetail.toLowerCase() !== client.jobDescription?.trim().toLowerCase();
+  const showDetail = companyDetail && companyDetail.toLowerCase() !== client.jobDescription?.trim().toLowerCase();
   const companyHref = safeHref(client.companyUrl);
 
   return (
@@ -128,33 +106,19 @@ function ClientEngagement({
               <span className="rounded border border-border/80 bg-muted px-1.5 py-0.5 text-[0.625rem] font-medium uppercase tracking-[0.12em] text-muted-foreground">
                 Client
               </span>
-              <Heading className="text-base font-semibold tracking-[-0.02em] text-foreground">
-                {client.company}
-              </Heading>
+              <Heading className="text-base font-semibold tracking-[-0.02em] text-foreground">{client.company}</Heading>
             </div>
-            <span className="mono-label shrink-0 text-muted-foreground">
-              {formatDateRange(client.from, client.to)}
-            </span>
+            <span className="mono-label shrink-0 text-muted-foreground">{formatDateRange(client.from, client.to)}</span>
           </div>
 
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-            <p className="text-sm font-medium text-foreground/90">
-              {client.jobTitle}
-            </p>
-            {client.companyFrom ? (
-              <LocationLabel location={client.companyFrom} />
-            ) : null}
+            <p className="text-sm font-medium text-foreground/90">{client.jobTitle}</p>
+            {client.companyFrom ? <LocationLabel location={client.companyFrom} /> : null}
           </div>
 
-          {showDetail ? (
-            <p className="text-xs leading-relaxed text-muted-foreground">
-              {companyDetail}
-            </p>
-          ) : null}
+          {showDetail ? <p className="text-xs leading-relaxed text-muted-foreground">{companyDetail}</p> : null}
           {client.jobDescription ? (
-            <p className="text-sm leading-relaxed text-muted-foreground">
-              {client.jobDescription}
-            </p>
+            <p className="text-sm leading-relaxed text-muted-foreground">{client.jobDescription}</p>
           ) : null}
           <HighlightList highlights={visibleHighlights([client])} />
           <TechnologyList experience={client} onSelectTech={onSelectTech} />
@@ -169,9 +133,7 @@ function ClientEngagement({
               <ExternalLink className="h-3 w-3" aria-hidden="true" />
             </a>
           ) : client.companyUrl ? (
-            <p className="break-all text-sm text-muted-foreground">
-              {client.companyUrl}
-            </p>
+            <p className="break-all text-sm text-muted-foreground">{client.companyUrl}</p>
           ) : null}
         </div>
       </div>
@@ -190,9 +152,7 @@ export function EmployerExperienceCard({
   const Title = heading;
   const clientHeading = heading === "h2" ? "h3" : "h4";
   const clientsLabelId = `${group.id}-clients`;
-  const clientIds = new Set(
-    group.clients.map((client) => client.id || client.slug),
-  );
+  const clientIds = new Set(group.clients.map((client) => client.id || client.slug));
   const employerHref = safeHref(group.logoExperience.companyUrl);
   const employerHighlights = visibleHighlights(
     group.sources.filter((source) => !clientIds.has(source.id || source.slug)),
@@ -204,12 +164,7 @@ export function EmployerExperienceCard({
     <article className={cn("min-w-0 space-y-5", className)}>
       <header className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-6">
         <div className="flex min-w-0 items-start gap-4">
-          {showLogo ? (
-            <CompanyLogo
-              experience={group.logoExperience}
-              className="h-11 w-11 shrink-0"
-            />
-          ) : null}
+          {showLogo ? <CompanyLogo experience={group.logoExperience} className="h-11 w-11 shrink-0" /> : null}
           <div className="min-w-0 space-y-1.5">
             <div className="flex flex-wrap items-center gap-2">
               <Title className="text-xl font-bold leading-tight tracking-[-0.03em] text-foreground sm:text-2xl">
@@ -217,17 +172,12 @@ export function EmployerExperienceCard({
               </Title>
               {isCurrent ? (
                 <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-600/20 bg-emerald-500/[0.07] px-2 py-0.5 text-[0.625rem] font-medium text-emerald-800 dark:border-emerald-400/20 dark:text-emerald-300">
-                  <span
-                    className="h-1 w-1 rounded-full bg-emerald-500"
-                    aria-hidden="true"
-                  />
+                  <span className="h-1 w-1 rounded-full bg-emerald-500" aria-hidden="true" />
                   Current
                 </span>
               ) : null}
             </div>
-            <p className="text-sm font-medium text-foreground/90">
-              {group.jobTitle}
-            </p>
+            <p className="text-sm font-medium text-foreground/90">{group.jobTitle}</p>
             {location ? <LocationLabel location={location} /> : null}
           </div>
         </div>
@@ -236,15 +186,9 @@ export function EmployerExperienceCard({
         </span>
       </header>
 
-      {group.summary ? (
-        <p className="text-sm leading-relaxed text-muted-foreground">
-          {group.summary}
-        </p>
-      ) : null}
+      {group.summary ? <p className="text-sm leading-relaxed text-muted-foreground">{group.summary}</p> : null}
       {group.companyDetail ? (
-        <p className="text-sm leading-relaxed text-muted-foreground">
-          {group.companyDetail}
-        </p>
+        <p className="text-sm leading-relaxed text-muted-foreground">{group.companyDetail}</p>
       ) : null}
       {compact ? null : <HighlightList highlights={employerHighlights} />}
 
@@ -254,9 +198,7 @@ export function EmployerExperienceCard({
             <p id={clientsLabelId} className="mono-label text-muted-foreground">
               Client engagements
             </p>
-            <span className="mono-label text-muted-foreground/70">
-              {String(group.clients.length).padStart(2, "0")}
-            </span>
+            <span className="mono-label text-muted-foreground/70">{String(group.clients.length).padStart(2, "0")}</span>
           </div>
           {compact ? (
             <ul className="space-y-2" aria-labelledby={clientsLabelId}>
@@ -265,9 +207,7 @@ export function EmployerExperienceCard({
                   key={client.id || client.slug}
                   className="flex flex-wrap items-baseline gap-x-2 text-sm text-muted-foreground"
                 >
-                  <span className="font-medium text-foreground">
-                    {client.company}
-                  </span>
+                  <span className="font-medium text-foreground">{client.company}</span>
                   <span className="text-muted-foreground/70">·</span>
                   <span>{client.jobTitle}</span>
                   <span className="mono-label ml-auto text-muted-foreground/80">

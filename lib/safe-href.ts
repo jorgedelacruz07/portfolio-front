@@ -17,10 +17,7 @@ function hasControlCharacter(value: string) {
  * Return a URL that is safe to put in an href, or null when it must be rendered as text.
  * External targets are limited to http(s). mailto and same-origin paths are opt-in.
  */
-export function safeHref(
-  value: unknown,
-  options: SafeHrefOptions = {},
-): string | null {
+export function safeHref(value: unknown, options: SafeHrefOptions = {}): string | null {
   if (typeof value !== "string") return null;
   const trimmed = value.trim();
   if (!trimmed || hasControlCharacter(trimmed)) return null;
@@ -59,11 +56,7 @@ const PLAIN_EMAIL =
 
 /** A mailbox with no header fields. The local-part allows only [A-Za-z0-9._+-]. */
 export function plainEmailAddress(value: unknown): string | null {
-  if (
-    typeof value !== "string" ||
-    value.length === 0 ||
-    value !== value.trim()
-  ) {
+  if (typeof value !== "string" || value.length === 0 || value !== value.trim()) {
     return null;
   }
   if (/[\s%?#/\\<>,;"]/.test(value) || hasControlCharacter(value)) return null;

@@ -1,10 +1,7 @@
 import { CompanyLogo } from "@/components/CompanyLogo";
 import { HomeSection } from "@/components/pages/home/HomeSection";
 import { Badge } from "@/components/ui/badge";
-import {
-  previewExperienceGroups,
-  visibleHighlights,
-} from "@/lib/experience-groups";
+import { previewExperienceGroups, visibleHighlights } from "@/lib/experience-groups";
 import { formatDateRange } from "@/lib/utils";
 import type { TExperience } from "@/types/experience";
 
@@ -49,32 +46,22 @@ export const HomeExperiences = ({ experiences }: HomeExperiencesProps) => {
                 />
               ) : null}
 
-              <CompanyLogo
-                experience={group.logoExperience}
-                className="relative z-10 h-10 w-10 sm:h-12 sm:w-12"
-              />
+              <CompanyLogo experience={group.logoExperience} className="relative z-10 h-10 w-10 sm:h-12 sm:w-12" />
 
               <div className="flex flex-col gap-2 border-b border-border/70 pb-7 pt-0.5 sm:flex-row sm:items-start sm:justify-between sm:gap-6">
                 <div className="min-w-0 space-y-1.5">
                   <div className="flex flex-wrap items-center gap-2">
-                    <h3 className="text-base font-semibold tracking-tight text-foreground">
-                      {group.jobTitle}
-                    </h3>
+                    <h3 className="text-base font-semibold tracking-tight text-foreground">{group.jobTitle}</h3>
                     {group.to === null ? (
                       <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-600/20 bg-emerald-500/[0.07] px-2 py-0.5 text-[0.625rem] font-medium text-emerald-800 dark:border-emerald-400/20 dark:text-emerald-300">
-                        <span
-                          className="h-1 w-1 rounded-full bg-emerald-500"
-                          aria-hidden="true"
-                        />
+                        <span className="h-1 w-1 rounded-full bg-emerald-500" aria-hidden="true" />
                         Current
                       </span>
                     ) : null}
                   </div>
 
                   <p className="text-sm text-muted-foreground">
-                    <span className="font-medium text-foreground/85">
-                      {group.companyLabel}
-                    </span>
+                    <span className="font-medium text-foreground/85">{group.companyLabel}</span>
                     {location ? <span> · {location}</span> : null}
                   </p>
 
@@ -85,10 +72,7 @@ export const HomeExperiences = ({ experiences }: HomeExperiencesProps) => {
                   {technologies.length > 0 ? (
                     <div className="flex flex-wrap gap-1.5 pt-1">
                       {technologies.map((technology) => (
-                        <Badge
-                          key={technology.id || technology.name}
-                          variant="secondary"
-                        >
+                        <Badge key={technology.id || technology.name} variant="secondary">
                           {technology.name}
                         </Badge>
                       ))}

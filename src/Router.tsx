@@ -1,10 +1,4 @@
-import {
-  type ComponentType,
-  type LazyExoticComponent,
-  Suspense,
-  lazy,
-  useEffect,
-} from "react";
+import { type ComponentType, type LazyExoticComponent, Suspense, lazy, useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import { Outlet, createBrowserRouter, useLocation } from "react-router-dom";
 
@@ -20,9 +14,7 @@ const ExperiencesPage = lazy(() => import("./routes/ExperiencesPage"));
 const ArticlesPage = lazy(() => import("./routes/ArticlesPage"));
 const ArticleDetailPage = lazy(() => import("./routes/ArticleDetailPage"));
 const AdminPage = lazy(() => import("./routes/AdminPage"));
-const SocialOAuthCallbackPage = lazy(
-  () => import("./routes/SocialOAuthCallbackPage"),
-);
+const SocialOAuthCallbackPage = lazy(() => import("./routes/SocialOAuthCallbackPage"));
 const NotFoundPage = lazy(() => import("./routes/NotFoundPage"));
 
 const googleAnalyticsId = import.meta.env.VITE_GA_ID;
@@ -39,10 +31,7 @@ function RouteChangeTracker() {
   const location = useLocation();
 
   useEffect(() => {
-    const isInvalidId =
-      !googleAnalyticsId ||
-      googleAnalyticsId === "undefined" ||
-      googleAnalyticsId === "";
+    const isInvalidId = !googleAnalyticsId || googleAnalyticsId === "undefined" || googleAnalyticsId === "";
 
     if (typeof window === "undefined" || !window.gtag || isInvalidId) {
       return;

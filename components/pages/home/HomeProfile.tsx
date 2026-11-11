@@ -21,9 +21,7 @@ export const HomeProfile = ({ cmsProfile, snapshot }: HomeProfileProps) => {
     shortBio: cmsProfile?.shortBio || profileFallback.shortBio,
     location: cmsProfile?.location || profileFallback.location,
     availability: cmsProfile?.availability || profileFallback.availability,
-    profileImage: cmsProfile?.profileImage?.src
-      ? cmsProfile.profileImage
-      : { src: profile.image },
+    profileImage: cmsProfile?.profileImage?.src ? cmsProfile.profileImage : { src: profile.image },
     resumeUrl: cmsProfile?.resumeUrl || profileFallback.resumeUrl,
     contactEmail: cmsProfile?.contactEmail || profileFallback.contactEmail,
   };
@@ -37,10 +35,7 @@ export const HomeProfile = ({ cmsProfile, snapshot }: HomeProfileProps) => {
     }
   };
 
-  const resumeHref = safeHref(
-    currentProfile.resumeUrl || "/documents/jorgedelacruz_cv.pdf",
-    { sameOriginPath: true },
-  );
+  const resumeHref = safeHref(currentProfile.resumeUrl || "/documents/jorgedelacruz_cv.pdf", { sameOriginPath: true });
   const contactHref = mailtoHref(currentProfile.contactEmail);
 
   return (
@@ -55,9 +50,7 @@ export const HomeProfile = ({ cmsProfile, snapshot }: HomeProfileProps) => {
               />
               {currentProfile.availability}
             </span>
-            <span className="mono-label text-muted-foreground">
-              {currentProfile.location} · UTC-5
-            </span>
+            <span className="mono-label text-muted-foreground">{currentProfile.location} · UTC-5</span>
           </div>
 
           <div className="space-y-3 sm:space-y-5">
@@ -68,9 +61,7 @@ export const HomeProfile = ({ cmsProfile, snapshot }: HomeProfileProps) => {
             <h1 className="max-w-3xl text-[2.5rem] font-semibold leading-[0.98] tracking-[-0.055em] text-foreground sm:text-7xl">
               {currentProfile.name}
             </h1>
-            <p className="max-w-2xl text-xl leading-snug text-foreground/90 sm:text-2xl">
-              {currentProfile.headline}
-            </p>
+            <p className="max-w-2xl text-xl leading-snug text-foreground/90 sm:text-2xl">{currentProfile.headline}</p>
             <p className="max-w-xl text-sm leading-relaxed text-muted-foreground sm:text-base">
               {currentProfile.shortBio}
             </p>
@@ -103,9 +94,7 @@ export const HomeProfile = ({ cmsProfile, snapshot }: HomeProfileProps) => {
                 {currentProfile.contactEmail}
               </a>
             ) : (
-              <span className="text-sm text-muted-foreground">
-                {currentProfile.contactEmail}
-              </span>
+              <span className="text-sm text-muted-foreground">{currentProfile.contactEmail}</span>
             )}
           </div>
 
@@ -118,24 +107,16 @@ export const HomeProfile = ({ cmsProfile, snapshot }: HomeProfileProps) => {
                 </dd>
               </div>
               <div>
-                <dt className="mono-label text-muted-foreground">
-                  Track record
-                </dt>
+                <dt className="mono-label text-muted-foreground">Track record</dt>
                 <dd className="mt-1 text-2xl font-bold tracking-tight text-foreground tabular-nums">
                   {snapshot.roles} roles
                 </dd>
-                <dd className="text-xs text-muted-foreground">
-                  across {snapshot.companies} companies
-                </dd>
+                <dd className="text-xs text-muted-foreground">across {snapshot.companies} companies</dd>
               </div>
               <div>
                 <dt className="mono-label text-muted-foreground">Focus</dt>
-                <dd className="mt-1 text-sm font-semibold leading-snug text-foreground">
-                  React · Node · Cloud
-                </dd>
-                <dd className="text-xs text-muted-foreground">
-                  End-to-end product delivery
-                </dd>
+                <dd className="mt-1 text-sm font-semibold leading-snug text-foreground">React · Node · Cloud</dd>
+                <dd className="text-xs text-muted-foreground">End-to-end product delivery</dd>
               </div>
             </dl>
           ) : null}
@@ -163,12 +144,8 @@ export const HomeProfile = ({ cmsProfile, snapshot }: HomeProfileProps) => {
             {snapshot?.current ? (
               <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/45 to-transparent px-5 pb-5 pt-12">
                 <p className="mono-label text-white/65">Currently</p>
-                <p className="mt-1 text-sm font-semibold leading-tight text-white">
-                  {snapshot.current.title}
-                </p>
-                <p className="text-xs text-white/70">
-                  {snapshot.current.company}
-                </p>
+                <p className="mt-1 text-sm font-semibold leading-tight text-white">{snapshot.current.title}</p>
+                <p className="text-xs text-white/70">{snapshot.current.company}</p>
               </div>
             ) : null}
           </div>

@@ -2,15 +2,7 @@ import { useState } from "react";
 import { adminApi } from "@/lib/admin-api";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import {
-  Briefcase,
-  Check,
-  ExternalLink,
-  Eye,
-  EyeOff,
-  Loader2,
-  Save,
-} from "lucide-react";
+import { Briefcase, Check, ExternalLink, Eye, EyeOff, Loader2, Save } from "lucide-react";
 import type { TExperience } from "@/types/experience";
 
 export function ExperienceEditor({
@@ -20,9 +12,7 @@ export function ExperienceEditor({
   experience: TExperience;
   onChange: (experience: TExperience) => void;
 }) {
-  const [state, setState] = useState<"idle" | "saving" | "saved" | "error">(
-    "idle",
-  );
+  const [state, setState] = useState<"idle" | "saving" | "saved" | "error">("idle");
   const fieldClass =
     "w-full rounded-xl border border-border bg-card/60 px-3.5 py-2 text-sm text-foreground placeholder:text-muted-foreground/60 transition-colors focus:border-primary focus:bg-card focus:outline-none focus:ring-1 focus:ring-primary font-sans";
 
@@ -58,19 +48,14 @@ export function ExperienceEditor({
             <legend className="px-0 text-base font-bold text-foreground font-sans">
               {experience.company || "Empresa no especificada"}
             </legend>
-            <p className="text-xs text-muted-foreground font-normal">
-              {experience.jobTitle || "Rol sin definir"}
-            </p>
+            <p className="text-xs text-muted-foreground font-normal">{experience.jobTitle || "Rol sin definir"}</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
           <Badge variant="outline" className="font-mono text-[10px]">
             Orden: #{experience.displayOrder ?? 0}
           </Badge>
-          <Badge
-            variant={isVisible ? "default" : "secondary"}
-            className="font-mono text-[10px]"
-          >
+          <Badge variant={isVisible ? "default" : "secondary"} className="font-mono text-[10px]">
             {isVisible ? "Visible en web" : "Oculto"}
           </Badge>
         </div>
@@ -187,9 +172,7 @@ export function ExperienceEditor({
 
       <div className="flex items-center justify-between pt-2 border-t border-border/40">
         <span className="text-[11px] font-mono text-muted-foreground">
-          {experience.updatedAt
-            ? `Actualizado: ${new Date(experience.updatedAt).toLocaleDateString()}`
-            : ""}
+          {experience.updatedAt ? `Actualizado: ${new Date(experience.updatedAt).toLocaleDateString()}` : ""}
         </span>
         <button
           type="button"

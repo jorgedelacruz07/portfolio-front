@@ -1,15 +1,7 @@
 import { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link, useParams } from "react-router-dom";
-import {
-  ArrowLeft,
-  Check,
-  Clock,
-  Copy,
-  ExternalLink,
-  Newspaper,
-  Share2,
-} from "lucide-react";
+import { ArrowLeft, Check, Clock, Copy, ExternalLink, Newspaper, Share2 } from "lucide-react";
 
 import { PageSkeleton } from "@/components/PageSkeleton";
 import { Badge } from "@/components/ui/badge";
@@ -17,10 +9,7 @@ import { Button } from "@/components/ui/button";
 import { LinkedinIcon } from "@/components/svgs/Linkedin";
 import { SafeMarkdown, isSafeUrl } from "@/components/articles/SafeMarkdown";
 import { useGetArticleBySlug } from "@/hooks";
-import {
-  PUBLIC_SITE_ORIGIN,
-  canonicalArticleUrl,
-} from "@/lib/article-delivery";
+import { PUBLIC_SITE_ORIGIN, canonicalArticleUrl } from "@/lib/article-delivery";
 import type { ArticleContentType } from "@/types/article";
 
 const CONTENT_TYPE_LABELS: Record<ArticleContentType, string> = {
@@ -59,10 +48,7 @@ export default function ArticleDetailPage() {
       <>
         <Helmet>
           <title>Article Not Found | Jorge de la Cruz</title>
-          <meta
-            name="description"
-            content="The requested article does not exist or has not been published."
-          />
+          <meta name="description" content="The requested article does not exist or has not been published." />
           <meta name="robots" content="noindex, nofollow" />
         </Helmet>
 
@@ -72,13 +58,10 @@ export default function ArticleDetailPage() {
               <Newspaper className="h-5 w-5" />
             </div>
             <p className="text-sm text-muted-foreground">404</p>
-            <h1 className="text-2xl font-semibold tracking-tight text-foreground">
-              Article not found
-            </h1>
+            <h1 className="text-2xl font-semibold tracking-tight text-foreground">Article not found</h1>
             <p className="text-sm leading-relaxed text-muted-foreground">
-              This article does not exist, may have been unpublished, or is
-              currently an unapproved draft. Only explicitly published technical
-              revisions are available.
+              This article does not exist, may have been unpublished, or is currently an unapproved draft. Only
+              explicitly published technical revisions are available.
             </p>
             <div className="pt-2">
               <Button asChild variant="outline" size="sm">
@@ -95,13 +78,9 @@ export default function ArticleDetailPage() {
   }
 
   const { publicContent } = article;
-  const canonicalUrl = canonicalArticleUrl(
-    article.slug,
-    publicContent.seo?.canonicalUrl,
-  );
+  const canonicalUrl = canonicalArticleUrl(article.slug, publicContent.seo?.canonicalUrl);
   const metaTitle = publicContent.seo?.metaTitle || publicContent.title;
-  const metaDescription =
-    publicContent.seo?.metaDescription || publicContent.excerpt;
+  const metaDescription = publicContent.seo?.metaDescription || publicContent.excerpt;
 
   const handleCopyLink = () => {
     if (navigator.clipboard) {
@@ -126,12 +105,12 @@ export default function ArticleDetailPage() {
     datePublished: article.publishedAt,
     author: {
       "@type": "Person",
-      name: "Jorge de la Cruz",
+      name: "Jorge de la Cruz Padilla",
       url: PUBLIC_SITE_ORIGIN,
     },
     publisher: {
       "@type": "Person",
-      name: "Jorge de la Cruz",
+      name: "Jorge de la Cruz Padilla",
     },
     mainEntityOfPage: {
       "@type": "WebPage",
@@ -142,7 +121,7 @@ export default function ArticleDetailPage() {
   return (
     <>
       <Helmet>
-        <title>{`${metaTitle} | Jorge de la Cruz`}</title>
+        <title>{`${metaTitle} | Jorge de la Cruz Padilla`}</title>
         <meta name="description" content={metaDescription} />
         <link rel="canonical" href={canonicalUrl} />
 
@@ -159,9 +138,7 @@ export default function ArticleDetailPage() {
         <meta name="twitter:description" content={metaDescription} />
 
         {/* Structured Data */}
-        <script type="application/ld+json">
-          {JSON.stringify(structuredData)}
-        </script>
+        <script type="application/ld+json">{JSON.stringify(structuredData)}</script>
       </Helmet>
 
       <article className="mx-auto w-full max-w-3xl px-4 py-10 sm:px-6 sm:py-14">
@@ -179,9 +156,7 @@ export default function ArticleDetailPage() {
         {/* Article Header */}
         <header className="space-y-4 border-b border-border pb-8">
           <div className="flex flex-wrap items-center gap-2.5 text-sm text-muted-foreground">
-            <Badge>
-              {CONTENT_TYPE_LABELS[article.contentType] || article.contentType}
-            </Badge>
+            <Badge>{CONTENT_TYPE_LABELS[article.contentType] || article.contentType}</Badge>
             <span className="inline-flex items-center gap-1">
               <Clock className="h-3.5 w-3.5" aria-hidden="true" />
               {publicContent.readingTime?.minutes || 1} min read
@@ -190,41 +165,26 @@ export default function ArticleDetailPage() {
             <span>{formatFullDate(article.publishedAt)}</span>
           </div>
 
-          <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
-            {publicContent.title}
-          </h1>
+          <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">{publicContent.title}</h1>
 
           {publicContent.subtitle ? (
-            <p className="text-lg leading-relaxed text-muted-foreground">
-              {publicContent.subtitle}
-            </p>
+            <p className="text-lg leading-relaxed text-muted-foreground">{publicContent.subtitle}</p>
           ) : null}
 
           {publicContent.excerpt ? (
-            <p className="text-base leading-relaxed text-muted-foreground">
-              {publicContent.excerpt}
-            </p>
+            <p className="text-base leading-relaxed text-muted-foreground">{publicContent.excerpt}</p>
           ) : null}
         </header>
 
         {/* Main Content Body */}
         <section className="py-8">
-          <SafeMarkdown
-            content={publicContent.contentMarkdown}
-            className="article-body"
-          />
+          <SafeMarkdown content={publicContent.contentMarkdown} className="article-body" />
         </section>
 
         {/* References and Sources Section */}
         {publicContent.references && publicContent.references.length > 0 ? (
-          <section
-            className="mt-12 rounded-lg border border-border bg-card p-6"
-            aria-labelledby="references-heading"
-          >
-            <h2
-              id="references-heading"
-              className="text-lg font-semibold tracking-tight text-foreground"
-            >
+          <section className="mt-12 rounded-lg border border-border bg-card p-6" aria-labelledby="references-heading">
+            <h2 id="references-heading" className="text-lg font-semibold tracking-tight text-foreground">
               References & Sources
             </h2>
             <ul className="mt-4 divide-y divide-border/40 text-sm">
@@ -243,9 +203,7 @@ export default function ArticleDetailPage() {
                         <ExternalLink className="h-3.5 w-3.5 text-muted-foreground group-hover:text-primary" />
                       </a>
                     ) : (
-                      <span className="font-medium text-foreground">
-                        {ref.title}
-                      </span>
+                      <span className="font-medium text-foreground">{ref.title}</span>
                     )}
                   </li>
                 );
@@ -256,14 +214,8 @@ export default function ArticleDetailPage() {
 
         {/* Claims Section */}
         {publicContent.claims && publicContent.claims.length > 0 ? (
-          <section
-            className="mt-8 rounded-lg border border-border bg-card p-6"
-            aria-labelledby="claims-heading"
-          >
-            <h2
-              id="claims-heading"
-              className="text-lg font-semibold tracking-tight text-foreground"
-            >
+          <section className="mt-8 rounded-lg border border-border bg-card p-6" aria-labelledby="claims-heading">
+            <h2 id="claims-heading" className="text-lg font-semibold tracking-tight text-foreground">
               Verified Statements
             </h2>
             <div className="mt-4 space-y-3">
@@ -290,33 +242,13 @@ export default function ArticleDetailPage() {
           </div>
 
           <div className="flex items-center gap-2">
-            <Button
-              asChild
-              variant="outline"
-              size="sm"
-              className="h-8 gap-1.5 text-xs"
-            >
-              <a
-                href={shareOnTwitterUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Post on X"
-              >
+            <Button asChild variant="outline" size="sm" className="h-8 gap-1.5 text-xs">
+              <a href={shareOnTwitterUrl} target="_blank" rel="noopener noreferrer" aria-label="Post on X">
                 <span>Post on X</span>
               </a>
             </Button>
-            <Button
-              asChild
-              variant="outline"
-              size="sm"
-              className="h-8 gap-1.5 text-xs"
-            >
-              <a
-                href={shareOnLinkedInUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="LinkedIn"
-              >
+            <Button asChild variant="outline" size="sm" className="h-8 gap-1.5 text-xs">
+              <a href={shareOnLinkedInUrl} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
                 <LinkedinIcon width={14} height={14} />
                 <span>LinkedIn</span>
               </a>
@@ -328,11 +260,7 @@ export default function ArticleDetailPage() {
               className="h-8 gap-1.5 text-xs"
               aria-label={copied ? "Copied" : "Copy link"}
             >
-              {copied ? (
-                <Check className="h-3.5 w-3.5 text-primary" />
-              ) : (
-                <Copy className="h-3.5 w-3.5" />
-              )}
+              {copied ? <Check className="h-3.5 w-3.5 text-primary" /> : <Copy className="h-3.5 w-3.5" />}
               <span>{copied ? "Copied" : "Copy link"}</span>
             </Button>
           </div>
