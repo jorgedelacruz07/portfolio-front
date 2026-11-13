@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { badgeVariants } from "@/components/ui/badge";
 import { EmptyState, PageContainer, PageHeader } from "@/components/ui/page";
 import { SearchField } from "@/components/ui/search-field";
-import { useGetExperiences } from "@/hooks";
+import { useGetExperiences, useSiteContent } from "@/hooks";
 import { experienceGroupMatches, groupExperiences } from "@/lib/experience-groups";
 import { listView } from "@/lib/list-state";
 import { safeHref } from "@/lib/safe-href";
@@ -18,6 +18,7 @@ import type { TExperience } from "@/types/experience";
 
 export default function ExperiencesPage() {
   const { data: experiences = [], isLoading, error } = useGetExperiences();
+  const { copy } = useSiteContent();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedTech, setSelectedTech] = useState<string | null>(null);
 
@@ -56,8 +57,8 @@ export default function ExperiencesPage() {
         <EmptyState
           heading="h1"
           icon={<X className="h-5 w-5" />}
-          title="Error loading experiences"
-          description={error instanceof Error ? error.message : "Unable to retrieve professional experience history."}
+          title={copy["experiences.errorTitle"]}
+          description={copy["experiences.errorDescription"]}
         >
           <Button onClick={() => window.location.reload()} variant="outline" size="sm">
             Try again
@@ -70,31 +71,25 @@ export default function ExperiencesPage() {
   return (
     <>
       <Helmet>
-        <title>Professional Experience & Career History | Jorge de la Cruz Padilla</title>
-        <meta
-          name="description"
-          content="Track record across software engineering roles, team collaboration, system architecture, and product delivery."
-        />
-        <meta property="og:title" content="Professional Experience | Jorge de la Cruz Padilla" />
-        <meta
-          property="og:description"
-          content="Track record of software engineering roles, team leadership, and product delivery."
-        />
+        <title>{copy["experiences.seoTitle"]}</title>
+        <meta name="description" content={copy["experiences.seoDescription"]} />
+        <meta property="og:title" content={copy["experiences.seoTitle"]} />
+        <meta property="og:description" content={copy["experiences.seoDescription"]} />
       </Helmet>
 
       <PageContainer className="space-y-10">
         <PageHeader
-          eyebrow={`${groups.length} positions`}
-          title="Professional Journey & Trajectory"
-          description="A comprehensive history of engineering positions, distributed collaborations, architectural milestones, and scalable web delivery."
+          eyebrow={`${groups.length} ${copy["experiences.countLabel"]}`}
+          title={copy["experiences.title"]}
+          description={copy["experiences.description"]}
         />
 
         <section aria-label="Experience search and filters" className="space-y-4">
           <SearchField
             value={searchQuery}
             onChange={setSearchQuery}
-            label="Search experiences"
-            placeholder="Search by company, client, role title, location, or stack..."
+            label={copy["experiences.searchLabel"]}
+            placeholder={copy["experiences.search"]}
           />
           {allTechnologies.length > 0 ? (
             <div className="flex flex-wrap items-center gap-1.5">
@@ -131,14 +126,14 @@ export default function ExperiencesPage() {
         {listView(groups.length, filteredGroups.length) === "empty" ? (
           <EmptyState
             icon={<Briefcase className="h-5 w-5" />}
-            title="No experiences yet"
-            description="Published roles will show up here."
+            title={copy["experiences.emptyTitle"]}
+            description={copy["experiences.emptyDescription"]}
           />
         ) : listView(groups.length, filteredGroups.length) === "no-results" ? (
           <EmptyState
             icon={<Briefcase className="h-5 w-5" />}
-            title="No matching career experiences"
-            description="No roles matched your active search query or technology filter. Try adjusting your search terms."
+            title={copy["experiences.noMatchTitle"]}
+            description={copy["experiences.noMatchDescription"]}
           >
             <Button onClick={resetFilters} variant="outline" size="sm">
               Clear all filters

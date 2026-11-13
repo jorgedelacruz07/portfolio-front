@@ -4,8 +4,10 @@ import { Link, NavLink, useLocation } from "react-router-dom";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { Button } from "@/components/ui/button";
 import { useGetArticles } from "@/hooks";
+import { useSiteContent } from "@/hooks";
 import { trappedMenuIndex } from "@/lib/menu-focus";
 import { cn } from "@/lib/utils";
+import { safeHref } from "@/lib/safe-href";
 
 const shell = "mx-auto flex w-full max-w-6xl items-center px-4 sm:px-6";
 
@@ -15,7 +17,7 @@ const navLinkClass = (isActive: boolean) =>
     isActive ? "text-foreground" : "text-muted-foreground hover:text-foreground",
   );
 
-function Brand() {
+function Brand({ name, role }: { name: string; role: string }) {
   return (
     <Link to="/" className="group flex items-center gap-2.5 sm:gap-3">
       <span className="inline-flex h-9 items-center rounded-lg border border-border/90 bg-card px-2.5 font-display text-base font-bold tracking-[-0.03em] text-foreground shadow-sm transition-colors group-hover:border-primary/45">
@@ -25,9 +27,9 @@ function Brand() {
         <span className="ml-0.5 font-mono text-[0.6875rem] font-semibold tracking-tight text-primary">.dev</span>
       </span>
       <span className="flex flex-col leading-none">
-        <span className="text-sm font-semibold tracking-tight text-foreground">Jorge de la Cruz Padilla</span>
+        <span className="text-sm font-semibold tracking-tight text-foreground">{name}</span>
         <span className="mt-1 hidden text-[0.625rem] font-medium uppercase tracking-[0.16em] text-muted-foreground sm:block">
-          Software Engineer
+          {role}
         </span>
       </span>
     </Link>
@@ -81,20 +83,22 @@ export const Navbar = () => {
   }, [isMenuOpen]);
 
   const { data: articles } = useGetArticles();
+  const { copy, profile } = useSiteContent();
+  const resumeUrl = safeHref(profile?.resumeUrl, { sameOriginPath: true }) || "/documents/jorgedelacruz_cv.pdf";
   const articlesAvailable = (articles?.length ?? 0) > 0;
   const navbarItems = [
-    { label: "Home", href: "/" },
-    { label: "Projects", href: "/projects" },
-    { label: "Experiences", href: "/experiences" },
-    ...(articlesAvailable ? [{ label: "Articles", href: "/articles" }] : []),
+    { label: copy["nav.home"], href: "/" },
+    { label: copy["nav.projects"], href: "/projects" },
+    { label: copy["nav.experiences"], href: "/experiences" },
+    ...(articlesAvailable ? [{ label: copy["nav.articles"], href: "/articles" }] : []),
   ];
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/80 bg-background/85 backdrop-blur-xl">
       <div className={cn(shell, "h-16 justify-between")}>
-        <Brand />
+        <Brand name={profile?.name || ""} role={copy["brand.role"]} />
 
-        <nav className="hidden items-center gap-1 md:flex" aria-label="Primary">
+        <nav className="hidden items-center gap-1 md:flex" aria-label={copy["nav.aria"]}>
           {navbarItems.map((item) => (
             <NavLink
               key={item.href}
@@ -114,8 +118,8 @@ export const Navbar = () => {
           <span className="mx-2 h-5 w-px bg-border/80" aria-hidden="true" />
           <ThemeToggle />
           <Button size="sm" className="ml-2" asChild>
-            <a href="/documents/jorgedelacruz_cv.pdf" target="_blank" rel="noopener noreferrer">
-              Resume
+            <a href={resumeUrl} target="_blank" rel="noopener noreferrer">
+              {copy["nav.resume"]}
             </a>
           </Button>
         </nav>
@@ -127,7 +131,7 @@ export const Navbar = () => {
             variant="ghost"
             size="icon"
             onClick={() => setIsMenuOpen((open) => !open)}
-            aria-label={isMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+            aria-label={isMenuOpen ? copy["nav.closeMenu"] : copy["nav.openMenu"]}
             aria-expanded={isMenuOpen}
             aria-controls={menuId}
           >
@@ -144,7 +148,7 @@ export const Navbar = () => {
 
       {isMenuOpen ? (
         <div id={menuId} ref={menuRef} className="surface-popover mx-3 mb-3 mt-2 border md:hidden">
-          <nav className={cn(shell, "flex-col items-stretch gap-1 py-3")} aria-label="Primary mobile">
+          <nav className={cn(shell, "flex-col items-stretch gap-1 py-3")} aria-label={copy["nav.aria"]}>
             {navbarItems.map((item) => (
               <NavLink
                 key={item.href}
@@ -163,8 +167,8 @@ export const Navbar = () => {
               </NavLink>
             ))}
             <Button size="sm" className="mt-2" asChild>
-              <a href="/documents/jorgedelacruz_cv.pdf" target="_blank" rel="noopener noreferrer">
-                Resume
+              <a href={resumeUrl} target="_blank" rel="noopener noreferrer">
+                {copy["nav.resume"]}
               </a>
             </Button>
           </nav>

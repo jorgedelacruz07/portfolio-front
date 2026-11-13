@@ -2,18 +2,23 @@ import { Link } from "react-router-dom";
 import { ArrowUpRight, Download } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { SocialNetworks } from "@/components/SocialNetworks";
 import { profileFallback } from "@/lib/profile-fallback";
 import { mailtoHref } from "@/lib/safe-href";
-import { socialNetworks } from "./SocialNetworks";
+import { safeHref } from "@/lib/safe-href";
+import { useSiteContent } from "@/hooks";
 
 const Footer = () => {
+  const { copy, profile, settings } = useSiteContent();
   const currentYear = new Date().getFullYear();
-  const contactHref = mailtoHref(profileFallback.contactEmail);
+  const currentProfileName = profile?.name || profileFallback.name;
+  const contactHref = mailtoHref(settings?.contactEmail || profile?.contactEmail || profileFallback.contactEmail);
+  const resumeUrl = safeHref(profile?.resumeUrl, { sameOriginPath: true }) || profileFallback.resumeUrl;
   const navLinks = [
-    { label: "Home", href: "/" },
-    { label: "Projects", href: "/projects" },
-    { label: "Experiences", href: "/experiences" },
-    { label: "Articles", href: "/articles" },
+    { label: copy["nav.home"], href: "/" },
+    { label: copy["nav.projects"], href: "/projects" },
+    { label: copy["nav.experiences"], href: "/experiences" },
+    { label: copy["nav.articles"], href: "/articles" },
   ];
 
   return (
@@ -23,13 +28,11 @@ const Footer = () => {
           <div className="max-w-2xl space-y-3">
             <p className="mono-label flex items-center gap-3 text-primary">
               <span className="h-px w-8 bg-primary/40" aria-hidden="true" />
-              Open to select roles
+              {copy["footer.eyebrow"]}
             </p>
-            <h2 className="text-2xl font-semibold leading-[1.1] text-foreground sm:text-4xl">
-              Let&apos;s build something reliable.
-            </h2>
+            <h2 className="text-2xl font-semibold leading-[1.1] text-foreground sm:text-4xl">{copy["footer.title"]}</h2>
             <p className="max-w-xl text-sm leading-relaxed text-muted-foreground sm:text-base">
-              I partner with teams that care about product quality, performance, and shipping software that holds up.
+              {copy["footer.description"]}
             </p>
           </div>
 
@@ -37,15 +40,15 @@ const Footer = () => {
             {contactHref ? (
               <Button asChild>
                 <a href={contactHref}>
-                  Start a conversation
+                  {copy["footer.contact"]}
                   <ArrowUpRight className="ml-2 h-4 w-4" aria-hidden="true" />
                 </a>
               </Button>
             ) : null}
             <Button variant="outline" asChild>
-              <a href={profileFallback.resumeUrl} download>
+              <a href={resumeUrl} download>
                 <Download className="mr-2 h-4 w-4" aria-hidden="true" />
-                Download CV
+                {copy["footer.resume"]}
               </a>
             </Button>
           </div>
@@ -53,13 +56,13 @@ const Footer = () => {
 
         <div className="grid gap-6 py-6 sm:py-10 md:grid-cols-[1.3fr_1fr_auto]">
           <div className="space-y-2">
-            <p className="text-sm font-semibold tracking-tight text-foreground">Jorge de la Cruz Padilla</p>
+            <p className="text-sm font-semibold tracking-tight text-foreground">{currentProfileName}</p>
             <p className="max-w-xs text-sm leading-relaxed text-muted-foreground">
-              Senior Software Engineer. Lima, Peru. Building full-stack products with React, Node, and cloud delivery.
+              {copy["footer.profileDescription"]}
             </p>
           </div>
 
-          <nav className="flex flex-wrap content-start gap-x-5 gap-y-2" aria-label="Footer">
+          <nav className="flex flex-wrap content-start gap-x-5 gap-y-2" aria-label={copy["footer.navLabel"]}>
             {navLinks.map((link) => (
               <Link
                 key={link.href}
@@ -71,30 +74,16 @@ const Footer = () => {
             ))}
           </nav>
 
-          <div className="flex items-start gap-3">
-            {socialNetworks.map((social) => {
-              const Icon = social.icon;
-              return (
-                <a
-                  key={social.id}
-                  href={social.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={social.name}
-                  className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-border bg-card text-muted-foreground transition-colors hover:border-primary/30 hover:text-foreground"
-                >
-                  <Icon width={16} height={16} />
-                </a>
-              );
-            })}
-          </div>
+          <SocialNetworks links={profile?.socialLinks} variant="footer" ariaLabelTemplate={copy["social.ariaLabel"]} />
         </div>
 
         <div className="flex flex-col gap-2 border-t border-border/80 py-6 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
-          <p>© {currentYear} Jorge de la Cruz Padilla. All rights reserved.</p>
+          <p>
+            © {currentYear} {settings?.footerText || `${currentProfileName}. All rights reserved.`}
+          </p>
           <p className="inline-flex items-center gap-1.5">
             <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" aria-hidden="true" />
-            Available for select engineering opportunities
+            {settings?.availabilityText || "Available for select engineering opportunities"}
           </p>
         </div>
       </div>

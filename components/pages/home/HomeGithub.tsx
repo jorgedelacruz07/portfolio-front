@@ -7,6 +7,7 @@ import { useGithubStats } from "@/hooks";
 import { cn } from "@/lib/utils";
 import { safeHref } from "@/lib/safe-href";
 import type { TGithubCalendarWeek } from "@/types/github";
+import type { TSiteCopy } from "@/lib/site-copy";
 
 const numberFormat = new Intl.NumberFormat("en");
 const contributionLevels = [
@@ -52,7 +53,7 @@ function Stat({ label, value, note }: { label: string; value: string; note: stri
   );
 }
 
-export const HomeGithub = () => {
+export const HomeGithub = ({ copy }: { copy: TSiteCopy }) => {
   const { data, isError, isFetching, refetch } = useGithubStats();
   const cells = useMemo(() => (data?.calendar ? buildCells(data.calendar) : []), [data?.calendar]);
   const levelOf = useMemo(() => levelForCells(cells), [cells]);
@@ -61,12 +62,12 @@ export const HomeGithub = () => {
     return (
       <HomeSection
         index="04"
-        eyebrow="Build in public"
-        title="GitHub activity"
-        description="The latest contribution snapshot is temporarily unavailable."
+        eyebrow={copy["home.github.eyebrow"]}
+        title={copy["home.github.title"]}
+        description={copy["home.github.errorDescription"]}
       >
         <Button type="button" variant="outline" onClick={() => void refetch()} disabled={isFetching}>
-          {isFetching ? "Refreshing…" : "Try again"}
+          {isFetching ? copy["home.github.refreshing"] : copy["home.github.retry"]}
         </Button>
       </HomeSection>
     );
@@ -85,23 +86,23 @@ export const HomeGithub = () => {
     <HomeSection
       id="github-activity"
       index="04"
-      eyebrow="Build in public"
-      title="GitHub activity"
-      description="A snapshot of what I’ve been building and contributing to."
+      eyebrow={copy["home.github.eyebrow"]}
+      title={copy["home.github.title"]}
+      description={copy["home.github.description"]}
     >
       <div className="flex flex-wrap items-center justify-between gap-4">
         <p className="text-sm text-muted-foreground">
-          Updated {updated}{" "}
+          {copy["home.github.updated"]} {updated}{" "}
           <span className="mx-1.5 text-border" aria-hidden="true">
             ·
           </span>
-          Private repositories are included in totals only.
+          {copy["home.github.privateRepos"]}
         </p>
         {profileUrl ? (
           <Button asChild variant="outline" size="sm">
             <a href={profileUrl} target="_blank" rel="noopener noreferrer">
               <GitBranch className="mr-2 h-4 w-4" aria-hidden="true" />
-              View GitHub profile
+              {copy["home.github.viewProfile"]}
               <ArrowUpRight className="ml-1.5 h-3.5 w-3.5" aria-hidden="true" />
             </a>
           </Button>
@@ -110,22 +111,26 @@ export const HomeGithub = () => {
 
       <div className="mt-4 grid grid-cols-2 divide-x divide-y divide-border/70 overflow-hidden rounded-2xl border border-border/80 bg-card/60 sm:grid-cols-4 sm:divide-y-0">
         <Stat
-          label="Contributions"
+          label={copy["home.github.contributions"]}
           value={numberFormat.format(contributions.lastYear)}
-          note={`Last year · ${numberFormat.format(contributions.private)} private`}
+          note={copy["home.github.lastYearLabel"].replace("{count}", numberFormat.format(contributions.private))}
         />
         <Stat
-          label="Current streak"
-          value={streaks ? `${streaks.current} days` : "–"}
-          note={streaks ? `Personal best: ${streaks.longest} days` : "GitHub streak"}
+          label={copy["home.github.currentStreak"]}
+          value={streaks ? `${streaks.current} ${copy["home.github.daysSuffix"]}` : "–"}
+          note={
+            streaks
+              ? copy["home.github.personalBest"].replace("{count}", String(streaks.longest))
+              : copy["home.github.streakFallback"]
+          }
         />
         <Stat
-          label="Repositories"
+          label={copy["home.github.repositories"]}
           value={numberFormat.format(repositories.total)}
           note={
             repositories.activeLast30Days === null
-              ? "Across my account"
-              : `${repositories.activeLast30Days} active this month`
+              ? copy["home.github.accountRepos"]
+              : copy["home.github.activeThisMonth"].replace("{count}", String(repositories.activeLast30Days))
           }
         />
         <Stat label="Followers" value={numberFormat.format(data.followers)} note={`${data.following} following`} />

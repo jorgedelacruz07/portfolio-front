@@ -4,23 +4,25 @@ import { Badge } from "@/components/ui/badge";
 import { previewExperienceGroups, visibleHighlights } from "@/lib/experience-groups";
 import { formatDateRange } from "@/lib/utils";
 import type { TExperience } from "@/types/experience";
+import type { TSiteCopy } from "@/lib/site-copy";
 
 type HomeExperiencesProps = {
   experiences: TExperience[];
+  copy: TSiteCopy;
 };
 
 /** Four roles, one line each. Full descriptions stay on /experiences. */
-export const HomeExperiences = ({ experiences }: HomeExperiencesProps) => {
+export const HomeExperiences = ({ experiences, copy }: HomeExperiencesProps) => {
   const groups = previewExperienceGroups(experiences, 4);
 
   return (
     <HomeSection
       index="02"
-      eyebrow="Experience"
-      title="A decade of shipping software"
-      description="From full-stack product work to senior engineering roles across distributed teams and client engagements."
+      eyebrow={copy["home.experience.eyebrow"]}
+      title={copy["home.experience.title"]}
+      description={copy["home.experience.description"]}
       actionHref="/experiences"
-      actionLabel="Full career history"
+      actionLabel={copy["home.experience.action"]}
     >
       <ol className="space-y-0">
         {groups.map((group, index) => {

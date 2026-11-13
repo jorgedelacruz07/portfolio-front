@@ -5,29 +5,36 @@ import { Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { EmptyState, PageContainer } from "@/components/ui/page";
 import { profileFallback } from "@/lib/profile-fallback";
+import { useSiteContent } from "@/hooks";
+import { safeHref } from "@/lib/safe-href";
 
 export default function NotFoundPage() {
+  const { copy, profile } = useSiteContent();
+  const resumeUrl = safeHref(profile?.resumeUrl, { sameOriginPath: true }) || profileFallback.resumeUrl;
+  const contactEmail = profile?.contactEmail || profileFallback.contactEmail;
   return (
     <>
       <Helmet>
-        <title>Page Not Found | Jorge de la Cruz</title>
-        <meta name="description" content="This page is not on the site. Jorge de la Cruz is." />
+        <title>
+          {copy["notFound.title"]} | {copy["layout.siteName"]}
+        </title>
+        <meta name="description" content={copy["notFound.description"]} />
         <meta name="robots" content="noindex" />
       </Helmet>
 
       <PageContainer>
-        <EmptyState heading="h1" title="Page not found" description="This endpoint doesn't exist... but I do.">
+        <EmptyState heading="h1" title={copy["notFound.title"]} description={copy["notFound.description"]}>
           <Button asChild>
-            <a href={profileFallback.resumeUrl} download>
+            <a href={resumeUrl} download>
               <Download className="mr-2 h-4 w-4" aria-hidden="true" />
-              Download CV
+              {copy["nav.resume"]}
             </a>
           </Button>
           <Button asChild variant="outline">
-            <a href={`mailto:${profileFallback.contactEmail}`}>Get in touch</a>
+            <a href={`mailto:${contactEmail}`}>{copy["notFound.contact"]}</a>
           </Button>
           <Button asChild variant="outline">
-            <Link to="/">Back home</Link>
+            <Link to="/">{copy["notFound.backHome"]}</Link>
           </Button>
         </EmptyState>
       </PageContainer>

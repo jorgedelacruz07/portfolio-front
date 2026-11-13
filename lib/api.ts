@@ -4,7 +4,7 @@ import type { TCategory } from "../types/category";
 import type { TExperience } from "../types/experience";
 import type { TGithubStats } from "../types/github";
 import type { ApiError } from "../types/error";
-import type { TPortfolioContent } from "../types/portfolio";
+import type { TPortfolioContent, TPublicSiteContent } from "../types/portfolio";
 import type { TProject } from "../types/project";
 import type { PublicArticle, PublicArticleSummary } from "../types/article";
 import { PRODUCTION_API_URL, resolveApiBaseUrl } from "./api-url.ts";
@@ -74,6 +74,7 @@ apiClient.interceptors.response.use(
 
 export const apiEndpoints = {
   portfolio: () => "/client/portfolio",
+  siteContent: () => "/client/portfolio/content",
   projects: () => "/client/projects",
   projectBySlug: (slug: string) => `/client/projects/${slug}`,
   experiences: () => "/client/experiences",
@@ -118,6 +119,7 @@ async function getOptionalPayload<T>(path: string): Promise<T | null> {
 
 export const api = {
   getPortfolio: () => getPayload<TPortfolioContent>(apiEndpoints.portfolio()),
+  getSiteContent: () => getPayload<TPublicSiteContent>(apiEndpoints.siteContent()),
   getProjects: () => getPayload<TProject[]>(apiEndpoints.projects()),
   getProjectBySlug: (slug: string) => getOptionalPayload<TProject>(apiEndpoints.projectBySlug(slug)),
   getExperiences: () => getPayload<TExperience[]>(apiEndpoints.experiences()),

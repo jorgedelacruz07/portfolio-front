@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { EmptyState, PageContainer, PageHeader } from "@/components/ui/page";
 import { SearchField } from "@/components/ui/search-field";
-import { useGetArticles } from "@/hooks";
+import { useGetArticles, useSiteContent } from "@/hooks";
 import { PUBLIC_SITE_ORIGIN } from "@/lib/article-delivery";
 import { cn } from "@/lib/utils";
 import type { ArticleContentType, PublicArticleSummary } from "@/types/article";
@@ -36,6 +36,7 @@ function formatPublishedDate(dateString: string): string {
 
 export default function ArticlesPage() {
   const { data: articles = [], isLoading, error } = useGetArticles();
+  const { copy } = useSiteContent();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedType, setSelectedType] = useState<string>("all");
 
@@ -67,8 +68,8 @@ export default function ArticlesPage() {
         <EmptyState
           heading="h1"
           icon={<X className="h-5 w-5" />}
-          title="Error loading articles"
-          description={error instanceof Error ? error.message : "Unable to retrieve the articles catalog."}
+          title={copy["articles.errorTitle"]}
+          description={copy["articles.errorDescription"]}
         >
           <Button onClick={() => window.location.reload()} variant="outline" size="sm">
             Try again
@@ -83,32 +84,23 @@ export default function ArticlesPage() {
   return (
     <>
       <Helmet>
-        <title>Articles & Engineering Notes | Jorge de la Cruz Padilla</title>
-        <meta
-          name="description"
-          content="Deep-dives into software architecture, systems engineering, distributed systems, and craft."
-        />
+        <title>{copy["articles.seoTitle"]}</title>
+        <meta name="description" content={copy["articles.seoDescription"]} />
         <link rel="canonical" href={`${PUBLIC_SITE_ORIGIN}/articles`} />
-        <meta property="og:title" content="Articles & Engineering Notes | Jorge de la Cruz Padilla" />
-        <meta
-          property="og:description"
-          content="Deep-dives into software architecture, systems engineering, distributed systems, and craft."
-        />
+        <meta property="og:title" content={copy["articles.seoTitle"]} />
+        <meta property="og:description" content={copy["articles.seoDescription"]} />
         <meta property="og:type" content="website" />
         <meta property="og:url" content={`${PUBLIC_SITE_ORIGIN}/articles`} />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Articles & Engineering Notes | Jorge de la Cruz Padilla" />
-        <meta
-          name="twitter:description"
-          content="Deep-dives into software architecture, systems engineering, distributed systems, and craft."
-        />
+        <meta name="twitter:title" content={copy["articles.seoTitle"]} />
+        <meta name="twitter:description" content={copy["articles.seoDescription"]} />
       </Helmet>
 
       <PageContainer className="space-y-10">
         <PageHeader
-          eyebrow="Writing"
-          title="Articles & Engineering Notes"
-          description="Practical reflections, architectural case studies, and tutorials on building reliable software systems."
+          eyebrow={copy["articles.eyebrow"]}
+          title={copy["articles.title"]}
+          description={copy["articles.description"]}
         />
 
         {articles.length > 0 ? (
@@ -148,8 +140,8 @@ export default function ArticlesPage() {
               <SearchField
                 value={searchQuery}
                 onChange={setSearchQuery}
-                label="Search articles"
-                placeholder="Search articles..."
+                label={copy["articles.searchLabel"]}
+                placeholder={copy["articles.search"]}
               />
             </div>
           </div>
@@ -158,12 +150,8 @@ export default function ArticlesPage() {
         {filteredArticles.length === 0 ? (
           <EmptyState
             icon={<Newspaper className="h-5 w-5" />}
-            title={filtering ? "No articles found" : "Check back soon"}
-            description={
-              filtering
-                ? "Try adjusting your search criteria or filters."
-                : "New technical writings and deep-dives will show up here."
-            }
+            title={filtering ? copy["articles.noMatchTitle"] : copy["articles.emptyTitle"]}
+            description={filtering ? copy["articles.noMatchDescription"] : copy["articles.emptyDescription"]}
           >
             {filtering ? (
               <Button

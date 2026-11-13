@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { badgeVariants } from "@/components/ui/badge";
 import { EmptyState, PageContainer, PageHeader } from "@/components/ui/page";
 import { SearchField } from "@/components/ui/search-field";
-import { useGetProjects } from "@/hooks";
+import { useGetProjects, useSiteContent } from "@/hooks";
 import { orderPublicProjects } from "@/lib/project-order";
 import { listView } from "@/lib/list-state";
 import { cn } from "@/lib/utils";
@@ -31,6 +31,7 @@ function FilterButton({ active, onClick, children }: { active: boolean; onClick:
 
 export default function ProjectsPage() {
   const { data: projects = [], isLoading, error } = useGetProjects();
+  const { copy } = useSiteContent();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedType, setSelectedType] = useState<string>("all");
   const [selectedTech, setSelectedTech] = useState<string | null>(null);
@@ -113,8 +114,8 @@ export default function ProjectsPage() {
         <EmptyState
           heading="h1"
           icon={<X className="h-5 w-5" />}
-          title="Error loading projects"
-          description={error instanceof Error ? error.message : "Unable to retrieve the projects collection."}
+          title={copy["projects.errorTitle"]}
+          description={copy["projects.errorDescription"]}
         >
           <Button onClick={() => window.location.reload()} variant="outline" size="sm">
             Try again
@@ -127,28 +128,25 @@ export default function ProjectsPage() {
   return (
     <>
       <Helmet>
-        <title>Projects & Engineering Work | Jorge de la Cruz Padilla</title>
-        <meta
-          name="description"
-          content="Selected products, personal tools, and client work built with TypeScript, React, Node.js, and other stacks."
-        />
-        <meta property="og:title" content="Projects & Engineering Work | Jorge de la Cruz Padilla" />
-        <meta property="og:description" content="Selected products, personal tools, and client work." />
+        <title>{copy["projects.seoTitle"]}</title>
+        <meta name="description" content={copy["projects.seoDescription"]} />
+        <meta property="og:title" content={copy["projects.seoTitle"]} />
+        <meta property="og:description" content={copy["projects.seoDescription"]} />
       </Helmet>
 
       <PageContainer className="space-y-10">
         <PageHeader
-          eyebrow={`${projects.length} projects`}
-          title="Projects & Engineering Systems"
-          description="Products, personal tools, and client work across finance, education, and other domains. Explore each project's stack, design decisions, and availability."
+          eyebrow={`${projects.length} ${copy["projects.countLabel"]}`}
+          title={copy["projects.title"]}
+          description={copy["projects.description"]}
         />
 
         <section aria-label="Project search and filters" className="space-y-4">
           <SearchField
             value={searchQuery}
             onChange={setSearchQuery}
-            label="Search projects"
-            placeholder="Search by title, description, or stack..."
+            label={copy["projects.searchLabel"]}
+            placeholder={copy["projects.search"]}
           />
           <div className="flex flex-wrap items-center gap-1">
             <FilterButton active={selectedType === "all"} onClick={() => setSelectedType("all")}>
@@ -209,14 +207,14 @@ export default function ProjectsPage() {
         {listView(projects.length, filteredProjects.length) === "empty" ? (
           <EmptyState
             icon={<Search className="h-5 w-5" />}
-            title="No projects yet"
-            description="Published projects will show up here."
+            title={copy["projects.emptyTitle"]}
+            description={copy["projects.emptyDescription"]}
           />
         ) : listView(projects.length, filteredProjects.length) === "no-results" ? (
           <EmptyState
             icon={<Search className="h-5 w-5" />}
-            title="No matching projects found"
-            description="No projects matched your active search or filter criteria. Try broadening your keywords or resetting filters."
+            title={copy["projects.noMatchTitle"]}
+            description={copy["projects.noMatchDescription"]}
           >
             <Button onClick={resetFilters} variant="outline" size="sm">
               Clear all filters

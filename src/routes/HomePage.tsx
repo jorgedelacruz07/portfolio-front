@@ -6,9 +6,10 @@ import { HomeProfile } from "@/components/pages/home/HomeProfile";
 import { HomeSection } from "@/components/pages/home/HomeSection";
 import { Button } from "@/components/ui/button";
 import { PageContainer } from "@/components/ui/page";
-import { useDeferredRender, useHomePageData } from "@/hooks";
+import { useDeferredRender, useHomePageData, useSiteContent } from "@/hooks";
 import { careerSnapshot } from "@/lib/experience-groups";
 import { cn } from "@/lib/utils";
+import type { TSiteCopy } from "@/lib/site-copy";
 
 const HomeProjects = lazy(() =>
   import("@/components/pages/home/HomeProjects").then((module) => ({
@@ -73,14 +74,14 @@ function DeferredSection({ children, className }: DeferredSectionProps) {
 }
 
 /** The GitHub block is optional: it reserves no space and only fetches once it is near the viewport. */
-function DeferredGithub() {
+function DeferredGithub({ copy }: { copy: TSiteCopy }) {
   const { ref, shouldRender } = useDeferredRender();
 
   return (
     <div ref={ref}>
       {shouldRender ? (
         <Suspense fallback={null}>
-          <HomeGithub />
+          <HomeGithub copy={copy} />
         </Suspense>
       ) : null}
     </div>
@@ -93,22 +94,23 @@ function SectionLoadError({
   index,
   onRetry,
   pending,
+  description,
+  retryLabel,
+  retryPendingLabel,
 }: {
   eyebrow: string;
   title: string;
   index: string;
   onRetry: () => void;
   pending: boolean;
+  description: string;
+  retryLabel: string;
+  retryPendingLabel: string;
 }) {
   return (
-    <HomeSection
-      index={index}
-      eyebrow={eyebrow}
-      title={title}
-      description="This section could not be loaded. The rest of the page is still available."
-    >
+    <HomeSection index={index} eyebrow={eyebrow} title={title} description={description}>
       <Button type="button" variant="outline" onClick={onRetry} disabled={pending}>
-        {pending ? "Trying again..." : "Try again"}
+        {pending ? retryPendingLabel : retryLabel}
       </Button>
     </HomeSection>
   );
@@ -116,6 +118,7 @@ function SectionLoadError({
 
 export default function HomePage() {
   const { profile, skills, experiences, projects, isLoading, error, isFetching, refetch } = useHomePageData();
+  const { copy, settings } = useSiteContent();
   const snapshot = careerSnapshot(experiences);
   const retry = () => {
     void refetch();
@@ -124,58 +127,61 @@ export default function HomePage() {
   return (
     <>
       <Helmet>
-        <title>Jorge de la Cruz Padilla | Senior Software Engineer</title>
-        <meta
-          name="description"
-          content="Senior Software Engineer building full-stack products with React.js, Vite.js, Express.js, MongoDB, AWS, Docker, and AI-native workflows."
-        />
+        <title>{settings?.seoTitle || copy["layout.siteName"]}</title>
+        <meta name="description" content={settings?.seoDescription || ""} />
       </Helmet>
 
       <PageContainer className="flex flex-col gap-10 sm:gap-16">
-        <HomeProfile cmsProfile={profile} snapshot={snapshot} />
+        <HomeProfile cmsProfile={profile} snapshot={snapshot} copy={copy} />
 
         {error ? (
           <SectionLoadError
-            eyebrow="Selected work"
-            title="Projects could not be loaded"
+            eyebrow={copy["home.projects.eyebrow"]}
+            title={copy["home.projects.errorTitle"]}
             index="01"
             onRetry={retry}
             pending={isFetching}
+            description={copy["home.error.description"]}
+            retryLabel={copy["home.error.retryIdle"]}
+            retryPendingLabel={copy["home.error.retry"]}
           />
         ) : projects.length > 0 ? (
           <DeferredSection>
             <Suspense fallback={<DeferredSectionPlaceholder />}>
-              <HomeProjects projects={projects} />
+              <HomeProjects projects={projects} copy={copy} />
             </Suspense>
           </DeferredSection>
         ) : null}
 
         {error ? (
           <SectionLoadError
-            eyebrow="Experience"
-            title="Experience could not be loaded"
+            eyebrow={copy["home.experience.eyebrow"]}
+            title={copy["home.experience.errorTitle"]}
             index="02"
             onRetry={retry}
             pending={isFetching}
+            description={copy["home.error.description"]}
+            retryLabel={copy["home.error.retryIdle"]}
+            retryPendingLabel={copy["home.error.retry"]}
           />
         ) : isLoading ? (
           <DeferredSectionPlaceholder />
         ) : experiences.length > 0 ? (
           <DeferredSection>
             <Suspense fallback={<DeferredSectionPlaceholder />}>
-              <HomeExperiences experiences={experiences} />
+              <HomeExperiences experiences={experiences} copy={copy} />
             </Suspense>
           </DeferredSection>
         ) : null}
 
-        <HomeAbout cmsSkills={skills} />
+        <HomeAbout cmsSkills={skills} copy={copy} />
 
         {error ? (
           <Suspense fallback={<DeferredSectionPlaceholder />}>
-            <HomeGithub />
+            <HomeGithub copy={copy} />
           </Suspense>
         ) : (
-          <DeferredGithub />
+          <DeferredGithub copy={copy} />
         )}
       </PageContainer>
     </>

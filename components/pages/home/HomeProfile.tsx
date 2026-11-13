@@ -8,13 +8,15 @@ import { profileFallback } from "@/lib/profile-fallback";
 import { mailtoHref, safeHref } from "@/lib/safe-href";
 import type { CareerSnapshot } from "@/lib/experience-groups";
 import type { TProfile } from "@/types/portfolio";
+import type { TSiteCopy } from "@/lib/site-copy";
 
 type HomeProfileProps = {
   cmsProfile?: TProfile;
   snapshot?: CareerSnapshot | null;
+  copy: TSiteCopy;
 };
 
-export const HomeProfile = ({ cmsProfile, snapshot }: HomeProfileProps) => {
+export const HomeProfile = ({ cmsProfile, snapshot, copy }: HomeProfileProps) => {
   const currentProfile = {
     name: cmsProfile?.name || profileFallback.name,
     headline: cmsProfile?.headline || profileFallback.headline,
@@ -24,6 +26,7 @@ export const HomeProfile = ({ cmsProfile, snapshot }: HomeProfileProps) => {
     profileImage: cmsProfile?.profileImage?.src ? cmsProfile.profileImage : { src: profile.image },
     resumeUrl: cmsProfile?.resumeUrl || profileFallback.resumeUrl,
     contactEmail: cmsProfile?.contactEmail || profileFallback.contactEmail,
+    socialLinks: cmsProfile?.socialLinks || [],
   };
 
   const handleDownloadClick = () => {
@@ -50,13 +53,15 @@ export const HomeProfile = ({ cmsProfile, snapshot }: HomeProfileProps) => {
               />
               {currentProfile.availability}
             </span>
-            <span className="mono-label text-muted-foreground">{currentProfile.location} · UTC-5</span>
+            <span className="mono-label text-muted-foreground">
+              {currentProfile.location} · {copy["home.hero.timezone"]}
+            </span>
           </div>
 
           <div className="space-y-3 sm:space-y-5">
             <p className="mono-label flex items-center gap-3 text-primary">
               <span className="h-px w-8 bg-primary/40" aria-hidden="true" />
-              Full-stack product engineer
+              {copy["home.hero.eyebrow"]}
             </p>
             <h1 className="max-w-3xl text-[2.5rem] font-semibold leading-[0.98] tracking-[-0.055em] text-foreground sm:text-7xl">
               {currentProfile.name}
@@ -72,16 +77,16 @@ export const HomeProfile = ({ cmsProfile, snapshot }: HomeProfileProps) => {
               {resumeHref ? (
                 <a href={resumeHref} download>
                   <Download className="mr-2 h-4 w-4" aria-hidden="true" />
-                  Download CV
+                  {copy["home.hero.download"]}
                 </a>
               ) : (
-                <span>Download CV</span>
+                <span>{copy["home.hero.download"]}</span>
               )}
             </Button>
             {contactHref ? (
               <Button asChild variant="outline">
                 <a href={contactHref}>
-                  Get in touch
+                  {copy["home.hero.contact"]}
                   <ArrowUpRight className="ml-2 h-4 w-4" aria-hidden="true" />
                 </a>
               </Button>
@@ -101,27 +106,32 @@ export const HomeProfile = ({ cmsProfile, snapshot }: HomeProfileProps) => {
           {snapshot ? (
             <dl className="grid grid-cols-2 gap-x-8 gap-y-5 border-t border-border/80 pt-7 sm:flex sm:flex-wrap sm:gap-x-12">
               <div>
-                <dt className="mono-label text-muted-foreground">Experience</dt>
+                <dt className="mono-label text-muted-foreground">{copy["home.hero.experienceLabel"]}</dt>
                 <dd className="mt-1 text-2xl font-bold tracking-tight text-foreground tabular-nums">
-                  {snapshot.years}+ yrs
+                  {snapshot.years}
+                  {copy["home.hero.yearsSuffix"]}
                 </dd>
               </div>
               <div>
-                <dt className="mono-label text-muted-foreground">Track record</dt>
+                <dt className="mono-label text-muted-foreground">{copy["home.hero.trackRecordLabel"]}</dt>
                 <dd className="mt-1 text-2xl font-bold tracking-tight text-foreground tabular-nums">
-                  {snapshot.roles} roles
+                  {snapshot.roles} {copy["home.hero.rolesSuffix"]}
                 </dd>
-                <dd className="text-xs text-muted-foreground">across {snapshot.companies} companies</dd>
+                <dd className="text-xs text-muted-foreground">
+                  {copy["home.hero.companiesLabel"].replace("{count}", String(snapshot.companies))}
+                </dd>
               </div>
               <div>
-                <dt className="mono-label text-muted-foreground">Focus</dt>
-                <dd className="mt-1 text-sm font-semibold leading-snug text-foreground">React · Node · Cloud</dd>
-                <dd className="text-xs text-muted-foreground">End-to-end product delivery</dd>
+                <dt className="mono-label text-muted-foreground">{copy["home.hero.focusLabel"]}</dt>
+                <dd className="mt-1 text-sm font-semibold leading-snug text-foreground">
+                  {copy["home.hero.focusValue"]}
+                </dd>
+                <dd className="text-xs text-muted-foreground">{copy["home.hero.focusNote"]}</dd>
               </div>
             </dl>
           ) : null}
 
-          <SocialNetworks />
+          <SocialNetworks links={currentProfile.socialLinks} ariaLabelTemplate={copy["social.ariaLabel"]} />
         </div>
 
         <div className="relative mx-auto hidden w-full max-w-[19rem] lg:mx-0 lg:block lg:justify-self-end">
@@ -143,7 +153,7 @@ export const HomeProfile = ({ cmsProfile, snapshot }: HomeProfileProps) => {
             />
             {snapshot?.current ? (
               <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/45 to-transparent px-5 pb-5 pt-12">
-                <p className="mono-label text-white/65">Currently</p>
+                <p className="mono-label text-white/65">{copy["home.hero.currentlyLabel"]}</p>
                 <p className="mt-1 text-sm font-semibold leading-tight text-white">{snapshot.current.title}</p>
                 <p className="text-xs text-white/70">{snapshot.current.company}</p>
               </div>

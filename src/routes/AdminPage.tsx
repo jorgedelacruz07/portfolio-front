@@ -1,4 +1,5 @@
 import { FormEvent, ReactNode, useEffect, useId, useMemo, useRef, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { Helmet } from "react-helmet-async";
 import { Link, useSearchParams } from "react-router-dom";
 import axios from "axios";
@@ -7,6 +8,7 @@ import { ProjectDraftImport } from "@/components/admin/ProjectDraftImport";
 import { ProjectEditor } from "@/components/admin/ProjectEditor";
 import { ExperienceEditor } from "@/components/admin/ExperienceEditor";
 import { ArticleEditor } from "@/components/admin/ArticleEditor";
+import { SiteContentEditor } from "@/components/admin/SiteContentEditor";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import {
@@ -36,7 +38,8 @@ import {
   Trash2,
   User,
 } from "lucide-react";
-import type { TPortfolioContent, TProfile, TSiteSettings, TSkill } from "@/types/portfolio";
+import type { TPortfolioContent, TProfile, TPublicSiteContent, TSiteSettings, TSkill } from "@/types/portfolio";
+import { withSiteCopyDefaults, type TSiteCopy } from "@/lib/site-copy";
 import type { TExperience } from "@/types/experience";
 import type { TProject } from "@/types/project";
 
@@ -47,7 +50,7 @@ type Session = {
 };
 
 type SaveState = "idle" | "saving" | "saved" | "error";
-type AdminTab = "articles" | "projects" | "experience" | "skills" | "profile";
+type AdminTab = "articles" | "projects" | "experience" | "skills" | "profile" | "content";
 
 const inputClass =
   "w-full rounded-xl border border-border bg-card/60 px-3.5 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/60 transition-colors focus:border-primary focus:bg-card focus:outline-none focus:ring-1 focus:ring-primary font-sans";
@@ -561,6 +564,7 @@ function GoogleLoginForm({
 }
 
 export default function AdminPage() {
+  const queryClient = useQueryClient();
   const [session, setSession] = useState<Session | null>(null);
   const [sessionExpired, setSessionExpired] = useState(false);
   const [content, setContent] = useState<TPortfolioContent | null>(null);
@@ -580,7 +584,8 @@ export default function AdminPage() {
     rawTab === "experience" ||
     rawTab === "skills" ||
     rawTab === "profile" ||
-    rawTab === "articles"
+    rawTab === "articles" ||
+    rawTab === "content"
       ? rawTab
       : "articles";
 
@@ -634,9 +639,30 @@ export default function AdminPage() {
     setContent({ ...content, profile: { ...content.profile, ...next } });
   }
 
+  function updateSocialLink(index: number, next: Partial<TProfile["socialLinks"][number]>) {
+    if (!profile) return;
+    const socialLinks = [...profile.socialLinks];
+    socialLinks[index] = { ...socialLinks[index], ...next };
+    updateProfile({ socialLinks });
+  }
+
+  function addSocialLink() {
+    if (!profile) return;
+    updateProfile({ socialLinks: [...profile.socialLinks, { label: "New network", url: "https://" }] });
+  }
+
+  function removeSocialLink(index: number) {
+    if (!profile) return;
+    updateProfile({ socialLinks: profile.socialLinks.filter((_, itemIndex) => itemIndex !== index) });
+  }
+
   function updateSettings(next: Partial<TSiteSettings>) {
     if (!content) return;
     setContent({ ...content, settings: { ...content.settings, ...next } });
+  }
+
+  function updateSiteCopy(siteCopy: TSiteCopy) {
+    updateSettings({ siteCopy });
   }
 
   function updateSkill(index: number, next: Partial<TSkill>) {
@@ -720,6 +746,24 @@ export default function AdminPage() {
     }
   }
 
+  async function saveProfileAndRefresh(profileToSave: TProfile) {
+    const savedProfile = await adminApi.saveProfile(profileToSave);
+    queryClient.setQueryData<TPublicSiteContent>(["portfolio", "site-content"], (current) =>
+      current ? { ...current, profile: savedProfile } : current,
+    );
+    await queryClient.invalidateQueries({ queryKey: ["portfolio", "public"] });
+    return savedProfile;
+  }
+
+  async function saveSettingsAndRefresh(settingsToSave: TSiteSettings) {
+    const savedSettings = await adminApi.saveSettings(settingsToSave);
+    queryClient.setQueryData<TPublicSiteContent>(["portfolio", "site-content"], (current) =>
+      current ? { ...current, settings: savedSettings } : current,
+    );
+    await queryClient.invalidateQueries({ queryKey: ["portfolio", "public"] });
+    return savedSettings;
+  }
+
   async function logout() {
     try {
       await adminApi.logout();
@@ -761,6 +805,7 @@ export default function AdminPage() {
     { id: "experience" as const, label: "Experiencia", icon: Briefcase, count: experiences.length },
     { id: "skills" as const, label: "Habilidades", icon: Sparkles, count: skills.length },
     { id: "profile" as const, label: "Perfil & SEO", icon: User },
+    { id: "content" as const, label: "Contenido del sitio", icon: FileText },
   ];
 
   return (
@@ -1130,7 +1175,7 @@ export default function AdminPage() {
                   <SaveButton
                     state={saveState}
                     label="Guardar Perfil"
-                    onClick={() => persist(() => adminApi.saveProfile(profile), "Perfil guardado con éxito")}
+                    onClick={() => persist(() => saveProfileAndRefresh(profile), "Perfil guardado con éxito")}
                   />
                 }
               >
@@ -1173,6 +1218,56 @@ export default function AdminPage() {
                   value={profile.contactEmail}
                   onChange={(contactEmail) => updateProfile({ contactEmail })}
                 />
+                <ModernField
+                  label="URL de la foto de perfil"
+                  value={profile.profileImage?.src || ""}
+                  placeholder="/images/profile.jpg o https://..."
+                  onChange={(src) => updateProfile({ profileImage: src.trim() ? { src: src.trim() } : null })}
+                />
+                <ModernField
+                  label="URL del CV"
+                  value={profile.resumeUrl || ""}
+                  placeholder="/documents/resume.pdf"
+                  onChange={(resumeUrl) => updateProfile({ resumeUrl: resumeUrl.trim() || null })}
+                />
+                <div className="space-y-3 border-t border-border/60 pt-4">
+                  <div>
+                    <h3 className="text-sm font-semibold text-foreground">Redes sociales</h3>
+                    <p className="mt-1 text-xs text-muted-foreground">Edita las redes visibles en el perfil público.</p>
+                  </div>
+                  {(profile.socialLinks || []).map((social, index) => (
+                    <div
+                      className="grid gap-3 sm:grid-cols-[minmax(8rem,0.7fr)_minmax(0,1.3fr)]"
+                      key={`${index}-${social.label}`}
+                    >
+                      <ModernField
+                        label={`Red ${index + 1}`}
+                        value={social.label}
+                        onChange={(label) => updateSocialLink(index, { label })}
+                      />
+                      <ModernField
+                        label="URL"
+                        value={social.url}
+                        onChange={(url) => updateSocialLink(index, { url })}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => removeSocialLink(index)}
+                        className="justify-self-start text-xs text-destructive hover:underline sm:col-span-2"
+                      >
+                        Eliminar red
+                      </button>
+                    </div>
+                  ))}
+                  <button
+                    type="button"
+                    onClick={addSocialLink}
+                    className="inline-flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                  >
+                    <Plus className="h-3.5 w-3.5" />
+                    Añadir red social
+                  </button>
+                </div>
               </SectionCard>
             )}
 
@@ -1188,7 +1283,7 @@ export default function AdminPage() {
                   <SaveButton
                     state={saveState}
                     label="Guardar SEO"
-                    onClick={() => persist(() => adminApi.saveSettings(settings), "Ajustes SEO guardados con éxito")}
+                    onClick={() => persist(() => saveSettingsAndRefresh(settings), "Ajustes SEO guardados con éxito")}
                   />
                 }
               >
@@ -1222,6 +1317,25 @@ export default function AdminPage() {
                   onChange={(seoDescription) => updateSettings({ seoDescription })}
                 />
                 <ModernField
+                  label="Palabras clave SEO"
+                  value={settings.seoKeywords || ""}
+                  placeholder="Software Engineer, React, TypeScript, Node.js"
+                  helperText="Lista separada por comas."
+                  onChange={(seoKeywords) => updateSettings({ seoKeywords })}
+                />
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <ModernField
+                    label="Email global de contacto"
+                    value={settings.contactEmail}
+                    onChange={(contactEmail) => updateSettings({ contactEmail })}
+                  />
+                  <ModernField
+                    label="Disponibilidad del pie de página"
+                    value={settings.availabilityText}
+                    onChange={(availabilityText) => updateSettings({ availabilityText })}
+                  />
+                </div>
+                <ModernField
                   label="Imagen Open Graph (og:image)"
                   value={settings.openGraphImage || ""}
                   placeholder="https://jorgedelacruzpadilla.dev/images/og-image.png"
@@ -1236,6 +1350,30 @@ export default function AdminPage() {
               </SectionCard>
             )}
           </div>
+        ) : null}
+
+        {activeTab === "content" ? (
+          !settings ? (
+            <div className="flex items-center justify-center p-12 text-muted-foreground text-xs font-mono">
+              Cargando contenido del sitio...
+            </div>
+          ) : (
+            <SectionCard
+              title="Contenido público del sitio"
+              subtitle="Edita los títulos, descripciones y llamadas a la acción que aparecen en las páginas públicas."
+              action={
+                <SaveButton
+                  state={saveState}
+                  label="Guardar contenido"
+                  onClick={() =>
+                    persist(() => saveSettingsAndRefresh(settings), "Contenido del sitio guardado con éxito")
+                  }
+                />
+              }
+            >
+              <SiteContentEditor value={withSiteCopyDefaults(settings.siteCopy)} onChange={updateSiteCopy} />
+            </SectionCard>
+          )
         ) : null}
       </div>
     </>

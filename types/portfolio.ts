@@ -28,10 +28,12 @@ export type TSiteSettings = {
   id?: string;
   seoTitle: string;
   seoDescription: string;
+  seoKeywords?: string;
   openGraphImage?: string | null;
   contactEmail: string;
   availabilityText: string;
   footerText: string;
+  siteCopy?: Record<string, string>;
 };
 
 export type TPortfolioContent = {
@@ -41,3 +43,5 @@ export type TPortfolioContent = {
   projects: TProject[];
   experiences: TExperience[];
 };
+
+export type TPublicSiteContent = Pick<TPortfolioContent, "profile" | "settings">;

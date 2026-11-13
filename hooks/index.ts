@@ -2,3 +2,4 @@
 export * from "./queries";
 export { useHomePageData } from "./useHomePageData";
 export { useDeferredRender } from "./useDeferredRender";
+export { useSiteContent } from "./useSiteContent";
