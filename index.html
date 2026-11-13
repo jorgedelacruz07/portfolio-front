@@ -100,12 +100,26 @@
     <!-- Google Analytics (Deferred, non-blocking via requestIdleCallback/load) -->
     <script>
       (() => {
-        const GA_ID = "%VITE_GA_ID%";
+        const GA_ID = "G-4J8T4WP1S7";
         const isValidId = /^G-[A-Z0-9]+$/i.test(GA_ID);
 
         if (!isValidId) {
           return;
         }
+
+        window.__gaMeasurementId = GA_ID;
+        window.dataLayer = window.dataLayer || [];
+        window.gtag =
+          window.gtag ||
+          function gtag() {
+            window.dataLayer.push(arguments);
+          };
+        window.gtag("js", new Date());
+        window.gtag("config", GA_ID, {
+          send_page_view: false,
+          anonymize_ip: true,
+          transport_type: "beacon",
+        });
 
         const initGA = () => {
           if (window.__gaInitialized) return;
@@ -115,20 +129,6 @@
           script.async = true;
           script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_ID}`;
           document.head.appendChild(script);
-
-          window.dataLayer = window.dataLayer || [];
-          window.gtag =
-            window.gtag ||
-            function gtag() {
-              window.dataLayer.push(arguments);
-            };
-
-          window.gtag("js", new Date());
-          window.gtag("config", GA_ID, {
-            send_page_view: false,
-            anonymize_ip: true,
-            transport_type: "beacon",
-          });
         };
 
         if ("requestIdleCallback" in window) {

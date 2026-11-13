@@ -64,11 +64,10 @@ The app currently reads these variables:
 
 ```bash
 VITE_API_URL=
-VITE_GA_ID=
 ```
 
 - `VITE_API_URL`: Base URL for the portfolio API.
-- `VITE_GA_ID`: Google Analytics measurement ID.
+- Google Analytics uses the configured measurement ID `G-4J8T4WP1S7`.
 
 `VITE_API_URL` is required in every environment. Missing configuration, network
 errors and unsupported endpoints surface as errors; public content is never
@@ -117,7 +116,7 @@ Production builds require an absolute HTTP(S) `VITE_API_URL` pointing to the rem
 API; missing, invalid, or loopback addresses fail the build. Set `VITE_API_URL` in the
 Doppler `portfolio` project, `prd` config, before releasing. `npm run deploy` reads it with
 `doppler run -c prd` and sets `VITE_VERIFY_PROD_URL=true`, so a missing or local URL fails the build
-instead of shipping a bundle that calls `localhost`. Only `VITE_API_URL` is injected; to enable analytics add `VITE_GA_ID` to `prd` and to the `--only-secrets` list in the `deploy` script.
+instead of shipping a bundle that calls `localhost`. The Google Analytics measurement ID is included in the frontend source; no Doppler value is needed for Analytics.
 
 Run the configuration regression checks with:
 

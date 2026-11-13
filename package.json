@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build && node scripts/prerender-seo-pages.mjs",
-    "build:prod": "doppler run -p portfolio -c prd --only-secrets=VITE_API_URL,VITE_GA_ID,VITE_GOOGLE_CLIENT_ID -- env VITE_VERIFY_PROD_URL=true npm run build",
+    "build:prod": "doppler run -p portfolio -c prd --only-secrets=VITE_API_URL,VITE_GOOGLE_CLIENT_ID -- env VITE_VERIFY_PROD_URL=true npm run build",
     "start": "vite preview",
     "test": "node --test tests/*.test.mjs",
     "typecheck": "tsc --noEmit --incremental false",

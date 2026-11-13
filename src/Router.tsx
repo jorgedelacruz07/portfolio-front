@@ -17,8 +17,6 @@ const AdminPage = lazy(() => import("./routes/AdminPage"));
 const SocialOAuthCallbackPage = lazy(() => import("./routes/SocialOAuthCallbackPage"));
 const NotFoundPage = lazy(() => import("./routes/NotFoundPage"));
 
-const googleAnalyticsId = import.meta.env.VITE_GA_ID;
-
 function renderLazyRoute(Page: LazyRouteComponent) {
   return (
     <Suspense fallback={<PageLoader />}>
@@ -31,9 +29,7 @@ function RouteChangeTracker() {
   const location = useLocation();
 
   useEffect(() => {
-    const isInvalidId = !googleAnalyticsId || googleAnalyticsId === "undefined" || googleAnalyticsId === "";
-
-    if (typeof window === "undefined" || !window.gtag || isInvalidId) {
+    if (typeof window === "undefined" || !window.gtag || !window.__gaMeasurementId) {
       return;
     }
 
@@ -43,7 +39,7 @@ function RouteChangeTracker() {
       page_path: pagePath,
       page_location: window.location.href,
       page_title: document.title,
-      send_to: googleAnalyticsId,
+      send_to: window.__gaMeasurementId,
       transport_type: "beacon",
     });
   }, [location.hash, location.pathname, location.search]);

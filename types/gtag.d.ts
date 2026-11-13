@@ -1,6 +1,8 @@
 // Google Analytics gtag type definitions
 declare global {
   interface Window {
+    __gaMeasurementId?: string;
+    __gaInitialized?: boolean;
     gtag: (
       command: "config" | "event" | "js" | "set",
       targetId: string | Date,
