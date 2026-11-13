@@ -14,7 +14,16 @@ function metaContent(source, key) {
     if (name?.[1] !== key) continue;
 
     const content = tag.match(/\bcontent=["']([^"']+)["']/);
-    return content?.[1] ?? null;
+    if (content?.[1]) return content[1];
+
+    const jsxContent = tag.match(/\bcontent=\{([^}]+)\}/);
+    if (jsxContent?.[1]) {
+      const varName = jsxContent[1].trim();
+      const varDecl = new RegExp(`(?:const|let|var)\\s+${varName}\\s*=\\s*(?:[^;\\n]*\\|\\|\\s*)?["']([^"']+)["']`);
+      const match = source.match(varDecl);
+      if (match?.[1]) return match[1];
+      return jsxContent[1];
+    }
   }
 
   return null;
