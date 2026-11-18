@@ -74,7 +74,11 @@ const Footer = () => {
             ))}
           </nav>
 
-          <SocialNetworks links={profile?.socialLinks} variant="footer" ariaLabelTemplate={copy["social.ariaLabel"]} />
+          <SocialNetworks
+            links={profile?.socialLinks || [...profileFallback.socialLinks]}
+            variant="footer"
+            ariaLabelTemplate={copy["social.ariaLabel"]}
+          />
         </div>
 
         <div className="flex flex-col gap-2 border-t border-border/80 py-6 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">

@@ -26,7 +26,7 @@ export const HomeProfile = ({ cmsProfile, snapshot, copy }: HomeProfileProps) =>
     profileImage: cmsProfile?.profileImage?.src ? cmsProfile.profileImage : { src: profile.image },
     resumeUrl: cmsProfile?.resumeUrl || profileFallback.resumeUrl,
     contactEmail: cmsProfile?.contactEmail || profileFallback.contactEmail,
-    socialLinks: cmsProfile?.socialLinks || [],
+    socialLinks: cmsProfile?.socialLinks || [...profileFallback.socialLinks],
   };
 
   const handleDownloadClick = () => {

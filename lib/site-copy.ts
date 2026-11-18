@@ -125,8 +125,8 @@ export const SITE_COPY_DEFAULTS = {
   "layout.author": "Jorge de la Cruz Padilla",
   "layout.openGraphAlt":
     "Jorge de la Cruz Padilla, Senior Software Engineer. AI-assisted delivery, security, and product thinking.",
-  "layout.twitterSite": "@jorgedelacruz07",
-  "layout.twitterCreator": "@jorgedelacruz07",
+  "layout.twitterSite": "@jorgedlcpdev",
+  "layout.twitterCreator": "@jorgedlcpdev",
   "social.ariaLabel": "Visit my {name} profile",
   "notFound.title": "Page not found",
   "notFound.description": "This endpoint doesn't exist... but I do.",

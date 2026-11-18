@@ -9,6 +9,7 @@
 - **Website:** https://jorgedelacruzpadilla.dev
 - **GitHub:** https://github.com/jorgedelacruz07
 - **LinkedIn:** https://www.linkedin.com/in/jorgedelacruz07
+- **X (Twitter):** https://x.com/jorgedlcpdev
 
 ## Key Pages & Resources
 - [Home Page](https://jorgedelacruzpadilla.dev/): Biography, engineering capabilities, featured projects, and career timeline.
